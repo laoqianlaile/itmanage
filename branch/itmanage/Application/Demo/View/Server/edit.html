@@ -1,0 +1,317 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">编辑</h4>
+        </div>
+        <form id="sys_dlg_form" role="form">
+        <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-sm-6">
+
+                        <div class="panel-body">
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>服务器名称</label>
+                                                <input id="server_name" name="server_name" type="text" value="{$data.server_name}" class="form-control">
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>子网掩码</label>
+                                                <input id="server_mask" name="server_mask" type="text" value="{$data.server_mask}"class="form-control">
+                                            </div>
+                                            <div class="form-group_l">
+                                                <label>默认网关</label>
+                                                <input id="server_gateway" name="server_gateway" type="text" value="{$data.server_gateway}"class="form-control">
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>IP地址</label>
+                                                <input id="server_ip" name="server_ip" type="text" value="{$data.server_ip}"class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>厂家</label>
+                                                <select name="server_factory"  id="server_factory" class="form-control" style="margin-bottom: -5px;width:56%;">
+                                                    <option value=""></option>
+                                                    <foreach name="ds_cj" item="vo">
+                                                        <option value="{$vo.d_atpid}" <if condition="($data.server_factory eq $vo['d_atpid'])">selected="selected"</if>>{$vo.d_dictname}</option>
+                                                    </foreach>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>型号</label>
+                                                <select name="server_model"  id="server_model" class="form-control" style="margin-bottom: -5px;width:56%;">
+                                                </select>
+                                            </div>
+                                            <div class="form-group_l">
+                                                <label>楼宇</label>
+                                                <select name="server_building"  id="server_building" class="form-control" style="margin-bottom: -5px;width:56%;">
+                                                </select>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>房间号</label>
+                                                <input id="server_room" name="server_room" type="text" value="{$data.server_room}" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_r">
+                                                <label>区域名</label>
+                                                <select name="server_area"  class="form-control" id="server_area" style="margin-bottom: -5px;width:56%;">
+                                                    <option value=""></option>
+                                                    <foreach name="ds_area" item="vo">
+                                                        <option value="{$vo.d_atpid}" <if condition="($data.server_area eq $vo['d_atpid'])">selected="selected"</if>>{$vo.d_dictname}</option>
+                                                    </foreach>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_l">
+                                                <label>用途</label>
+                                                <input id="server_usage" name="server_usage" type="text" value="{$data.server_usage}" class="form-control">
+                                            </div>
+                                            <div class="form-group_l">
+                                                <label>密级</label>
+                                                <select name="server_secret" id="server_secret" class="form-control" style="margin-bottom: -5px;width:65%;">
+                                                    <option value=''>--请选择--</option>
+                                                    <foreach name="ds_miji" item="vo">
+                                                        <option value="{$vo.d_dictname}" <if condition="($data.server_secret eq $vo['d_dictname'])">selected="selected"</if>>{$vo.d_dictname}</option>
+                                                    </foreach>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>操作系统及版本</label>
+                                                <select name="server_os" id="server_os" class="form-control" style="margin-bottom: -5px;width:65%;">
+                                                    <option value=""></option>
+                                                    <option value='WinServer2003' <if condition="($data.server_os eq 'WinServer2003')">selected="selected"</if>>WinServer2003</option>
+                                                    <option value='WinServer2008' <if condition="($data.server_os eq 'WinServer2008')">selected="selected"</if>>WinServer2008</option>
+                                                    <option value='WinServer2000' <if condition="($data.server_os eq 'WinServer2000')">selected="selected"</if>>WinServer2000</option>
+                                                    <option value='windowsXP-32位' <if condition="($data.server_os eq 'windowsXP-32位')">selected="selected"</if>>windowsXP-32位</option>
+                                                    <option value='windowsXP-64位' <if condition="($data.server_os eq 'windowsXP-64位')">selected="selected"</if>>windowsXP-64位</option>
+                                                    <option value='windows7-32位' <if condition="($data.server_os eq 'windows7-32位')">selected="selected"</if>>windows7-32位</option>
+                                                    <option value='windows7-64位' <if condition="($data.server_os eq 'windows7-64位')">selected="selected"</if>>windows7-64位</option>
+                                                    <option value='自定义'>自定义</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                            <div class="heng">
+                                <div class="form-group_r">
+                                    <label>数据库及版本</label>
+                                    <input id="server_database" name="server_database" type="text" value="{$data.server_database}" class="form-control">
+                                </div>
+                                <div class="form-group_l">
+                                    <label>编号</label>
+                                    <input id="server_num" name="server_num" type="text" value="{$data.server_num}" class="form-control">
+                                </div>
+                                <div class="form-group_l">
+                                    <label>所属部门</label>
+                                    <input id="server_dept" name="server_dept" type="text" value="{$data.server_dept}" class="form-control">
+                                </div>
+                                <div class="form-group_r">
+                                    <label>责任人</label>
+                                    <input id="server_dutyman" name="server_dutyman" type="text" value="{$data.server_dutyman}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_r">
+                                    <label>责任人账号</label>
+                                    <input id="server_dutymanid" name="server_dutymanid" type="text" value="{$data.server_dutymanid}" class="form-control">
+                                </div>
+                                <div class="form-group_l">
+                                    <label>操作系统安装日期</label>
+                                    <input id="server_osdate" name="server_osdate" type="text" value="{$data.server_osdate}" class="form-control">
+                                </div>
+                                <div class="form-group_l">
+                                    <label>硬盘序列号</label>
+                                    <input id="server_disknum" name="server_disknum" type="text" value="{$data.server_disknum}" class="form-control">
+                                </div>
+                                <div class="form-group_r">
+                                    <label>MAC地址</label>
+                                    <input id="server_macaddress" name="server_macaddress" type="text" value="{$data.server_macaddress}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_r">
+                                    <label>机房区域</label>
+                                    <input id="server_jifang" name="server_jifang" type="text" value="{$data.server_jifang}" class="form-control">
+                                </div>
+                                <div class="form-group_l">
+                                    <label>启用时间</label>
+                                    <input id="server_qiyong" name="server_qiyong" type="text" value="{$data.server_qiyong}" class="form-control">
+                                </div>
+                                <div class="form-group_l">
+                                    <label>使用情况</label>
+                                    <input id="server_status" name="server_status" type="text" value="{$data.server_status}" class="form-control">
+                                </div>
+                            </div>
+                                        <input id="server_atpid" name="server_atpid" type="hidden" value="{$data.server_atpid}" class="form-control">
+                                    </div>
+
+                    </div>
+                </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>
+            <input type="submit" id="sys_dlg_submit" value="保存" class="btn btn-primary" />
+            <!--<button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary">保存</button>-->
+        </div>
+        </form>
+    </div>
+</div>
+
+<!--<link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLICOLD__/vendor/tabs/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/font-awesome.css?v=4.4.0" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/animate.css" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/style.css?v=4.0.0" rel="stylesheet"> -->
+<style type="text/css">
+    .modal-dialog{width: 94%;height: 80%;}
+    .col-sm-6{width:100%;}
+    .heng{width:100%;height: 50px;}
+    .form-group_heng{width:100%;height: 50px;}
+    .form-group_l{width:25%;float: left;}
+    .form-group_r{width:25%;float: left;}
+    .form-group_r label{width:25%;float: left;margin-top: 7px;}
+    .form-group_l label{width:25%;float: left;margin-top: 7px;}
+    /*.heng div label{width:20%;float: left;margin-top: 7px;}*/
+    .form-control{width:65%;}
+    .form-group_21{width:33.3%;float:left;}
+    .form-group_22{width:33.3%;float:left;}
+    .form-group_23{width:33.3%;float:left;}
+    .fengetitle{height: 40px;margin-bottom: 10px;font-size: 20px;font-family: 微软雅黑;text-align: center;line-height: 40px;width: 60%;margin-left: 20%;border-bottom: 1px solid #cdcdcd;}
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function(e){
+
+        $.validator.setDefaults({
+            highlight:function(element){
+                $(element).closest('.form-group').remove('has-success').addClass('has-error');
+            },
+            success:function(element){
+                $(element).closest('.form-group').remove('has-error').addClass('has-success');
+            },
+            errorElement:'span',
+            errorPlacement:function(error,element){
+                if(element.is(":radio") || element.is(":checkbox")){
+                    error.appendTo(element.parent().parent().parent());
+                }else{
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass:"help-block m-b-none",
+            validClass:"help-block m-b-none"
+        });
+        $("#sys_dlg_form").validate({
+            rules :{
+                server_name :"required",
+                server_ip:"required"
+            },
+            messages:{
+                server_name : "必填",
+                server_ip:"必填"
+            },
+            submitHandler:function(){
+                var formBody = $('#sys_dlg_form');
+                $.post('__CONTROLLER__/submit',formBody.serialize(), function(data) {
+                    if("success" == data) {
+                        $("#sys_dlg").modal("hide");
+                        $('#atpbiztable').bootstrapTable("refresh");
+                    }else {
+                        alert('保存失败');
+                    }
+                });
+            }
+
+        });
+
+        var factory = $("#server_factory option:selected").val();
+        $.post('__CONTROLLER__/getmodel', {factory: factory}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+//                    alert(typearr.length);
+                $("#server_model").children().remove();
+                var item = "";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'";
+                    if(typearr[i]['d_atpid'] == "{$data.server_model}")
+                        item += " selected>" + typearr[i]['d_dictname'] + "</option>";
+                    else
+                        item += ">" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#server_model").append(item);
+            }
+            else
+                $("#server_model").children().remove();
+        });
+
+        var area = $("#server_area option:selected").val();
+        $.post('__CONTROLLER__/getbuilding', {area: area}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#server_building").children().remove();
+                var item = "";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'";
+                    if(typearr[i]['d_atpid'] == "{$data.server_building}")
+                        item += " selected>" + typearr[i]['d_dictname'] + "</option>";
+                    else
+
+                        item += ">" + typearr[i]['d_dictname'] + "</option>";
+
+                }
+                $("#server_building").append(item);
+            }
+            else
+            {
+                $("#server_building").children().remove();
+            }
+
+        });
+    });
+    $('#server_factory').on('change',function() {
+        var factory = $("#server_factory option:selected").val();
+        $.post('__CONTROLLER__/getmodel', {factory: factory}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#server_model").children().remove();
+                var item = "<option value=''></option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'";
+                    if(typearr[i]['d_atpid'] == "{$data.server_model}")
+                        item += " selected>" + typearr[i]['d_dictname'] + "</option>";
+                    else
+                        item += ">" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#server_model").append(item);
+            }
+            else
+                $("#server_model").children().remove();
+
+        });
+    });
+    $('#server_area').on('change',function() {
+        var area = $("#server_area option:selected").val();
+        $.post('__CONTROLLER__/getbuilding', {area: area}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#server_building").children().remove();
+                var item = "<option value=''></option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'";
+                    if(typearr[i]['d_atpid'] == "{$data.server_building}")
+                        item += " selected>" + typearr[i]['d_dictname'] + "</option>";
+                    else
+                        item += ">" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#server_building").append(item);
+            }
+            else
+            {
+                $("#server_building").children().remove();
+            }
+
+
+        });
+    });
+</script>

@@ -1,0 +1,37 @@
+﻿<div class="modal-dialog" style="width: 1000px;z-index: 10;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">批量入库</h4>
+        </div>
+        <div class="modal-body">
+            <form id="sys_dlg_form2" role="form" class="form-horizontal" action="__CONTROLLER__/submitimp">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">选择Excel2007：</label>
+                    <div class="col-sm-4">
+                        <input name="updataexcel2007" type="file"  class="form-control">
+                        <!--<input name="u_filename" id="file" type="file" value="{$u_filename}" style="width: 300px;" class="">-->
+                    </div>
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-4"><a href="__PUBLICOLD__/tpl/imptplbgzdh_excel.xls">点击下载模板示例</a> </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>
+            <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary">上传</button>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade in" style="z-index: -101;"></div>
+<script>
+$(function () {
+    $(".js-switch").each(function(){
+        new Switchery(this, {color: '#1AB394'});
+    });
+    $(".file-pretty").prettyFile();
+    $(".chosen-select").chosen({disable_search_threshold: 10, search_contains: true,width:'284px'});
+});
+</script>

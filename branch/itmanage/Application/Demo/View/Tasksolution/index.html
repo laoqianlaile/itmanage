@@ -1,0 +1,640 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>运维工单管理</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+     
+    <style>
+        .table {
+            max-width: none;
+        }
+
+        .pull-left {
+            width: 100%;
+        }
+
+        #atpbiztoolbar {
+            width: 100%;
+        }
+
+        #dic_name {
+            width: 20%;
+            float: left;
+            margin-right: 5px;
+        }
+        .buttons button{
+            float: left;
+            margin:-8px 0 12px 5px !important;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <div id="atpbiztoolbar">
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">工单号&nbsp;</label>
+                            <input id="taskid" type="text" width="100px" class="form-control"
+                                   style="margin-bottom: -5px;width:56%;" readonly>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">任务单号&nbsp;</label>
+                            <input id="workid" type="text" width="100px" class="form-control"
+                                   style="margin-bottom: -5px;width:56%;" readonly>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">申请人&nbsp;</label>
+                            <input id="person" type="text" width="100px" class="form-control"
+                                   style="margin-bottom: -5px;width:56%;" readonly>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">申请部门&nbsp;</label>
+                            <input id="depart" type="text" width="100px" class="form-control"
+                                   style="margin-bottom: -5px;width:56%;" readonly>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">电话&nbsp;</label>
+                            <input id="telphone" type="text" width="100px" class="form-control"
+                                   style="margin-bottom: -5px;width:56%;" readonly>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">任务来源&nbsp;</label>
+                            <input id="taskfrom" type="text" width="100px" class="form-control"
+                                   style="margin-bottom: -5px;width:56%;" readonly>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">问题分类&nbsp;</label>
+                            <input id="problemtype" type="text" width="100px" class="form-control"
+                                   style="margin-bottom: -5px;width:56%;" readonly>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">到达时间&nbsp;</label>
+                            <input id="arrivetime" type="text" width="100px" class="form-control"
+                                   style="margin-bottom: -5px;width:56%;" readonly>
+                        </div>
+                        <div style="float:left;width:48%;">
+                            <label style="float:left;width:16%;">问题描述&nbsp;</label>
+                            <textarea id="zd_memo" name="zd_memo" class="form-control" style="width: 78%;" readonly>{$data.zd_memo}</textarea>
+                        </div>
+                        <div style="float:left;width:24%;margin-top: 5px;">
+                            <label style="float:left;width:32%;">处理方式</label>
+                            <select name="sovltype" id="sovltype" class="form-control"
+                                    style="margin-bottom: -5px;width:56%;">
+                            </select>
+                        </div>
+                        <div style="float:left;width:24%;margin-top: 5px;" id="erxianperson">
+                            <label style="float:left;width:32%;">二线人员</label>
+                            <select name="chuliperson" id="chuliperson" class="form-control"
+                                    style="margin-bottom: -5px;width:56%;">
+                                <option value=""></option>
+                                <foreach name="ds_chuliperson" item="vo">
+                                    <option value="{$vo.yw_account}">{$vo.yw_name}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                        <div style="float:left;width:100%;margin-top: 5px" class="buttons">
+                            <label style="float:left;width:7.5%;">处理结果&nbsp;</label>
+                            <textarea id="process" name="process" class="form-control" style="width: 61.5%;float:left;margin-right:15px;"></textarea>
+                            <button class="btn btn-info " type="button" id="sys_quxiao">
+                                <i class="fa fa-eraser"></i>&nbsp;取消
+                            </button>
+                            <button class="btn btn-success " type="button" id="sys_tijiao">
+                                <i class="fa fa-pencil-square"></i>&nbsp;提交
+                            </button>
+                            <button class="btn btn-success " type="button" id="sys_bd">
+                                <i class="fa fa-pencil-square"></i>&nbsp;处理表单
+                            </button>
+                            <button class="btn btn-info " type="button" id="sys_chongzhi" style="display: none;">
+                                <i class="fa fa-retweet"></i>&nbsp;重置为未处理
+                            </button>
+                            <button class="btn btn-warning" style="background-color: #9bc63e;border:#9bc63e 1px solid;" type="button" id="sys_txz">
+                                <i class="fa fa-reply"></i>&nbsp;通信站派工
+                            </button>
+                        </div>
+                        <input id="t_tasktype" type="hidden" width="100px" class="form-control"
+                               style="margin-bottom: -5px;width:56%;">
+                        <input id="t_atpid" type="hidden" width="100px" class="form-control"
+                               style="margin-bottom: -5px;width:56%;">
+                        <input id="t_bdstatus" type="hidden" width="100px" class="form-control"
+                               style="margin-bottom: -5px;width:56%;">
+                        <input id="t_biaodanurl" type="hidden" width="100px" class="form-control"
+                               style="margin-bottom: -5px;width:56%;">
+
+                        <div style="float:left;width:100%;margin-top: 5px;padding-top: 12px;">
+                            <button class="btn btn-warning " type="button" id="sys_search"><i class="fa fa-search"></i>&nbsp;查询
+                            </button>
+                            <button class="btn btn-danger " type="button" id="sys_reset"><i
+                                    class="fa fa-rotate-right"></i>&nbsp;重置
+                            </button>
+                            <div style="float:left;width:24%;">
+                                <label style="float:left;width:32%;">工单状态&nbsp;</label>
+                                <select name="taskradio" id="taskradio" class="form-control"
+                                        style="margin-bottom: -5px;width:56%;">
+                                    <option value="" selected="selected"></option>
+                                    <option value="0">未处理工单</option>
+                                    <option value="2">已完成工单</option>
+                                    <option value="1">处理中工单</option>
+                                </select>
+                            </div>
+                            <div style="float:left;width:24%;">
+                                <label style="float:left;width:32%;">创建人&nbsp;</label>
+                                <select name="t_createuserid" class="chosen-select_longajax" id="t_createuserid"
+                                        style="margin-bottom: -5px;width:56%;">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                            <div style="float:left;width:24%;">
+                                <label style="float:left;width:32%;">申请人&nbsp;</label>
+                                <select name="t_name" class="chosen-select_longajax" id="t_name"
+                                        style="margin-bottom: -5px;width:56%;">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                            <div style="float:left;width:24%;">
+                                <label style="float:left;width:32%;">处理人&nbsp;</label>
+                                <select name="t_person" class="chosen-select_longajax" id="t_person"
+                                        style="margin-bottom: -5px;width:56%;">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <table id="atpbiztable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<script>
+    $(".chosen-select_longajax").chosen({disable_search_threshold: 0, search_contains: true});//,width:'56%',hight:'80px'
+    $('#t_name').ajaxChosen({
+        dataType: 'json',
+        type: 'POST',
+        url: '__CONTROLLER__/assignuser'
+    }, {
+        loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+    $('#t_person').ajaxChosen({
+        dataType: 'json',
+        type: 'POST',
+        url: '__CONTROLLER__/assignuser'
+    }, {
+        loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+    $('#t_createuserid').ajaxChosen({
+        dataType: 'json',
+        type: 'POST',
+        url: '__CONTROLLER__/assignuser'
+    }, {
+        loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+    $(function () {
+        $("#erxianperson").hide();
+        $("#sys_bd").hide();
+        $("#sys_tijiao").hide();
+        $("#sys_quxiao").hide();
+        $("#sys_txz").hide();
+        var TableObj = {
+            oTableInit: function () {
+                $('#atpbiztable').bootstrapTable({
+                    url: '__CONTROLLER__/getData',         //请求后台的URL（*）
+                    method: 'post',                      //请求方式（*）
+                    toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                    striped: true,                      //是否显示行间隔色
+                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    pagination: true,                   //是否显示分页（*）
+                    iconSize: 'outline',
+                    sortable: true,                     //是否启用排序
+                    sortName: "t_arrivetime",
+                    sortOrder: "desc",                   //排序方式
+                    queryParams: queryParam,//传递参数（*）
+                    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1,                       //初始化加载第一页，默认第一页
+                    pageSize: 10,                       //每页的记录行数（*）
+                    pageList: [5, 10, 25, 50, 100],        //可供选择的每页的行数（*）
+                    search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                    showColumns: false,                  //是否显示所有的列
+                    showRefresh: false,                  //是否显示刷新按钮
+                    minimumCountColumns: 2,             //最少允许的列数
+                    clickToSelect: false,                //是否启用点击选中行
+                    uniqueId: "t_atpid",                     //每一行的唯一标识，一般为主键列
+                    detailView: false,                   //是否显示父子表
+                    detailFormatter: "detailFormatter",
+                    columns: [
+                        [
+//                    {checkbox: true},
+                            {
+                                title: '序号', width: 40,
+                                formatter: function (value, row, index) {
+                                    var option = $('#atpbiztable').bootstrapTable("getOptions");
+                                    return option.pageSize * (option.pageNumber - 1) + index + 1;
+                                }
+                            },
+                            {field: 't_taskid', title: '工单号', sortable: true},
+                            {field: 't_name', title: '申请人', sortable: true},
+                            {field: 't_createusername', title: '创建人', sortable: true},
+                            {field: 't_problemtype', title: '问题分类', sortable: true},
+                            {field: 'bdidurl', title: '任务单号', sortable: false},
+                            {field: 't_rwtype', title: '来源', sortable: true},
+                            {field: 'bdname', title: '表单名称', sortable: false},
+                            {field: 't_arrivetime', title: '接收时间', sortable: true},
+                            {field: 'statusprint', title: '状态', sortable: true},
+                            {field: 't_biaodanurl', title: '表单url', sortable: false, visible: false},
+                            {field: 't_bdstatus', title: '表单状态', sortable: false, visible: false},
+                            {
+                                field: 't_atpid', title: '操作', sortable: false, width: 60,
+                                formatter: function (value, row, index) {
+                                    var inp = "'" + value + "'";
+                                    if (row['t_status'] == '0') {
+                                        var a = '<a  class="btn btn-danger btn-xs" onclick="updateInRow(' + inp + ')">处理</a><br>';
+                                    }
+                                    else if (row['t_status'] == '1') {
+                                        var a = '<a  class="btn btn-warning btn-xs" onclick="updateInRow(' + inp + ')"> 继续处理</a><br>';
+                                    }
+                                    else if (row['t_status'] == '2') {
+                                        var a = '<a  class="btn btn-info btn-xs" aria-disabled="true">已处理</a><br>';
+                                    }
+                                    return a;
+                                }
+                            },
+                            {field: 'sovlnum', title: '次数', sortable: true}
+                        ]
+                    ],
+                    onSort: function (name, order) {
+                    }
+                });
+            }
+        };
+        TableObj.oTableInit();
+        $('#sys_search').on('click', function () {
+            $('#atpbiztable').bootstrapTable('destroy');
+            TableObj.oTableInit();
+        });
+        $('#taskradio').on('change', function () {
+            var type = $("#taskradio").val();
+            if (type == '2') {
+                $('#sys_tijiao').hide();
+                $('#sys_quxiao').hide();
+                $('#sys_chongzhi').hide();
+                $('#sovltype').attr('disabled', true);
+                $('#process').attr('readOnly', true);
+            }
+            else if (type == '0') {
+                $('#sys_tijiao').show();
+                $('#sys_quxiao').show();
+                $('#sys_txz').show();
+                $('#sys_chongzhi').hide();
+                $('#sovltype').attr('disabled', false);
+                $('#process').attr('readOnly', false);
+
+            }
+            else if (type == '1') {
+                $('#sys_tijiao').show();
+                $('#sys_txz').show();
+                $('#sys_quxiao').hide();
+                $('#sys_chongzhi').show();
+                $('#sovltype').attr('disabled', false);
+                $('#process').attr('readOnly', false);
+
+            }
+            else {
+                $('#sys_tijiao').hide();
+                $('#sys_bd').hide();
+                $('#sys_quxiao').hide();
+                $('#sys_chongzhi').hide();
+                $('#sovltype').attr('disabled', true);
+                $('#process').attr('readOnly', true);
+            }
+            $('#atpbiztable').bootstrapTable('destroy');
+            TableObj.oTableInit();
+        });
+
+        $('#sys_txz').on('click',function(){
+            var t_atpid = $('#t_atpid').val();
+            if(t_atpid == '') return false;
+            $("#sys_dlg").load('__CONTROLLER__/txz_add?t_atpid=' + t_atpid, function () {
+                $("#sys_dlg").modal({backdrop: false});
+            });
+        });
+    });
+    function queryParam(params) {  //配置参数
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            search: params.search,
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            taskradio: $('#taskradio').val(),  //字典类别
+            t_nameid: $('#t_name').val(),  //申请人
+            t_createuserid: $('#t_createuserid').val(),//创建人
+            t_person: $('#t_person').val()  //处理人
+        };
+        return temp;
+    }
+
+    function dataCellFormatter(value, row) {
+        var color = '#' + Math.floor(Math.random() * 6777215).toString(16);
+        return '<div  style="color: ' + color + '">' + '<i class="glyphicon glyphicon-usd"></i>' + value + '</div>';
+    }
+    function updateInRow(id) {
+        var lastid = $('#t_atpid').val();
+        if (lastid != "" && id != lastid) {
+            alert("您有正在处理的工单，请完成处理或取消处理");
+        }
+        else {
+            $.post('__CONTROLLER__/gettask', {id: id}, function (rep) {
+//                var lastid = $('#t_atpid').val();
+                var typearr = eval("(" + rep + ")");
+//                if(lastid !="" && typearr['t_atpid'] !=lastid)
+//                {
+//                    alert("您有正在处理的工单，请完成处理或取消处理");
+//                }
+//                else{
+                if (typearr['t_tasktype'] == '一线') {
+                    if (typearr['t_rwtype'] == 'BD') {
+                        $("#sovltype").attr('disabled', true);
+                        var item = "";
+//                            item += "<option value='' selected='selected'></option>";
+                        item += "<option value='1' selected='selected'>正常处理</option>";
+                        item += "<option value='2' >跳过处理</option>";
+                        $("#sovltype").append(item);
+                        $("#erxianperson").hide();
+                        //改
+                        $("#sys_tijiao").hide();
+                        $("#sys_bd").show();
+                        $("#sys_quxiao").show();
+                        $('#sys_txz').show();
+                    }
+                    else if (typearr['t_rwtype'] == 'BZ') {
+                        $("#sovltype").attr('disabled', false);
+                        $("#sovltype").children().remove();
+                        var item = "";
+//                            item += "<option value='' selected='selected'></option>";
+                        item += "<option value='1' selected='selected'>正常处理</option>";
+                        item += "<option value='2' >跳过处理</option>";
+                        $("#sovltype").append(item);
+                        $("#erxianperson").hide();
+                        //改
+                        $("#sys_tijiao").show();
+                        $("#sys_quxiao").show();
+                        $("#sys_bd").hide();
+                        $('#sys_txz').show();
+                    }
+                    else if (typearr['t_rwtype'] == 'YW') {
+                        $("#sovltype").attr('disabled', false);
+                        $("#sovltype").children().remove();
+                        var item = "";
+//                            item += "<option value='' selected='selected'></option>";
+                        item += "<option value='1' selected='selected'>正常处理</option>";
+                        item += "<option value='2' >跳过处理</option>";
+                        item += "<option value='3' >转派二线</option>";
+                        item += "<option value='4' >转派通信站</option>";
+                        $("#sovltype").append(item);
+                        //改
+                        $("#sys_tijiao").show();
+                        $("#sys_quxiao").show();
+                        $("#sys_bd").hide();
+                        $('#sys_txz').show();
+                    }
+                }
+                else if (typearr['t_tasktype'] == '二线') {
+                    $("#sovltype").attr('disabled', false);
+                    $("#sovltype").children().remove();
+                    var item = "";
+//                        item += "<option value='' selected='selected'></option>";
+                    item += "<option value='1' selected='selected'>正常处理</option>";
+                    item += "<option value='2' >跳过处理</option>";
+                    $("#sovltype").append(item);
+//                    $("#erxianperson").hide();
+
+                }
+                $('#telphone').attr("value", typearr['t_phone']);
+                $('#person').attr("value", typearr['t_name']);
+                $('#depart').attr("value", typearr['t_depart']);
+                $('#zd_memo').attr("value", typearr['t_description']);
+                $('#taskid').attr("value", typearr['t_taskid']);
+                $('#workid').attr("value", typearr['t_rwid']);
+                $('#arrivetime').attr("value", typearr['t_arrivetime']);
+                $('#t_atpid').attr("value", typearr['t_atpid']);
+                $('#problemtype').attr("value", typearr['t_problemtype']);
+                $('#taskfrom').attr("value", typearr['t_rwtype']);
+                $('#t_tasktype').attr("value", typearr['t_tasktype']);
+                $('#t_biaodanurl').attr("value", typearr['t_biaodanurl']);
+//                }
+            });
+        }
+
+    }
+
+    $('#sovltype').on('change', function () {
+        var type = $("#sovltype").val();
+//        if(type == '1'){
+//            $('#sys_tijiao').hide();
+//            $('#sys_bd').show();
+//        }else if(type == '2'){
+//            $('#sys_tijiao').show();
+//            $('#sys_bd').hide();
+//        }
+        if (type == '3') {
+            $("#erxianperson").show();
+        }
+    });
+    $('#sys_tijiao').on('click', function () {
+        var sovltype = $('#sovltype').val();
+        var process = $('#process').val();
+        var lastid = $('#t_atpid').val();
+        var person = $('#chuliperson').val();
+        if (sovltype == '') {
+            alert("未选择处理方式");
+        }
+        else {
+            $.post('__CONTROLLER__/sovltask', {
+                sovltype: sovltype,
+                t_atpid: lastid,
+                process: process,
+                person: person
+            }, function (rep) {
+                if (rep == '-1') {
+                    alert("表单尚未处理，请先处理表单");
+                    location.reload();
+                }
+                else if (rep == '-2') {
+                    alert("表单或保障类型的工单不允许转派二线或者转派通信站");
+                    location.reload();
+                }
+                else if (rep == 'error') {
+                    alert("提交失败");
+                    location.reload();
+//                        $('#atpbiztable').bootstrapTable('refresh');
+                }
+                else if (rep == '') {
+                    alert("提交成功");
+                    location.reload();
+                    $("#sys_bd").hide();
+//                        $('#atpbiztable').bootstrapTable('refresh');
+                }
+            });
+        }
+
+    });
+
+    $('#sys_reset').on('click', function () {
+        $('#t_name').val("");
+        $('#t_name').trigger("chosen:updated");
+        $('#t_createuserid').val("");
+        $('#t_createuserid').trigger("chosen:updated");
+        $('#t_person').val("");
+        $('#t_person').trigger("chosen:updated");
+    });
+    $('#sys_quxiao').on('click', function () {
+        $('#telphone').attr("value", "");
+        $('#person').attr("value", "");
+        $('#depart').attr("value", "");
+        $('#zd_memo').attr("value", "");
+        $('#taskid').attr("value", "");
+        $('#workid').attr("value", "");
+        $('#arrivetime').attr("value", "");
+        $('#problemtype').attr("value", "");
+        $('#taskfrom').attr("value", "");
+        $('#t_tasktype').attr("value", "");
+        var t_atpid = $('#t_atpid').val();
+        $('#t_atpid').attr("value", "");
+        $('#t_biaodanurl').val("");
+        $('#sovltype').val("");
+        $.post('__CONTROLLER__/resettask', {t_atpid: t_atpid}, function (rep) {
+            if (rep == '') {
+                alert("取消成功");
+                $('#atpbiztable').bootstrapTable('refresh');
+            }
+            else
+                alert("取消失败");
+        });
+    });
+    $('#sys_chongzhi').on('click', function () {
+        $('#telphone').attr("value", "");
+        $('#person').attr("value", "");
+        $('#depart').attr("value", "");
+        $('#zd_memo').attr("value", "");
+        $('#taskid').attr("value", "");
+        $('#workid').attr("value", "");
+        $('#arrivetime').attr("value", "");
+        $('#problemtype').attr("value", "");
+        $('#taskfrom').attr("value", "");
+        $('#t_tasktype').attr("value", "");
+        var t_atpid = $('#t_atpid').val();
+        $('#t_atpid').attr("value", "");
+        $('#t_biaodanurl').val("");
+        $('#sovltype').val("");
+        if(t_atpid == '') return false;
+        $.post('__CONTROLLER__/resettask', {t_atpid: t_atpid}, function (rep) {
+            if (rep == '') {
+                alert("重置成功");
+                $('#atpbiztable').bootstrapTable('refresh');
+            }
+            else
+                alert("重置失败");
+        });
+    });
+
+    //    $('#sys_detail').on('click',function() {
+    //        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+    //        if(tablerow.length!=1){
+    //            alert("您已多选或者少选，仅能对一条数据进行操作");
+    //        }else {
+    //            $("#sys_dlg").load('__CONTROLLER__/detail?id=' + tablerow[0]['t_taskid'], function() {
+    //                $("#sys_dlg").modal({backdrop: false});
+    //                $("#sys_dlg").modal('show');
+    //
+    //            });
+    //        }
+    //});
+    $('#sys_bd').on('click', function () {
+        var url = $('#t_biaodanurl').val();
+        if (url == "") {
+            alert("尚未选择处理的数据，url为空");
+        }
+        else {
+            var taskid = $('#taskid').val();
+            //写入处理人
+            $.post('__CONTROLLER__/recorddealperson', {taskid: taskid}, function (rep) {
+                if (rep.code == 0) {
+                    var da = window.open("http://10.64.1.129/System/Windows_Login1.asp");
+//                    location.reload();
+                    window.open(url);
+                    setTimeout(da.close(), 3);
+                } else {
+                    alert(rep.message);
+                }
+            }, 'json');
+        }
+    });
+    function submitdata() {
+        var formbody = $("#sys_dlg_form");
+        $.post('__CONTROLLER__/submit', formbody.serialize(), function (rep) {
+            if (rep == "success") {
+                $('#atpbiztable').bootstrapTable('refresh');
+            } else {
+                alert("保存失败！");
+                $('#atpbiztable').bootstrapTable('refresh');
+            }
+
+        });
+    }
+    function opentaskdetail(taskid) {
+        $("#sys_dlg").load('__CONTROLLER__/detail?id=' + taskid, function () {
+            $("#sys_dlg").modal({backdrop: false});
+        });
+    }
+    function openbddetail(bdid) {
+        $("#sys_dlg").load('__CONTROLLER__/bddetail?id=' + bdid, function () {
+            $("#sys_dlg").modal({backdrop: false});
+        });
+    }
+
+</script>
+</body>
+
+</html>
+
+
+
+

@@ -1,0 +1,102 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" /><script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<title>邮件降密发送审计添加编辑</title>
+<style>
+    .form-group{
+        margin-top: 26px;
+    }
+    .control-label{
+        width:150px  !important;
+    }
+     .must_filter{
+        color: red;
+    }
+    .form-control{
+        display:inline-block;
+    }
+    .col-sm-3{
+        width:60%  !important;
+    }
+    .chosen-container{
+        top: -1px;
+    }
+
+</style>
+<body style="margin: 0 auto;">
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content" >
+        <div class="panel-body">           <div class="form-group">                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>发件人邮箱地址 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="am_mfrom" id="am_mfrom" value="<?php if(!empty($data['am_mfrom']))echo $data['am_mfrom']; ?>">                   </div>                </div>                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>收件人邮箱地址 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="am_mto" id="am_mto" value="<?php if(!empty($data['am_mto']))echo $data['am_mto']; ?>">                   </div>                </div>           </div>           <div class="form-group">                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>发送时间 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="am_mlogtimestr" id="am_mlogtimestr" value="<?php if(!empty($data['am_mlogtimestr']))echo $data['am_mlogtimestr']; ?>" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">                   </div>                </div>                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>邮件大小 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="am_size" id="am_size" value="<?php if(!empty($data['am_size']))echo $data['am_size']; ?>">                   </div>                </div>           </div>           <div class="form-group">                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>邮件标题 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="am_subj" id="am_subj" value="<?php if(!empty($data['am_subj']))echo $data['am_subj']; ?>">                   </div>                </div>                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>附件列表 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="am_attachlist" id="am_attachlist" value="<?php if(!empty($data['am_attachlist']))echo $data['am_attachlist']; ?>">                   </div>                </div>           </div>           <div class="form-group">                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>邮件密级 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="am_mailmj" id="am_mailmj" value="<?php if(!empty($data['am_mailmj']))echo $data['am_mailmj']; ?>">                   </div>                </div>                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>问题类型 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="am_msg" id="am_msg" value="<?php if(!empty($data['am_msg']))echo $data['am_msg']; ?>">                   </div>                </div>           </div>            </div>        <input type="hidden" value="<?php if(!empty($data['am_id'])) echo $data['am_id']; ?>" name="am_id">
+       </div>
+    </form>
+<div class="modal-footer" style="margin-top: 15px;text-align: center;width: 100%;">
+    <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="display:inline-block">保存</button>
+</div>
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        $('#sys_dlg_submit').click(function(){
+            $('#sys_dlg_form1').submit();
+        })
+        
+
+        $.validator.setDefaults({
+            highlight:function(element){
+                $(element).parent().remove('has-success').addClass('has-error');
+            },
+            success:function(element){
+                $(element).parent().remove('has-error').addClass('has-success');
+            },
+            errorPlacement:function(error,element){
+                if(element.is(":radio") || element.is(":checkbox")){
+                    error.appendTo(element.parent());
+                }else{
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass:"help-block m-b-none",
+            validClass:"help-block m-b-none"
+        });
+        $('#sys_dlg_form1').validate({
+            onclick:false,
+            onfocusout:false,
+            onkeyup:false,
+            // 如果是下拉菜单，这里的require是不生效的，需要自己在submitHandle方法中添加验证
+            rules:{
+                
+            },
+            messages:{
+                
+            },submitHandler:function(){
+                var formBody = $('#sys_dlg_form1');
+                $.post('__CONTROLLER__/addData',formBody.serialize(), function (data) {
+                    if (data.code > 0) {
+                        parent.$('#atpbiztable').bootstrapTable('refresh');
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        layer.alert(data.message);
+                    }
+                },'JSON');
+            }
+        });
+    });
+    //如果验证下拉框必填，请使用该方法
+//    function checkSelectForm(objArr, messageArr){
+//        var len = objArr.length;
+//        for(var i=0;i<len;i++){
+//            var obj = objArr[i];
+//            var val = $('#'+obj).val();
+//            if(!val){
+//                layer.msg('请选择'+messageArr[i]);
+//                $('#'+obj).trigger('chosen:open');
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+</script>

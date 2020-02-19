@@ -1,0 +1,438 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>创建临时账户</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+    <link rel="stylesheet" href="__PUBLICOLD__/vendor/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ztree/js/jquery.ztree.core.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+     
+    <style>
+        .table{max-width: none;}
+        .pull-left{width:100%;}
+        #atpbiztoolbar{width:100%;}
+        #dic_name{width: 20%;float: left;margin-right: 5px;}
+        .name{background-color:#f0f7f5; font-weight:bold; margin-top:30px; margin-bottom:20px; float:left;border-left:#18a689 8px solid; padding-left: 15px;line-height: 38px;height:38px;}
+        .tt{ size: 16px; font-weight:bold; padding-left:0px;color:#03513f;}
+        .chosen-choices{height:80px !important;}
+        .col-sm-6 {
+            width: 50%;
+        }
+        .col-sm-12 {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <form id="atpform" role="form"　class="form-inline">
+            <div class="ibox-content" style="padding:5%;padding-top:1%;">
+                <div style="margin-top:20px;width:100%;">
+                    <p class="tt">创建到&emsp;{$CreateToOUstr}</p>
+                    <p class="name" style="text-align: left;font-size: 20px;width:100%;">常&nbsp;规</p>
+                </div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable" style="width:15%;margin-right:2%">姓&emsp;名：</label>
+                            <input  id="truename" name="truename" type="text" class="form-control">
+                            <font color="orangered">*</font>
+                        </div>
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable  " style="width:15%;margin-right:2%;"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable" style="width:15%;margin-right:2%">姓：</label>
+                            <input  id="lastname" name="lastname" type="text" class="form-control" style="" required="true" onblur="writeName()">
+                        </div>
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable  " style="width:15%;margin-right:2%">名：</label>
+                            <input  id="firstname" name="firstname" type="text" class="form-control" required="true" onblur="writeName()">
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top: 25px;">
+                    <div class="col-sm-12 form-inline">
+                        <label class="control-lable" style="width:8%;">描&emsp;述：</label>
+                        <textarea class="form-control" rows="3" id="desc" name="desc" style="width:69.5%;"></textarea>
+                        <font color="orangered">*</font>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top: 0px;">
+                    <div class="col-sm-12 form-inline">
+                        <label class="control-lable" style="width:9%;"></label>
+                        <span style="font-weight:normal;font-size: 8px;">（计算机信息）</span>
+                    </div>
+                </div>
+                <div style="margin-top:20px;width:100%;">
+                    <p class="name" style="text-align: left;font-size: 20px;width:100%;">账&nbsp;户</p>
+                </div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable" style="width:15%;margin-right:2%">登录名：</label>
+                            <input  id="username" name="username" type="text" class="form-control" style="" required="true" onkeyup="sameUsername(this.name)">
+                            <font color="orangered">*</font>
+                        </div>
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable  " style="width:15%;margin-right:2%"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-12 form-inline">
+                            <label class="control-lable" style="width:7.5%;margin-right:1%">登录名：</label>
+                            <input  id="" value="hq.cast\" type="text" class="form-control" required="true" readonly="true" style="width:9%;">
+                            <input  id="formername" name="formername" type="text" class="form-control" required="true" onkeyup="sameUsername(this.name)">
+                            <font color="orangered">*</font>
+                            <label class="control-lable  " style="width:25%;margin-left:1%;">（Windows2000以前版本）</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-12 form-inline">
+                            <input  id="changepass" name="changepass" type="checkbox" class="form-control" required="true" style="margin-left:8.5%" value="1" <if condition="$mode == 1">checked disabled</if>>
+                            <label class="control-lable" style="width:25%;margin-left:1%">用户下次登录时必须更改密码</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top:0px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-12 form-inline">
+                            <input  id="accountdeny" name="accountdeny" type="checkbox" class="form-control" required="true" style="margin-left:8.5%" value="1" <if condition="$mode == 0">checked disabled</if>>
+                            <label class="control-lable" style="width:25%;margin-left:1%">账户已禁用</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable" style="width:15%;margin-right:2%">新密码：</label>
+                            <input  id="newpwd" name="newpwd" type="password" class="form-control" style="width:;" >
+                            <font color="orangered">*</font>
+                        </div>
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable  " style="width:19%;margin-right:2%;">确认密码：</label>
+                            <input  id="confirmpwd" name="confirmpwd" type="password" class="form-control" style="width:;" >
+                            <font color="orangered">*</font>
+                            <!--<select id="passwords" name="passwords" class="chosen-select2" style="width: 41%;" >-->
+                                <!--<option value="">请选择</option>-->
+                                <!--<foreach name="ipsecretlevel" item="val">-->
+                                    <!--<option value="{$val.d_sortno}">{$val.d_dictname}</option>-->
+                                <!--</foreach>-->
+                            <!--</select>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable" style="width:15%;margin-right:2%">登录到：</label>
+                            <input  id="loginto" name="loginto" type="text" class="form-control">
+                            <button class="btn btn-primary" type="button" id="choosecomp" style="padding-top: 4px;height: 35px;margin-top: 4px;margin-left:3%">确定</button>
+                        </div>
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable" style="width:20%;margin-right:1%;">从模板选择：</label>
+                            <select class="chosen-select_longajax" id="logintomodel" style="margin-bottom: -5px; width: 56%;">
+                                <option value=""></option>
+                                <foreach name="modelInfo" item="vo">
+                                    <option value="{$vo.d_detail}">{$vo.d_dictname}：{$vo.d_detail}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top: 20px;">
+                    <div class="col-sm-12 form-inline">
+                        <label class="control-lable" style="width:7%;margin-right:1%;"></label>
+                        <select id="select_computer" data-placeholder=" " name="select_computer" style="height: 80px !important;
+}" class="chosen-select_long" multiple >
+                            <option value="" checked></option>
+                        </select>
+                    </div>
+                </div>
+                <div style="margin-top:20px;width:100%;">
+                    <p class="name" style="text-align: left;font-size: 20px;width:100%;">其他信息</p>
+                </div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable" style="width:15%;margin-right:2%">公&emsp;司：</label>
+                            <input  id="companyname" name="companyname" type="text" class="form-control" style="width:;" >
+                        </div>
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable  " style="width:19%;margin-right:2%;">邮政信箱：</label>
+                            <input  id="email" name="email" type="text" class="form-control" style="width:;" >
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable" style="width:15%;margin-right:2%">部&emsp;门：</label>
+                            <input  id="deptname" name="deptname" type="text" class="form-control" style="width:;" >
+                        </div>
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable  " style="width:19%;margin-right:2%;">邮政编码：</label>
+                            <input  id="postcode" name="postcode" type="text" class="form-control" style="width:;" >
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable" style="width:15%;margin-right:2%">市\县：</label>
+                            <input  id="city" name="city" type="text" class="form-control" style="width:;" >
+                        </div>
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable  " style="width:19%;margin-right:2%;">街&emsp;道：</label>
+                            <input  id="road" name="road" type="text" class="form-control" style="width:;" >
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top:55px;">
+                    <div class="form-group" style="margin-bottom: 0px;">
+                        <input type="hidden" id="CreateToOU" name="CreateToOU" value="{$CreateToOU}" />
+                        <input type="hidden" id="mode" name="mode" value="{$mode}" />
+                        <label class="control-lable  col-sm-4"></label>
+                        <button class="btn btn-primary" type="button" id="submit">提交</button>
+                        <label class="control-lable" style="width:10%">&nbsp;</label>
+                        <button class="btn btn-primary " type="button" id="cancel">取消</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="sys_dept" role="dialog" class="modal fade "></div>
+    <div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+        <div class="modal-dialog" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">处理中</h4>
+                </div>
+                <div class="modal-body">
+                    <img src="__PUBLICOLD__/img/loading/loading8.gif" style='display: block;margin: 0 auto'>
+                    <div id="loadingText" style="text-align: center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    CHOSEN_DEFAULT_TEXT ="";
+</script>
+<script>
+
+
+    $(function () {
+        $(".chosen-select_long").chosen({disable_search_threshold: 10, search_contains: false,width:'40%',height:'88px !imprtant'});
+        $(".chosen-select_longajax").chosen({disable_search_threshold: 10, search_contains: false,width:'70%'});
+//删除
+//        $(".chosen-select_long option").remove();
+        $('#select_computer').append('<option value="" selected  ></option>');
+        $('#select_computer').trigger("chosen:updated");
+        $('#choosecomp').on('click',function(){
+            var loginto = $("#loginto").val();
+            if(loginto != ''){
+                $('#select_computer').append('<option value="'+loginto+'" selected  >'+loginto+'</option>');
+                $('#select_computer').trigger("chosen:updated");
+            }
+        });
+
+        $('#logintomodel').on('change',function(){
+            var modelVal = $('#logintomodel').val();
+            if(modelVal != ''){
+                if(modelVal.indexOf(',')<0){
+                    var modelVals = modelVal.split(';');
+                }else{
+                    var modelVals = modelVal.split(',');
+                }
+                for(var i = 0;i<modelVals.length;i++){
+                    $('#select_computer').append('<option value="'+modelVals[i]+'" selected  >'+modelVals[i]+'</option>');
+                }
+                $('#select_computer').trigger("chosen:updated");
+            }
+        });
+
+        $(".chosen-select2").chosen({disable_search_threshold: 10, search_contains: true});
+
+        $('#cancel').click(function(){
+            history.go(-1);
+        })
+
+        $('#choosedept').click(function(){
+            $("#sys_dept").load('__CONTROLLER__/getDeptTree', function() {
+                $("#sys_dept").modal({backdrop: false});
+            });
+        })
+    });
+
+    $('#ip_area').on('change',function() {
+        var area     = $("#ip_area option:selected").val();
+        var areaname = $("#ip_area option:selected").html();
+        $.post('__CONTROLLER__/getbuilding', {area: area}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#ip_building").children().remove();
+                var item = "";
+                item += "<option value='"+area+"' selected='selected'>"+areaname+"全部</option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'>" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#ip_building").append(item);
+            }
+            else
+                $("#ip_building").children().remove();
+        });
+    });
+
+    $('#submit').on('click',function (){
+        var truename   = $('#truename');
+        var username   = $('#username');
+        var formername = $('#formername');
+        var newpwd     = $('#newpwd');
+        var confirmpwd = $('#confirmpwd');
+        var desc       = $('#desc');
+        var res = checkSub([truename,username,formername,newpwd,confirmpwd,desc]); //验证非空
+        if(!res) return false;
+        var newpwdval     = $('#newpwd').val();
+        var confirmpwdval = $('#confirmpwd').val();
+        if(newpwdval != confirmpwdval){
+            newpwd.parent().addClass('has-error');
+            confirmpwd.parent().addClass('has-error');
+            alert('新密码与确认密码不一致，请重新填写');
+            return false;
+        }else{
+            newpwd.parent().removeClass('has-error');
+            newpwd.parent().addClass('has-success');
+            confirmpwd.parent().removeClass('has-error');
+            confirmpwd.parent().addClass('has-success');
+        }
+        $.ajax({
+                type:'post',
+                url:'__CONTROLLER__/addADUser',
+                data:{
+                    CreateToOU:$('#CreateToOU').val(),
+                    mode:$('#mode').val(),
+                    username:$('#username').val(),
+                    formername:$('#formername').val(),
+                    newpwd:$('#newpwd').val(),
+                    truename:$('#truename').val(),
+                    firstname:$('#firstname').val(),
+                    lastname:$('#lastname').val(),
+                    desc:$('#desc').val(),
+                    changepass:$('#changepass').is(':checked'),
+                    accountdeny:$('#accountdeny').is(':checked'),
+                    select_computer:$('#select_computer').val(),
+                    companyname:$('#companyname').val(),
+                    deptname:$('#deptname').val(),
+                    city:$('#city').val(),
+                    email:$('#email').val(),
+                    postcode:$('#postcode').val(),
+                    road:$('#road').val(),
+                },
+                beforeSend:function(){
+                    $("#loadingText").html("正在处理请稍后");
+                    $('#loading').modal('show');
+                },
+                success:function(res){
+                    if(res.code != 0){
+                        alert(res.message);
+                        return false;
+                    }else{
+                        var username = $('#username').val();
+                        alert('新增数据成功！\n'+'域账号：' + username);
+                        window.history.go(-1);
+                    }
+                },
+                complete:function(){
+                    $('#loading').modal('hide');
+                },
+                dataType:'json'
+        });
+    });
+
+    function checkSub(para){
+        var err  = 0;
+        for(var i = 0;i<para.length;i++){
+            if(para[i].val() == ''){
+                para[i].parent().addClass('has-error');
+                err = 1;
+            }else{
+                para[i].parent().removeClass('has-error');
+                para[i].parent().addClass('has-success');
+            }
+        }
+        if(err == 1){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    function  sameUsername(name){
+        if(name == 'username'){
+            var username   = $('#username').val();
+            $('#formername').val(username);
+        }else{
+            var formername   = $('#formername').val();
+            $('#username').val(formername);
+        }
+    }
+
+    function writeName(){
+        var firstname = $('#firstname').val();
+        var lastname = $('#lastname').val();
+        var truename = lastname+firstname;
+        $('#truename').val(truename);
+    }
+
+</script>
+</body>
+
+</html>
+
+
+
+

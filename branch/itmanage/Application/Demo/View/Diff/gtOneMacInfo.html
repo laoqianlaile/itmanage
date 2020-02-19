@@ -1,0 +1,124 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">涉密终端绑定详情</h4>
+        </div>
+        <div class="modal-body">
+            <form id="sys_dlg_form" role="form">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="panel-body">
+                            <table id="macinfotable" ></table>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <input id="mac" name="mac" type="hidden" value="{$mac}" class="form-control">
+            <button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>
+        </div>
+    </div>
+</div>
+
+<!--<link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLICOLD__/vendor/tabs/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/font-awesome.css?v=4.4.0" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/animate.css" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/style.css?v=4.0.0" rel="stylesheet"> -->
+<style type="text/css">
+    .modal-dialog{width: 94%;height: 80%;}
+    .col-sm-6{width:100%;}
+    .heng{width:100%;height: 50px;}
+    .form-group_heng{width:100%;height: 50px;}
+    .form-group_l{width:25%;float: left;}
+    .form-group_r{width:25%;float: left;}
+    .form-group_r label{width:25%;float: left;margin-top: 7px;}
+    .form-group_l label{width:25%;float: left;margin-top: 7px;}
+    /*.heng div label{width:20%;float: left;margin-top: 7px;}*/
+    .form-control{width:65%;}
+    .form-group_21{width:33.3%;float:left;}
+    .form-group_22{width:33.3%;float:left;}
+    .form-group_23{width:33.3%;float:left;}
+    .fengetitle{height: 40px;margin-bottom: 10px;font-size: 20px;font-family: 微软雅黑;text-align: center;line-height: 40px;width: 60%;margin-left: 20%;border-bottom: 1px solid #cdcdcd;}
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function(e){
+        $(".js-switch").each(function(){
+            new Switchery(this, {color: '#1AB394'});
+
+        });
+        $('#macinfotable').bootstrapTable({
+            url: '__CONTROLLER__/gtOneMacInfoData',         //请求后台的URL（*）
+            method: 'post',                      //请求方式（*）
+//            toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            iconSize: 'outline',
+            sortable: true,                     //是否启用排序
+            sortName:"sw_atpid",
+            sortOrder: "asc",                   //排序方式
+            queryParams: queryParams,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber: 1,                       //初始化加载第一页，默认第一页
+            pageSize: 10,                       //每页的记录行数（*）
+            pageList: [5,10, 25, 50, 100],        //可供选择的每页的行数（*）
+            search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+//            strictSearch: true,
+            showColumns: false,                  //是否显示所有的列
+            showRefresh: false,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+            clickToSelect: false,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            uniqueId: "sw_atpid",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+            detailView: false,                   //是否显示父子表
+            detailFormatter: "detailFormatter",
+            columns: [
+                [
+                    {checkbox: true},
+                    {title: '序号', width: 40,
+                        formatter: function (value, row, index){
+                            var option =  $('#macinfotable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'sw_ipaddress', title: '交换机IP', sortable: true},
+                    {field: 'sw_interface', title: '端口号', sortable: true},
+                    {field: 'sw_atpid', title: '位置', sortable: false,
+                        formatter: function (value, row, index) {
+                            var inp = row.sw_mainarea + " - " + row.sw_mainbelongfloor + " - " +row.sw_mainroomno;
+                            var a = '<a  class="btn btn-info btn-xs" onclick="macDetail(' + inp + ')">查看</a><br>';
+
+                            return inp;
+                        }
+                    },
+                    {field: 'sw_status', title: '状态', sortable: true},
+                    {field: 'sw_mainarea', title: '地区', visible: false},
+                    {field: 'sw_mainbelongfloor', title: '楼宇', visible: false},
+                    {field: 'sw_mainroomno', title: '房间号', visible: false}
+
+                ]
+            ],
+            onSort: function (name, order) {
+            },
+        });
+
+    })
+    function queryParams(params) {  //配置参数
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            search: params.search,
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            macaddress:$('#mac').val()
+        };
+        return temp;
+    }
+</script>

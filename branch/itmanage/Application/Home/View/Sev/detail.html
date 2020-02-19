@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>申报说明</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=8,IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> -->
+    <link rel="stylesheet" href="__PUBLIC__/vendor/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="__PUBLIC__/css/public.css">
+    <link href="__PUBLIC__/vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="__PUBLIC__/img/ico_ss.png" rel="shortcut icon ">
+
+    <style>
+        p{
+            margin: 0;
+        }
+        h1{
+            font-size: 22px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .textBox{
+            padding: 0 50px;
+            box-sizing: border-box;
+        }
+        .textBox p{
+            font-size: 18px;
+        }
+        .text span{
+            display: block;
+            text-indent: 2em;
+            line-height: 20px;
+            font-size: 15px;
+        }
+        .box{
+            margin: 0 auto;
+        }
+        .panel-body{
+            margin-top: 16px;
+        }
+
+        .chosen-single span{
+            text-align: left;
+        }
+    </style>
+</head>
+<body >
+
+<div class="box">
+        <div class="tab-content">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="textBox">
+                        <foreach name="detail" item="v">
+                            <p>{$v}</p>
+                        </foreach>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</body>
+<!--[if lte IE 8]>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/es5-shim.min.js"></script>
+<![endif]-->
+<script src="__PUBLIC__/vendor/jquery/jquery1.11.1.js"></script>
+<script src="__PUBLIC__/vendor/bootstrap/js/bootstrap.js"></script>
+<!--[if lte IE 9]>
+<script src="__PUBLIC__/vendor/ie8/respond.min.js"></script>
+<script src="__PUBLIC__/vendor/ie8/html5shiv.js"></script>
+<![endif]-->
+<script type="text/javascript" src="__PUBLIC__/vendor/layui/layui.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/banBackSpace.js"></script>
+
+<script>
+    $('#sys_dlg_submit').click(function () {
+        $.ajax({
+            type: 'post',
+            url: '__MODULE__/Login/TongYi',
+            data: {
+
+            },
+            dataType: 'json',
+            success: function (data) {
+                if (data.code > 0) {
+                } else {
+                    return;
+                }
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.window.location.href = '__MODULE__/Index/index?noReopen=1';
+                parent.layer.close(index);
+            }
+        })
+    })
+    $('#sys_dlg_cancle').click(function () {
+        $.ajax({
+            type: 'post',
+            url: '__MODULE__/Login/BuTongYi',
+            data: {
+
+            },
+            dataType: 'json',
+            success: function (data) {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+            }
+        })
+    })
+</script>
+</html>

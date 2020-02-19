@@ -1,0 +1,397 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<style>
+    th{
+        text-align: center;
+    }
+    .form-control{
+        display: inline-block;
+    }
+    .wrapper .wrapper-content{
+        padding-bottom: 0;
+    }
+    .control-label{
+        width: 30%;
+        float: left;
+        text-align:center;
+    }
+    .form-group{
+        display: inline-block;
+        width: 24%;
+        margin-top: -7px;
+    }
+    .formEl-div{
+        float: left;
+    }
+    ._box {
+        height:32px;
+        margin: 18px 0px 0px !important;
+    }
+    .fixed-table-container{
+        padding-bottom: 0px !important;
+    }
+    table{
+        table-layout: fixed;
+        word-break: break-all;
+    }
+    .formEl-div{
+        width:70%
+    }
+</style>
+<body class="gray-bg" >
+<div class="wrapper wrapper-content ">
+    <div class="row">
+        <div class="col-sm-12" id='search_div'>
+            <div class="_box" style="margin-top: 5px;">
+
+                <div class="form-group">
+                    <label class="control-label" >IP地址</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="net_ipaddress">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >厂家</label>
+                    <div class="formEl-div" >
+                        <select id="net_factory" class="chosen-select" >
+                            <option value=""> </option>
+                            <?php foreach($changJia as $key=>$value){ ?>
+                            <option value="{$value.dic_id}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >型号</label>
+                    <div class="formEl-div" >
+                        <select id="net_model" class="chosen-select" >
+                            <option value=""> </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="_box" style="margin-top: 4px;">
+                <div class="form-group">
+                    <label class="control-label" >地区</label>
+                    <div class="formEl-div" >
+                        <select id="net_area" class="chosen-select" >
+                            <option value=""> </option>
+                            <?php foreach($diQu as $key=>$value){ ?>
+                            <option value="{$value.dic_id}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >楼宇</label>
+                    <div class="formEl-div" >
+                        <select id="net_building" class="chosen-select" ></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >房间号</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="net_room">
+                    </div>
+                </div>
+            </div>
+
+            <div class="_box">
+                <button class="btn btn-info" style="background-color: forestgreen;border-color: forestgreen;" type="button" id="sys_refresh">查询</button>
+            </div>
+        </div>
+
+        <div class="col-sm-12">
+            <table id="atpbiztable" ></table>
+        </div>
+        <div class="col-sm-12">
+            <div style="text-align: center;margin: 16px 0">
+				<button class="btn btn-info" id="leading-in" style="display: inline">选中数据</button>
+			</div>
+			<div style="margin-top: 16px">
+				<label class="control-label" style="width: 110px;display: block">已选择的信息：</label>
+				<select data-placeholder="请选择" id="needUpdateUser" class="chosen-select_long" style="margin-left: 30px;" multiple>
+                    <option value="">&nbsp;</option>
+                    <?php foreach($optionInfo as $key=>$value){ ?>
+                    <option selected value="{$value.r_id}">{$value.r_ip}</option>
+                    <?php } ?>
+                </select>
+			</div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer" style="margin-top: 15px;text-align: center;width: 100%;">
+    <button type="button" data-dismiss="modal" id="sys_submit" class="btn btn-primary" style="display:inline-block">提交</button>
+</div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLIC__/img/loading/loading9.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="sort" >
+<input type="hidden" id="sortOrder" >
+</body>
+<script src="__PUBLIC__/js/tablecopy.js"></script>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script>
+    $(".chosen-select_long").chosen({disable_search_threshold: 10, search_contains: true, width: '800px'});
+
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+    var formEl_div_width = parseInt($('.formEl-div').eq(0).width());
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: formEl_div_width+"px"})
+
+    var height = document.documentElement.clientHeight -70;
+    var searchDivHeight = parseInt($('#search_div').height());
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getNetListData?where=<?php echo $where;?>',      //请求后台的URL（*）
+                method: 'post',                     //请求方式（*）
+                toolbar: '#atpbiztoolbar',          //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName: "net_ipaddress",
+                sortOrder: "desc",                  //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页
+                pageSize: 15,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                uniqueId: "net_atpid",                   //每一行的唯一标识，一般为主键列
+                detailView: false,                  //是否显示父子表
+                columns: [
+                    [
+                        {checkbox: true},
+                        {
+                            title: '序号', width: 55,
+                            formatter: function (value, row, index) {
+
+                                var option = $('#atpbiztable').bootstrapTable('getOptions');
+                                return option.pageSize * (option.pageNumber - 1) + index + 1;
+                            }
+                        },
+                        {field: 'net_type', title: '设备类型', sortable: true, width: 90},
+                        {field: 'net_ipaddress', title: 'IP地址', sortable: true, width: 90},
+                        {field: 'net_factory', title: '厂家', sortable: true, width: 70},
+                        {field: 'net_model', title: '型号', sortable: true, width: 70},
+                        {field: 'net_area', title: '地区', sortable: true, width: 70},
+                        {field: 'net_building', title: '楼宇', sortable: true, width: 70},
+                        {field: 'net_room', title: '房间号', sortable: true, width: 80},
+                        {field: 'net_status', title: '状态', sortable: true, width: 70},
+                        {field: 'net_isscan', title: '是否扫描', sortable: true, width: 90},
+                        {field: 'net_anecode', title: '设备编码', sortable: true, width: 90}
+
+                    ]
+                ],
+                onLoadSuccess:function(data){
+                    var tabheight = $('.fixed-table-container').height();
+                    tabheight = parseInt(tabheight);
+                    if(tabheight < (height-searchDivHeight)){
+                        $('.fixed-table-container').css('height', 'auto');
+                    }else{
+                        $('#atpbiztable').bootstrapTable("resetView",{height:height-searchDivHeight});
+                    }
+                }
+            });
+        }
+    };
+    TableObj.oTableInit();
+
+    function queryParams(params) {  //配置参数
+        $('#sort').val(params.sort);
+        $('#sortOrder').val(params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            net_ipaddress:$('#net_ipaddress').val(),
+            net_factory:$('#net_factory option:selected').val(),
+            net_model:$('#net_model option:selected').val(),
+            net_area:$('#net_area option:selected').val(),
+            net_building:$('#net_building option:selected').val(),
+            net_room:$('#net_room').val()
+//            net_usage:$('#net_usage option:selected').val(),
+//            net_protocol:$('#net_protocol').val(),
+//            net_status:$('#net_status option:selected').val(),
+//            net_secretlevel:$('#net_secretlevel option:selected').val(),
+//            net_anecode:$('#net_anecode').val(),
+//            net_sn:$('#net_sn').val(),
+//            net_dutydept:$('#net_dutydept option:selected').val(),
+//            net_net:$('#net_net option:selected').val(),
+//            net_dutyman:$('#net_dutyman option:selected').val()
+        };
+        return temp;
+    }
+
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+
+    //选择地区触发楼宇
+    $('#net_area').change(function () {
+        var id = $(this).val();
+        dic_louyu(id);
+    });
+
+    //设置楼宇
+    var areaid = $("#net_area").val();
+    if(areaid != ''){
+        var next_id = "<?php echo $data['net_building'];?>";
+        dic_louyu(areaid,next_id);
+    }
+
+    //楼宇
+    function dic_louyu(id,next_id){
+        if(next_id == 'undefined'){next_id = ''}
+        if(!id)  return false;
+        $.ajax({
+            type:'post',
+            url:'__MODULE__/dic/getDicLouYu',
+            data:{pid: id,pid2:'光纤交换机'},
+
+            dataType :'json',
+            success:function(data){
+                if (data.code > 0) {
+                    var str=  '<option value=""> </option>';
+                    $.each(data.results,function(k,v){
+                        var sele = '';
+                        if(next_id == v['dic_id']){sele = 'selected'}
+                        str += "<option "+sele+" value='"+v['dic_id']+"'>"+v['dic_name']+"</option>";
+                    });
+                    $('#net_building option').remove();
+                    $('#net_building').append(str);
+                    $('#net_building').trigger("chosen:updated");
+                } else {
+                    layer.alert(data.message);
+                }
+            },
+            error:function(){
+                layer.alert('出错啦！请联系管理员');
+            }
+        });
+    }
+
+    //选择厂家触发型号
+    $('#net_factory').change(function () {
+        var id = $(this).val();
+        dic_xinghao(id);
+    });
+    //设置型号
+    var factoryid = $("#net_factory").val();
+    if(factoryid != ''){
+        var next_id = "<?php echo $data['net_model'];?>";
+        dic_xinghao(factoryid,next_id);
+    }
+    //型号
+    function dic_xinghao(id,next_id){
+        if(next_id == 'undefined'){next_id = ''}
+        if(!id)  return false;
+        $.ajax({
+            type:'post',
+            url:'__MODULE__/dic/getDicXingHao',
+            data:{pid: id,pid2:"<?php echo $where;?>"},
+            dataType :'json',
+            success:function(data){
+                if (data.code > 0) {
+                    var str=  '<option value=""> </option>';
+                    $.each(data.results,function(k,v){
+                        var sele = '';
+                        if(next_id == v['dic_id']){sele = 'selected'}
+                        str += "<option "+sele+" value='"+v['dic_id']+"'>"+v['dic_name']+"</option>";
+                    });
+                    $('#net_model option').remove();
+                    $('#net_model').append(str);
+                    $('#net_model').trigger("chosen:updated");
+                } else {
+                    layer.alert(data.message);
+                }
+            },
+            error:function(){
+                layer.alert('出错啦！请联系管理员');
+            }
+        });
+    }
+    //责任人
+    $('#net_dutyman').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url:'__MODULE__/org/assignuser'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+    $('#leading-in').click(function(){
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        var len = $('#needUpdateUser option:selected').length;
+        var arr = [];
+        for(var i=0;i<len;i++){
+            arr.push($('#needUpdateUser option:selected').eq(i).val());
+        }
+        $.each(tablerow, function () {
+            if($.inArray(this['net_atpid'], arr) == -1){
+                $('#needUpdateUser').append('<option value="'+this['net_atpid']+'" selected >'+this['net_ipaddress']+'</option>');
+            }
+        });
+        $('#needUpdateUser').trigger("chosen:updated");
+
+    })
+    //确认并返回父级
+    $('#sys_submit').on('click',function() {
+        var len = $('#needUpdateUser option:selected').length;
+        var ids = [];
+        var names = [];
+        if(len == 0){
+            layer.alert("您尚未选择数据");
+        }else{
+            //限制选择多条
+            var astrict = "<?php echo $astrict;?>";
+            if(astrict == 'false' && len > 1){
+                layer.alert("您只能选择一条数据");
+                return false;
+            }
+
+            for(var i=0;i<len;i++){
+                if($('#needUpdateUser option:selected').eq(i).val() != ''){
+                    ids.push($('#needUpdateUser option:selected').eq(i).val());
+                    names.push('('+$('#needUpdateUser option:selected').eq(i).text()+')');
+                }
+            }
+            var flag = "<?php echo $flag; ?>";
+
+            if(flag == 'M'){
+                parent.$("#sys_Mlist").val(ids.join(','));
+                parent.$("#M_info").val(names.join(','));
+            }else if(flag == 'S'){
+                parent.$("#sys_Slist").val(ids.join(','));
+                parent.$("#S_info").val(names.join(','));
+            }else{
+                parent.$("#<?php echo $tar_id;?>").val(ids.join(','));
+                parent.$("#<?php echo $tar_name;?>").val(names.join(','));
+            }
+//            window.parent.location.reload(); //刷新父页面
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        }
+    });
+</script>
+</html>

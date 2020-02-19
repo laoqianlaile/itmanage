@@ -1,0 +1,97 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">IP地址状态修改</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <div class="col-sm-9" style="width: 100%;">
+                    <label class="col-sm-2 control-label" style="margin-top: 8px;margin-left:10px;width: 12%;" >IP 地址：</label>
+                    <input style="float: left;width: 30%;"  type="text"  value="{$baseInfo.ipb_address}" class="form-control" readonly="true" />
+                    <label style="margin-top: 8px;margin-left:10px;width: 12%;" class="col-sm-2 control-label">子网掩码：</label>
+                    <input style="float: left;width: 30%;"  type="text"  value="{$baseInfo.ip_mask}" class="form-control" readonly="true" />
+                </div>
+                <div class="col-sm-9" style="width: 100%;margin-top: 15px;">
+                    <label class="col-sm-2 control-label" style="margin-top: 8px;margin-left:10px;width: 12%;" >网关：</label>
+                    <input style="float: left;width: 30%;"  type="text"  value="{$baseInfo.ip_gateway}" class="form-control" readonly="true" />
+                    <label style="margin-top: 8px;margin-left:10px;width: 12%;" class="col-sm-2 control-label">Vlan号：</label>
+                    <input style="float: left;width: 30%;"  type="text"  value="{$baseInfo.ip_vlan_no}" class="form-control" readonly="true" />
+                </div>
+            </div>
+            <form id="sys_dlg_form" role="form">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="panel-body">
+                            <label class="col-sm-2 control-label" style="margin-top: 8px;margin-left:10px;width: 12%;" >状态：</label>
+                            <select style="float: left;width: 30%;" class="form-control" name="ipb_status" id="ipb_status">
+                                <option value="" checked>未使用</option>
+                                <option value="1">预分配</option>
+                            </select>
+                            <input id="ipb_atpid" name="ipb_atpid" type="hidden" value="{$baseInfo.ipb_atpid}" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-warning" type="button" id="sys_tijiao">&nbsp;确定</button>
+            <button type="button" data-dismiss="modal" class="btn btn-default">&nbsp;关闭</button>
+        </div>
+    </div>
+</div>
+
+<!--<link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLICOLD__/vendor/tabs/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/font-awesome.css?v=4.4.0" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/animate.css" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/style.css?v=4.0.0" rel="stylesheet"> -->
+<style type="text/css">
+    .modal-dialog{width: 94%;height: 80%;}
+    .col-sm-6{width:100%;}
+    .heng{width:100%;height: 50px;}
+    .form-group_heng{width:100%;height: 50px;}
+    .form-group_l{width:25%;float: left;}
+    .form-group_r{width:25%;float: left;}
+    .form-group_r label{width:25%;float: left;margin-top: 7px;}
+    .form-group_l label{width:25%;float: left;margin-top: 7px;}
+    /*.heng div label{width:20%;float: left;margin-top: 7px;}*/
+    .form-control{width:65%;}
+    .form-group_21{width:33.3%;float:left;}
+    .form-group_22{width:33.3%;float:left;}
+    .form-group_23{width:33.3%;float:left;}
+    .fengetitle{height: 40px;margin-bottom: 10px;font-size: 20px;font-family: 微软雅黑;text-align: center;line-height: 40px;width: 60%;margin-left: 20%;border-bottom: 1px solid #cdcdcd;}
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function(e){
+        $(".js-switch").each(function(){
+            new Switchery(this, {color: '#1AB394'});
+
+        });
+
+        $('#sys_tijiao').click(function(){
+            var ipbid  = $('#ipb_atpid').val();
+            var status  = $('#ipb_status').val();
+            if(status == ''){
+                $('.btn-default').click();
+            }else{
+                $.post(
+                    '__CONTROLLER__/editBaseStatus',
+                    {ipbid: ipbid},
+                    function (res) {
+                        if(res.code != '0'){
+                            alert('保存成功!');
+                        }else{
+                            alert(res.message);
+                        }
+                        $('.btn-default').click();
+                        history.go(0);
+                    },'json'
+                );
+            }
+        })
+    })
+
+</script>

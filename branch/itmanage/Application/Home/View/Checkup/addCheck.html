@@ -1,0 +1,279 @@
+<?php showViewsByPower() ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLIC__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+    <link href="__PUBLIC__/vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="__PUBLIC__/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="__PUBLIC__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css">
+    <link rel="stylesheet" href="__PUBLIC__/vendor/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLIC__/css/tablepublic.css" rel="stylesheet">
+    <link rel="stylesheet" href="__PUBLIC__/vendor/layui/css/layui.css" media="all" />
+    <title>部门管理</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            width: 100%;
+            height: 100%;
+            *overflow: hidden;
+            font-family: 微软雅黑;
+        }
+        #main{
+            width:100%;
+            height:100%;
+            position:relative;
+            min-width: 1000px;
+            margin:0 auto;
+        }
+        .form-group >div{
+            margin-top: 3px;
+            margin-bottom: 3px;
+        }
+        .control-label:nth-of-type(even){
+            margin-left: 0 !important;
+        }
+        .z-tab button{
+            margin: 10px;
+            display: inline-block;
+        }
+
+        #checkuptable td{
+            vertical-align:middle;
+        }
+        iframe{
+            width: 100%;
+            height:100%;
+            overflow-y:hidden;
+            border: none;
+        }
+
+        #top_nav .z-tab{
+            display: inline-block;
+        }
+        #top_nav .z-tab button{
+            width: 150px;
+            margin-left: -4px;
+            color: black;
+        }
+
+        .arrow i{
+            display: inline-block;
+            line-height: 30px;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<div id="main">
+    <!--atp_wrapper start-->
+    <div >
+        <div style="margin-bottom: 20px;">
+            <!--<label class="control-label" style="margin-left:15px;">部门简称：</label>-->
+            <!--<input type="text" class="form-control" placeholder="" id="search_name" style="width:200px;display: inline-block;">-->
+
+            <!--<button class="btn btn-info" style="margin-left: 10px;" type="button" id="sys_refresh"><i class="fa fa-eraser"></i>查询</button>-->
+            <a class="btn btn-warning " style="margin-left: 10px;" type="button" id="sys_add" ><i class="fa fa-sign-out"></i>添加</a>
+            <button class="btn btn-error" style="margin-left: 10px;" type="button" id="sys_del"><i class="fa fa-eraser"></i>删除</button>
+            <!--<button class="btn btn-danger" style="margin-left: 10px;" type="button" id="sys_export"><i class="fa fa-eraser"></i>导出</button>-->
+        </div>
+
+        <!--content start-->
+        <div class="content">
+            <table id="checkuptable" ></table>
+            <input id="atpid" value="{$atpid}" hidden>
+            <input id="admina" value="{$admina}" hidden>
+            <input id="adminb" value="{$adminb}" hidden>
+            <input id="type" value="{$type}" hidden>
+            <input id="name" value="{$name}" hidden>
+        </div>
+        <!--content end-->
+    </div>
+</div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLIC__/img/loading/loading9.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" name="choosemenu" id="choosemenu" value=""/>
+<input type="hidden" id="sort" >
+<input type="hidden" id="sortOrder" >
+</body>
+<script src="__PUBLIC__/vendor/jquery/jquery1.11.1.js"></script>
+<script src="__PUBLIC__/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="__PUBLIC__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+<script src="__PUBLIC__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+<script type="text/javascript" src="__PUBLIC__/vendor/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script type="text/javascript" src="__PUBLIC__/vendor/layui/layui.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/banBackSpace.js"></script>
+
+<script type="text/javascript">
+    layui.use('layer', function() {
+        layer = layui.layer;
+    });
+
+    $('#checkuptable').bootstrapTable({
+        url: '__CONTROLLER__/getcheckupData',         //请求后台的URL（*）
+        method: 'post',                      //请求方式（*）
+        toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+        striped: true,                      //是否显示行间隔色
+        cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+        pagination: true,                   //是否显示分页（*）
+        iconSize: 'outline',
+        sortable: false,                     //是否启用排序
+        sortName:"require",
+        sortOrder: "asc",                   //排序方式
+        queryParams: checkupqueryParams,//传递参数（*）
+        sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+        pageNumber: 1,                       //初始化加载第一页，默认第一页
+        pageSize: 10,                       //每页的记录行数（*）
+        pageList: [5,10, 25, 50, 100],        //可供选择的每页的行数（*）
+//            strictSearch: true,
+//            showColumns: true,                                  //是否显示所有的列
+//            showRefresh: true,                  //是否显示刷新按钮
+        minimumCountColumns: 2,             //最少允许的列数
+        clickToSelect: true,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+        uniqueId: "checkupid",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+        detailView: false,                   //是否显示父子表
+        columns: [[
+            {checkbox: true},
+            {title: '序号', width: 40,
+                formatter: function (value, row, index)
+                {
+                    var option =  $('#checkuptable').bootstrapTable("getOptions");
+                    return option.pageSize * (option.pageNumber - 1) + index + 1;
+                }
+            },
+            {field: 'name', title: '名称', sortable: true,width:150},
+            {field: 'content', title: '巡检内容', sortable: true,width:150},
+            {field: 'require', title: '巡检要求', sortable: true,width:150},
+            {field: 'cycle', title: '巡检周期', sortable: true,width:150},
+            {field: 'isimportant', title: '是否重要', sortable: true,width:150},
+            {field: 'checkupid', title: '操作', sortable: false,width:60,
+                formatter: function (value, row, index) {
+                    var inp = "'"+  value +"'";
+                    var a = '<a  class="btn btn-info btn-xs" onclick="updateInRow('+ inp +')">编辑</a><br>';
+                    return a;
+                }
+            }
+        ]
+        ],
+        onDblClickRow: function (row) {
+            updateInRow(row['checkupid']);
+        }
+
+    });
+    function checkupqueryParams(params) {  //配置参数
+        $('#sort').val(params.sort);
+        $('#sortOrder').val(params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            atpid:$('#atpid').val(),
+            name:$('#name').val(),
+
+        };
+        return temp;
+    }
+
+    $('#sys_refresh').on('click',function() {
+        $('#checkuptable').bootstrapTable('refresh')
+    });
+    $('#sys_export').on('click',function() {
+        var sort=$('#sort').val();
+        var sortOrder=$('#sortOrder').val();
+        var org_name=$('#search_name').val();
+        var t = "__CONTROLLER__/export?sort="+sort+"&sortOrder="+sortOrder+"&org_name="+org_name;
+        t = encodeURI(t);
+        $.ajax({
+            type:'get',
+            url: t,
+            dataType:'json',
+            success:function(data){
+                if(data.code > 0){
+                    location.href = data.message;
+                }else{
+                    layer.msg(data.message);
+                }
+            }
+        })
+    });
+    $('#sys_add').on('click',function(){
+        layer.open({
+            title:'新增巡检内容',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/editxjnr?atpid='+$('#atpid').val()+'&type='+$('#type').val()+'&admina='+$('#admina').val()+'&adminb='+$('#adminb').val()+'&name='+$('#name').val(),
+            area: ['1000px', '600px']
+        });
+    });
+
+
+    $('#sys_del').on('click',function() {
+        var tablerow = $('#checkuptable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            layer.alert("您尚未选择数据");
+        } else {
+            layer.confirm('确认删除' + tablerow.length + '条数据?',{btn:['确定','取消']},function(){
+                var ids = [];
+                $.each(tablerow, function () {
+                    ids.push(this['checkupid']);
+                });
+                $.ajax({
+                    type:'post',
+                    url:'__CONTROLLER__/delxjnr',
+                    data:{ids: ids.join(',')},
+                    dataType :'json',
+                    success:function(data){
+                        if(data.code > 0){
+                            layer.alert('操作成功');
+                            $('#checkuptable').bootstrapTable('refresh')
+                        }else{
+                            layer.alert(data.message);
+                        }
+                    }
+                })
+            })
+        }
+    });
+    function updateInRow(id)
+    {
+        layer.open({
+            title:'巡检内容编辑',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content:'__CONTROLLER__/editxjnr?atpid='+$('#atpid').val()+'&name='+$('#name').val()+'&checkupid='+id,
+            area: ['1000px', '600px']
+        });
+    }
+
+
+</script>
+</html>

@@ -1,0 +1,197 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>数据库管理添加编辑</title>
+<style>
+    .form-group{
+        margin-top: 26px;
+    }
+    .control-label{
+        width:150px  !important;
+    }
+    .must_filter{
+        color: red;
+    }
+    .form-control{
+        display:inline-block;
+    }
+    .col-sm-3{
+        width:60%  !important;
+    }
+    .chosen-container{
+        top: -1px;
+    }
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .chosen-container{
+        height: 100%;
+    }
+</style>
+<body style="margin: 0 auto;">
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content" style="padding-bottom: 50px;">
+        <div class="panel-body">
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>平台IP <span class="must_filter">*</span> </label>
+                    <div class="col-sm-3">
+                        <select name="in_dbid" id="in_dbid" class="chosen-select" >
+                            <option value=""> </option>
+                            <?php foreach($platInfo as $key=>$value){ ?>
+                            <option <?php if($data['in_dbid'] == $value['db_atpid']) echo 'selected'; ?> value="{$value.db_atpid}">{$value.text}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>域名 <span class="must_filter">*</span></label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" style="width:99%;" name="in_dns" id="in_dns" value="<?php if(!empty($data['in_dns']))echo $data['in_dns']; ?>">
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>实例名称 <span class="must_filter">*</span></label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" style="width:99%;" name="in_name" id="in_name" value="<?php if(!empty($data['in_name']))echo $data['in_name']; ?>">
+                    </div>
+                </div>
+
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>用途 </label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" style="width:99%;" name="in_useage" id="in_useage" value="<?php if(!empty($data['in_useage']))echo $data['in_useage']; ?>">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>备注 </label>
+                    <div class="col-sm-3">
+                        <textarea name="in_bz" id="in_bz" style="height:120px;width: 280%;" class="form-control"><?php if(!empty($data['in_bz']))echo $data['in_bz']; ?></textarea>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <input type="hidden" value="<?php if(!empty($data['in_atpid'])) echo $data['in_atpid']; ?>" name="in_atpid">
+        <!--<input type="hidden" value="<?php if(!empty($net_type)) echo $net_type; ?>" name="net_type">-->
+    </div>
+</form>
+<div class="modal-footer" style="margin: 0px;text-align:center;z-index: 999;position: fixed;bottom:0;left:0;font-family: cursive; width: 100%;height: 60px;background-color: #fff;">
+    <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="display:inline-block;text-align:center;">保存</button>
+</div>
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function () {
+            layer = layui.layer;
+        })
+        $('#sys_dlg_submit').click(function () {
+            $('#sys_dlg_form1').submit();
+        })
+        var long_select_width = parseInt($('.form-control').eq(0).css('width').replace('px', '')) * 2.75;
+        $('.long-chosen-select').chosen({
+            disable_search_threshold: 0,
+            search_contains: true,
+            width: long_select_width + 'px'
+        });
+
+        var input_width = parseInt($('.form-control').eq(0).css('width').replace('px', ''));
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: input_width + 'px'});
+
+        $('#sys_dlg_form1').validate({
+            onclick: false,
+            onfocusout: false,
+            onkeyup: false,
+            // 如果是下拉菜单，这里的require是不生效的，需要自己在submitHandle方法中添加验证
+          submitHandler: function () {
+              var in_dbid = $('#in_dbid').val();
+              var in_dns = $('#in_dns').val();
+              var in_name = $('#in_name').val();
+              if(in_dbid == ''){
+                  layer.alert("必须选择平台！");
+                  return false;
+              }
+              if(in_dns == ''){
+                  layer.alert("域名不可为空！");
+                  return false;
+              }
+              if(in_name == ''){
+                  layer.alert("实例名称不可为空！");
+                  return false;
+              }
+                var formBody = $('#sys_dlg_form1');
+                $.post('__CONTROLLER__/addInData', formBody.serialize(), function (data) {
+                    if (data.code > 0) {
+                        parent.$('#atpbiztable').bootstrapTable('refresh');
+//                        parent.$('#sys_refresh').click();
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        layer.alert(data.message);
+                    }
+                }, 'JSON');
+            }
+        });
+
+        $.validator.setDefaults({
+            highlight: function (element) {
+                $(element).parent().remove('has-success').addClass('has-error');
+            },
+            success: function (element) {
+                $(element).parent().remove('has-error').addClass('has-success');
+            },
+            errorPlacement: function (error, element) {
+                if (element.is(":radio") || element.is(":checkbox")) {
+                    error.appendTo(element.parent());
+                } else {
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass: "help-block m-b-none",
+            validClass: "help-block m-b-none"
+        });
+        //管理员
+        $('#db_adminname').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url: '__MODULE__/org/assignuser'
+        }, {
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        //如果验证下拉框必填，请使用该方法
+        function checkSelectForm(objArr, messageArr) {
+            var len = objArr.length;
+            for (var i = 0; i < len; i++) {
+                var obj = objArr[i];
+                var val = $('#' + obj).val();
+                if (!val) {
+                    layer.msg('请选择' + messageArr[i]);
+                    $('#' + obj).trigger('chosen:open');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
+    })
+</script>

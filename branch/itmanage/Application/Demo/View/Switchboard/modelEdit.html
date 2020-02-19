@@ -1,0 +1,444 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>交换机模板编辑</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/extensions/editable/bootstrap-table-editable.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap3-editable/js/bootstrap-editable.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+     
+    <style>
+        #atpbiztoolbar{width:100%;}
+        .name{
+            background-color:#f0f7f5;
+            font-weight:bold;
+            margin-top:20px;
+            margin-bottom:15px;
+            float:left;
+            border-left:#18a689 8px solid;
+            padding-left: 15px;
+            line-height: 38px;
+            height:38px;
+        }
+        .col-sm-2 {
+            width: 16.66666667%;
+        }
+        #addRowbtn{
+            float: right;
+        }
+        #submit{
+            float: none;
+        }
+        #cancel{
+            float: none;
+        }
+        .col-sm-4 {
+            width: 39.333333%;
+        }
+        .col-sm-6 {
+            width: 50%;
+        }
+        .row{
+            width:100%;
+            margin-top:20px;
+        }
+        #atpbiztoolbar{
+            margin-left: 15px;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content" style="padding:5%;padding-top:1%;">
+            <div style="margin-top:20px;width:100%;">
+                <p class="name" style="text-align: left;font-size: 20px;width:100%;">交换机信息</p>
+            </div>
+            <div class="row row-lg">
+                <div class="form-group form-inline">
+                    <div class="col-sm-6 form-inline">
+                        <label class="control-lable  " style="width:19%;margin-right:1%;">模板类型：</label>
+                        <select class="form-control" id="swbat_type" style="width: auto;">
+                            <option value="">请选择...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 form-inline">
+                        <label class="control-lable" style="width:19%;margin-right:1%">模板名称：</label>
+                        <select class="form-control" name="swbat_mainid" id="swbat_mainid" style="width: auto;">
+                            <option value="">请选择...</option>
+                            <foreach name="modelInfo" item="vo">
+                                <option value="{$vo.d_atpid}">{$vo.d_dictname}</option>
+                            </foreach>
+                        </select>
+                        <input id="swbat_name" name="swbat_name" type="hidden"/>
+                    </div>
+            </div>
+            <div style="margin-top:10px;width:100%;">
+                <p class="name" style="text-align: left;font-size: 20px;width:100%;">指令序列集信息</p>
+            </div>
+            <div class="row row-lg">
+                <div id="atpbiztoolbar">
+                    1. 指令序列集的"序列号"代表指令的实际执行顺序，故"指令内容"须严格按顺序填写；<br/>
+                    2. "指令内容"中若存在端口、绑定数量、VLAN、MAC等变量时，写法使用"%(port)%"、"%(macnumber)%"、"%(vlan)%"、"%(mac)%"；<br/>
+                    3. "成功结果"、"失败结果"为全字符串匹配原则，若存在多个关键字符串，字符串之间使用"##"分割。例如"成功结果"中含有"AAAA"和"OK"时，在填写时书写为"AAAA##OK"；<br/>
+                    4. "是否需要more"的含义：当登录交换机后，需要操作人员主动输入任意键后方可查看剩余信息，存在此情况在填写模板时要将此项选为"是"(目前华为交换机需要勾选此选项，思科交换机不需要)；<br/>
+                    5. 目前交换机自动扫描程序使用的指令集为"端口配置查看"、"查询交换机端口列表"两个模板，若更改这两个模板，需同步更新扫描程序，以免自动扫描程序出现异常。
+                    <button class="btn btn-primary" type="button" id="addRowbtn"><i class="fa fa-plus"></i></button>
+                </div>
+                <table id="modelinfo">
+                    <!--<th data-field="swbat_sortno" data-editable="true">序列号</th>-->
+                    <!--<th data-field="swbat_detail" data-editable="true">指令内容</th>-->
+                    <!--<th data-field="swbat_success" data-editable="true">成功结果</th>-->
+                    <!--<th data-field="swbat_fail" data-editable="true">失败结果</th>-->
+                    <!--<th data-field="swbat_atpid" data-editable="false">失败结果</th>-->
+                </table>
+            </div>
+            <div class="row row-lg" style="margin-bottom: 0px;">
+                <label class="control-lable  col-sm-4"></label>
+                <button class="btn btn-primary" type="button" id="submit">提交</button>
+                <label class="control-lable" style="width:10%">&nbsp;</label>
+                <button class="btn btn-primary " type="button" id="cancel">取消</button>
+            </div>
+        </div>
+    </div>
+    <div id="sys_dept" role="dialog" class="modal fade "></div>
+    <div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+        <div class="modal-dialog" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">处理中</h4>
+                </div>
+                <div class="modal-body">
+                    <img src="__PUBLICOLD__/img/loading/loading8.gif" style='display: block;margin: 0 auto'>
+                    <div id="loadingText" style="text-align: center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    CHOSEN_DEFAULT_TEXT ="";
+</script>
+<script>
+
+
+    $(function () {
+        $(".chosen-select_long").chosen({disable_search_threshold: 10, search_contains: false,width:'40%',height:'88px !imprtant'});
+
+        $(".chosen-select2").chosen({disable_search_threshold: 10, search_contains: true});
+        var TableObj = {
+            oTableInit: function () {
+                $('#modelinfo').bootstrapTable({
+                    url: '__CONTROLLER__/getModelData',         //请求后台的URL（*）
+                    idField:"swbat_atpid",
+                    method: 'post',                      //请求方式（*）
+                    toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                    editable:true,
+                    striped: true,                      //是否显示行间隔色
+                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    pagination: false,                   //是否显示分页（*）
+                    iconSize: 'outline',
+                    sortable: true,                     //是否启用排序
+                    sortName: "swbat_sortno",
+                    sortOrder: "asc",                   //排序方式
+                    queryParams: queryParam,//传递参数（*）
+                    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1,                       //初始化加载第一页，默认第一页
+                    pageSize: 10,                       //每页的记录行数（*）
+                    pageList: [5, 10, 25, 50, 100],        //可供选择的每页的行数（*）
+                    search: false,                       //是否显示表格搜索，此搜索是客户端搜索
+                    showColumns: false,                  //是否显示所有的列
+                    showRefresh: false,                  //是否显示刷新按钮
+                    clickToSelect: true,                //是否启用点击选中行
+                    uniqueId: "swbat_atpid",                     //每一行的唯一标识，一般为主键列
+                    columns: [
+                        [
+                            {
+                                field: 'swbat_sortno',
+                                title: '序列号',
+                                width: 40,
+                                editable: {
+                                    type:'text',
+                                    title:'序列号',
+                                    mode:'inline',
+                                    showbuttons:false,
+                                    onblur:'submit',
+                                    validate:function(v){
+                                        if(!v){
+                                            return '排序号不能为空';
+                                        }else if(isNaN(v)){
+                                            return '序列号必须为数字';
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                field: 'swbat_detail',
+                                title: '指令内容',
+                                editable: {
+                                    type:'text',
+                                    title:'指令内容',
+                                    mode:'inline',
+                                    showbuttons:false,
+                                    onblur:'submit',
+                                    validate:function(v){
+                                        if(!v){
+                                            return '指令内容不能为空';
+                                        }
+                                    }
+                                }
+                            },
+                            {field: 'swbat_success',
+                                title: '成功结果',
+                                editable: {
+                                    type:'text',
+                                    title:'成功结果',
+                                    showbuttons:false,
+                                    onblur:'submit',
+                                    emptytext:'null',
+                                    mode:'inline',
+                                    validate:function(v){
+                                        if(v === null){
+                                            return '成功结果不能为空';
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                field: 'swbat_fail',
+                                title: '失败结果',
+                                editable: {
+                                    type:'text',
+                                    title:'失败结果',
+                                    mode:'inline',
+                                    showbuttons:false,
+                                    onblur:'submit',
+                                    emptytext:'null',
+                                    validate:function(v){
+                                        if(v === null){
+                                            return '失败结果不能为空';
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                field: 'swbat_sign_more',
+                                title: '是否需要more',
+                                editable: {
+                                    type:'checklist',
+                                    title:'是否需要more',
+                                    mode:'inline',
+                                    showbuttons:false,
+                                    onblur:'submit',
+                                    emptytext:'请选择',
+                                    source:[{value:'need',text:'need'}]
+                                }
+                            },
+                            {field: 'swbat_atpids',title: '操作',width:60,align:"center",editable:false,
+                                formatter: function (value, row, index){
+                                    return '<a class="remove" swbat_atpids="'+row["swbat_atpids"]+'"  href="javascript:void(0)" onclick="deletetr(\''+row["swbat_atpids"]+'\')" title="Remove"><i class="glyphicon glyphicon-remove"></i></a>';
+                                }
+                            }
+                        ]
+                    ]
+                });
+            }
+
+        };
+
+        TableObj.oTableInit();
+
+        $('#submit').on('click',function (){
+            var swbat_mainid   = $('#swbat_mainid');
+            var swbat_type     = $('#swbat_type');
+            var res = checkSub([swbat_mainid,swbat_type]);
+            if(!res) return false;
+            var swbat_name     = $('#swbat_name').val();// option:selected
+            var modelData = $('#modelinfo').bootstrapTable('getData');
+            var length    = modelData.length;
+            if(length<1){
+                var res = confirm('确认删除当前类型模板下所有指令？');
+                if(!res) return false;
+            }else{
+                for(var i =0;i<length;i++){
+                    var swbat_detail = modelData[i].swbat_detail;
+                    if(!swbat_detail){
+                        alert('指令内容不能为空');
+                        return false;
+                    }
+                }
+            }
+            $.ajax({
+                type:'post',
+                url:'__CONTROLLER__/Setmodelinfo',
+                data:{
+                    swbat_mainid:$('#swbat_mainid option:selected').val(),
+                    swbat_type:$('#swbat_type').val(),
+                    swbat_name:$('#swbat_name').val(),
+                    newpwd:$('#newpwd').val(),
+                    modelinfo:modelData
+                },
+                beforeSend:function(){
+                    $("#loadingText").html("正在处理请稍后");
+                    $('#loading').modal('show');
+                },
+                success:function(res){
+//                    alert(res);return false;
+                    if(res.code != 0){
+                        alert(res.message);
+                        return false;
+                    }else{
+                        $('#modelinfo').bootstrapTable('destroy');
+                        TableObj.oTableInit();
+                    }
+                },
+                complete:function(){
+                    $('#loading').modal('hide');
+                },
+                dataType:'json'
+            });
+        });
+        function queryParam(params) {  //配置参数
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                limit: params.limit,   //页面大小
+                offset: params.offset,  //页码
+                search: params.search,
+                sort: params.sort,  //排序列名
+                sortOrder: params.order,//排位命令（desc，asc）
+                swbat_mainid:$('#swbat_mainid').val(),
+                swbat_type:$('#swbat_type').val()
+            };
+            return temp;
+        }
+
+        $('#addRowbtn').click(function(){
+            if($('.no-records-found').length>0){
+                $('#modelinfo tbody').children().remove();
+            }
+            var option  = $('#modelinfo').bootstrapTable("getOptions");
+            var nums = $('#modelinfo tbody tr').length;
+            var num = option.pageSize * (option.pageNumber - 1) + nums + 1;
+            $('#modelinfo').bootstrapTable('insertRow',{
+                index: num,
+                row:{
+                    swbat_sortno:num,
+                    swbat_detail:'',
+                    swbat_success:'',
+                    swbat_fail:'',
+                    swbat_atpid:'',
+                    swbat_atpids:num
+                }
+            });
+        });
+        $('body').on('click','.remove',function(){
+            var swbat_atpids = $(this).attr('swbat_atpids');
+            swbat_atpids     = parseInt(swbat_atpids);
+            $('#modelinfo').bootstrapTable("remove", {
+                field: 'swbat_atpids',
+                values: [swbat_atpids]
+            });
+        });
+        $('#swbat_mainid').on('change',function(){
+            var swbat_name = $('#swbat_mainid option:checked').html();
+            $('#swbat_name').val(swbat_name);
+            $('#modelinfo').bootstrapTable('destroy');
+            TableObj.oTableInit();
+        });
+
+        $('#swbat_type').on('change',function(){
+            $('#modelinfo').bootstrapTable('destroy');
+            TableObj.oTableInit();
+        });
+
+        $('#cancel').click(function(){
+            $('#modelinfo').bootstrapTable('destroy');
+            TableObj.oTableInit();
+        });
+
+        var sbtype = '154118';
+        $.post('__CONTROLLER__/getfactory', {sbtype: sbtype,options: 1}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#swbat_type").children().remove();
+                var item = "";
+                item += "<option value=''>请选择...</option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'>";
+                    item += typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#swbat_type").append(item);
+            }
+            else{
+                $("#swbat_type").children().remove();
+            }
+        });
+    });
+
+    function deletetr(swbat_atpid) {
+        $('#modelinfo').bootstrapTable("remove", {
+            field: 'swbat_atpid',
+            values: [swbat_atpid]
+        });
+    }
+
+    function checkSub(para){
+        var err  = 0;
+        for(var i = 0;i<para.length;i++){
+            if(para[i].val() == ''){
+                para[i].parent().addClass('has-error');
+                err = 1;
+            }else{
+                para[i].parent().removeClass('has-error');
+                para[i].parent().addClass('has-success');
+            }
+        }
+        if(err == 1){
+            return false;
+        }else{
+            return true;
+        }
+    }
+</script>
+</body>
+
+</html>
+
+
+
+

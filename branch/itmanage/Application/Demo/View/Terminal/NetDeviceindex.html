@@ -1,0 +1,552 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>交换机台帐维护</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+     
+    <style>
+        #atpbiztoolbar{width:100%;}
+        .form-control {
+            width: 65% !important;
+        }
+        .form-group_l label {
+            width: 28% !important;
+        }
+        .form-group_r label {
+            width: 28% !important;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <div id="atpbiztoolbar" >
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">设备名称&nbsp;</label>
+                            <input  id="name" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">设备编码&nbsp;</label>
+                            <input  id="code" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">IP地址&nbsp;</label>
+                            <input  id="ipaddress" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">MAC地址&nbsp;</label>
+                            <input  id="macaddess" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">出厂编号&nbsp;</label>
+                            <input  id="sn" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">厂家&nbsp;</label>
+                            <select name="factory"  id="factory" class="form-control" style="margin-bottom: -5px;width:56%;">
+                                <option value=""></option>
+                                <foreach name="ds_factory" item="vo">
+                                    <option value="{$vo.d_atpid}">{$vo.d_dictname}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">型号&nbsp;</label>
+                            <select name="model"  id="model" class="form-control" style="margin-bottom: -5px;width:56%;">
+                            </select>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">密  级&nbsp;</label>
+                            <select name="secretlevel" id="secretlevel" class="form-control" style="margin-bottom: -5px;width:56%;">
+                                <option value=""></option>
+                                <foreach name="ds_miji" item="vo">
+                                    <option value="{$vo.d_atpid}" <if condition="($data.zd_secretlevel eq $vo['d_atpid'])">selected="selected"</if>>{$vo.d_dictname}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">地区&nbsp;</label>
+                            <select name="area"  class="form-control" id="area" style="margin-bottom: -5px;width:56%;">
+                                <option value=""></option>
+                                <foreach name="ds_area" item="vo">
+                                    <option value="{$vo.d_atpid}">{$vo.d_dictname}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">楼宇&nbsp;</label>
+                            <select name="building"  class="form-control" id="building" style="margin-bottom: -5px;width:56%;">
+                            </select>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">房间号&nbsp;</label>
+                            <input  id="roomno" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">状  态&nbsp;</label>
+                            <select name="status" id="status" class="form-control" style="margin-bottom: -5px;width:56%;">
+                                <option value=""></option>
+                                <option>库存</option>
+                                <option>在用</option>
+                                <option>借用</option>
+                                <option>下线</option>
+                                <option>备用</option>
+                                <option>领用</option>
+                            </select>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">状扫描态&nbsp;</label>
+                            <select name="isscan" id="isscan" class="form-control" style="margin-bottom: -5px;width:56%;">
+                                <option value=""></option>
+                                <option value="0">扫描</option>
+                                <option value="1">不扫描</option>
+                            </select>
+                        </div>
+                        <!--<div style="float:left;width:24%;">-->
+                            <!--<label style="float:left;width:32%;">上联端口&nbsp;</label>-->
+                            <!--<input  id="upport" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">-->
+                        <!--</div>-->
+                        <!--<div style="float:left;width:24%;">-->
+                            <!--<label style="float:left;width:32%;">下联端口&nbsp;</label>-->
+                            <!--<input  id="downport" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">-->
+                        <!--</div>-->
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">所属网络&nbsp;</label>
+                            <input  id="net" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">登录方式&nbsp;</label>
+                            <input  id="protocol" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">
+                        </div>
+                        <div style="float:left;width:24%;">
+                        <label style="float:left;width:32%;">&nbsp;</label>
+                        <!--<input  id="downport" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">-->
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">责任人&nbsp;</label>
+                            <select name="dutyman"  class="chosen-select_longajax" id="dutyman" style="margin-bottom: -5px;width:56%;">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div style="float:left;width:72%;">
+                            <label style="float:left;width:10.5%;">责任部门&nbsp;</label>
+                            <select name=""  class="chosen-select_longajax" id="dutydept" style="margin-bottom: -5px;width:85.5%;">
+                                <option value=""></option>
+                            </select>
+                        </div>
+
+                        <div style="float:left;width:100%;margin-top: 5px;">
+                            <button class="btn btn-success " type="button" id="sys_search"><i class="fa fa-search"></i>&nbsp;查询</button>
+                            <button class="btn btn-info " type="button" id="sys_add"><i class="fa fa-pencil"></i>&nbsp;添加</button>
+                            <button class="btn btn-warning " type="button" id="sys_update"><i class="fa fa-edit"></i>&nbsp;编辑</button>
+                            <button class="btn btn-danger " type="button" id="sys_del"><i class="fa fa-close"></i>&nbsp;删除</button>
+                            <button class="btn btn-info " type="button" id="sys_detail"><i class="fa fa-list"></i>&nbsp;详情</button>
+                            <button class="btn btn-warning " type="button" id="sys_addrelation"><i class="fa fa-link"></i>&nbsp;关联</button>
+                            <button class="btn btn-success " type="button" id="sys_export" onclick="getExpURL();"><i class="fa fa-sign-out"></i>&nbsp;导出</button>
+                            <button class="btn btn-danger " type="button" id="sys_reset"><i class="fa fa-rotate-right"></i>&nbsp;重置</button>
+                        </div>
+                    </div>
+                    <table id="atpbiztable" ></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input id="sortfield" value="" type="hidden"/>
+<input id="sortorder" value="" type="hidden"/>
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<script>
+    function getExpURL()
+    {
+        var name         = $("#name").val();
+        var ipaddress    = $("#ipaddress").val();
+        var macaddess    = $("#macaddess").val();
+        var code         = $("#code").val();
+        var upport       = $("#upport").val();
+        var factory      = $("#factory").val();
+        var model        = $("#model").val();
+        var sn           = $("#sn").val();
+        var area         = $("#area").val();
+        var building     = $("#building").val();
+        var roomno       = $("#roomno").val();
+        var net          = $("#net").val();
+        var status       = $("#status").val();
+        var protocol     = $("#protocol").val();
+        var isscan       = $("#isscan").val();
+        var secretlevel  = $("#secretlevel").val();
+        var dutydept     = $("#dutydept").val();
+//        var usedept      = $("#usedept").val();
+        var dutyman      = $("#dutyman").val();
+//            var dutyman       = $('#dutyman option:checked').html();
+//            dutyman            = dutyman.substr(0,dutyman.indexOf('('));
+
+        var sortOrder    = $("#sortorder").val();
+        var sortfield    = $("#sortfield").val();
+        window.location.href="__MODULE__/Export/terminal_exp?name="+name+"&ipaddess="+ipaddress+"&macaddess="+macaddess+"&code="+code+"&sbtype="+sbtype+"&factory="+factory+"&model="+model+"&terminalname="+terminalname+"&area="+area+"&building="+building+"&roomno="+roomno+"&diskno="+diskno+"&isavailable="+isavailable+"&dutydept="+dutydept+"&usedept="+usedept+"&userman="+userman+"&bubiaono="+bubiaono+"&secretlevel="+secretlevel+"&dutyman="+dutyman+"&sortOrder="+sortOrder+"&sort="+sortfield;
+    }
+    $(function () {
+        $(".chosen-select_longajax").chosen({disable_search_threshold: 0, search_contains: true});//,width:'56%',hight:'80px'
+        $('#dutyman').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__CONTROLLER__/assignuser'
+        },{
+            loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        $('#userman').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__CONTROLLER__/assignuser'
+        },{
+            loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        $('#dutydept').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__CONTROLLER__/assigndept'
+        },{
+            loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        $('#usedept').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__CONTROLLER__/assigndept'
+        },{
+            loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        var TableObj = {
+            oTableInit: function () {
+                $('#atpbiztable').bootstrapTable({
+                    url: '__CONTROLLER__/getNDData',         //请求后台的URL（*）
+                    method: 'post',                      //请求方式（*）
+                    toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                    striped: true,                      //是否显示行间隔色
+                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    pagination: true,                   //是否显示分页（*）
+                    iconSize: 'outline',
+                    sortable: true,                     //是否启用排序
+                    sortName: "netdevice_atpid",
+                    sortOrder: "asc",                   //排序方式
+                    queryParams: queryParam,//传递参数（*）
+                    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1,                       //初始化加载第一页，默认第一页
+                    pageSize: 10,                       //每页的记录行数（*）
+                    pageList: [5, 10, 25, 50, 100],        //可供选择的每页的行数（*）
+                    search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+//            strictSearch: true,
+                    showColumns: false,                  //是否显示所有的列
+                    showRefresh: false,                  //是否显示刷新按钮
+                    minimumCountColumns: 2,             //最少允许的列数
+                    clickToSelect: false,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                    uniqueId: "netdevice_atpid",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                    detailView: false,                   //是否显示父子表
+                    detailFormatter: "detailFormatter",
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {
+                                title: '序号', width: 40,
+                                formatter: function (value, row, index) {
+                                    var option = $('#atpbiztable').bootstrapTable("getOptions");
+                                    return option.pageSize * (option.pageNumber - 1) + index + 1;
+                                }
+                            },
+                            {field: 'netdevice_ipaddress', title: 'IP地址', sortable: true},//zd_type
+                            {field: 'netdevice_mask', title: 'MAC地址', sortable: true},
+                            {field: 'netdevice_area', title: '地区', sortable: true},
+                            {field: 'netdevice_building', title: '楼宇', sortable: true},
+                            {field: 'netdevice_room', title: '房间号', sortable: true},
+                            {field: 'netdevice_factory', title: '厂家', sortable: true},
+                            {field: 'netdevice_model', title: '型号', sortable: true},//zd_area
+                            {field: 'netdevice_status', title: '状态', sortable: true}
+//                            {field: 'zd_roomno', title: '房间号', sortable: true},
+//                            {field: 'zd_dutymanname', title: '责任人', sortable: true},
+//                            {field: 'zd_username', title: '使用人', sortable: true}
+                        ]
+                    ],
+                    onSort: function (name, order) {
+                    }
+                });
+            }
+        };
+        TableObj.oTableInit();
+        $('#sys_search').on('click',function() {
+            $('#atpbiztable').bootstrapTable('destroy');
+            TableObj.oTableInit();
+        });
+
+        var sbtype = '154118';
+        $.post('__CONTROLLER__/getfactory', {sbtype: sbtype,options: 1}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#factory").children().remove();
+                var item = "";
+                item += "<option value=''></option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'";
+                    if (typearr[i]['d_atpid'] == "{$data.factory}")
+                        item += " selected>" + typearr[i]['d_dictname'] + "</option>";
+                    else
+                        item += ">" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#factory").append(item);
+            }
+            else{
+                $("#factory").children().remove();
+            }
+        })
+    });
+    function queryParam(params) {  //配置参数
+        $("#sortfield").attr("value",params.sort);
+        $("#sortorder").attr("value",params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            search: params.search,
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            name:$('#name').val(),
+            ipaddress:$('#ipaddress').val(),
+            macaddess:$('#macaddess').val(),
+            code:$('#code').val(),
+            upport:$('#upport').val(),
+            factory:$('#factory').val(),
+            model:$('#model').val(),
+            sn:$('#sn').val(),
+            area:$('#area').val(),
+            building:$('#building').val(),
+            roomno:$('#roomno').val(),
+            net:$('#net').val(),
+            status:$('#status').val(),
+            protocol:$('#protocol').val(),
+            isscan:$('#isscan').val(),
+//            bubiaono:$('#bubiaono').val(),
+            secretlevel:$('#secretlevel').val(),
+            dutydept:$('#dutydept').val(),
+//            usedept:$('#usedept').val(),
+            dutyman:$('#dutyman').val()
+        };
+        return temp;
+    }
+
+    function dataCellFormatter(value, row)
+    {
+        var color = '#'+Math.floor(Math.random() * 6777215).toString(16);
+        return '<div  style="color: ' + color + '">' + '<i class="glyphicon glyphicon-usd"></i>' + value + '</div>';
+    }
+    $('#sys_add').on('click',function(){
+
+        $("#sys_dlg").load('__CONTROLLER__/NetDeviceadd', function() {
+//            $('#sys_dlg_submit').on('click', submitdata);
+            $("#sys_dlg").modal({backdrop: false});
+        });
+    });
+    $('#sys_addrelation').on('click',function()
+    {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if(tablerow.length!=1){
+            alert("您已多选或者少选，仅能对一条数据进行操作");
+        }else {
+            $("#sys_dlg").load('__CONTROLLER__/addrelation?id=' + tablerow[0]['zd_atpid'], function() {
+                $("#sys_dlg").modal({backdrop: false});
+
+            });
+        }
+    });
+    $('#sys_update').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if(tablerow.length!=1){
+            alert("您已多选或者少选，仅能对一条数据进行操作");
+        }else {
+            $("#sys_dlg").load('__CONTROLLER__/NDedit?id=' + tablerow[0]['netdevice_atpid'], function() {
+//                $('#sys_dlg_submit').on('click',submitdata);
+                $("#sys_dlg").modal({backdrop: false});
+
+            });
+        }
+    });
+    $('#sys_reset').on('click',function() {
+        $('#name').val("");
+        $('#ipaddress').val("");
+        $('#macaddess').val("");
+        $('#code').val("");
+        $('#upport').val("");
+        $('#factory').val("");
+        $('#model').val("");
+        $('#sn').val("");
+        $('#area').val("");
+        $('#building').val("");
+        $('#roomno').val("");
+        $('#net').val("");
+        $('#status').val("");
+        $('#isscan').val("");
+        $('#secretlevel').val("");
+        $('#protocol').val("");
+
+        $('#dutyman').val("");
+        $('#dutyman').trigger("chosen:updated");
+        $('#dutydept').val("");
+        $('#dutydept').trigger("chosen:updated");
+    });
+    $('#sys_del').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            alert("您尚未选择数据");
+        }else {
+            if (confirm('确认删除' + tablerow.length + '条数据?')) {
+                var ids = [];
+                $.each(tablerow, function () {
+                    ids.push(this['netdevice_atpid']);
+                });
+                $.post('__CONTROLLER__/NDdel', {ids: ids.join(',')}, function (rep, status) {
+                    if ('' == rep) {
+                        $('#atpbiztable').bootstrapTable('refresh');
+                    }else {
+                        alert('删除失败' + "可能是因为数据存在关联无法删除" );//\n错误详情：+ rep
+                    }
+                });
+            }
+        }
+    });
+
+    $('#sys_detail').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if(tablerow.length!=1){
+            alert("您已多选或者少选，仅能对一条数据进行操作");
+        }else {
+            $("#sys_dlg").load('__CONTROLLER__/detailForm?id=' + tablerow[0]['netdevice_atpid'], function() {
+//                $("#sys_dlg").modal({backdrop: false});
+                $("#sys_dlg").modal('show');
+            });
+        }
+    });
+    function toRelation(ratpid){
+        $("#sys_dlg").load('__CONTROLLER__/detailForm?id=' + ratpid, function() {
+//                $("#sys_dlg").modal({backdrop: false});
+            $("#sys_dlg").modal('show');
+        });
+    }
+    function submitdata() {
+        var formbody = $("#sys_dlg_form");
+        $.post('__CONTROLLER__/submit', formbody.serialize(),function (rep) {
+            if(rep == "success"){
+                $('#atpbiztable').bootstrapTable('refresh');
+            }else{
+                alert("保存失败！");
+                $('#atpbiztable').bootstrapTable('refresh');
+            }
+        });
+    }
+    function relationdata() {
+        var formbody = $("#sys_dlg_form");
+        $.post('__CONTROLLER__/relation', formbody.serialize(),function (rep) {
+            if(rep == "success"){
+                $('#atpbiztable').bootstrapTable('refresh');
+            }else{
+                alert("保存失败！");
+                $('#atpbiztable').bootstrapTable('refresh');
+            }
+        });
+    }
+    $('#sbtype').on('change',function() {
+        var sbtype = $("#sbtype option:selected").val();
+        $.post('__CONTROLLER__/getfactory', {sbtype: sbtype}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#factory").children().remove();
+                var item = "";
+                item += "<option value='' selected='selected'></option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'>" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#factory").append(item);
+            }else{
+                $("#factory").children().remove();
+                $("#model").children().remove();
+            }
+        });
+    });
+    $('#factory').on('change',function() {
+        var factory = $("#factory option:selected").val();
+        $.post('__CONTROLLER__/getmodel', {factory: factory}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#model").children().remove();
+                var item = "";
+                item += "<option value='' selected='selected'></option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'>" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#model").append(item);
+            }else{
+                $("#model").children().remove();
+            }
+        });
+    });
+    $('#area').on('change',function() {
+        var area = $("#area option:selected").val();
+        $.post('__CONTROLLER__/getbuilding', {area: area}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#building").children().remove();
+                var item = "";
+                item += "<option value='' selected='selected'></option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'>" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#building").append(item);
+            }else{
+                $("#building").children().remove();
+            }
+        });
+    });
+
+</script>
+</body>
+
+</html>
+
+
+
+

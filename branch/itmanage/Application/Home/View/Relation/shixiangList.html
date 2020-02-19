@@ -1,0 +1,231 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<style>
+    th{
+        text-align: center;
+    }
+    .form-control{
+        display: inline-block;
+        width: 250px;
+    }
+    .wrapper .wrapper-content{
+        padding-bottom: 0;
+    }
+    .control-label{
+        font-size: 14px!important;
+        width:75px;
+    }
+    .fixed-table-toolbar{
+        display: none;
+    }
+    /*table{*/
+        /*table-layout: fixed;*/
+    /*}*/
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content " style="">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="_box" style="margin-top: 25px;">
+                <label class="control-label" style="margin-left:5px;">事项编号：</label>
+                <input type="text" class="form-control" style="width:130px;"  id="sx_code">
+                <label class="control-label" style="margin-left:5px;">名称：</label>
+                <input type="text" class="form-control" style="width:180px;"  id="sx_name">
+                <label class="control-label" style="margin-left:5px;">责任人：</label>
+                <select id="dutyman" class="chosen-select" >
+                    <option value="">请选择</option>
+                </select>
+                <label class="control-label" style="margin-left:5px;">提出人：</label>
+                <select id="demander" class="chosen-select" >
+                    <option value="">请选择</option>
+                </select>
+                <button class="btn btn-info" style="margin-left: 10px;margin-top: -5px;" type="button" id="sys_refresh">查询</button>
+            </div>
+            <table id="atpbiztable" ></table>
+            <div class="col-sm-12">
+                <div style="text-align: center;margin: 16px 0">
+                    <button class="btn btn-info" id="leading-in" style="display: inline">选中数据</button>
+                </div>
+                <div style="margin-top: 16px">
+                    <label class="control-label" style="width: 110px;display: block">已选择的信息：</label>
+                    <select data-placeholder="请选择" id="needUpdateUser" class="chosen-select_long" style="margin-left: 30px;" multiple>
+                        <option value="">&nbsp;</option>
+                        <option selected value="{$optionInfo.sx_atpid}">{$optionInfo.sx_name}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer" style="margin-top: 15px;text-align: center;width: 100%;">
+    <button type="button" data-dismiss="modal" id="sys_submit" class="btn btn-primary" style="display:inline-block">确定</button>
+</div>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script>
+
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+    $(".chosen-select_long").chosen({disable_search_threshold: 10, search_contains: true, width: '800px'});
+
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '150px'});
+
+    $('#dutyman').ajaxChosen({
+        dataType: 'json',
+        type: 'POST',
+        url:'__CONTROLLER__/assignusered'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+    $('#demander').ajaxChosen({
+        dataType: 'json',
+        type: 'POST',
+        url:'__CONTROLLER__/assignusered'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getSxData',         //请求后台的URL（*）
+                method: 'post',                      //请求方式（*）
+                toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName: "sx_atpcreatetime",
+                sortOrder: "desc",                   //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 18,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+//            strictSearch: true,
+//            showColumns: true,                  //是否显示所有的列
+//            showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "sx_atpid",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                columns: [[
+                    {checkbox: true, width: 40},
+                    {
+                        title: '序号', width: 20,
+                        formatter: function (value, row, index) {
+                            var option = $('#atpbiztable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'sx_code', title: '编号', sortable: true, width: 70},
+                    {field: 'sx_name', title: '名称', sortable: true, width: 70},
+                    {field: 'rw_detail', title: '内容', sortable: true, width: 200,
+//                        formatter: function (value, row, index) {
+//                            var inp = "'" + row.rw_atpid + "'";
+//                            var sx = "'" + row.sx_atpid + "'";
+//                            var a = '<a  onclick="addRenWu(' + inp + ','+ sx + ')">'+value+'</a><br>';
+//                            return a;
+//                        }
+                    },
+                    {field: 'sx_dutyman', title: '责任人', sortable: true, width: 50, visible: true},
+                    {field: 'sx_dutymandept', title: '责任部门', sortable: true, width: 100, visible: true},
+                    {field: 'sx_demander', title: '提出人', sortable: true, width: 50, visible: true},
+                    {field: 'sx_demanddept', title: '提出人部门', sortable: true, width: 100, visible: true},
+                    {field: 'sx_atpcreatetime', title: '时间', sortable: true, width: 100, visible: true}
+//                    {field: 'sx_atpid', title: '任务', sortable: true, width: 70, visible: true,
+//                        formatter: function (value, row, index) {
+//                            var inp = "'" + value + "'";
+//                            var a = '<a  class="btn btn-info btn-xs" onclick="read(' + inp + ')">查看</a><br>';
+//                            return a;
+//                        }
+//                    }
+                ]
+                ]
+            });
+        }
+    }
+    TableObj.oTableInit();
+
+    function queryParams(params) {  //配置参数
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            sx_code:$('#sx_code').val(),
+            sx_name:$('#sx_name').val(),
+            dutyman:$('#dutyman').val(),
+            demander:$('#demander').val()
+        };
+        return temp;
+    }
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+
+    $('#leading-in').click(function(){
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        var len = $('#needUpdateUser option:selected').length;
+        var arr = [];
+        for(var i=0;i<len;i++){
+            arr.push($('#needUpdateUser option:selected').eq(i).val());
+        }
+        $.each(tablerow, function () {
+            if($.inArray(this['sx_atpid'], arr) == -1){
+                $('#needUpdateUser').append('<option value="'+this['sx_atpid']+'" selected >'+this['sx_name']+'</option>');
+            }
+        });
+        $('#needUpdateUser').trigger("chosen:updated");
+
+    })
+
+    //确认并返回父级
+    $('#sys_submit').on('click',function() {
+        var len = $('#needUpdateUser option:selected').length;
+        var ids = [];
+        var names = [];
+        if(len == 0){
+            layer.alert("您尚未选择数据");
+        }else{
+            //限制选择多条
+            var astrict = "<?php echo $astrict;?>";
+            if(astrict == 'false' && len > 2){
+                layer.alert("您只能选择一条数据");
+                return false;
+            }
+
+            for(var i=0;i<len;i++){
+                if($('#needUpdateUser option:selected').eq(i).val() != ''){
+                    ids.push($('#needUpdateUser option:selected').eq(i).val());
+                    names.push('('+$('#needUpdateUser option:selected').eq(i).text()+')');
+                }
+            }
+            var flag = "<?php echo $flag; ?>";
+            parent.$("#<?php echo $tar_id;?>").val(ids.join(','));
+            parent.$("#<?php echo $tar_name;?>").val(names.join(','));
+
+//            window.parent.location.reload(); //刷新父页面
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        }
+    });
+
+
+
+
+</script>
+</body>
+
+</html>
+
+
+
+

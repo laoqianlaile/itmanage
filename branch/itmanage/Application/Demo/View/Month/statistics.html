@@ -1,0 +1,93 @@
+<include file="Universal@Public:header" />
+<title>统计分析</title>
+<style>
+    .layui-tab-content {
+        padding-bottom: 0 !important;
+        padding-top: 0;
+    }
+
+    input, textarea, select {
+        margin-bottom: 8px;
+    }
+    .layui-tab {
+        margin-bottom: 0 !important;
+        margin-top: 0;
+    }
+    #layui-title li {
+        width: 12%;
+    }
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    .layui-tab-item>iframe{
+        width: 100%;box-sizing:border-box;overflow:hidden;border: none;
+    }
+    .modal-body {
+        padding: 3px !important;
+    }
+</style>
+<body>
+<div style="overflow: hidden">
+    <div class="modal-body" style="overflow: hidden">
+        <div class="layui-tab layui-tab-brief" lay-filter="demo">
+            <div class="layui-tab-content" id="layui-content">
+                <div lay-id="1" class="layui-tab-item">
+                    <iframe  id="framecontent" url="" style="" src="http://10.78.72.239:8075/WebReport/ReportServer?formlet=wy%2Fproject%2Fplan%2F%5B5f85%5D%5B529e%5D%5B4e8b%5D%5B9879%5D%5B7efc%5D%5B5408%5D%5B6708%5D%5B5ea6%5D.frm" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $(function () {
+
+//        var views = [];
+//        var tabLength = $('.tab').length;
+//        for(var i = 0; i<tabLength; i++){
+//            var url = $('.tab').eq(i).attr('url');
+//            var splitUrl = url.split('index.php');
+//            views.push(splitUrl[1].toLowerCase());
+//        }
+//        var viewPowers = '<?php echo json_encode(cookie("operate_view")); ?>';
+//        for(var i = 0; i<tabLength; i++){
+//            if( viewPowers.indexOf(views[i]) < 0){
+//                $('.tab').eq(i).parent().remove();
+//            }
+//        }
+
+        layui.use('element', function () {
+            var element = layui.element();
+            element.on('tab(demo)', function (data) {
+            });
+        })
+
+        var ifm = $('iframe');
+//        var height = document.documentElement.clientHeight -60;
+        var height = $(window).height();
+//        alert(height);
+        var iframeHeigth = height-50;
+        ifm.css('height', iframeHeigth+'px');
+        //判断先展示那个div
+        var show_div = "<?php echo I('get.show_div',0,'intval'); ?>";
+        var content_obj = $('#layui-content').children();
+        var title_obj = $('#layui-title').children();
+        if (show_div != 0) {
+            var index = show_div -1;
+            ifm.eq(index).attr('src',$('.tab').eq(index).attr('url'));
+            content_obj.eq(index).addClass('layui-show').siblings().removeClass('layui-show');
+            title_obj.eq(index).addClass('layui-this').siblings().removeClass('layui-this');
+        } else {
+            content_obj.eq(0).addClass('layui-show');
+            ifm.eq(0).attr('src',$('.tab').eq(0).attr('url'));
+            title_obj.eq(0).addClass('layui-this');
+        }
+
+        $('.tab').click(function(){
+            var iframeLink = $(this).attr('url');
+            ifm.attr('src',iframeLink);
+        })
+    });
+
+</script>

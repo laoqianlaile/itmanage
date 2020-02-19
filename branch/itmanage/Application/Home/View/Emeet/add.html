@@ -1,0 +1,289 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>电子会议室添加编辑</title>
+<style>
+    .form-group{
+        margin-top: 26px;
+    }
+    .control-label{
+        width:150px  !important;
+    }
+    .must_filter{
+        color: red;
+    }
+    .form-control{
+        display:inline-block;
+    }
+    .col-sm-3{
+        width:60%  !important;
+    }
+
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .chosen-container{
+        height: 100%;
+    }
+    .star{
+        color:red;
+    }
+</style>
+<body style="margin: 0 auto;">
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content" style="padding-bottom: 50px;">
+        <div class="panel-body">
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>日期 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="emr_date" id="emr_date" value="<?php if(!empty($data['emr_date']))echo $data['emr_date']; ?>" onClick="WdatePicker({dateFmt:'M-d-w'})">
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>开始时间  </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="emr_time" id="emr_time" value="<?php if(!empty($data['emr_time']))echo $data['emr_time']; ?>" onClick="WdatePicker({dateFmt:'H:mm'})">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="float: left;width: 50%;">
+                    <label class='col-sm-2 control-label'>部门</label>
+                    <div class="col-sm-3" >
+                        <select  name="emr_dept" class="chosen-select"  id="emr_dept">
+                            <option value="">请选择</option>
+                            <option value="{$data.emr_dept}" <?php if(!empty($data['emr_dept'])){echo selected;}?>>{$emr_dept}</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>申请人</label>
+                    <div class="col-sm-3" >
+                        <select name="emr_applyman" class="chosen-select" id="emr_applyman">
+                            <option value="">请选择</option>
+                            <option value="{$data.emr_applyman}" <?php if(!empty($data['emr_applyman'])){echo selected;}?>>{$userMan}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>电话</label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="emr_applytel" id="emr_applytel" value="<?php if(!empty($data['emr_applytel']))echo $data['emr_applytel']; ?>">
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>会议主题</label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="emr_name" id="emr_name" value="<?php if(!empty($data['emr_name']))echo $data['emr_name']; ?>">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>使用需求 </label>
+                    <div class="col-sm-3" >
+                        <select  name="emr_usedemand[]" id="emr_usedemand" class="chosen-select" multiple>
+                            < <option value=""> </option>
+                            <?php foreach($usedemand as $key=>$value){ ?>
+                            <option <?php if(in_array($value['dic_name'],$use)) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>会议室名称 </label>
+                    <div class="col-sm-3" >
+                        <select  name="emr_roomname[]" id="emr_roomname" class="chosen-select" multiple>
+                            < <option value=""> </option>
+                            <?php foreach($roomname as $key=>$value){ ?>
+                            <option <?php if(in_array($value['dic_name'],$room)) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>处理人</label>
+                    <div class="col-sm-3" >
+                        <select name="emr_dealperson" class="chosen-select" id="emr_dealperson">
+                            <option value="">请选择</option>
+                            <option value="{$data.emr_dealperson}" <?php if(!empty($data['emr_dealperson'])){echo selected;}?>>{$emr_dealperson}</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>备注</label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="emr_bz" id="emr_bz" value="<?php if(!empty($data['emr_bz']))echo $data['emr_bz']; ?>">
+                    </div>
+                </div>
+            </div>
+            </div>
+            <input type="hidden" value="<?php if(!empty($data['emr_atpid'])) echo $data['emr_atpid']; ?>" name="emr_atpid" id="emr_atpid">
+        </div>
+    </div>
+</form>
+    <if condition="$Objtype eq null">
+        <div class="modal-footer" style="margin: 0px;text-align:center;z-index: 999;position: fixed;bottom:0;left:0;font-family: cursive; width: 100%;height: 60px;background-color: #fff;">
+            <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="display:inline-block;text-align:center;">保存</button>
+            <if condition="$data['cl_atpid'] neq null">
+                <button type="button"  id="oplog" class="btn btn-warning" style="margin-left: 30px;">日志</button>
+            </if>
+        </div>
+    </if>
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        $('#sys_dlg_submit').click(function(){
+            $('#sys_dlg_form1').submit();
+        })
+
+        var input_width = parseInt($('.form-control').eq(0).css('width').replace('px', ''));
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: input_width+'px'});
+
+        //申请人
+        $('#emr_applyman').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        //处理人
+        $('#emr_dealperson').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        //用户单位
+        $('#emr_dept').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assigndept'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+
+        $.validator.setDefaults({
+            highlight:function(element){
+                $(element).parent().remove('has-success').addClass('has-error');
+            },
+            success:function(element){
+                $(element).parent().remove('has-error').addClass('has-success');
+            },
+            errorPlacement:function(error,element){
+                if(element.is(":radio") || element.is(":checkbox")){
+                    error.appendTo(element.parent());
+                }else{
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass:"help-block m-b-none",
+            validClass:"help-block m-b-none"
+        });
+        $('#sys_dlg_form1').validate({
+            onclick:false,
+            onfocusout:false,
+            onkeyup:false,
+            submitHandler:function(){
+//                var sqr = $('#cl_sqr').val();
+//                var cl_starttime = $('#cl_starttime').val();
+//                var cl_endtime = $('#cl_endtime').val();
+//                var cl_sourceip = $('#cl_sourceip').val();
+//                var cl_objectip = $('#cl_objectip').val();
+//                var cl_port = $('#cl_port').val();
+//                var cl_rwid = $('#cl_rwid').val();
+//                var cl_clid = $('#cl_clid').val();
+//                var cl_status = $('#cl_status').val();
+//                var cl_fw = $('#cl_fw').val();
+//                if(sqr==''){
+//                    layer.alert("申请人不可为空！")
+//                    return false;
+//                }
+//                if(cl_starttime==''){
+//                    layer.alert("策略生效日期不可为空！")
+//                    return false;
+//                }
+//                if(cl_endtime==''){
+//                    layer.alert("策略截止日期不可为空！")
+//                    return false;
+//                }
+//                if(cl_sourceip==''){
+//                    layer.alert("源IP不可为空！")
+//                    return false;
+//                }
+//                if(cl_objectip==''){
+//                    layer.alert("目的IP不可为空！")
+//                    return false;
+//                }
+//                if(cl_port==''){
+//                    layer.alert("端口号不可为空！")
+//                    return false;
+//                }
+//                if(cl_rwid==''){
+//                    layer.alert("表单编号不可为空！")
+//                    return false;
+//                }
+//                if(cl_clid==''){
+//                    layer.alert("策略编号不可为空！")
+//                    return false;
+//                }
+//                if(cl_status==''){
+//                    layer.alert("策略状态不可为空！")
+//                    return false;
+//                }
+//                if(cl_fw==''){
+//                    layer.alert("防火墙不可为空！")
+//                    return false;
+//                }
+
+                var formBody = $('#sys_dlg_form1');
+                $.post('__CONTROLLER__/addData',formBody.serialize(), function (data) {
+                    if (data.code > 0) {
+//                        parent.$('#sys_refresh').click();
+                        parent.$('#atpbiztable').bootstrapTable('refresh');
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        layer.alert(data.message);
+                    }
+                },'JSON');
+            }
+        });
+    });
+
+    //如果验证下拉框必填，请使用该方法
+    //    function checkSelectForm(objArr, messageArr){
+    //        var len = objArr.length;
+    //        for(var i=0;i<len;i++){
+    //            var obj = objArr[i];
+    //            var val = $('#'+obj).val();
+    //            if(!val){
+    //                layer.msg('请选择'+messageArr[i]);
+    //                $('#'+obj).trigger('chosen:open');
+    //                return false;
+    //            }
+    //        }
+    //        return true;
+    //    }
+
+</script>

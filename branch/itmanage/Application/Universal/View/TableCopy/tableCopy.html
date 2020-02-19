@@ -1,0 +1,228 @@
+<include file="Universal@Public:header" />
+<style>
+    td,th{
+        width: 90px;
+        height: 26px;
+        text-align: center;
+        border: 1px solid slategray !important;
+    }
+    table{
+        border-color: #E2DFDD !important;
+        font-family: 'Microsoft YaHei';
+        color: #585755;
+        margin: 0 auto;
+    }
+    input{
+        width: 100%;
+        height: 26px;
+        margin-left: 2px;
+        margin-right: 2px;
+        border: none;
+        text-align: center;
+    }
+    input:focus{
+        outline: none;
+        width: auto;
+    }
+    table thead th{
+        font-size: 15px;
+    }
+    .btn {
+        display: inline-block;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+</style>
+<body style="text-align: center;padding: 10px">
+<div style="margin-top: 3px;">
+    <button class="btn btn-info sys_save"  style="margin-left: 10px;background-color: #71A1CB !important;border-color: #71A1CB;"  >保存</button>
+    <button class="btn btn-warning reset" style="margin-left: 10px;" id="reset" >重置</button>
+</div>
+<?php if(!empty($remark)){ ?>
+<h2 style="color: red;font-size: 16px; text-align: left;">* {$remark}</h2>
+<?php } ?>
+<table cellpadding="0" cellspacing="0" border="1" class="table"  style="" >
+    <thead>
+    <tr>
+        <?php foreach($head as $value){ ?>
+        <th>{$value}</th>
+        <?php } ?>
+    </tr>
+    </thead>
+    <tbody>
+    <?php
+                 $thcount = count($head);
+                 $tr = '<tr>' .str_repeat('<td><input type="text"></td>', $thcount). '</tr>';
+    echo str_repeat($tr, 3);
+    ?>
+    </tbody>
+</table>
+<div style="margin-top: 3px;">
+    <button class="btn btn-info sys_save" style="margin-left: 10px;background-color: #71A1CB !important;border-color: #71A1CB;" >保存</button>
+    <button class="btn btn-warning reset" style="margin-left: 10px;">重置</button>
+</div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLIC__/img/loading/loading9.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $('table th').css('vertical-align', 'middle');
+    layui.use('layer', function () {
+        layer = layui.layer;
+    });
+    var saveMethod = "<?php echo $method; ?>";
+    var head = "<?php echo  trim(I('get.head')); ?>";
+    $.fn.pasteFromTable = function(cb) {     //make it a jquery function
+        $(this).bind('paste', function(e) {
+            $('#loading').modal('show');
+
+            e.preventDefault(); //消除默认粘贴
+
+            //获取粘贴板数据
+            var clipboardData = window.clipboardData || e.originalEvent.clipboardData, // IE || chrome
+//                    data = clipboardData.getData('Text').replace(/\n/g,''),
+                    data = clipboardData.getData('Text').split('"');
+            var newData = '';
+            var len = data.length;
+            for(i=0;i < len;i++){
+                if(i%2 == 0){
+                    newData +=data[i];
+                }else{
+                    data[i] = data[i].replace(/\n/g,'');
+                    newData += data[i];
+                }
+            }
+            //判断表格数据是使用\n还是\r分行，解析成行数组
+            var rowArr = (newData.indexOf(String.fromCharCode(10)) > -1) ? newData.split(String.fromCharCode(10)) : newData.split(String.fromCharCode(13));
+
+            //根据\t解析单元格
+            var cellArr = [];
+            $.each(rowArr, function(k,v){
+                if(v == '') delete rowArr[k];
+                var val = v. split(String.fromCharCode(9));
+                if(val != '') cellArr.push(val);
+            });
+
+            //输出至网页表格
+            var tab = $(e.target).parents('table')[0];  //表格
+            var td = $(e.target).parents('td');  //当前单元格
+
+            var startRow = td.parents('tr')[0].rowIndex; //当前单元格行数
+            var startCell = td[0].cellIndex; //当前单元格列数
+
+            //数据行数如果大于table tr 数量，追加tr
+            var dataRowNum = cellArr.length;
+            var tbody = $(e.target).parents('tbody');
+            var trRowNum = tbody.children().length - startRow;
+            if(trRowNum < dataRowNum){
+                var appendTrNum = dataRowNum - trRowNum;
+                var cloneTr = '<tr>'+tbody.children().last().html() + '</tr>';
+                for(var i = 0; i < appendTrNum; i++){
+                    tbody.append($(cloneTr));
+                }
+            }
+
+            var rows = tab.rows.length;  //总行数
+
+            for (var i = 0; i < cellArr.length && startRow + i < rows; i++) {
+                var cells = tab.rows[startRow + i].cells.length;  //该行总列数
+
+                for(var j = 0; j < cellArr[i].length && startCell + j < cells; j++) {
+                    var cell = tab.rows[startRow + i].cells[startCell + j];
+                    $(cell).find(':text').val(cellArr[i][j]);
+                    if (cb) {cb(cell)}
+                }
+            }
+
+            $('#loading').modal('hide');
+        })
+    };
+    $('table').pasteFromTable(function(cell){
+        //cell 为当前单元格dom
+    });
+    $('.sys_save').click(function(){
+        $('#loading').modal('show');
+
+        var data = {};
+        var trs = $('tbody tr');
+        var length = trs.length;
+        var i = 1;
+        $.each(trs, function(key, value){
+            if( i == length) return ;
+            var trArr = {};
+            var EmptyTdNum = 0;
+            $.each($(value).children(), function(k, v){
+                var inputVal = $(v).children().val();
+                if(inputVal != '') EmptyTdNum++;
+                trArr[k] = inputVal;
+            });
+
+            if(EmptyTdNum > 0){
+                data[key]=  trArr;
+            }
+            i++;
+        });
+        data = JSON.stringify(data);
+        var extraParam = "<?php echo $extraParam; ?>";
+        $.ajax({
+            type:'post',
+            url:'__APP__/'+saveMethod,
+            data:{head:head, data:data, extraParam:extraParam},
+            dataType :'json',
+            success:function(data){
+                $('#loading').modal('hide');
+
+                if(data.code > 0){
+                    layer.msg('操作成功');
+                    parent.$('#sys_refresh').click();
+
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                }else{
+                    layer.alert(data.message);
+                }
+            },error:function(){
+                $('#loading').modal('hide');
+                layer.alert('出错啦！请稍候再试');
+            }
+        })
+    });
+
+    $('.reset').click(function(){
+        layer.confirm('确认清空所有数据?' ,
+        {btn:['确定','取消']}
+        ,function(index){
+            $('input').val('');
+
+            layer.close(index);
+        }, function (index) {
+            layer.close(index);
+        })
+    });
+
+</script>
+</html>

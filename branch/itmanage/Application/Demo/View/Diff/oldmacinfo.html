@@ -1,0 +1,35 @@
+﻿<div class="modal-dialog" style="width: 600px;z-index: 10;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">涉密终端绑定详情</h4>
+        </div>
+        <div class="modal-body">
+            <form id="sys_batch_form" role="form" class="form-horizontal" enctype="multipart/form-data">
+                <div class="form-group">
+                    <div class="col-sm-12" style="text-align: center">
+                        <p style="text-align: left;">
+                            <span style="font-weight: bold;color: #03513f;"> 上次终端绑定情况：</span></p>
+                            <notempty name="macinfo">
+                                <foreach name="macinfo" item="vo">
+                                    {$vo.swo_ipaddress}，{$vo.swo_interface}；<br />
+                                </foreach>
+                                <else/>
+                                该终端没有绑定
+                            </notempty>
+
+                    </div>
+                    <div class="col-sm-12" style="text-align: center">
+                        <p style="font-weight: bold;color: #03513f;text-align: left;"> 当前终端绑定情况：</p>该终端没有绑定
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade in" style="z-index: -101;"></div>

@@ -1,0 +1,214 @@
+<?php showViewsByPower() ?>
+<title>选择用户页面</title>
+<style>
+	.control-label {
+		width: 130px;
+	}
+
+	.form-group > div {
+		margin-top: -3px;
+		margin-bottom: -3px;
+	}
+
+	.chosen-select2 {
+		z-index: 222;
+	}
+
+	.layui-tab-content {
+		padding-bottom: 0 !important;
+	}
+
+	.modal-body {
+		padding-bottom: 0 !important;
+	}
+
+	input, textarea, select {
+		margin-bottom: 8px;
+	}
+
+	.form-control {
+		border-radius: 2px;
+	}
+
+	.chosen-choices {
+		margin-bottom: 6px;
+	}
+
+	html {
+		height: auto;
+	}
+
+	.layui-tab {
+		margin-bottom: 0 !important;
+		margin-top: 0;
+	}
+
+	#layui-title li {
+		width: 10%;
+	}
+
+	.chosen-container-multi .chosen-choices {
+		width: 105% !important;
+	}
+
+	#personLiable .chosen-container .chosen-drop {
+		width: 105% !important;
+	}
+
+	::-webkit-scrollbar {
+		display: none;
+	}
+
+	.riskDistinguish .panel-body {
+		padding-top: 0;
+	}
+
+	.riskDistinguish .panel-body h3 {
+		margin-bottom: 10px !important;
+	}
+	.must_filter {
+		color: red
+	}
+	.modal-dialog{
+		width:70%;
+	}
+
+</style>
+<body>
+<div  class="modal-dialog" style="margin-top: 12px">
+	<div class="modal-content" style="">
+		<div class="layui-tab layui-tab-brief modal-header" lay-filter="demo" style="padding-top: 4px">
+			<ul class="layui-tab-title" id="layui-title">
+				<li class="layui-tab-item tab layui-this">内部部门</li>
+				<li class="layui-tab-item tab">外部组织</li>
+			</ul>
+
+			<div class="layui-tab-content modal-body" id="layui-content">
+				<div lay-id="1" class=" layui-tab-item layui-show">
+					<div id="search_div" style="margin-bottom: 2px;margin-top: 3px">
+						<input type="text" class="form-control" style="width: 200px;display: inline-block" id="search_name">
+						<button class="btn btn-info" style="margin-left: 10px;" type="button" id="sys_refresh">&nbsp;搜索</button>
+					</div>
+					<div style="overflow: hidden">
+						<table id="table" <?php if(empty($orgItem)){echo ' data-height="330"';}?>></table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer" style="padding: 6px 6px 6px 0;box-sizing: border-box">
+			<button class="btn btn-info" style="background: #BB6C82;border-color: #BB6C82" type="button" id="sys_confirm">&nbsp;确定</button>
+		</div>
+	</div>
+</div>
+<input type="hidden" value="" id="org_type">
+</body>
+<script>
+	var isonlyshow = "<?php echo intval(I('get.isonlyshow')); ?>";
+	var obj = "<?php echo intval(I('get.obj')); ?>";
+	$('.tab').click(function(){
+		var org_type = $(this).text();
+		$('#org_type').val(org_type);
+		$('#sys_refresh').click();
+	});
+
+	layui.use('layer', function () {
+		layer = layui.layer;
+	});
+	layui.use('element', function () {
+		var element = layui.element();
+		element.on('tab(demo)', function (data) {
+		});
+	});
+
+	$('#search_name').bind('keypress', function (event) {
+		var val = $(this).val();
+		if(event.keyCode == "13"){
+//				if(val != ''){
+			$('#sys_refresh').click();
+//				}
+		}
+	});
+	var height = document.documentElement.clientHeight -200;
+	var searchDivHeight = parseInt($('#search_div').css('height').replace('px', ''));
+
+	//专家打分js
+	TableObj = {
+		oTableInit: function () {
+			$('#table').bootstrapTable({
+				url: '__CONTROLLER__/chooseUserOrgData',         //请求后台的URL（*）
+				method: 'post',                      //请求方式（*）
+				striped: true,                      //是否显示行间隔色
+				cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+				pagination: true,                   //是否显示分页（*）
+				iconSize: 'outline',
+				sortable: true,                     //是否启用排序
+				sortName: "org_fullnum",
+				sortOrder: "desc",                   //排序方式
+				queryParams: queryParams,
+				sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+				pageNumber: 1,                       //初始化加载第一页，默认第一页
+				pageSize: 10,                       //每页的记录行数（*）
+				pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+				search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+//            strictSearch: true,
+				showColumns: false,                  //是否显示所有的列
+				showRefresh: false,                  //是否显示刷新按钮
+				minimumCountColumns: 2,             //最少允许的列数
+				clickToSelect: true,                //是否启用点击选中行
+				height:height-searchDivHeight,
+				uniqueId: "esp_id",                     //每一行的唯一标识，一般为主键列
+				showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+				cardView: false,                    //是否显示详细视图
+				detailView: false,                   //是否显示父子表
+				detailFormatter: "detailFormatterExpert",
+				columns: [
+					[
+						{radio: true},
+						{field: 'org_name', title: '部门名称', width: 150}
+					]
+				],onLoadSuccess:function(rows){
+					$('thead th').css('text-align', 'center');
+
+					var tabheight = $('tbody').css('height');
+					tabheight = parseInt(tabheight.replace('px', ''));
+
+					if(tabheight < (height-160)){
+						$('.fixed-table-container').css('height', 'auto');
+						$('.fixed-table-container').css('padding-bottom', '0');
+					}else{
+						$('#table').bootstrapTable("resetView",{height:height-searchDivHeight});
+					}
+				},onDblClickRow: function () {
+					$('#sys_confirm').click();
+				}
+			});
+		}
+	};
+	TableObj.oTableInit();
+	function queryParams(params) {
+		return {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+			limit: params.limit,   //页面大小
+			offset: params.offset,  //页码
+			sort: params.sort,  //排序列名
+			order: params.order,//排位命令（desc，asc）
+			org_type: $('#org_type').val(),
+			search_name: $('#search_name').val(),
+			isonlyshow: isonlyshow
+		};
+	}
+	$('#sys_refresh').click(function () {
+		$('#table').bootstrapTable('destroy');
+		TableObj.oTableInit();
+	});
+
+	$('#sys_confirm').click(function () {
+		var tablerow = $('#table').bootstrapTable('getSelections');
+		if (tablerow.length == 0) {
+			layer.msg("您尚未选择数据");
+		} else {
+			fillUserOrg(tablerow[0], obj);
+		}
+	})
+
+
+</script>

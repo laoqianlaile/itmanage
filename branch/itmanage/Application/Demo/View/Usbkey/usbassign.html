@@ -1,0 +1,341 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>USB权限分配管理</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+
+    <script src="__PUBLICOLD__/vendor/ie8/jquery.form.js"></script>
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+     
+    <style>
+        .table{max-width: none;}
+        .pull-left{width:100%;}
+        #atpbiztoolbar{width:100%;}
+        #dic_name{width: 20%;float: left;margin-right: 5px;}
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <div id="atpbiztoolbar" >
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">USB编号&nbsp;</label>
+                            <input  id="usbcode" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">
+                        </div>
+
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">入库人&nbsp;</label>
+                            <!--<input  id="u_stockman" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">-->
+                            <select name="u_stockman"  class="chosen-select_longajax" id="u_stockman" style="margin-bottom: -5px;width:56%;">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">入库日期</label>
+                            <input id="u_dbtime" type="text"  onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="form-control" style="margin-bottom: -5px;width:56%;">
+                        </div>
+
+                        <div style="float:left;width:100%;margin-top: 5px;">
+                        <button class="btn btn-success " type="button" id="sys_search"><i class="fa fa-search"></i>&nbsp;查询</button>
+                        <button class="btn btn-info " type="button" id="sys_add"><i class="fa fa-pencil"></i>&nbsp;入库</button>
+                        <button class="btn btn-warning " style="background-color: #9bc63e;border:#9bc63e 1px solid;" type="button" id="sys_del"><i class="fa fa-rotate-right"></i>&nbsp;重置</button>
+                        <button class="btn btn-warning " type="button" id="sys_update"><i class="fa fa-pencil-square"></i>&nbsp;分配</button>
+                        <button class="btn btn-danger " style="background-color:lightsalmon ;border:lightsalmon 1px solid;" type="button" id="sys_updates"><i class="fa fa-pencil-square"></i>&nbsp;批量分配</button>
+                        <button class="btn btn-danger " type="button" id="sys_imp"><i class="fa fa-sign-out"></i>&nbsp;批量入库</button>
+                        <!--<button class="btn btn-success " type="button" id="sys_export" onclick="getExpURL();"><i class="fa fa-search"></i>&nbsp;导出</button>-->
+                        </div>
+                    </div>
+                    <table id="atpbiztable" ></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLICOLD__/img/loading/loading8.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $(".chosen-select_longajax").chosen({disable_search_threshold: 0, search_contains: true});//,width:'56%',hight:'80px'
+        $('#u_stockman').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__CONTROLLER__/assignuser'
+        },{
+            loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        var TableObj = {
+            oTableInit: function () {
+                $('#atpbiztable').bootstrapTable({
+                    url: '__CONTROLLER__/getData2',         //请求后台的URL（*）
+                    method: 'post',                      //请求方式（*）
+                    toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                    striped: true,                      //是否显示行间隔色
+                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    pagination: true,                   //是否显示分页（*）
+                    iconSize: 'outline',
+                    sortable: true,                     //是否启用排序
+                    sortName: "u_dbtime",
+                    sortOrder: "desc",                   //排序方式
+                    queryParams: queryParams,//传递参数（*）
+                    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1,                       //初始化加载第一页，默认第一页
+                    pageSize: 10,                       //每页的记录行数（*）
+                    pageList: [5, 10, 25, 50, 100],        //可供选择的每页的行数（*）
+                    search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+//            strictSearch: true,
+                    showColumns: false,                  //是否显示所有的列
+                    showRefresh: false,                  //是否显示刷新按钮
+                    minimumCountColumns: 2,             //最少允许的列数
+                    clickToSelect: false,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                    uniqueId: "u_atpid",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                    detailView: false,                   //是否显示父子表
+                    detailFormatter: "detailFormatter",
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {
+                                title: '序号', width: 40,
+                                formatter: function (value, row, index) {
+                                    var option = $('#atpbiztable').bootstrapTable("getOptions");
+                                    return option.pageSize * (option.pageNumber - 1) + index + 1;
+                                }
+                            },
+                            {field: 'u_code', title: '编号', sortable: true},
+                            {field: 'tl_type', title: '状态', sortable: true},
+                            {field: 'u_dbtime', title: '入库时间', sortable: true},
+                            {field: 'u_stockman', title: '入库人', sortable: true},
+                            {
+                                field: 'u_atpid', title: '操作', sortable: false, width: 60,
+                                formatter: function (value, row, index) {
+                                    var inp = "'" + value + "'";
+//                            var a = '<a  class="btn btn-info btn-xs" onclick="printInRow(' + inp + ')">打印</a>';
+//                            a += '<a  class="btn btn-warning btn-xs" onclick="updateInRow('+ inp +')">编辑</a>';
+                                    var a = '<a  class="btn btn-danger btn-xs" onclick="delInRow(' + inp + ')">删除</a>';
+
+                                    return a;
+                                }
+                            },
+                            {field: 'u_atpid', title: '主键', sortable: true, visible: false}
+                        ]
+                    ],
+                    onSort: function (name, order) {
+                    }
+                });
+            }
+        };
+        TableObj.oTableInit();
+
+        $('#sys_search').on('click',function() {
+            $('#atpbiztable').bootstrapTable('destroy');
+            TableObj.oTableInit();
+        });
+
+    });
+    function queryParams(params) {  //配置参数
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            search: params.search,
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            usbcode:$('#usbcode').val(),
+            u_stockman:$('#u_stockman').val(),
+            u_dbtime:$('#u_dbtime').val(),
+            status:"0"
+        };
+        return temp;
+    }
+
+    function dataCellFormatter(value, row) {
+        var color = '#'+Math.floor(Math.random() * 6777215).toString(16);
+        return '<div  style="color: ' + color + '">' + '<i class="glyphicon glyphicon-usd"></i>' + value + '</div>';
+    }
+    function delInRow(id)
+    {
+        if (confirm('确认删除数据?')) {
+            var ids = [];
+            ids.push(id);
+            $.post('__CONTROLLER__/del', {ids: ids.join(',')}, function (rep, status) {
+                if ('' == rep) {
+                    $('#atpbiztable').bootstrapTable('refresh')
+                }
+                else {
+                    alert('删除失败' + "可能是因为数据存在关联无法删除<br>错误详情：" + rep);
+                }
+            });
+        }
+    }
+    function submitdata() {
+        var formbody = $("#sys_dlg_form");
+        $.post('__CONTROLLER__/submitusbassign', formbody.serialize(),function (rep) {
+                    if(rep == "success"){
+                        $('#atpbiztable').bootstrapTable('refresh');
+                    }else{
+                        alert("保存失败！");
+                        $('#atpbiztable').bootstrapTable('refresh');
+                    }
+
+                }
+        );
+    }
+    function submitimpdata() {
+        var formbody = $("#sys_dlg_form2");
+        $.post('__CONTROLLER__/submitimp', formbody.serialize(),function (rep) {
+            if(rep == "success"){
+                $('#atpbiztable').bootstrapTable('refresh');
+            }else{
+                alert("保存失败！");
+                $('#atpbiztable').bootstrapTable('refresh');
+            }
+         });
+    }
+    $('#sys_add').on('click',function(){
+        $("#sys_dlg").load('__CONTROLLER__/pushdb', function() {
+            $('#sys_dlg_submit').on('click', submitdata);
+            $("#sys_dlg").modal({backdrop: false});
+        });
+    });
+    $('#sys_imp').on('click',function(){
+        $("#sys_dlg").load('__CONTROLLER__/import', function() {
+            $('#sys_dlg_submit').on('click', submitimpdata);
+            $("#sys_dlg").modal({backdrop: false});
+        });
+    });
+    $('#sys_updates').on('click',function(){
+        $("#sys_dlg").load('__CONTROLLER__/distribute', function() {
+            $('#sys_dlg_submit').on('click', submitdisdata);
+            $("#sys_dlg").modal({backdrop: false});
+        });
+    });
+    $('#sys_update').on('click',function(){
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            alert("请至少选择一条数据！");
+        }else{
+            if (confirm('确认修改' + tablerow.length + '条数据?')) {
+                var ids = [];
+                $.each(tablerow, function () {
+                    ids.push(this['u_atpid']);
+                });
+                var id = ids.join(',');
+                $("#sys_dlg").load('__CONTROLLER__/assigncard?id=' +id, function() {
+                    $('#sys_dlg_submit').on('click', submitdata);
+                    $("#sys_dlg").modal({backdrop: false});
+                });
+            }
+        }
+    });
+    $('#sys_del').on('click',function() {
+        $('#usbcode').val("");
+        $('#u_stockman').val("");
+        $('#u_stockman').trigger('chosen:updated');
+        $('#u_dbtime').val("");
+    });
+    function submitimpdata()
+    {
+        var formBody = $('#sys_dlg_form2');
+        formBody.ajaxSubmit({
+            type:'post',
+            url:'__CONTROLLER__/submitimp',
+            dataType:'json',
+            beforeSend:function(){
+                $("#loadingText").html("正在处理请稍后");
+                $('#loading').modal('show');
+            },
+            success:function(data){
+                if(data.code == 0){
+                    $('#atpbiztable').bootstrapTable('refresh');
+                }else{
+                    alert(data.message);
+                }
+            },
+            complete:function(){
+                $('#loading').modal('hide');
+            }
+        });
+    }
+    function submitdisdata()
+    {
+        var formBody = $('#sys_dlg_form3');
+        formBody.ajaxSubmit({
+            type:'post',
+            url:'__CONTROLLER__/submitdistribute',
+            dataType:'json',
+            beforeSend:function(){
+                $("#loadingText").html("正在处理请稍后");
+                $('#loading').modal('show');
+            },
+            success:function(data){
+                if(data.code == 0){
+                    $('#atpbiztable').bootstrapTable('refresh');
+                }else{
+                    alert(data.message);
+                }
+            },
+            complete:function(){
+                $('#loading').modal('hide');
+            }
+        });
+    }
+</script>
+</body>
+
+</html>
+
+
+
+

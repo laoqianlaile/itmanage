@@ -1,0 +1,415 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>工具软件添加编辑</title>
+<style>
+    .form-group {
+        margin-top: 10px;
+        margin-bottom: 4px;
+    }
+
+    .control-label {
+        width: 150px !important;
+        font-size: 13px!important;
+    }
+    .must_filter{
+        color: red;
+    }
+    .form-control{
+        display:inline-block;
+    }
+
+    .chosen-container{
+        top: -1px;
+    }
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .chosen-container{
+        height: 100%;
+        width:100%!important;
+    }
+    .modal-footer{
+        margin: 0px;
+        z-index: 999;
+        position: fixed;
+        bottom:0;
+        left:0;
+        font-family: cursive;
+        width: 100%;
+        height: 60px;
+        background-color: #fff;
+    }
+    .modal-footer .form-group{
+        position: absolute;
+        top: -3px;
+        left:50px;
+        width: 85%;
+    }
+
+    .col-sm-3{
+        width:54%!important;
+        padding-left: 0!important;
+    }
+    .col-sm-3{
+        padding-left:0;
+        padding-right:0;
+    }
+    .remark{
+        float: left;
+        margin-top: 10px;
+        margin-right: 10px;
+        width:74px;
+        font-size: 13px;
+    }
+    #sys_dlg_submit {
+        margin-right: 30px;
+    }
+</style>
+<body style="margin: 0 auto;overflow-x:hidden;">
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content" style="padding-bottom: 50px;">
+        <div class="panel-body">
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>工具名称<span class="must_filter">*</span> </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="tl_name" id="tl_name" value="<?php if(!empty($data['tl_name']))echo $data['tl_name']; ?>">
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>简称 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="tl_shortname" id="tl_shortname" value="<?php if(!empty($data['tl_shortname']))echo $data['tl_shortname']; ?>">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>版本</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" style="width:99%;" name="tl_version" id="tl_version" value="<?php if(!empty($data['tl_version']))echo $data['tl_version']; ?>">
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>搜索关键词  </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="tl_keyword" id="tl_keyword" value="<?php if(!empty($data['tl_keyword']))echo $data['tl_keyword']; ?>" >
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>建设途径  </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="tl_purchase" id="tl_purchase" value="<?php if(!empty($data['tl_purchase']))echo $data['tl_purchase']; ?>" >
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>立项级别 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="tl_projectlevel" id="tl_projectlevel" value="<?php if(!empty($data['tl_projectlevel']))echo $data['tl_projectlevel']; ?>">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>下载地址 </label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" style="width:99%;" name="tl_url" id="tl_url" value="<?php if(!empty($data['tl_url']))echo $data['tl_url']; ?>">
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>上线时间</label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="tl_onlinetime" id="tl_onlinetime" value="<?php if(!empty($data['tl_onlinetime']))echo $data['tl_onlinetime']; ?>" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>用户范围 </label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" style="width:99%;" name="tl_userrange" id="tl_userrange" value="<?php if(!empty($data['tl_userrange']))echo $data['tl_userrange']; ?>">
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>使用状态 </label>
+                    <div class="col-sm-3" >
+                        <select name="tl_status" id="tl_status" class="chosen-select">
+                            <option value=""></option>
+                                <?php foreach($zhuangTai as $key=>$value){ ?>
+                                <option <?php if($data['tl_status'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                                <?php } ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>管理员A岗<span class="must_filter">*</span> </label>
+                    <div class="col-sm-3" >
+                        <select name="tl_admina"  class="chosen-select" id="tl_admina">
+                            <option value="<?php echo $adminA['username'];?>"><?php echo $adminA['name'];?></option>
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>管理员B岗 </label>
+                    <div class="col-sm-3" >
+                        <select name="tl_adminb"  class="chosen-select" id="tl_adminb">
+                            <option value="<?php echo $adminB['username'];?>"><?php echo $adminB['name'];?></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>责任人 </label>
+                    <div class="col-sm-3" >
+                    <select  name="tl_dutyman" id="tl_dutyman" class="chosen-select" >
+                        <option value="<?php echo $dutuser['username'];?>"><?php echo $dutuser['name'];?></option>
+                    </select>
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>所属班组</label>
+                    <div class="col-sm-3" >
+                        <select  name="tl_group" id="tl_group" class="chosen-select" >
+                            <option value=""> 请选择</option>
+                            <?php foreach($group as $key=>$value){ ?>
+                            <option <?php if($data['tl_group'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>责任部门</label>
+                    <div class="col-sm-3">
+                        <select   name="tl_dutydept" class="chosen-select" id="tl_dutydept" disabled>
+                            <option value="<?php echo $dutyDept;?>"><?php echo $dutyDept;?></option>
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>开发单位 </label>
+                    <div class="col-sm-3">
+                        <select  name="tl_develop[]" id="tl_develop" class="chosen-select" multiple>
+                            <option value="">请选择</option>
+                            <?php foreach($develope as $key=>$value){ ?>
+                            <option <?php if(in_array($value['dic_name'],$dept)) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div style="width: 100%;float: left">
+                    <label class=' col-sm-2 control-label'>功能简介 </label>
+                    <div class="col-sm-3" style='width: 77.5%!important;'>
+                        <input type="text" class="form-control" style="width:99%;" name="tl_function" id="tl_function" value="<?php if(!empty($data['tl_function']))echo $data['tl_function']; ?>" >
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 100%;float: left">
+                    <label class=' col-sm-2 control-label'>备注</label>
+                    <div class="col-sm-3" style='width: 77.5%!important;'>
+                        <input type="text" class="form-control" style="width:99%;" name="tl_remark" id="tl_remark" value="<?php if(!empty($data['tl_remark']))echo $data['tl_remark']; ?>">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>运行环境</label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="tl_environment" id="tl_environment" value="<?php if(!empty($data['tl_environment']))echo $data['tl_environment']; ?>">
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>技术平台 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="tl_plats" id="tl_plats" value="<?php if(!empty($data['tl_plats']))echo $data['tl_plats']; ?>">
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>开发平台</label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="tl_platd" id="tl_platd" value="<?php if(!empty($data['tl_platd']))echo $data['tl_platd']; ?>">
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>开发语言 </label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" style="width:99%;" name="tl_language" id="tl_language" value="<?php if(!empty($data['tl_language']))echo $data['tl_language']; ?>" >
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>是否巡检</label>
+                    <div class="col-sm-3" >
+                        <select  name="tl_ischeck" id="tl_ischeck" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <?php foreach($ischeck as $key=>$value){ ?>
+                            <option <?php if($data['tl_ischeck'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" value="<?php if(!empty($data['tl_atpid'])) echo $data['tl_atpid']; ?>" name="tl_atpid" id="tl_atpid">
+    </div>
+    </div>
+</form>
+<if condition="$Objtype eq null">
+    <div class="modal-footer" style="margin: 0px;text-align:center;z-index: 999;position: fixed;bottom:0;left:0;font-family: cursive; width: 100%;height: 60px;background-color: #fff;">
+        <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="display:inline-block;text-align:center;">保存</button>
+    </div>
+</if>
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        $('#sys_dlg_submit').click(function(){
+            $('#sys_dlg_form1').submit();
+        })
+
+        var input_width = parseInt($('.form-control').eq(0).css('width').replace('px', ''));
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true , width: input_width+'px'});
+        //管理员A岗
+        $('#tl_admina').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        //管理员B岗
+        $('#tl_adminb').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        //责任人
+        $('#tl_dutyman').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url: '__MODULE__/org/assignuser'
+        }, {
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+
+        $.validator.setDefaults({
+            highlight:function(element){
+                $(element).parent().remove('has-success').addClass('has-error');
+            },
+            success:function(element){
+                $(element).parent().remove('has-error').addClass('has-success');
+            },
+            errorPlacement:function(error,element){
+                if(element.is(":radio") || element.is(":checkbox")){
+                    error.appendTo(element.parent());
+                }else{
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass:"help-block m-b-none",
+            validClass:"help-block m-b-none"
+        });
+        $('#sys_dlg_form1').validate({
+            onclick:false,
+            onfocusout:false,
+            onkeyup:false,
+            submitHandler:function(){
+             /*   var tl_atpid = $('#tl_atpid').val();*/
+                var tl_name = $('#tl_name').val();
+                var tl_admina = $('#tl_admina').val();
+                var  tl_dutydept = $('#tl_dutydept').val();
+                var  tl_status = $('#tl_status').val()
+                if(tl_status == ''){
+                    layer.alert("使用状态不可为空！");
+                    return false;
+                }
+              if(tl_name==''){
+                    layer.alert("工具名称不可为空！")
+                    return false;
+                }
+                if(tl_admina==''){
+                    layer.alert("管理员A岗不可为空！")
+                    return false;
+                }
+
+                var formBody = $('#sys_dlg_form1');
+                $.post('__CONTROLLER__/addData',formBody.serialize(), function (data) {
+                    if (data.code > 0) {
+//                        parent.$('#sys_refresh').click();
+                        parent.$('#atpbiztable').bootstrapTable('refresh');
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        layer.alert(data.message);
+                    }
+                },'JSON');
+            }
+        });
+    });
+
+  $('#tl_dutyman').change(function(){
+       var username = $(this).val();
+       $.ajax({
+           type:'post',
+           url:'__MODULE__/ShiXiang/FindId',
+           data:{username:username},
+           dataType:'json',
+           success:function(res){
+               if(res.code > 0){
+                   var str = "<option value='" + res.message[0] + "'  " + 'selected' + ">" + res.message[1] + "</option>";
+                   $('#tl_dutydept').append(str)
+                   $('#tl_dutydept').trigger("chosen:updated")
+               }else{
+                   alert(res.message)
+               }
+           }
+       })
+   });
+
+    //如果验证下拉框必填，请使用该方法
+    //    function checkSelectForm(objArr, messageArr){
+    //        var len = objArr.length;
+    //        for(var i=0;i<len;i++){
+    //            var obj = objArr[i];
+    //            var val = $('#'+obj).val();
+    //            if(!val){
+    //                layer.msg('请选择'+messageArr[i]);
+    //                $('#'+obj).trigger('chosen:open');
+    //                return false;
+    //            }
+    //        }
+    //        return true;
+    //    }
+</script>

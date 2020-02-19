@@ -1,0 +1,263 @@
+﻿<?php showViewsByPower() ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=8,IE=edge">
+    <link href="__PUBLIC__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLIC__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLIC__/css/style.css?v=4.0.0" rel="stylesheet">
+    <link href="__PUBLIC__/css/tablepublic.css" rel="stylesheet">
+    <style>
+        th{
+            text-align: center;
+        }
+        .form-control{
+            display: inline-block;
+            width: 250px;
+        }
+        .wrapper .wrapper-content{
+            padding-bottom: 0;
+        }
+        .control-label{
+            font-size: 14px!important;
+        }
+        .fixed-table-body{
+            height: auto;
+        }
+        table td{
+            font-size: 13px;
+        }
+        .th-inner{
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content " style="">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="_box" style="margin-top: -15px;margin-bottom: -15px;">
+                        <label class="control-label" style="margin-left:15px;">部门：</label>
+                        <select id="search_org" class="chosen-select" >
+                            <option value="">&nbsp;</option>
+                            <?php foreach($type as $key=>$value){ ?>
+                            <option value="{$value.val}" >{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                        <label class="control-label" style="margin-left:15px;">人员名称：</label>
+                        <input type="text" class="form-control" width="200px;" id="search_name">
+
+                        <!--<a class="btn btn-warning " style="margin-left: 10px;" type="button" id="sys_add" ><i class="fa fa-sign-out"></i>&nbsp;添加</a>-->
+                        <button class="btn btn-info" style="margin-left: 10px;" type="button" id="sys_refresh">查询</button>
+                        <a class="btn btn-warning " style="margin-left: 10px;" type="button" id="sys_add" >添加</a>
+                        <!--<a class="btn btn-warning " style="margin-left: 10px;background: #7FAF35;border-color: #7FAF35" type="button" id="sys_expin" >导入</a>-->
+                        <a class="btn btn-warning " style="margin-left: 10px;background: #21A0CC;border-color: #21A0CC" type="button" id="sys_export" >导出</a>
+                    </div>
+                    <table id="atpbiztable" ></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLIC__/img/loading/loading9.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="sort" >
+<input type="hidden" id="sortOrder" >
+<script src="__PUBLIC__/vendor/bootstrap-table/jquery.min.js"></script>
+<script src="__PUBLIC__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script src="__PUBLIC__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+<script src="__PUBLIC__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+<script type="text/javascript" src="__PUBLIC__/vendor/layui/layui.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/banBackSpace.js"></script>
+
+<script>
+    layui.use('layer', function() {
+        layer = layui.layer;
+    });
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '250px'});
+    $('#search_org').ajaxChosen({
+        dataType: 'json',
+        type: 'POST',
+        url:'__MODULE__/Org/getOrgLists'
+    });
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getAuthData',         //请求后台的URL（*）
+                method: 'post',                      //请求方式（*）
+                toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName:"u_createtime",
+                sortOrder: "desc",                   //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 15,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+//            strictSearch: true,
+//            showColumns: true,                  //是否显示所有的列
+//            showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "u_id",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                columns: [[
+                    {checkbox: true},
+                    {
+                        title: '序号', width: 40,
+                        formatter: function (value, row, index) {
+                            var option = $('#atpbiztable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'u_orgname', title: '部门', sortable: true,width: 150},
+                    // {field: 'u_orgfullname', title: '部门全称', sortable: true},
+                    {field: 'u_username', title: '人员', sortable: true, width: 150},
+                    {field: 'u_createtime', title: '创建时间', sortable: true, width: 180},
+                    {field: 'u_id', title: '操作', sortable: false, width: 120,
+                        formatter: function (value, row, index) {
+                            var inp = "'" + value + "'";
+                            var a = '<a  class="btn btn-info btn-xs" onclick="updateInRow(' + inp + ')">编辑</a>';
+                            a += '<a  class="btn btn-info btn-xs" style="background:#C82323;border-color:#C82323;" onclick="deleteInRow('+inp+')">删除</a>';
+                            return a;
+                        }
+                    }
+                ]
+                ]
+            });
+        }
+    }
+    TableObj.oTableInit();
+
+    function queryParams(params) {  //配置参数
+        $('#sort').val(params.sort);
+        $('#sortOrder').val(params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            search_org:$('#search_org option:selected').val(),
+            search_name:$('#search_name').val()
+        };
+        return temp;
+    }
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+    $('#sys_add').on('click',function(){
+        updateInRow('');
+    });
+
+    $('#sys_export').on('click',function() {
+        $('#loading').modal('show');
+        var sort=$('#sort').val();
+        var sortOrder=$('#sortOrder').val();
+        var search_org=$('#search_org option:selected').val();
+        var search_name=$('#search_name').val();
+        var t = "__CONTROLLER__/getAuthDataWithExport?sort="+sort+"&sortOrder="+sortOrder+"&search_name="+search_name+'&search_org='+search_org;
+        t = encodeURI(t);
+        $.ajax({
+            type:'get',
+            url: t,
+            dataType:'json',
+            success:function(data){
+                $('#loading').modal('hide');
+                if(data.code > 0){
+                    location.href = data.message;
+                }else{
+                    layer.msg(data.message);
+                }
+            }
+        })
+    });
+
+
+    function updateInRow(id) {
+        if(id == ''){
+            layer.open({
+                title:'授权编辑',
+                closeBtn:1,
+                type: 2,
+                shadeClose:false,
+                content:'__CONTROLLER__/authAdd?deptid='+$("#search_org option:selected").val()+'&deptname='+$("#search_org option:selected").text(),
+                area: ['60%', '340px']
+            });
+        }else{
+            layer.open({
+                title:'授权编辑',
+                closeBtn:1,
+                type: 2,
+                shadeClose:false,
+                content:'__CONTROLLER__/authAdd?id='+id,
+                area: ['60%', '340px']
+            });
+        }
+    }
+
+
+    function deleteInRow(id){
+        layer.confirm('确定要删除吗？' ,
+        {btn:['确定','取消']},
+        function(index){
+            $.ajax({
+                type:'post',
+                url:'__CONTROLLER__/delAuth',
+                data:{id:id},
+                dataType :'json',
+                success:function(data){
+                    if(data.code > 0){
+                        layer.msg('删除成功');
+                    }else{
+                        layer.msg(data.message);
+                    }
+                    $('#sys_refresh').click();
+                }
+            })
+        }, function (index) {
+            layer.close(index);
+        })
+    }
+    function enclosure(id){
+        layer.open({
+            title:'附件管理',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content:'__CONTROLLER__/enclosure?id='+id,
+            area: ['90%', '85%']
+        });
+    }
+</script>
+</body>
+
+</html>
+
+
+
+

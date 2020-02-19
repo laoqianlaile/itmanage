@@ -1,0 +1,354 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLICOLD__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+<style>
+    th{
+        text-align: center;
+        vertical-align: middle !important;
+    }
+    .form-control{
+        display: inline-block;
+        width: 250px;
+    }
+    .wrapper .wrapper-content{
+        padding-bottom: 0;
+    }
+    table{
+        table-layout: fixed;
+    }
+    .th-inner{
+        line-height: 15px !important;
+    }
+    .dropdown-toggle{
+        margin-top: -10px;;
+    }
+    .fixed-table-toolbar .columns label {
+        width: 140px!important;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content " style="">
+    <!--<div class="ibox float-e-margins">-->
+        <!--<div class="ibox-content">-->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="_box" style="margin-top: -5px;">
+                        <label class="control-label" style="margin-left:10px;width: 100px;">工作项目：</label>
+                        <input type="text" class="form-control" placeholder="" id="ytd_name" style="width:150px;display: inline-block;">
+                        <label class="control-label" style="margin-left:20px;width: 120px;">责任处室：</label>
+                        <select id="dept" name="kydept" class="chosen-select" >
+                            <option value="">&nbsp;</option>
+                            <foreach name="dept" item="val">
+                                <option value="{$val.org_name}">{$val.org_name}</option>
+                            </foreach>
+                        </select>
+                        <label class="control-label" style="margin-left:30px;width: 120px;">计划完成时间：</label>
+                        <input type="text" class="form-control" placeholder="" id="start" value="{$first}" style="width:150px;display: inline-block;" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">---
+                        <input type="text" class="form-control" placeholder="" id="end"  value="{$end}" style="width:150px;display: inline-block;" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                        <br>
+                        <label class="control-label" style="margin-left:10px;width: 100px;">&nbsp;&nbsp;&nbsp;责任人：</label>
+                        <select id="kybchargemanname"  class="chosen-select" >
+                            <option value=""></option>
+                            <!--<foreach name="ling" item="val">-->
+                                <!--<option value="{$val.user_realusername}" >{$val.user_realusername}</option>-->
+                            <!--</foreach>-->
+                        </select>
+                        <label class="control-label" style="margin-left:10px;width: 130px;">&nbsp;&nbsp;状态：</label>
+                        <select id="ytd_status" name="ytd_status" class="chosen-select" >
+                            <option value="">&nbsp;</option>
+                            <foreach name="state" item="val">
+                                <option value="{$val.dic_name}">{$val.dic_name}</option>
+                            </foreach>
+                        </select>
+                        <label class="control-label" style="margin-left:20px;width: 130px;">是否属于待办：</label>
+                        <select id="is_td" name="is_td" class="chosen-select" >
+                            <option value="">&nbsp;</option>
+                            <option value="是">是</option>
+                            <option value="否">否</option>
+
+                        </select>
+
+                        <label class="control-label" style="margin-left:10px;width: 140px;">是否属于目标管理：</label>
+                        <select id="is_ip" name="is_ip" class="chosen-select" >
+                            <option value="">&nbsp;</option>
+                            <option value="是">是</option>
+                            <option value="否">否</option>
+                        </select>
+
+                    </div>
+                    <div class="_box" id="atpbiztoolbar" style="margin-top: -12px;">
+                        <button class="btn btn-info" style="margin-left: 30px;background-color: forestgreen;border-color: forestgreen;" type="button" id="sys_refresh">查询</button>
+                        <a class="btn btn-info " style="margin-left: 10px;background-color: yellowgreen;border-color: yellowgreen;" type="button" id="sys_submit" >提交</a>
+                        <!--<button class="btn btn-info" style="margin-left: 10px;" type="button" id="sys_exp">导出</button>-->
+                    </div>
+                    <table id="atpbiztable" ></table>
+                </div>
+            </div>
+        <!--</div>-->
+    <!--</div>-->
+</div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLICOLD__/img/loading/loading9.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<input type="hidden" id="userid" value="{$userid}" >
+<input type="hidden" id="sort" >
+<input type="hidden" id="sortOrder" >
+<script src="__PUBLICOLD__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script src="__PUBLICOLD__/js/table-hidecloumn.js"></script>
+<script>
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '150px'});
+    $('#kybchargemanname').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url:'__MODULE__/User/getDutyUser'
+    });
+
+    var columns = [
+        {checkbox: true, width: 40},
+        {
+            title: '序号', width: 60,
+            formatter: function (value, row, index) {
+                var option = $('#atpbiztable').bootstrapTable("getOptions");
+                return option.pageSize * (option.pageNumber - 1) + index + 1;
+            }
+        },
+        {field: 'ytd_worktype', title: '工作分类', sortable: true, width: 100},
+        {field: 'ytd_name', title: '工作事项', sortable: true, width: 230},
+        {field: 'ytd_content', title: '行动项目', sortable: true, width: 230},
+        {field: 'ytd_planfinishdate', title: '完成时间', sortable: true, width: 100},
+        {field: 'ytd_modifyfinishdate', title: '预计<br/>完成时间', sortable: true, width: 100},
+        {field: 'ytd_finishtype', title: '完成形式', sortable: true, width: 100},
+        {field: 'ytd_kybchargeman', title: '责任人', sortable: true, width: 70},
+        {field: 'ytd_kybunitleader', title: '主管<br/>处领导', sortable: true, width: 80},
+        {field: 'ytd_kybunit', title: '责任处室', sortable: true, width: 100},
+        {field: 'ytd_kybleader', title: '主管<br/>部领导', sortable: true, width: 80},
+        {field: 'ytd_confirmtime', title: '实际<br/>完成时间', sortable: true, width: 100},
+        {field: 'status', title: '完成情况', sortable: true ,width: 100},
+        {field: 'ytd_dealmethod', title: '处置措施', sortable: true ,width: 100},
+        {field: 'ytd_iswytodo', title: '是否属<br/>于待办', sortable: true, width: 80},
+        {field: 'ytd_isip', title: '是否属于目标<br/>管理事项', sortable: true, width: 110},
+        {field: 'material', title: '上传文件', width: 100, sortable: true,
+            formatter: function (value, row, index) {
+                var inp = value;
+                var id="'"+row.ytd_id+"'";
+                if(inp!=null){
+                    var a = '<a style="color: #1C7165;text-decoration:underline" onclick="fileUp(' + id + ')">'+inp+'</a><br>';
+                    return a;
+                }
+            }
+        },
+        {
+            field: 'ytd_id', title: '提交', sortable: false,width: 60,
+            formatter: function (value, row, index) {
+                var inp = "'" + value + "'";
+                var a = '<a style="background: #CBDDDA;border-color: #1C7165;color: #1C7165;"  class="btn btn-info btn-xs" onclick="TjInRow(' + inp + ')">提交</a><br>';
+                return a;
+            }
+        }
+    ];
+    columns = $_hide.hideColumnsByCookie(columns);
+    fixed();
+    function fixed(){
+        var h  = $(window).height() - 110;
+        $('table').attr('data-height',h);
+    }
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getData',         //请求后台的URL（*）
+                method: 'post',                      //请求方式（*）
+                toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName: "decode(ytd_flowstatus,'被退回',1,'未提交',2,'已提交',3),ytd_planfinishdate",
+                sortOrder: "",                   //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 15,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+//            strictSearch: true,
+            showColumns: true,                  //是否显示所有的列
+//            showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "ytd_id",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                detailView: true,                   //是否显示父子表
+                detailFormatter: "detailFormatter",
+                rowStyle:function(row,index){
+                    var style = '';
+                    if(row.ytd_flowstatus == '被退回'){
+                        style = 'danger';
+                    }
+                    return {classes:style}
+                },
+                columns: [
+                    columns
+                ]
+            });
+        }
+    }
+    TableObj.oTableInit();
+
+    function queryParams(params) {  //配置参数
+        $('#sort').val(params.sort);
+        $('#sortOrder').val(params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            ytd_name:$('#ytd_name').val(),
+            dept:$('#dept').val(),
+            start:$('#start').val(),
+            end:$('#end').val(),
+            kybchargemanname:$('#kybchargemanname').val(),
+            ytd_status:$('#ytd_status').val(),
+            kybchargemanid:$('#userid').val(),
+            stateTj:'未提交,已提交,被退回',
+            istd:$('#is_td').val(),
+            isip:$('#is_ip').val()
+        };
+        return temp;
+    }
+
+    function detailFormatter(index, row) {
+        var html = [];
+        var length = row['workflow'].length;
+        html.push("<div class='ibox-content'>");
+        html.push("<table class='table'  style='width:60%'>");
+        html.push("<tbody>");
+        for(var i =0; i < length ; i++ ){
+            html.push("<tr><td style='text-align: left'>"+row['workflow'][i]['work']+"</td></tr>");
+        }
+        html.push("</tbody>");
+        html.push("</table>");
+        html.push("</div>");
+        return html.join('').replace(/null/g, "").replace(/undefined/g, "");
+    }
+
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+
+    $('#sys_submit').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            layer.alert("您尚未选择数据");
+        } else {
+            layer.confirm('确认提交' + tablerow.length + '条数据?',{btn:['确定','取消']},function(){
+                var ids = [];
+                $.each(tablerow, function () {
+                    ids.push(this['ytd_id']);
+                });
+                $.ajax({
+                    type:'post',
+                    url:'__CONTROLLER__/tjSubmit',
+                    data:{ids: ids.join(',')},
+                    dataType :'json',
+                    success:function(data){
+                        if(data.code > 0){
+                            layer.msg('操作成功');
+                        }else{
+                            layer.alert(data.message);
+                        }
+                        $('#atpbiztable').bootstrapTable('refresh')
+                    }
+                })
+            })
+        }
+    });
+
+    $('#sys_exp').click(function(){
+        $('#loading').modal('show');
+        var sort=$('#sort').val();
+        var sortOrder=$('#sortOrder').val();
+        var ytd_name = $('#ytd_name').val();
+        var dept = $('#dept').val();
+        var start = $('#start').val();
+        var end = $('#end').val();
+        var kybchargemanname = $('#kybchargemanname').val();
+        var ytd_status = $('#ytd_status').val();
+        var t = "__CONTROLLER__/getDataWithExport?ytd_name="+ytd_name+'&dept='+dept+'&start='+start+'&end='+end+'&kybchargemanname='+kybchargemanname+'&ytd_status='+ytd_status+'&sort='+sort+'&sortOrder='+sortOrder;
+        t = encodeURI(t);
+        $.ajax({
+            type:'get',
+            url: t,
+            dataType:'json',
+            success:function(data){
+                $('#loading').modal('hide');
+                if(data.code > 0){
+                    location.href = data.message;
+                }else{
+                    layer.msg(data.message);
+                }
+            },error:function(){
+                $('#loading').modal('hide');
+                layer.alert('出错了！请联系管理员！');
+            }
+        })
+
+    })
+
+
+    function fileUp(id){
+        layer.open({
+            title:'文件上传',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__APP__/Admin/File/index?objId='+id+'&objType='+'月计划',
+            area: ['800px', '600px']
+        });
+    }
+
+    function TjInRow(id){
+        layer.confirm('确定提交这条数据?',{btn:['确定','取消']},function(){
+            $.ajax({
+                type:'post',
+                url:'__CONTROLLER__/tjSubmit',
+                data:{ids: id},
+                dataType :'json',
+                success:function(data){
+                    if(data.code > 0){
+                        layer.msg(data.message);
+                    }else{
+                        layer.alert(data.message);
+                    }
+                    $('#atpbiztable').bootstrapTable('refresh')
+                }
+            })
+        })
+    }
+
+</script>
+</body>
+
+</html>
+
+
+
+

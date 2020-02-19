@@ -1,0 +1,95 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">备份查看</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="tabs-container">
+                        <div id="tab-2" class="tab-pane">
+                            <div class="panel-body">
+                                <table id="relationtable" ></table>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+             </div>
+        </div>
+    </div>
+</div>
+
+<!--<link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLIC__/vendor/tabs/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">-->
+<!--<link href="__PUBLIC__/vendor/tabs/css/font-awesome.css?v=4.4.0" rel="stylesheet">-->
+<!--<link href="__PUBLIC__/vendor/tabs/css/animate.css" rel="stylesheet">-->
+<!--<link href="__PUBLIC__/vendor/tabs/css/style.css?v=4.0.0" rel="stylesheet"> -->
+<style type="text/css">
+    .modal-dialog{width: 94%;height: 80%;}
+    .col-sm-6{width:100%;}
+    .form-group_r label{width:25%;float: left;margin-top: 7px;}
+    .form-group_l label{width:25%;float: left;margin-top: 7px;}
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function(e){
+        $('.heng .form-control').attr('disabled','true');
+        $(".chosen-select_longajax").chosen({disable_search_threshold: 0, search_contains: true,width:'65%'});
+
+        $('#zd_useman').trigger("chosen:updated");
+        $('#relationtable').bootstrapTable({
+            url: '__CONTROLLER__/getBeiFdata',
+            method: 'post',
+            striped: true,
+            cache: false,
+            pagination: true,
+            iconSize: 'outline',
+            sortable: true,
+            sortName:"bl_atpcreatedatetime",
+            sortOrder: "desc",
+            queryParams: queryParams,
+            sidePagination: "server",
+            pageNumber: 1,
+            pageSize: 10,
+            pageList: [5,10, 25, 50, 100],
+            uniqueId: "bl_atpid",
+            columns: [
+                [
+                    {title: '序号', width: 40,
+                        formatter: function (value, row, index){
+                            var option =  $('#relationtable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'bl_name', title: '文件名称', sortable: true},
+                    {field: 'bl_atpcreatedatetime', title: '备份时间', sortable: true},
+                    {field: 'bl_type', title: '类型', sortable: true},
+                    {field: 'bl_url', title: '操作', sortable: true,
+                        formatter: function (value, row, index) {
+                            var inp = "'" + row.bl_url + "'";
+                            var a = '<a  class="btn btn-info btn-xs"  onclick="downFile(' + inp + ')">下载</a><br>';
+                            return a;
+                        }
+                    }
+
+                ]
+            ]
+        });
+    });
+    function queryParams(params) {  //配置参数
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            search: params.search,
+            sort: params.sort,  //排序列名
+            sortOrder: params.order//排位命令（desc，asc）
+        };
+        return temp;
+    }
+
+    function downFile(url){
+        location.href='__PUBLIC__/'+url;
+    }
+</script>

@@ -1,0 +1,195 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">编辑</h4>
+        </div>
+        <form id="sys_dlg_form" role="form">
+        <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-sm-6">
+
+                        <div class="panel-body">
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>产品名称</label>
+                                                <input id="secproducts_name" name="secproducts_name" type="text" value="{$data.secproducts_name}" class="form-control">
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>IP地址</label>
+                                                <input id="secproducts_ip" name="secproducts_ip" type="text" value="{$data.secproducts_ip}"class="form-control">
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>数量</label>
+                                                <input id="secproducts_num" name="secproducts_num" type="text" value="{$data.secproducts_num}"class="form-control">
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>证书编号</label>
+                                                <input id="secproducts_certsn" name="secproducts_certsn" type="text" value="{$data.secproducts_certsn}" class="form-control">
+                                            </div>
+                                        </div>
+                            <div class="heng">
+                                <div class="form-group_l">
+                                    <label>厂家</label>
+                                    <input id="secproducts_factory" name="secproducts_factory" type="text" value="{$data.secproducts_factory}" class="form-control">
+                                </div>
+                                <div class="form-group_r">
+                                    <label>型号</label>
+                                    <input id="secproducts_model" name="secproducts_model" type="text" value="{$data.secproducts_model}"  class="form-control">
+                                </div>
+                                <div class="form-group_l">
+                                    <label>楼宇</label>
+                                    <select name="secproducts_building"  class="form-control"  id="secproducts_building" style="margin-bottom: -5px;width:56%;">
+                                    </select>
+                                </div>
+                                <div class="form-group_r">
+                                    <label>房间号</label>
+                                    <input id="secproducts_room" name="secproducts_room" type="text" value="{$data.secproducts_room}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_r">
+                                    <label>区域名</label>
+                                    <select name="secproducts_area"  class="form-control"  id="secproducts_area" style="margin-bottom: -5px;width:56%;">
+                                        <option value=""></option>
+                                        <foreach name="ds_area" item="vo">
+                                            <option value="{$vo.d_atpid}" <if condition="($data.secproducts_area eq $vo['d_atpid'])">selected="selected"</if>>{$vo.d_dictname}</option>
+                                        </foreach>
+                                    </select>
+                                </div>
+                                <div class="form-group_l">
+                                    <label>用途</label>
+                                    <input id="secproducts_usage" name="secproducts_usage" type="text" value="{$data.secproducts_usage}" class="form-control">
+                                </div>
+                            </div>
+                                        <input id="secproducts_atpid" name="secproducts_atpid" type="hidden" value="{$data.secproducts_atpid}" class="form-control">
+                                    </div>
+
+                    </div>
+                </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>
+            <input type="submit" id="sys_dlg_submit" value="保存" class="btn btn-primary" />
+            <!--<button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary">保存</button>-->
+        </div>
+        </form>
+    </div>
+</div>
+
+<!--<link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLICOLD__/vendor/tabs/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/font-awesome.css?v=4.4.0" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/animate.css" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/style.css?v=4.0.0" rel="stylesheet"> -->
+<style type="text/css">
+    .modal-dialog{width: 94%;height: 80%;}
+    .col-sm-6{width:100%;}
+    .heng{width:100%;height: 50px;}
+    .form-group_heng{width:100%;height: 50px;}
+    .form-group_l{width:25%;float: left;}
+    .form-group_r{width:25%;float: left;}
+    .form-group_r label{width:25%;float: left;margin-top: 7px;}
+    .form-group_l label{width:25%;float: left;margin-top: 7px;}
+    /*.heng div label{width:20%;float: left;margin-top: 7px;}*/
+    .form-control{width:65%;}
+    .form-group_21{width:33.3%;float:left;}
+    .form-group_22{width:33.3%;float:left;}
+    .form-group_23{width:33.3%;float:left;}
+    .fengetitle{height: 40px;margin-bottom: 10px;font-size: 20px;font-family: 微软雅黑;text-align: center;line-height: 40px;width: 60%;margin-left: 20%;border-bottom: 1px solid #cdcdcd;}
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function(e){
+
+        $.validator.setDefaults({
+            highlight:function(element){
+                $(element).closest('.form-group').remove('has-success').addClass('has-error');
+            },
+            success:function(element){
+                $(element).closest('.form-group').remove('has-error').addClass('has-success');
+            },
+            errorElement:'span',
+            errorPlacement:function(error,element){
+                if(element.is(":radio") || element.is(":checkbox")){
+                    error.appendTo(element.parent().parent().parent());
+                }else{
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass:"help-block m-b-none",
+            validClass:"help-block m-b-none"
+        });
+        $("#sys_dlg_form").validate({
+            rules :{
+                server_name :"required",
+                server_ip:"required"
+            },
+            messages:{
+                server_name : "必填",
+                server_ip:"必填"
+            },
+            submitHandler:function(){
+                var formBody = $('#sys_dlg_form');
+                $.post('__CONTROLLER__/submit',formBody.serialize(), function(data) {
+                    if("success" == data) {
+                        $("#sys_dlg").modal("hide");
+                        $('#atpbiztable').bootstrapTable("refresh");
+                    }else {
+                        alert('保存失败');
+                    }
+                });
+            }
+
+        });
+        var area = $("#secproducts_area option:selected").val();
+        $.post('__CONTROLLER__/getbuilding', {area: area}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#secproducts_building").children().remove();
+                var item = "";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'";
+                    if(typearr[i]['d_atpid'] == "{$data.secproducts_building}")
+                        item += " selected>" + typearr[i]['d_dictname'] + "</option>";
+                    else
+
+                        item += ">" + typearr[i]['d_dictname'] + "</option>";
+
+                }
+                $("#secproducts_building").append(item);
+            }
+            else
+            {
+                $("#secproducts_building").children().remove();
+            }
+
+        });
+        
+    });
+    $('#secproducts_area').on('change',function() {
+        var area = $("#secproducts_area option:selected").val();
+        $.post('__CONTROLLER__/getbuilding', {area: area}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#secproducts_building").children().remove();
+                var item = "<option value=''></option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'";
+                    if(typearr[i]['d_atpid'] == "{$data.secproducts_building}")
+                        item += " selected>" + typearr[i]['d_dictname'] + "</option>";
+                    else
+                        item += ">" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#secproducts_building").append(item);
+            }
+            else
+            {
+                $("#secproducts_building").children().remove();
+            }
+        });
+    });
+</script>

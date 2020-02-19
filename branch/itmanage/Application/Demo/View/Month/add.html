@@ -1,0 +1,155 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLICOLD__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+<title>会议编辑</title>
+<style>
+    .form-group{
+        margin-top: 26px;
+    }
+    .control-label{
+        width:150px;
+    }
+</style>
+<body style="margin: 0 auto;">
+<?php $isdomainType= false; ?>
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content" >
+        <div class="panel-body">
+            <div class="form-group" style="margin-top: 6px">
+                <label class=" control-label">工作分类：</label>
+                <input id="ytd_worktype" name="ytd_worktype" type="text"  value="{$data.ytd_worktype}" style="width:300px;display: inline-block" class="form-control">
+                <label class="control-label">工作事项：</label>
+                <input id="ytd_name" name="ytd_name" class="form-control" style="width:300px;display: inline-block"  value="{$data.ytd_name}">
+            </div>
+            <div class="form-group" style="margin-top: 6px">
+                <label class=" control-label">行动项目：</label>
+                <input id="ytd_content" name="ytd_content" type="text"  value="{$data.ytd_content}" style="width:760px;display: inline-block" class="form-control">
+            </div>
+            <div class="form-group">
+                <label class="control-label">计划完成时间：</label>
+                <input id="time" name="ytd_planfinishdate" class="form-control" style="width:300px;display: inline-block"  value="{$data.ytd_planfinishdate}" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                <label class="control-label">完成形式：</label>
+                <input id="ytd_finishtype" name="ytd_finishtype" class="form-control" style="width:300px;display: inline-block"  value="{$data.ytd_finishtype}">
+            </div>
+            <div class="form-group">
+
+                <label class="control-label">责任人：</label>
+                <select id="zereb" name="ytd_kybchargemanid" class="chosen-select" >
+                    <option value="">&nbsp;</option>
+                    <foreach name="zr" item="val">
+                        <option value="{$val.user_id}" <?php if($val['user_id']==$data['ytd_kybchargemanid']){echo 'selected';}?>>{$val.user_realusername}({$val.user_name})</option>
+                    </foreach>
+                </select>
+                <label class="control-label">主管处领导：</label>
+                <select id="deps" name="ytd_kybunitleaderid" class="chosen-select" >
+                    <option value="">&nbsp;</option>
+                    <foreach name="chu" item="val">
+                        <option value="{$val.user_id}" <?php if($val['user_id']==$data['ytd_kybunitleaderid']){echo 'selected';}?>>{$val.user_realusername}({$val.user_name})</option>
+                    </foreach>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">责任处室：</label>
+
+                <if condition="$orgName eq null">
+                    <select id="zechu" name="ytd_kybunitid" class="chosen-select" >
+                        <option value="">&nbsp;</option>
+                        <foreach name="dept" item="val">
+                            <option value="{$val.org_id}" <?php if($val['org_id']==$data['ytd_kybunitid']){echo 'selected';}?>>{$val.org_name}</option>
+                        </foreach>
+                    </select>
+                <else />
+                    <select id="zchu" name="ytd_kybunitid" class="chosen-select">
+                        <option value="">&nbsp;</option>
+                        <foreach name="dept" item="val">
+                            <option value="{$val.org_id}" <?php if($val['org_name']==$orgName){echo 'selected';}?>>{$val.org_name}</option>
+                        </foreach>
+                    </select>
+                </if>
+                <label class="control-label">主管部领导：</label>
+                <select id="dep" name="ytd_kybleaderid" class="chosen-select" >
+                    <option value="">&nbsp;</option>
+                    <foreach name="ling" item="val">
+                        <option value="{$val.user_id}" <?php if($val['user_id']==$data['ytd_kybleaderid']){echo 'selected';}?>>{$val.user_realusername}({$val.user_name})</option>
+                    </foreach>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">处置措施：</label>
+                <input id="ytd_dealmethod" name="ytd_dealmethod" class="form-control" style="width:760px;display: inline-block"  value="{$data.ytd_dealmethod}">
+            </div>
+        </div>
+        <input type="hidden" value="{$data.ytd_id}" name="ytd_id">
+    </div>
+</form>
+<div class="modal-footer" style="margin-top: 30px">
+    <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="margin-right: 20px;">保存</button>
+</div>
+</body>
+<script src="__PUBLICOLD__/vendor/chosen/chosen.jquery.js"></script>
+<script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script src="__PUBLICOLD__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        $('#zchu').attr("disabled",true);
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        $('#sys_dlg_submit').click(function(){
+            $('#sys_dlg_form1').submit();
+        })
+        $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '300px'});
+
+        $("#jingbanren").chosen({disable_search_threshold: 0, search_contains: true, width: '760px'});
+
+        $('#jingbanren').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__CONTROLLER__/getUserLists'
+        });
+        $.validator.setDefaults({
+            highlight:function(element){
+                $(element).parent().remove('has-success').addClass('has-error');
+            },
+            success:function(element){
+                $(element).parent().remove('has-error').addClass('has-success');
+            },
+            errorPlacement:function(error,element){
+                if(element.is(":radio") || element.is(":checkbox")){
+                    error.appendTo(element.parent());
+                }else{
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass:"help-block m-b-none",
+            validClass:"help-block m-b-none"
+        });
+        $('#sys_dlg_form1').validate({
+            onclick:false,
+            onfocusout:false,
+            onkeyup:false,
+            rules:{
+                ytd_worktype:'required'
+            },
+            messages:{
+                ytd_name:'请输入工作项目'
+            },submitHandler:function(){
+                $('#zchu').attr("disabled",false);
+                var formBody = $('#sys_dlg_form1');
+                $.post('__CONTROLLER__/submit',formBody.serialize(), function (data) {
+                    if (data.code > 0) {
+                        parent.$('#atpbiztable').bootstrapTable('refresh');
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        layer.alert(data.message);
+                    }
+                },'JSON');
+            }
+        });
+
+
+    });
+</script>

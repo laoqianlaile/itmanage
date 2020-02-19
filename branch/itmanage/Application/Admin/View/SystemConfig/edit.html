@@ -1,0 +1,127 @@
+﻿<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<title>配置项编辑</title>
+<style>
+    .box{
+        margin: 0 auto;
+        text-align: center;
+    }
+    .tab-content{
+        position: relative;
+    }
+    .form-group > div {
+        margin-top: 3px;
+        margin-bottom: 5px;
+    }
+    .form-group{
+        float: left;
+        width: 60%;
+        margin-top:10px ;
+    }
+    #xian{
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        top: 150px;
+        left: 0;
+        background: lightgrey;
+    }
+    .chosen-single{
+        width: 280px!important;
+    }
+    .form-group{
+        margin-left:28px !important;
+        margin-right:0px !important;
+    }
+    .control-label{
+        text-align: left !important;
+    }
+    .form-group input{
+        margin-left: 12px;
+        border-radius: 2px;
+    }
+    #sys_dlg_submit{
+        margin-right: 53px!important;
+    }
+    .panel-body{
+        margin: 10px 0 12px;
+    }
+    .chosen-drop{
+        text-align: left;
+    }
+    .chosen-single span{
+        text-align: left;
+    }
+    html{
+        overflow: hidden;
+    }
+    .department .chosen-drop{
+        height: 200px!important;
+    }
+    .department .chosen-results{
+        height: 160px!important;
+    }
+</style>
+<body>
+<div class="box">
+<form id="sys_dlg_form" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content">
+        <div class="panel-body">
+            <div class="clearfix" style="margin-top: 8px">
+                <div class="form-group pull-left clearfix" >
+                    <label class=" control-label" style="float: left">配置项名称：</label>
+                    <input id="itemname" type="text" value="{$data.sc_itemname}"
+                           style="width:280px;display:block;float: left" disabled="false" class="form-control">
+                    </div>
+                    <div class="form-group pull-left clearfix" >
+                    <label class=" control-label" style="float: left">配置项值：</label>
+                    <input id="itemvalue" type="text" value="{$data.sc_itemvalue}" style="width:280px;display: inline-block;float: left"
+                           class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+    <input id="id" type="hidden" value="{$data.sc_id}" class="form-control">
+</form>
+<div id="xian" style="margin-top: 30px"></div>
+<div class="modal-footer" style="border: none;">
+    <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="margin-top: 11px">保存</button>
+</div>
+</div>
+</body>
+<script>
+    $(function () {
+        layui.use('layer', function () {
+            layer = layui.layer;
+        })
+
+        $('#sys_dlg_submit').click(function () {
+            var id = $('#id').val();
+            var sc_itemvalue = $('#itemvalue').val();
+            var sc_itemname=$('itemname').val();
+
+            $.ajax({
+                type: 'post',
+                url: '__CONTROLLER__/editConfig',
+                data: {
+                    sc_itemvalue: sc_itemvalue,
+                    sc_itemname:sc_itemname,
+                    id: id
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.code > 0) {
+                        layer.msg('操作成功');
+                    } else {
+                        layer.alert(data.message);
+                        return;
+                    }
+                    parent.$('#atpbiztable').bootstrapTable('refresh');
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                }
+            })
+        })
+
+    });
+</script>

@@ -1,0 +1,94 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<title>部门待办事项</title>
+<style>
+    .layui-tab-content {
+        padding-bottom: 0 !important;
+    }
+    .modal-body {yy
+        padding-bottom: 0 !important;
+    }
+    input, textarea, select {
+        margin-bottom: 8px;
+    }
+    html {
+        height: auto;
+    }
+    .layui-tab {
+        margin-bottom: 0 !important;
+        margin-top: 0;
+    }
+    #layui-title li {
+        width: 12%;
+    }
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    .layui-tab-item>iframe{
+        width: 98%;box-sizing:border-box;overflow:hidden;border: none;
+    }
+
+</style>
+<body>
+<div style="overflow: hidden">
+    <div class="modal-body" style="overflow: hidden">
+        <div class="layui-tab layui-tab-brief" lay-filter="demo">
+            <ul class="layui-tab-title" id="layui-title">
+                <?php $count = 0; ?>
+                <?php foreach($powers as $menuName=>$menuPath){ ?>
+                <li class="<?php if($count==0){echo 'layui-this';} ?> layui-tab-item tab" url="__APP__/{$menuPath}">{$menuName}</li>
+                <?php $count++; ?>
+                <?php } ?>
+                <!--<li class="layui-this layui-tab-item tab" url="__CONTROLLER__/index">部门待办事项维护</li>-->
+                <!--<li class="layui-tab-item tab" url="__CONTROLLER__/tijiao">部门待办事项提交</li>-->
+                <!--<li class="layui-tab-item tab" url="__CONTROLLER__/confirm" >部门待办事项确认</li>-->
+                <!--<li class="layui-tab-item tab"  url="__CONTROLLER__/rogatory">部门待办事项查询</li>-->
+            </ul>
+            <div class="layui-tab-content" id="layui-content">
+                <div lay-id="1" class=" layui-tab-item">
+                    <iframe  url="" style="" src="" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $(function () {
+        layui.use('layer', function () {
+            layer = layui.layer;
+            if($('.tab').length ==0) {
+                layer.alert('您在本页面中没有任何操作权限！');
+                return ;
+            }
+        })
+        layui.use('element', function () {
+            var element = layui.element();
+            element.on('tab(demo)', function (data) {
+            });
+        })
+        var ifm = $('iframe');
+        var height = document.documentElement.clientHeight -100;
+        ifm.css('height', height+'px');
+        //判断先展示那个div
+        var show_div = "<?php echo I('get.show_div',0,'intval'); ?>";
+        var content_obj = $('#layui-content').children();
+        var title_obj = $('#layui-title').children();
+        if (show_div != 0) {
+            var index = show_div -1;
+            ifm.eq(index).attr('src',$('.tab').eq(index).attr('url'));
+            content_obj.eq(index).addClass('layui-show').siblings().removeClass('layui-show');
+            title_obj.eq(index).addClass('layui-this').siblings().removeClass('layui-this');
+        } else {
+            content_obj.eq(0).addClass('layui-show');
+            ifm.eq(0).attr('src',$('.tab').eq(0).attr('url'));
+            title_obj.eq(0).addClass('layui-this');
+        }
+
+        $('.tab').click(function(){
+            var iframeLink = $(this).attr('url');
+            ifm.attr('src',iframeLink);
+        })
+    });
+</script>

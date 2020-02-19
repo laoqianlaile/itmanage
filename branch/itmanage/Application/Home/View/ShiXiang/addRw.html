@@ -1,0 +1,168 @@
+﻿<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<style>
+    .an button{
+        width: 100px;
+        height: 30px;
+        border-radius: 0px;
+        font-weight: bold;
+        background-color: #fff;
+        border-radius: 5px;
+    }
+    .an{
+        margin-top: 50px;
+    }
+    .control-label{
+        font-size: 14px!important;
+        margin-top: 7px;
+    }
+    .form-control{
+        display: inline-block;
+        width: 300px;
+    }
+    font{
+        font-weight: bold;
+        color: red;
+        font-size: 14px;
+    }
+    .layui-tab-content {
+        padding-bottom: 0 !important;
+    }
+</style>
+
+<body class="gray-bg">
+        <div class="layui-tab layui-tab-brief" lay-filter="demo" style="margin-top: -20px;">
+            <ul class="layui-tab-title" id="layui-title">
+                <li class="layui-this layui-tab-item tab">内容填写</li>
+                <li class="layui-tab-item tab">内容历史</li>
+            </ul>
+        <div class="layui-tab-content" id="layui-content">
+            <div lay-id="1" class=" layui-tab-item layui-show">
+                <form id="atpform" role="form"　class="form-inline">
+                    <div class="" style="padding:5%;padding-top:1%;">
+                        <div class="row row-lg" style="width:100%;">
+                            <div class="form-group form-inline" style="display: block">
+                                <label class=' col-sm-2 control-label' style="width: 16%">任务内容</label>
+                                <textarea  class="form-control" name="rw_detail" style="width: 82.5%;height: 150px;" >{$data.rw_detail}</textarea>
+                            </div>
+                        </div>
+                        <if condition="$biao eq null">
+                            <div class="an" style="text-align: center">
+                                <input type="hidden" name="rw_atpid" id="rw_atpid" value="{$data.rw_atpid}"/>
+                                <input type="hidden" name="rw_sxid" id="rw_sxid" value="{$sxId}"/>
+                                <button type="button" style="background-color:#104aad;color:#fff" onclick="submitMatter();">提交</button>
+                            </div>
+                        </if>
+                    </div>
+                    </form>
+                </div>
+                <div lay-id="2"  class=" layui-tab-item">
+                    <iframe  class="frame"   url="__CONTROLLER__/renwu?id={$sxId}" style src="" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    <div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+        <div class="modal-dialog" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">处理中</h4>
+                </div>
+                <div class="modal-body">
+                    <img src="__PUBLIC__/img/loading/loading8.gif" style='display: block;margin: 0 auto'>
+                    <div id="loadingText" style="text-align: center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script>
+
+    var ifm = $('iframe');
+    var height = document.documentElement.clientHeight -100;
+    ifm.css('height', height+'px');
+
+
+    layui.use('layer', function () {
+        layer = layui.layer;
+    })
+
+    /* Tab效果 */
+    layui.use('element', function () {
+        var element = layui.element();
+        element.on('tab(demo)', function (data) {
+        });
+    })
+
+    var content_obj = $('#layui-content').children();
+    var title_obj = $('#layui-title').children();
+
+    content_obj.eq(0).addClass('layui-show');
+    title_obj.eq(0).addClass('layui-this');
+
+    $('.tab').click(function(){
+        var index = $(this).index();
+        $('#layui-content .layui-tab-item').eq(index).addClass('layui-show').siblings().removeClass('layui-show');
+        if(index != 0){
+            var iframe  = $('iframe').eq(index-1);
+            var iframeLink = iframe.attr('src');
+            if(iframeLink == ''){
+                iframe.attr('src',encodeURI(iframe.attr('url')));
+            }
+        }
+    });
+
+
+//    $('.tab').eq(showIndex).click().addClass('layui-this');
+//    $('#layui-content .layui-tab-item').eq(showIndex).addClass('layui-show');
+
+    function submitMatter(){
+
+        var formbody   = $("#atpform");
+        $.ajax({
+            type:'post',
+            url:'__CONTROLLER__/addRwData',
+            data:formbody.serialize(),
+            success:function(res){
+                if(res == 'error'){
+                    alert('添加失败！');
+                    return false;
+                }else{
+//                    parent.$('#sys_refresh').click();
+                    parent.$('#atpbiztable').bootstrapTable('refresh');
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                }
+            }
+        });
+    }
+
+    function checkSub(para){
+        var err  = 0;
+        for(var i = 0;i<para.length;i++){
+            if(para[i].val() == ''){
+                para[i].parent().addClass('has-error');
+                err = 1;
+            }else{
+                para[i].parent().removeClass('has-error');
+                para[i].parent().addClass('has-success');
+            }
+        }
+        if(err == 1){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+
+
+</script>
+</body>
+
+</html>
+
+
+
+

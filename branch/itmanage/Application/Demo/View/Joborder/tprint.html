@@ -1,0 +1,295 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>通信站协作派工单</TITLE>
+
+
+    <script type="text/javascript">
+        function printT() {
+           window.print();
+        }
+    </script>
+    <style type="text/css">
+        .comment
+        {
+            width:800px;
+            border-collapse:collapse;
+            font-size:1em;
+        }
+        .top
+        {
+            text-align:center;
+            font-size : 24px;
+            font-weight : bold;
+        }
+        .comment tr td
+        {
+            border:1px solid black;
+        }
+        .title
+        {
+            width:120px;
+        }
+        .content-short
+        {
+            width:280px;
+        }
+        .content-long
+        {
+            width:680px;
+        }
+        .A4{
+            page-break-before: auto;
+            page-break-after:always;
+        }
+    </style>
+</head>
+<body onload="printT()">
+
+<foreach name="formlist" item="data">
+    <div class="A4">
+<form >
+
+    <table class='comment top' cellpadding=5 cellspacing=0 >
+        <tr>
+            <td>
+                通信站协作派工单-第1联（任务联）
+            </td>
+        </tr>
+    </table>
+    <table class='comment' cellpadding=5 cellspacing=0>
+        <tr>
+            <td class='title'>
+                编号:
+            </td>
+            <td class='content-short'>
+                {$data.txz_tongxinid}
+            </td>
+            <td class='title'>
+                日期:
+            </td>
+            <td class='content-short' id="date">
+                {$data.txz_submittime}
+            </td>
+        </tr>
+    </table>
+
+    <table class='comment' cellpadding=5 cellspacing=0 >
+        <tr>
+            <td class='title'>
+                姓名:
+            </td>
+            <td class='content-short' id="username" colspan=3>
+                {$data.txz_username}
+            </td>
+        </tr>
+        <tr>
+            <td class='title'>
+                部门:
+            </td>
+            <td class='content-short' id="dept">
+                {$data.txz_depart}
+            </td>
+            <td class='title'>
+                科室:
+            </td>
+            <td class='content-short' id="office">
+                {$data.txz_office}
+            </td>
+        </tr>
+        <tr>
+            <td class='title'>
+                电话:
+            </td>
+            <td class='content-short' id="phone">
+                {$data.txz_phone}
+            </td>
+            <td class='title'>
+                地址:
+            </td>
+            <td class='content-short' id="address">
+                {$data.txz_address}
+            </td>
+        </tr>
+        <tr>
+            <td class='title'>
+                任务类型:
+            </td>
+            <td colspan=3  class='content-long' id="type">
+                {$data.txz_type}
+            </td>
+        </tr>
+        <tr>
+            <td class='title'>
+                任务内容:
+            </td>
+            <td colspan=3 class='content-long' id="detail">
+                {$data.txz_detail}
+            </td>
+        </tr>
+    </table>
+    <table class='comment' cellpadding=5 cellspacing=0 >
+        <tr>
+            <td class='title'>
+                重要提示
+            </td>
+            <td colspan=3 class='content-long'>
+                1.&nbsp;严禁在配线间内吸烟、喝水、堆放杂物，保持配线间内环境卫生；<br/>
+                2.&nbsp;严禁以任何方式将非授权的设备与配线间内的设备、红黑隔离插座连接；<br/>
+                3.&nbsp;确保机柜内网线走线规范；<br/>
+                4.&nbsp;离开配线间时注意关灯锁门；<br/>
+                5.&nbsp;清理多余线缆。
+            </td>
+        </tr>
+
+    </table>
+    <br/>
+    备注：请将虚线以下第2联返回给信息中心，谢谢！
+    <br/>
+    <br/>
+    <br/>
+    ---------------------------------------------------------------------------------------------------------------
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <table class='comment top' cellpadding=5 cellspacing=0 >
+        <tr>
+            <td>
+                通信站协作派工单-第2联（反馈联）
+            </td>
+        </tr>
+    </table>
+    <table class='comment' cellpadding=5 cellspacing=0>
+        <tr>
+            <td class='title'>
+                编号:
+            </td>
+            <td class='content-short' id="number2">
+                {$data.txz_tongxinid}
+            </td>
+            <td class='title'>
+                日期:
+            </td>
+            <td class='content-short' id="date2">
+                {$data.txz_completetime}
+            </td>
+        </tr>
+    </table>
+
+    <table class='comment' cellpadding=5 cellspacing=0 >
+        <tr>
+            <td class='title'>
+                姓名:
+            </td>
+            <td class='content-short' id="username2" colspan=3>
+                {$data.txz_username}
+            </td>
+        </tr>
+        <tr>
+            <td class='title'>
+                部门:
+            </td>
+            <td class='content-short' id="dept2">
+                {$data.txz_depart}
+            </td>
+            <td class='title'>
+                科室:
+            </td>
+            <td class='content-short' id="office2">
+                {$data.txz_office}
+            </td>
+        </tr>
+        <tr>
+            <td class='title'>
+                电话:
+            </td>
+            <td class='content-short' id="phone2">
+                {$data.txz_phone}
+            </td>
+            <td class='title'>
+                地址:
+            </td>
+            <td class='content-short' id="address2">
+                {$data.txz_address}
+            </td>
+        </tr>
+        <tr>
+            <td class='title'>
+                任务类型:
+            </td>
+            <td colspan=3  class='content-long' id="type2">
+                {$data.txz_type}
+            </td>
+        </tr>
+        <tr>
+            <td class='title'>
+                任务内容:
+            </td>
+            <td colspan=3 class='content-long' id="detail2">
+                {$data.txz_detail}
+            </td>
+        </tr>
+    </table>
+    <table class='comment' cellpadding=5 cellspacing=0 >
+        <tr>
+            <td class='title'>
+                完成情况
+            </td>
+            <td colspan=3 class='content-long' >
+                {$data.txz_tresult}
+            </td>
+        </tr>
+        <tr>
+            <td class='title'>
+                交换机地址:
+            </td>
+            <td class='content-short'>
+                {$data.txz_tswitch}
+            </td>
+            <td class='title'>
+                交换机端口:
+            </td>
+            <td class='content-short'>
+                {$data.txz_tport}
+            </td>
+        </tr>
+        <tr>
+            <td class='title'>
+                通信站配线间操作反馈
+            </td>
+            <td colspan=3 class='content-long'>
+                □&nbsp;填写配线间进出登记表；<br/>
+                □&nbsp;进出及时关闭大门；<br/>
+                □&nbsp;离开时关灯和关闭门窗；<br/>
+                □&nbsp;机柜内网线走线规范；<br/>
+                □&nbsp;无多余线缆及杂物。
+            </td>
+        </tr>
+
+        <tr>
+            <td class='title'>
+                通信站班组长
+            </td>
+            <td colspan=3 class='content-long'>
+                本班组人员已严格按照上述要求工作。<br/><br/>
+                签字：&nbsp;{$data.txz_taccountname}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期：{$data.txz_completetime}
+
+            </td>
+        </tr>
+    </table>
+    <br/>
+    备注：请将第2联反馈给信息中心。
+    <br/>
+    <br/>
+    <br/>
+
+
+</form>
+    </div>
+</foreach>
+</body>
+
+
+</html>
+
+
+

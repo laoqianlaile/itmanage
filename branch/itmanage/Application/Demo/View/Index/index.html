@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=8">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+    <meta name="renderer" content="webkit">
+    <title>运维管理系统</title>
+    <meta name="运维管理系统" content="运维管理系统">
+    <meta name="description" content="运维管理系统">
+    <!--[if lt IE 8]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+<!--<img src="__PUBLICOLD__/img/loginbg.jpg">-->
+<!-- 全局js -->
+<!--<script src="__PUBLICOLD__/js/jquery.min.js?v=2.1.4"></script>-->
+<script src="__PUBLICOLD__/js/jquery1.11.1.js"></script>
+<script>
+    $(document).ready(function () {
+        function GetUserName() {
+            var wshNetwork = new ActiveXObject("WScript.Network");
+            if (null != wshNetwork) {
+                return wshNetwork.UserName;
+            } else {
+                return "";
+            }
+        }
+        function GetDomain() {
+            var wshNetwork = new ActiveXObject("WScript.Network");
+            if (null != wshNetwork) {
+                return wshNetwork.UserDomain;
+            } else {
+                return "";
+            }
+        }
+        try{
+            var domainusername = GetDomain().toLowerCase() + '\\' + GetUserName();
+
+//            alert(domainusername);
+            $.post('__CONTROLLER__/check', {username: domainusername, type: 1}, function (result) {
+                if (result == '0') {
+                    window.location.href = "{:U('Main/index')}";
+                } else {
+                    window.location.href = "{:U('Index/loginPage')}";
+                }
+            });
+
+        } catch(err){
+            //后期替换为错误提示页面，不允许通过浏览器直接
+            window.location.href = "{:U('Index/loginPage')}";
+        }
+    });
+</script>
+</body>
+</html>

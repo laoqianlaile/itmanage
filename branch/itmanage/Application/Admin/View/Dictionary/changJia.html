@@ -1,0 +1,231 @@
+﻿<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<style>
+    th{
+        text-align: center;
+    }
+    .form-control{
+        display: inline-block;
+        width: 250px;
+    }
+    .wrapper .wrapper-content{
+        padding-bottom: 0;
+    }
+    .control-label{
+        font-size: 14px!important;
+    }
+    .fixed-table-toolbar{
+        display: none;
+    }
+    table td{
+        font-size: 13px;
+    }
+    .th-inner{
+        font-size: 13px;
+    }
+    table{
+        table-layout: fixed;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content " style="">
+    <!--<div class="ibox float-e-margins">-->
+        <!--<div class="ibox-content">-->
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- <div >
+                        <p class="name" style="text-align: center;font-size: 30px;">字典管理</p>
+                    </div> -->
+                    <div class="_box" style="">
+                        <label class="control-label" style="margin-left:15px;">资产类型：</label>
+                        <select id="search_type" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <?php foreach($dicZiChan as $key=>$value){ ?>
+                             <option value="{$value.dic_id}" >{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                        <label class="control-label" style="margin-left:10px;width: 120px;">厂家名称：</label>
+                        <input type="text" class="form-control" placeholder="" id="search_dic" style="width:200px;display: inline-block;">
+
+                        <!--<a class="btn btn-warning " style="margin-left: 10px;" type="button" id="sys_add" ><i class="fa fa-sign-out"></i>&nbsp;添加</a>-->
+                        <button class="btn btn-info" style="margin-left: 10px;" type="button" id="sys_refresh">查询</button>
+                        <a class="btn btn-warning " style="margin-left: 10px;" type="button" id="sys_add" >添加</a>
+                        <button class="btn btn-error" style="margin-left: 10px;" type="button" id="sys_del">删除</button>
+                    </div>
+                    <table id="atpbiztable" data-height="600"></table>
+                </div>
+            </div>
+        <!--</div>-->
+    <!--</div>-->
+</div>
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script>
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '300px'});
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getDataChangJia',         //请求后台的URL（*）
+                method: 'post',                      //请求方式（*）
+                toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName: "dic_order",
+                sortOrder: "asc",                   //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 15,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+//            strictSearch: true,
+//            showColumns: true,                  //是否显示所有的列
+//            showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "dic_id",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                columns: [[
+                    {checkbox: true},
+                    {
+                        title: '序号', width: 40,
+                        formatter: function (value, row, index) {
+                            var option = $('#atpbiztable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'dic_name', title: '字典项名称', sortable: true, width: 150},
+                    {field: 'dic_value', title: '字典值', sortable: true, width: 150},
+                    {field: 'dic_type', title: '字典类型', sortable: true, width: 150},
+                    {field: 'dic_createtime', title: '创建时间', sortable: true, width: 150, visible: true},
+                    {field: 'dic_order', title: '顺序号', sortable: true, width: 80, visible: true},
+                    {
+                        field: 'dic_id', title: '操作', sortable: false, width: 60,
+                        formatter: function (value, row, index) {
+                            var inp = "'" + value + "'";
+                            var a = '<a  class="btn btn-info btn-xs" onclick="updateInRow(' + inp + ')">编辑</a><br>';
+                            return a;
+                        }
+                    }
+                ]
+                ],
+                onDblClickRow: function (row) {
+                    layer.open({
+                        title: '字典编辑',
+                        closeBtn: 1,
+                        type: 2,
+                        shadeClose: false,
+                        content: '__CONTROLLER__/changJiaAdd?id=' + row['dic_id'],
+                        area: ['800px', '430px']
+                    });
+
+                }
+            });
+        }
+    }
+    TableObj.oTableInit();
+
+    function queryParams(params) {  //配置参数
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            dic_name:$('#search_dic').val(),
+            search_type:$('#search_type').val()
+        };
+        return temp;
+    }
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+    $('#sys_add').on('click',function(){
+        var dic_type = $('#search_type').val();
+        layer.open({
+            title:'字典编辑',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/changJiaAdd?dic_type='+dic_type,
+            area: ['800px', '430px']
+        });
+    });
+
+
+
+    $('#sys_update').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if(tablerow.length!=1)
+        {
+            layer.alert("您已多选或者少选，仅能对一条数据进行操作");
+        }
+        else {
+            layer.open({
+                title:'字典编辑',
+                closeBtn:1,
+                type: 2,
+                shadeClose:false,
+                content: '__CONTROLLER__/changJiaAdd?id='+tablerow[0]['dic_id'],
+                area: ['800px', '430px']
+            });
+        }
+    });
+
+    function updateInRow(id)
+    {
+        layer.open({
+            title:'字典编辑',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/changJiaAdd?id='+id,
+            area: ['800px', '430px']
+        });
+    }
+
+    $('#sys_del').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            layer.alert("您尚未选择数据");
+        } else {
+            layer.confirm('确认删除' + tablerow.length + '条数据?',{btn:['确定','取消']},function(){
+                var ids = [];
+                $.each(tablerow, function () {
+                    ids.push(this['dic_id']);
+                });
+                $.ajax({
+                    type:'post',
+                    url:'__CONTROLLER__/delDictionaryChangjia',
+                    data:{ids: ids.join(',')},
+                    dataType :'json',
+                    success:function(data){
+                        if(data.code > 0){
+                            layer.msg('操作成功');
+                        }else{
+                            layer.alert(data.message);
+                        }
+                        $('#atpbiztable').bootstrapTable('refresh')
+                    }
+                })
+            })
+        }
+    });
+
+</script>
+</body>
+
+</html>
+
+
+
+

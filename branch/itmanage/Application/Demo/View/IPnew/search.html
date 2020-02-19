@@ -1,0 +1,329 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>IP地址查询</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+     
+    <style>
+        .table{max-width: none;}
+        .pull-left{width:100%;}
+        #atpbiztoolbar{width:100%;}
+        #dic_name{width: 20%;float: left;margin-right: 5px;}
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <div style="padding-top:2%;padding-left:2%;" >
+                        <div calss="form-inline" style="float:left;width:24%;">
+                            <label style="float:left;width:32%;margin-top: 5px;">起始 IP&nbsp;</label>
+                            <input  id="ipstart" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;" >
+                        </div>
+                        <div calss="form-inline" style="float:left;width:24%;">
+                            <label style="float:left;width:32%;margin-top: 5px;">结束 IP&nbsp;</label>
+                            <input  id="ipend" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;" >
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:44%;margin-top: 5px;">IP使用状态&nbsp;</label>
+                            <select style="margin-bottom: -5px;width: 56%;" class="form-control" name="ipb_status" id="ipb_status">
+                                <!--<option value="" >请选择</option>-->
+                                <option value="3" >未使用</option>
+                                <option value="1">预分配</option>
+                                <option value="2" selected>已使用</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-info " type="button" style="margin-left:30px;" id="sys_search"><i class="fa fa-pencil-square"></i>&nbsp;查询</button>
+                        <button class="btn btn-danger " type="button"  style="margin-left:10px;" id="sys_del"><i class="fa fa-rotate-right"></i>&nbsp;重置</button>
+                        <div style="float:right;width:25%;margin-top: 10px;">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div id="table1" style="display:;">
+                        <table id="atpbiztable"></table>
+                    </div>
+                    <div id="table2" style="display:none;">
+                        <table id="atpbiztables"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="editinfo" role="dialog" class="modal fade "></div>
+<script>
+
+    $(function () {
+        $(".chosen-select_longajax").chosen({disable_search_threshold: 0, search_contains: true});//,width:'56%',hight:'80px'
+
+        $('#dutydept').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__CONTROLLER__/assigndept'
+        },{
+            loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        $('#iparea').on('change',function() {
+            var area = $("#iparea option:selected").val();
+            $.post('__CONTROLLER__/getbuilding', {area: area}, function (rep) {
+                var typearr = eval("(" + rep + ")");
+                if (typearr.length > 0) {
+                    $("#ipbuilding").children().remove();
+                    var item = "";
+                    item += "<option value='' selected='selected'></option>";
+                    for (var i = 0; i < typearr.length; i++) {
+                        item += "<option value='" + typearr[i]['d_atpid'] + "'>" + typearr[i]['d_dictname'] + "</option>";
+                    }
+                    $("#ipbuilding").append(item);
+                }
+                else
+                    $("#ipbuilding").children().remove();
+            });
+        });
+        var TableObj = {
+            oTableInit: function () {
+                $('#atpbiztable').bootstrapTable({
+                    url: '__CONTROLLER__/getSearchData',
+                    method: 'post',
+                    toolbar: '#atpbiztoolbar',
+                    striped: true,
+                    cache: false,
+                    pagination: true,
+                    iconSize: 'outline',
+                    sortable: true,
+                    sortName: "ipb_addressnum",
+                    sortOrder: "asc",
+                    queryParams: queryParams,
+                    sidePagination: "server", 
+                    pageNumber: 1,
+                    pageSize: 10,
+                    pageList: [5, 10, 25, 50, 100],
+                    uniqueId: "ipb_atpid",
+                    columns: [
+                        [
+                            {
+                                title: '序号', width: 40,
+                                formatter: function (value, row, index) {
+                                    var option = $('#atpbiztable').bootstrapTable("getOptions");
+                                    return option.pageSize * (option.pageNumber - 1) + index + 1;
+                                }
+                            },
+                            {field: 'zd_name', title: '资产名称', sortable: true},
+                            {field: 'zd_type', title: '资产类别', sortable: true},
+                            {field: 'ipb_address', title: 'IP地址', sortable: true},
+                            {field: 'ip_mask', title: '子网掩码', sortable: false},
+                            {field: 'ip_gateway', title: '网关', sortable: false},
+                            {field: 'ip_vlan_no', title: 'Vlan号', sortable: false},
+                            {
+                                field: 'zd_atpid', title: '查看', sortable: false, width: 60,
+                                formatter: function (value, row, index) {
+                                    var inp = "'" + value + "'";
+                                    var a = '<a  class="btn btn-warning btn-xs" onclick="terminalInfo(' + inp + ')">资产详情</a><br>';
+                                    return a;
+                                }
+                            }
+                        ]
+                    ]
+                });
+            }
+        };
+        TableObj.oTableInit();
+        $('#back').click(function(){
+            history.go(-1);
+        })
+
+        $('#sys_search').on('click',function() {
+            var ip_start   = $('#ipstart');
+            var ip_end     = $('#ipend');
+            var res = checkSub([ip_start,ip_end]);
+            if(!res) return false;
+            var ipbstatus = $('#ipb_status').val();
+            if(ipbstatus == 3 || ipbstatus == 1){
+                $('#atpbiztables').bootstrapTable('destroy');
+                TableObjs.oTableInit();
+                $('#table2').show();
+                $('#table1').hide();
+            }else{
+                $('#atpbiztable').bootstrapTable('destroy');
+                TableObj.oTableInit();
+                $('#table2').hide();
+                $('#table1').show();
+            }
+        });
+        $('#sys_del').on('click',function(){
+            $('#ipstart').val("");
+            $('#ipend').val("");
+            $('#ipb_status').val("");
+            $('#atpbiztable').bootstrapTable('destroy');
+            TableObj.oTableInit();
+            $('#table2').hide();
+            $('#table1').show();
+        });
+
+    });
+
+    var TableObjs = {
+        oTableInit: function () {
+            $('#atpbiztables').bootstrapTable({
+                url: '__CONTROLLER__/getSearchDatas',
+                method: 'post',
+                toolbar: '#atpbiztoolbar',
+                striped: true,
+                cache: false,
+                pagination: true,
+                iconSize: 'outline',
+                sortable: true,
+                sortName: "ipb_addressnum",
+                sortOrder: "asc",
+                queryParams: queryParam,
+                sidePagination: "server", 
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [5, 10, 25, 50, 100],
+                uniqueId: "ipb_atpid",
+                columns: [
+                    [
+                        {
+                            title: '序号', width: 40,
+                            formatter: function (value, row, index) {
+                                var option = $('#atpbiztable').bootstrapTable("getOptions");
+                                return option.pageSize * (option.pageNumber - 1) + index + 1;
+                            }
+                        },
+                        {field: 'ipb_address', title: 'IP地址', sortable: true},
+                        {field: 'ip_mask', title: '子网掩码', sortable: true},
+                        {field: 'ip_gateway', title: '网关', sortable: true},
+                        {field: 'ip_vlan_no', title: 'Vlan号', sortable: true},
+                        {
+                            field: 'ipb_atpid', title: '操作', sortable: false, width: 60,
+                            formatter: function (value, row, index) {
+                                var inp      = "'" + value + "'";
+                                var ip_atpid = row['ip_atpid'];
+                                var a = '<a  class="btn btn-danger btn-xs" onclick="editIpInfo(' + inp + ',\''+ip_atpid+'\')">修改</a><br>';
+                                return a;
+                            }
+                        }
+                    ]
+                ]
+            });
+        }
+    }
+    function queryParams(params) {
+        var temp = {
+            limit: params.limit,
+            offset: params.offset,
+            sort: params.sort,
+            sortOrder: params.order,
+            ipstart: $('#ipstart').val(),
+            ipend: $('#ipend').val(),
+            ipbstatus: $('#ipb_status').val(),
+        };
+        return temp;
+    }
+
+    function queryParam(params) {  //配置参数
+        var temp = {
+            limit: params.limit,
+            offset: params.offset,
+            sort: params.sort,
+            sortOrder: params.order,
+            ipstart: $('#ipstart').val(),
+            ipend: $('#ipend').val(),
+            ipbstatus: $('#ipb_status').val(),
+        };
+        return temp;
+    }    
+
+    function checkSub(para){
+        var reg  = /^10\.([1-9]{1}\d?)\.(\d|1\d?\d?|2(\d|([0-4]\d|5[0-5]))|[1-9]\d)\.(\d|1\d?\d?|2(\d|([0-4]\d|5[0-5]))|[1-9]\d)$/;
+        var err  = 0;
+        for(var i = 0;i<para.length;i++){
+            var tmp  = para[i].val();
+            tmp = tmp.trim();
+            if(tmp == ''){
+                para[i].parent().removeClass('has-error');
+                para[i].parent().addClass('has-success');
+                break;
+            }else{
+                var re = reg.test(tmp);
+                if(!re){
+                    para[i].parent().addClass('has-error');
+                    err = 1;
+                }else{
+                    para[i].parent().removeClass('has-error');
+                    para[i].parent().addClass('has-success');
+                }
+            }
+        }
+        if(err == 1){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    function editIpInfo(id,ipid){
+        $("#editinfo").load('__CONTROLLER__/editIpInfo?id='+id+'&ipid='+ipid, function() {
+            $("#editinfo").modal({backdrop: false});
+        });
+    }
+
+    function terminalInfo(id){
+        $("#editinfo").load('__MODULE__/Terminal/detailForm?id=' + id, function() {
+            $("#editinfo").modal('show');
+
+        });
+    }
+
+    function toRelation(ratpid){
+        $("#editinfo").load('__MODULE__/Terminal/detailForm?id=' + ratpid, function() {
+//                $("#sys_dlg").modal({backdrop: false});
+            $("#editinfo").modal('show');
+        });
+    }
+</script>
+</body>
+
+</html>
+
+
+
+

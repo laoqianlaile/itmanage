@@ -1,0 +1,142 @@
+﻿<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<title>模块编辑</title>
+<style>
+    .form-group{
+        margin-bottom: 0;
+        margin-top: 22px;
+    }
+    .form-horizontal input{
+        border-radius: 2px;
+    }
+    .panel-body{
+        height: 340px!important;
+    }
+</style>
+<body style="margin: 0 auto;text-align: center">
+<form id="sys_dlg_form" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content">
+        <div class="panel-body">
+            <div class="form-group" style="margin-top: 10px">
+                <label class=" control-label">父级模块：</label>
+                <select id="mi_pid" class="chosen-select">
+                    <option value="">&nbsp;</option>
+                    <?php foreach($modellist as $key=>$value){ ?>
+                    <option value="{$value.mi_id}"
+                    <?php
+                         if($data['mi_pid'] == $value['mi_id'])
+                         {
+                         echo "selected";
+                         }
+                    ?>
+                    >{$value.mi_name}</option>
+                    <?php } ?>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class=" control-label">模块类型：</label>
+                <select id="mi_type" class="chosen-select">
+                    <option value="">&nbsp;</option>
+                    <option value="网站菜单"
+                    <?php
+                         if($data['mi_type'] == '网站菜单')  echo "selected";
+                    ?>
+                    >网站菜单</option>
+                    <option value="功能页面"
+                    <?php
+                         if($data['mi_type'] == '功能页面')  echo "selected";
+                    ?>
+                    >功能页面</option>
+
+                </select>
+            </div>
+            <div class="form-group">
+                <label class=" control-label">模块名称：</label>
+                <input id="mi_name" type="text" value="{$data.mi_name}" style="width:300px;display: inline-block"
+                       class="form-control">
+            </div>
+            <div class="form-group">
+                <label class=" control-label">模块路径：</label>
+                <input id="mi_url" type="text" value="{$data.mi_url}" style="width:300px;display: inline-block"
+                       class="form-control">
+            </div>
+            <div class="form-group" style="padding-bottom: 10px!important;">
+                <label class=" control-label">排序号：</label>
+                <!--onkeyup="this.value=this.value.replace(/\D/g,'')"-->
+                <input id="mi_sort" type="text" value="{$data.mi_sort}"  style="width:300px;display: inline-block"
+                       class="form-control">
+            </div>
+            </div>
+        </div>
+    </div>
+    <input id="id" type="hidden" value="{$data.mi_id}" class="form-control">
+</form>
+<div class="modal-footer">
+    <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary">保存</button>
+</div>
+</body>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function () {
+            layer = layui.layer;
+        })
+        $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '300px'});
+
+        $('#sys_dlg_submit').click(function () {
+            var id = $('#id').val();
+            var mi_name =$('#mi_name').val().trim();
+            var mi_sort= $('#mi_sort').val().trim();
+            var mi_type=$('#mi_type').val().trim();
+            var mi_url=$('#mi_url').val().trim();
+            var mi_pid=$('#mi_pid').val().trim();
+            if(mi_sort=='')
+            {
+                layer.alert('请输入排序号');
+                return false;
+            }
+            else
+            {
+                var t=/^\d+$/;
+                if(!mi_sort.match(t))
+                {
+                    layer.alert('排序号只能为数字');
+                    return false;
+                }
+            }
+            if (mi_name=='') {
+                layer.alert('请输入模块名称');
+                return false;
+            }
+            if(mi_url=='')
+            {
+                layer.alert('请输入模块路径');
+                return false;
+            }
+            if(mi_type=='')
+            {
+                layer.alert('请选择模块类型');
+                return false;
+            }
+            $.ajax({
+                type: 'post',
+                url: '__CONTROLLER__/addModelInfo',
+                data: {mi_name: mi_name, id: id,mi_sort:mi_sort,mi_type:mi_type,mi_url:mi_url,mi_pid:mi_pid},
+                dataType: 'json',
+                success: function (data) {
+                    if (data.code > 0) {
+                        layer.msg('操作成功');
+                    } else {
+                        layer.alert(data.message);
+                        return;
+                    }
+                    parent.$('#atpbiztable').bootstrapTable('refresh');
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                }
+            })
+        })
+
+    });
+</script>

@@ -1,0 +1,818 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+
+<style>
+    th{
+        text-align: center;
+    }
+    .form-control{
+        display: inline-block;
+    }
+    .wrapper-content{
+        padding-bottom: 0;
+        padding-top: 0;
+    }
+
+    .control-label{
+        width: 30%;
+        float: left;
+        text-align:center;
+        line-height: 30px;
+    }
+    .chosen-container{
+        top: -1px;
+    }
+    .form-group{
+        display: inline-block;
+        width: 23%;
+        margin-top: -7px;
+    }
+    .formEl-div{
+        float: left;
+    }
+    ._box {
+        height:25px;
+        margin: 15px 0px 0px !important;
+    }
+    .fixed-table-container{
+        padding-bottom: 0px !important;
+    }
+    table{
+        table-layout: fixed;
+        word-break: break-all;
+    }
+    .formEl-div{
+        width:70%
+    }
+</style>
+<body class="gray-bg" style="overflow:hidden">
+<div class="wrapper wrapper-content ">
+    <div class="row">
+        <div class="col-sm-12" id='search_div'>
+            <div class="_box" style="margin-top: 5px;">
+                <div class="form-group">
+                    <label class="control-label" >设备编码</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sp_devicecode">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >部标编码</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sp_anecode">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >设备类型</label>
+                    <div class="formEl-div" >
+                        <select id="sp_type" class="chosen-select" >
+                            <option value="">请选择</option>
+                           <<foreach name="sbType" item="v">
+                                <option value="{$v.dic_name}">{$v.dic_name}</option>
+                            </foreach>
+                          <!--  <?php foreach($sbType as $key=>$value){ ?>
+                            <option value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>-->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" >厂家</label>
+                    <div class="formEl-div" >
+                        <select name="sp_factory" id="sp_factory" class="chosen-select">
+                            <option value="">请选择</option>
+                            <?php foreach($changJia as $key=>$value){ ?>
+                            <option value="{$value.dic_id}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="box-show" style="margin-top:20px;">
+                <div class="form-group">
+                    <label class="control-label" >使用人</label>
+                    <div class="formEl-div" >
+                        <select id="sp_useman" name="sp_useman" class="chosen-select" >
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >使用部门</label>
+                    <div class="formEl-div" >
+                        <select id="sp_usedept" class="chosen-select" >
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >状态</label>
+                    <div class="formEl-div" >
+                        <select id="sp_status" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <foreach name="status" item="v">
+                                <option value="{$v.dic_name}">{$v.dic_name}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >型号</label>
+                    <div class="formEl-div" >
+                        <select name="sp_modelnumber" id="sp_modelnumber" class="chosen-select">
+                            <option value=""> </option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >地区</label>
+                    <div class="formEl-div" >
+                        <div class="formEl-div" >
+                            <select id="sp_area" class="chosen-select" >
+                                <option value="">请选择</option>
+                                <?php foreach($diQu as $key=>$value){ ?>
+                                <option value="{$value.dic_id}">{$value.dic_name}</option>
+                                <?php } ?>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >密级</label>
+                    <div class="formEl-div" >
+                        <select id="sp_secretlevel" class="chosen-select" >
+                            <option value="">请选择 </option>
+                            <?php foreach($miJi as $key=>$value){ ?>
+                            <option value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >房间号</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sp_roomno">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" >使用责任单位</label>
+                    <div class="formEl-div">
+                        <select id="sp_assetusedept" class="chosen-select"  >
+                            <option value="">请选择</option>
+                            <foreach name="syDept" item="v">
+                                <option value="{$v.dic_name}">{$v.dic_name}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >楼宇</label>
+                    <div class="formEl-div" >
+                            <select id="sp_belongfloor" class="chosen-select" ></select>
+                        </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >责任人</label>
+                    <div class="formEl-div" >
+                        <select id="sp_dutyman" class="chosen-select" >
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >责任部门</label>
+                    <div class="formEl-div" >
+                        <select id="sp_dutydept" class="chosen-select" >
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >资产责任单位</label>
+                    <div class="formEl-div" >
+                        <select id="sp_assetdutydept" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <foreach name="zcDept" item="v">
+                                <option value="{$v.dic_name}">{$v.dic_name}</option>
+                            </foreach>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >IP地址</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sp_ip">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >MAC地址</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sp_mac">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >子IP地址</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sp_subip">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" >子MAC地址</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sp_submac">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >交换机地址</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sp_swip">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >交换机端口</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sp_swport">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >最远端</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sp_farend">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >领用时间</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sp_receivetime">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >IOS版本</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sp_ios">
+                    </div>
+                </div>
+            </div>
+            <div class="_box" style="">
+                <button class="btn btn-info" style="background-color: forestgreen;border-color: forestgreen;" type="button" id="sys_refresh">查询</button>
+                <button class="btn btn-info" style="background-color: #1AB394;border-color: #1AB394;" type="button" id="sys_reset">重置</button>
+                <a class="btn btn-info " style="margin-left: 10px;background-color: yellowgreen;border-color: yellowgreen;" type="button" id="sys_add" >新增</a>
+               <!-- <button class="btn btn-warning" style="margin-left: 10px;" type="button" data-head="设备编码,部标编码,设备类型,IP地址,子网掩码,网关,MAC地址,子IP地址,子MAC地址,名称,用途,厂家,型号,出厂编号,状态,密级,资产责任单位,使用责任单位,采购日期,启用日期,地区,楼宇,房间号,责任人,责任部门,使用人,使用部门,所属网络,备注,交换机地址,交换机端口,最远端(线路干扰器),次远端(线路干扰器),路数(线路干扰器),部署地点(线路干扰器、视频干扰器),联系方式,描述,购入时间(漏洞扫描、入侵检测),领用时间,有效期,出厂时间(漏洞扫描),列装号(密码机),证书名称,证书编号,颁发机构,管理主机地址,日志服务器地址,IOS版本,配置信息(网闸)" data-extraparam="" data-remark="支持从Excel批量拷贝粘贴" id="sys_batchadd" data-method="Home/Security/saveCopyTables">批量增加</button>-->
+                <button class="btn btn-info" style="margin-left: 10px;background-color: cadetblue;border-color: cadetblue;" type="button" id="sys_del">删除</button>
+                <button class="btn btn-info" style="margin-left: 10px;" type="button" id="sys_exp">导出</button>
+                <button class="btn btn-info" style="margin-left: 10px;" type="button" id="show">收起/展开</button>
+            </div>
+        </div>
+    <div class="col-sm-12">
+            <table id="atpbiztable" ></table>
+        </div>
+</div>
+
+</div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLIC__/img/loading/loading9.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="sort" >
+<input type="hidden" id="sortOrder" >
+</body>
+<script src="__PUBLIC__/js/tablecopy.js"></script>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script>
+
+      /*  var strCookie = document.cookie;
+
+        if(strCookie){
+           location.reload();
+        }*/
+
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+
+          var formEl_div_width = parseInt($('.formEl-div').eq(0).width());
+          $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: formEl_div_width+"px"})
+
+
+   // $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '180px'});
+
+    //选择地区触发楼宇
+   $('#sp_area').change(function () {
+        var id = $(this).val();
+        dic_louyu(id);
+    });
+
+    function dic_louyu(id){
+        if(!id)  return false;
+        $.ajax({
+            type:'post',
+            url:'__MODULE__/dic/getDicLouYu',
+            data:{pid: id},
+            dataType :'json',
+            success:function(data){
+                if (data.code > 0) {
+                    var str=  '<option value=""> </option>';
+                    $.each(data.results,function(k,v){
+                        str += "<option value='"+v['dic_id']+"'>"+v['dic_name']+"</option>";
+                    });
+                    $('#sp_belongfloor option').remove();
+                    $('#sp_belongfloor').append(str);
+                    $('#sp_belongfloor').trigger("chosen:updated");
+                } else {
+                    layer.alert(data.message);
+                }
+            },
+            error:function(){
+                layer.alert('出错啦！请联系管理员');
+            }
+        });
+    }
+
+
+    //选择厂家触发型号
+    $('#sp_factory').change(function () {
+        var id = $(this).val();
+        dic_xinghao(id);
+    });
+    //设置型号
+    var factoryid = $("#sp_factory").val();
+    if (factoryid != '') {
+        var next_name = "<?php echo $data['sp_modelnumber'];?>";
+        dic_xinghao(factoryid, next_name);
+    }
+    //型号
+    function dic_xinghao(id, next_name) {
+        if (next_name == 'undefined') { next_name = '' }
+        if (!id) return false;
+        $.ajax({
+            type: 'post',
+            url: '__MODULE__/dic/getDicXingHao',
+            data: { pid: id },
+            dataType: 'json',
+            success: function (data) {
+                if (data.code > 0) {
+                    var str = '<option value=""> </option>';
+                    $.each(data.results, function (k, v) {
+                        var sele = '';
+                        if (next_name == v['dic_name']) { sele = 'selected' }
+                        str += "<option " + sele + " value='" + v['dic_id'] + "'>" + v['dic_name'] + "</option>";
+                    });
+                    $('#sp_modelnumber option').remove();
+                    $('#sp_modelnumber').append(str);
+                    $('#sp_modelnumber').trigger("chosen:updated");
+                } else {
+                    layer.alert(data.message);
+                }
+            },
+            error: function () {
+                layer.alert('出错啦！请联系管理员');
+            }
+        });
+    }
+
+    //使用人
+    $('#sp_useman').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url:'__MODULE__/org/assignuser'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+    //使用部门
+    $('#sp_usedept').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url: '__MODULE__/org/assigndept'
+    }, {
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+    //责任人
+    $('#sp_dutyman').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url:'__MODULE__/org/assignuser'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+    //责任部门
+    $('#sp_dutydept').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url: '__MODULE__/org/assigndept'
+    }, {
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+  /*fixed();
+    function fixed(){
+        var h  = $(window).height() - 145;
+        $('table').attr('data-height',h);
+    }*/
+
+
+    var height = document.documentElement.clientHeight -70;
+    var searchDivHeight = parseInt($('#search_div').height());
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getData',      //请求后台的URL（*）
+                method: 'post',                     //请求方式（*）
+                toolbar: '#atpbiztoolbar',          //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName: "sp_devicecode",
+                sortOrder: "desc",                  //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页
+                pageSize: 15,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                uniqueId: "sp_atpid",                   //每一行的唯一标识，一般为主键列
+                detailView: true,                  //是否显示父子表
+                detailFormatter: "showDataView",
+                columns: [
+                    {checkbox: true},
+                       {
+                           field: 'sp_atpid',title: '操作', sortable: false,width: 120,
+                           formatter: function (value, row, index) {
+                               var inp = "'" + value + "'";
+                               var type = "'" + row.sp_type + "'";
+                               return '<a  class="btn btn-info btn-xs"  style="margin:0" onclick="updateInRow(' + inp + ','+ type +')">编辑</a>&nbsp;<a  class="btn btn-info btn-xs" onclick="deleteInRow(' + inp + ')" style="margin:0;background: #AB154D;border-color: #AB154D;">删除</a>';                           }
+                       },
+                        {
+                            title: '序号', width: 55,
+                            formatter: function (value, row, index) {
+                                var option = $('#atpbiztable').bootstrapTable('getOptions');
+                                return option.pageSize * (option.pageNumber - 1) + index + 1;
+                            }
+                        },
+                       {field: 'spCount', title: '关联事项', sortable: true, width: 85,
+                           formatter: function (value, row, index) {
+                               var inp = "'" + row.sp_atpid + "'";
+                               var name = "'" + row.sp_devicecode + "'";
+                               return '<a  style="margin:0" onclick="shiXiang(' + inp + ','+ name +')">'+value+'</a>'
+                           }
+                       },
+                        {field: 'sp_devicecode', title: '设备编码', sortable: true, width: 90},
+                        {field: 'sp_anecode', title: '部标编码', sortable: true, width: 90},
+                        {field: 'sp_type', title: '设备类型', sortable: true, width: 90},
+                      /*  {field: 'sp_ip', title: 'IP地址', sortable: true, width: 90},
+                        {field: 'sp_mask', title: '子网掩码', sortable: true, width: 90},
+                        {field: 'sp_gateway', title: '网关', sortable: true, width: 90},
+                        {field: 'sp_mac', title: 'MAC地址', sortable: true, width: 90},
+                        {field: 'sp_subip', title: '子IP地址', sortable: true, width: 90},
+                        {field: 'sp_submac', title: '子MAC地址', sortable: true, width: 90},*/
+                        {field: 'sp_name', title: '名称', sortable: true, width: 90},
+                       /* {field: 'sp_useage', title: '用途', sortable: true, width: 90},*/
+                        {field: 'sp_factory', title: '厂家', sortable: true, width: 90},
+                        {field: 'sp_modelnumber', title: '型号', sortable: true, width: 90},
+                   /*     {field: 'sp_sn', title: '出厂编号', sortable: true, width: 90},*/
+                        {field: 'sp_status', title: '状态', sortable: true, width: 90},
+                        {field: 'sp_secretlevel', title: '密级', sortable: true, width: 90},
+                      /*  {field: 'sp_assetdutydept', title: '资产责任单位', sortable: true, width: 120},
+                        {field: 'sp_assetusedept', title: '使用责任单位', sortable: true, width: 120},
+                        {field: 'sp_purchasetime', title: '采购日期', sortable: true, width: 90},
+                        {field: 'sp_startusetime', title: '启用日期', sortable: true, width: 90},*/
+                        {field: 'sp_area', title: '地区', sortable: true, width: 90},
+                        {field: 'sp_belongfloor', title: '楼宇', sortable: true, width: 90},
+                        {field: 'sp_roomno', title: '房间号', sortable: true, width: 90},
+                     /*   {field: 'sp_dutyman', title: '责任人', sortable: true, width: 90},
+                        {field: 'sp_dutydept', title: '责任部门', sortable: true, width: 90},
+                        {field: 'sp_useman', title: '使用人', sortable: true, width: 90},
+                        {field: 'sp_usedept', title: '使用部门', sortable: true, width: 90},
+                        {field: 'sp_net', title: '所属网络', sortable: true, width: 90},*/
+                       /* {field: 'sp_remark', title: '备注', sortable: true, width: 120},
+                        {field: 'sp_swip', title: '交换机地址', sortable: true, width: 120},
+                        {field: 'sp_swport', title: '交换机端口', sortable: true, width: 120},
+                        {field: 'sp_farend', title: '最远端(线路干扰器)', sortable: true, width: 120},
+                        {field: 'sp_distalend', title: '次远端(线路干扰器)', sortable: true, width: 120},
+                        {field: 'sp_grqnum', title: '路数(线路干扰器)', sortable: true, width: 120},
+                        {field: 'sp_position', title: '部署地点(线路干扰器、视频干扰器)', sortable: true, width: 120},
+                        {field: 'sp_tel', title: '联系方式', sortable: true, width: 120},
+                        {field: 'sp_description', title: '描述', sortable: true, width: 120},
+                        {field: 'sp_buytime', title: '购入时间(漏洞扫描、入侵检测)', sortable: true, width: 120},
+                        {field: 'sp_receivetime', title: '领用时间', sortable: true, width: 120},
+                        {field: 'sp_expirydate', title: '有效期', sortable: true, width: 120},
+                        {field: 'sp_producedate', title: '出厂时间(漏洞扫描)', sortable: true, width: 120},
+                        {field: 'sp_liezhuangnum', title: '列装号(密码机)', sortable: true, width: 120},
+                        {field: 'sp_cert', title: '证书名称', sortable: true, width: 120},
+                        {field: 'sp_certnum', title: '证书编号', sortable: true, width: 120},
+                        {field: 'sp_publish', title: '颁发机构', sortable: true, width: 120},
+                        {field: 'sp_host', title: '管理主机地址', sortable: true, width: 120},
+                        {field: 'sp_logserver', title: '日志服务器地址', sortable: true, width: 120},
+                        {field: 'sp_ios', title: 'IOS版本', sortable: true, width: 120},
+                        {field: 'sp_config', title: '配置信息(网闸)', sortable: true, width: 120},*/
+
+                ],
+                onDblClickRow: function (row) {
+                    updateInRow(row['sp_atpid'],row['sp_type']);
+                }
+
+            });
+        }
+    };
+    TableObj.oTableInit();
+
+    function showDataView(index, row){
+        var html = [];
+        html.push("<div class='ibox-content'>");
+        html.push("<table class='table'>");
+        html.push("<tbody>");
+        html.push("<tr><td><b>资产责任单位</b></td><td>" + row['sp_assetdutydept'] + "</td><td><b>使用责任单位</b></td><td>" + row['sp_assetusedept'] + "</td><td><b>采购日期</b></td><td>" + row['sp_purchasetime'] + "</td><td><b>启用日期</b></td><td>" + row['sp_startusetime'] + "</td></tr>");
+        html.push("<tr><td><b>责任人</b></td><td>" + row['sp_dutyman'] + "</td><td><b>责任部门</b></td><td>" + row['sp_dutydept'] + "</td><td><b>使用人</b></td><td>" + row['sp_useman'] + "</td><td><b>使用部门</b></td><td>" + row['sp_usedept'] + "</td></tr>");
+        html.push("<tr><td><b>IP地址</b></td><td>" + row['sp_ip'] + "</td><td><b>子IP地址</b></td><td>" + row['sp_subip'] + "</td><td><b>MAC地址</b></td><td>" + row['sp_mac'] + "</td><td><b>子MAC地址</b></td><td>" + row['sp_submac'] + "</td></tr>");
+        html.push("<tr><td><b>子网掩码</b></td><td>" + row['sp_mask'] + "</td><td><b>网关</b></td><td>" + row['sp_gateway'] + "</td><td><b>出厂编号</b></td><td>" + row['sp_sn'] + "</td><td><b>用途</b></td><td>" + row['sp_useage'] + "</td></tr>");
+        html.push("<tr><td><b>交换机地址</b></td><td>" + row['sp_swip'] + "</td><td><b>交换机端口</b></td><td>" + row['sp_swport'] + "</td><td><b>最远端(线路干扰器)</b></td><td>" + row['sp_farend'] + "</td><td><b>次远端(线路干扰器)</b></td><td>" + row['sp_distalend'] + "</td></tr>");
+        html.push("<tr><td><b>路数(线路干扰器)</b></td><td>" + row['sp_grqnum'] + "</td><td><b>部署地点(线路干扰器、视频干扰器)</b></td><td>" + row['sp_position'] + "</td><td><b>联系方式</b></td><td>" + row['sp_tel'] + "</td><td><b>描述</b></td><td>" + row['sp_description'] + "</td></tr>");
+        html.push("<tr><td><b>购入时间(漏洞扫描、入侵检测)</b></td><td>" + row['sp_buytime'] + "</td><td><b>领用时间</b></td><td>" + row['sp_receivetime'] + "</td><td><b>有效期</b></td><td>" + row['sp_expirydate'] + "</td><td><b>出厂时间(漏洞扫描)</b></td><td>" + row['sp_producedate'] + "</td></tr>");
+        html.push("<tr><td><b>列装号(密码机)</b></td><td>" + row['sp_liezhuangnum'] + "</td><td><b>证书名称</b></td><td>" + row['sp_cert'] + "</td><td><b>证书编号</b></td><td>" + row['sp_certnum'] + "</td><td><b>颁发机构</b></td><td>" + row['sp_publish'] + "</td></tr>");
+
+        html.push("<tr><td><b>管理主机地址</b></td><td>" + row['sp_host'] + "</td><td><b>日志服务器地址</b></td><td>" + row['sp_logserver'] + "</td><td><b>IOS版本</b></td><td>" + row['sp_ios'] + "</td><td><b>配置信息(网闸)</b></td><td>" + row['sp_config'] + "</td></tr>");
+        html.push("<tr><td><b>领用单位</b></td><td>" + row['sp_receivedept'] + "</td><td><b>所属网络</b></td><td>" + row['sp_net'] + "</td><td><b>备注</b></td><td>" + row['sp_remark'] + "</td></tr>");
+        html.push("</tbody>");
+        html.push("</table>");
+        html.push("</div>");
+        return html.join('').replace(/null/g, "").replace(/undefined/g, "");
+    }
+
+    function queryParams(params) {  //配置参数
+        $('#sort').val(params.sort);
+        $('#sortOrder').val(params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            sp_devicecode:$('#sp_devicecode').val(),
+            sp_anecode:$('#sp_anecode').val(),
+            sp_type:$('#sp_type').val(),
+            sp_ip:$('#sp_ip').val(),
+            sp_mask:$('#sp_mask').val(),
+            sp_gateway:$('#sp_gateway').val(),
+            sp_mac:$('#sp_mac').val(),
+            sp_subip:$('#sp_subip').val(),
+            sp_submac:$('#sp_submac').val(),
+            sp_name:$('#sp_name').val(),
+            sp_useage:$('#sp_useage').val(),
+            sp_factory:$('#sp_factory').val(),
+            sp_modelnumber:$('#sp_modelnumber').val(),
+            sp_sn:$('#sp_sn').val(),
+            sp_status:$('#sp_status').val(),
+            sp_secretlevel:$('#sp_secretlevel').val(),
+            sp_assetdutydept:$('#sp_assetdutydept').val(),
+            sp_assetusedept:$('#sp_assetusedept').val(),
+            sp_purchasetime:$('#sp_purchasetime').val(),
+            sp_startusetime:$('#sp_startusetime').val(),
+            sp_area:$('#sp_area').val(),
+            sp_belongfloor:$('#sp_belongfloor').val(),
+            sp_roomno:$('#sp_roomno').val(),
+            sp_dutyman:$('#sp_dutyman').val(),
+            sp_dutydept:$('#sp_dutydept').val(),
+            sp_useman:$('#sp_useman').val(),
+            sp_usedept:$('#sp_usedept').val(),
+            sp_net:$('#sp_net').val(),
+            sp_remark:$('#sp_remark').val(),
+            sp_swip:$('#sp_swip').val(),
+            sp_swport:$('#sp_swport').val(),
+            sp_farend:$('#sp_farend').val(),
+            sp_distalend:$('#sp_distalend').val(),
+            sp_grqnum:$('#sp_grqnum').val(),
+            sp_position:$('#sp_position').val(),
+            sp_tel:$('#sp_tel').val(),
+            sp_description:$('#sp_description').val(),
+            sp_buytime:$('#sp_buytime').val(),
+            sp_receivetime:$('#sp_receivetime').val(),
+            sp_expirydate:$('#sp_expirydate').val(),
+            sp_producedate:$('#sp_producedate').val(),
+            sp_liezhuangnum:$('#sp_liezhuangnum').val(),
+            sp_cert:$('#sp_cert').val(),
+            sp_certnum:$('#sp_certnum').val(),
+            sp_publish:$('#sp_publish').val(),
+            sp_host:$('#sp_host').val(),
+            sp_logserver:$('#sp_logserver').val(),
+            sp_ios:$('#sp_ios').val(),
+            sp_config:$('#sp_config').val()
+        };
+        return temp;
+    }
+
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+
+    $('#sys_add').on('click',function() {
+        updateInRow('');
+    });
+
+    $('#sys_del').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            layer.alert("您尚未选择数据");
+        } else {
+            var ids = [];
+            $.each(tablerow, function () {
+                ids.push(this['sp_atpid']);
+            });
+            deleteInRow(ids.join(','));
+        }
+    });
+
+    //数据编辑触发该方法
+    function updateInRow(id,type) {
+        layer.open({
+            title:'数据编辑',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/add?sp_atpid='+id+'&sp_type='+type,
+            area: ['80%', '80%']
+        });
+    }
+    //数据删除触发该方法
+    function deleteInRow(id){
+        layer.confirm('确认删除选中数据?',
+                {btn:['确定','取消']},
+                function(){
+                    $.ajax({
+                        type:'post',
+                        url:'__CONTROLLER__/isGldel',
+                        data:{zy_id: id},
+                        dataType :'json',
+                        success:function(data){
+                            if(data.code > 0){
+                                layer.confirm('存在关联关系，是否继续删除?',
+                                        {btn:['确定','取消']},
+                                        function() {
+                                            $.ajax({
+                                                type: 'post',
+                                                url: '__CONTROLLER__/delData',
+                                                data: {sp_atpid: id},
+                                                dataType: 'json',
+                                                success: function (data) {
+                                                    if (data.code > 0) {
+                                                        layer.msg('操作成功');
+                                                        $('#sys_refresh').click();
+                                                    } else {
+                                                        layer.alert(data.message);
+                                                    }
+                                                }, error: function () {
+                                                    layer.alert('出错啦！请稍后再试');
+                                                }
+                                            })
+                                        })
+                            }else{
+                                $.ajax({
+                                    type: 'post',
+                                    url: '__CONTROLLER__/delData',
+                                    data: {sp_atpid: id},
+                                    dataType: 'json',
+                                    success: function (data) {
+                                        if (data.code > 0) {
+                                            layer.msg('操作成功');
+                                            $('#sys_refresh').click();
+                                        } else {
+                                            layer.alert(data.message);
+                                        }
+                                    }, error: function () {
+                                        layer.alert('出错啦！请稍后再试');
+                                    }
+                                })
+                            }
+                        },error:function(){
+                            layer.alert('出错啦！请稍后再试');
+                        }
+                    })
+                })
+    }
+
+    $('#sys_exp').click(function(){
+        $('#loading').modal('show');
+        var sort=$('#sort').val();
+        var sortOrder=$('#sortOrder').val();
+        var t = "__CONTROLLER__/getDataWithExport";
+        t = encodeURI(t);
+        $.ajax({
+            type:'post',
+            url: t,
+            dataType:'json',
+            data:{
+                sort:sort,
+                sortOrder:sortOrder,
+                            sp_devicecode:$('#sp_devicecode').val(),
+            sp_anecode:$('#sp_anecode').val(),
+            sp_type:$('#sp_type').val(),
+            sp_ip:$('#sp_ip').val(),
+            sp_mask:$('#sp_mask').val(),
+            sp_gateway:$('#sp_gateway').val(),
+            sp_mac:$('#sp_mac').val(),
+            sp_subip:$('#sp_subip').val(),
+            sp_submac:$('#sp_submac').val(),
+            sp_name:$('#sp_name').val(),
+            sp_useage:$('#sp_useage').val(),
+            sp_factory:$('#sp_factory').val(),
+            sp_modelnumber:$('#sp_modelnumber').val(),
+            sp_sn:$('#sp_sn').val(),
+            sp_status:$('#sp_status').val(),
+            sp_secretlevel:$('#sp_secretlevel').val(),
+            sp_assetdutydept:$('#sp_assetdutydept').val(),
+            sp_assetusedept:$('#sp_assetusedept').val(),
+            sp_purchasetime:$('#sp_purchasetime').val(),
+            sp_startusetime:$('#sp_startusetime').val(),
+            sp_area:$('#sp_area').val(),
+            sp_belongfloor:$('#sp_belongfloor').val(),
+            sp_roomno:$('#sp_roomno').val(),
+            sp_dutyman:$('#sp_dutyman').val(),
+            sp_dutydept:$('#sp_dutydept').val(),
+            sp_useman:$('#sp_useman').val(),
+            sp_usedept:$('#sp_usedept').val(),
+            sp_net:$('#sp_net').val(),
+            sp_remark:$('#sp_remark').val(),
+            sp_swip:$('#sp_swip').val(),
+            sp_swport:$('#sp_swport').val(),
+            sp_farend:$('#sp_farend').val(),
+            sp_distalend:$('#sp_distalend').val(),
+            sp_grqnum:$('#sp_grqnum').val(),
+            sp_position:$('#sp_position').val(),
+            sp_tel:$('#sp_tel').val(),
+            sp_description:$('#sp_description').val(),
+            sp_buytime:$('#sp_buytime').val(),
+            sp_receivetime:$('#sp_receivetime').val(),
+            sp_expirydate:$('#sp_expirydate').val(),
+            sp_producedate:$('#sp_producedate').val(),
+            sp_liezhuangnum:$('#sp_liezhuangnum').val(),
+            sp_cert:$('#sp_cert').val(),
+            sp_certnum:$('#sp_certnum').val(),
+            sp_publish:$('#sp_publish').val(),
+            sp_host:$('#sp_host').val(),
+            sp_logserver:$('#sp_logserver').val(),
+            sp_ios:$('#sp_ios').val(),
+            sp_config:$('#sp_config').val()
+            },
+            success:function(data){
+                $('#loading').modal('hide');
+                if(data.code > 0){
+                    location.href = data.message;
+                }else{
+                    layer.msg(data.message);
+                }
+            },error:function(){
+                $('#loading').modal('hide');
+                layer.alert('出错了！请联系管理员！');
+            }
+        })
+    })
+
+    //查询行隐藏
+    $('.box-show').hide();
+    $("#show").click(function(){
+        $('.box-show').fadeToggle();// 透明度变化 淡入淡出
+    });
+
+
+    function shiXiang(id,name){
+        layer.open({
+            title:'事项查看编辑'+'---'+name,
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            cancel:function(){$('#atpbiztable').bootstrapTable('refresh');},
+            content: '__MODULE__/ShiXiang/table?id='+id+'&objType='+'安全产品',
+            area: ['95%', '95%']
+        });
+    }
+
+    $('#sys_reset').click(function(){
+        $('.form-control').val('');
+        $('.chosen-select').val('');
+        $('.chosen-select').trigger("chosen:updated");
+        $('#sys_refresh').click()
+    })
+</script>
+</html>

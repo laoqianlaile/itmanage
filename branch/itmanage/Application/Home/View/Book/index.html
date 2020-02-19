@@ -1,0 +1,230 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<style>
+    th{
+        text-align: center;
+    }
+    .form-control{
+        display: inline-block;
+        width: 250px;
+    }
+    .wrapper .wrapper-content{
+        padding-bottom: 0;
+    }
+    .control-label{
+        font-size: 14px!important;
+    }
+    .fixed-table-toolbar{
+        display: none;
+    }
+    table{
+        table-layout: fixed;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content " style="">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="_box" style="margin-top: 25px;">
+                <label class="control-label" style="margin-left:15px;">班组：</label>
+                <select id="group" class="chosen-select">
+                    <option value="">请选择</option>
+                    <foreach name="dic" item="v">
+                        <option value="{$v.dic_name}">{$v.dic_name}</option>
+                    </foreach>
+                </select>
+                <label class="control-label" style="margin-left:15px;">应用系统：</label>
+                <!--<select id="appname" class="chosen-select" >-->
+                    <!--<option value="">请选择</option>-->
+                <!--</select>-->
+                <!--<input type="text" class="form-control" style="width:100px"  id="appname">-->
+                <input type="text" class="form-control" style="width:180px;"  id="appname">
+                <label class="control-label" style="margin-left:15px;">管理员：</label>
+                <select id="user" class="chosen-select" >
+                    <option value="">请选择</option>
+                </select>
+                <button class="btn btn-info" style="margin-left: 10px;margin-top: -5px;" type="button" id="sys_refresh">查询</button>
+                <button class="btn btn-info" style="margin-left: 10px;margin-top: -5px;" type="button" id="sys_q">导入小Q</button>
+            </div>
+            <table id="atpbiztable" ></table>
+        </div>
+    </div>
+</div>
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script>
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '180px'});
+    fixed();
+
+    //导入小Q
+
+    $('#sys_q').on('click',function(){
+       $.ajax({
+            type:'post',
+            url:'__CONTROLLER__/addQ',
+            data:'',
+            dataType :'json',
+            success:function(data){
+                if (data.code > 0) {
+                    layer.msg('操作成功');
+
+                } else {
+                    layer.alert(data.message);
+                }
+            }
+        });
+
+
+    })
+
+
+    function fixed(){
+        var h  = $(window).height() - 80;
+        $('table').attr('data-height',h);
+    }
+    $('#user').ajaxChosen({
+        dataType: 'json',
+        type: 'POST',
+        url:'__CONTROLLER__/assignusered'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getData',         //请求后台的URL（*）
+                method: 'post',                      //请求方式（*）
+                toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName: "sort1,amd_admin1",
+                sortOrder: "asc",                   //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 18,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+//            strictSearch: true,
+//            showColumns: true,                  //是否显示所有的列
+//            showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "amd_atpid",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                columns: [[
+                    {
+                        title: '序号', width: 40,
+                        formatter: function (value, row, index) {
+                            var option = $('#atpbiztable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'amd_appname', title: '应用系统', sortable: true, width: 200},
+                    {field: 'amd_appgroup', title: '班组', sortable: true, width: 70},
+                    {field: 'amd_adminname1', title: 'A岗', sortable: true, width: 50},
+                    {field: 'amd_adminname2', title: 'B岗', sortable: true, width: 50, visible: true},
+                    {field: 'amd_atpid', title: '管理员手册', sortable: true, width: 120, visible: true,
+                        formatter: function (value, row, index) {
+                            var inp = "'" + value + "'";
+                            var a = '<a  class="btn btn-info btn-xs" onclick="updateInRow(' + inp + ')">更新</a><br>';
+                            return a;
+                        }
+                    },
+                    {field: 'mnum', title: '运维知识项(管理人员)', sortable: true, width: 130, visible: true,
+                        formatter: function (value, row, index) {
+                            var count = value;
+                            var inp = "'" + row.amd_atpid + "'";
+                            var a = '<a  class=""  onclick="guanLi(' + inp + ')">'+count+'</a><br>';
+                            return a;
+                        }
+                    },
+                    {field: 'unum', title: '运维知识项(用户)', sortable: true, width: 130, visible: true,
+                        formatter: function (value, row, index) {
+                            var countyh =value;
+                            var inp = "'" + row.amd_atpid + "'";
+                            var a = '<a  class="" onclick="yongHu(' + inp + ')">'+countyh+'</a><br>';
+                            return a;
+                        }
+                    }
+                ]
+                ]
+            });
+        }
+    }
+    TableObj.oTableInit();
+
+    function queryParams(params) {  //配置参数
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            appname:$('#appname').val(),
+            user:$('#user').val(),
+            group:$('#group').val()
+        };
+        return temp;
+    }
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+
+    function updateInRow(id)
+    {
+        layer.open({
+            title:'管理员手册更新页面',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/word?id='+id,
+            area: ['95%', '95%']
+        });
+    }
+
+    function guanLi(id)
+    {
+        layer.open({
+            title:'运维知识项管理页面',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            cancel:function(){$('#sys_refresh').click();},
+            content: '__CONTROLLER__/knowledge?id='+id+'&version='+'管理员',
+            area: ['95%', '92%']
+        });
+    }
+
+    function yongHu(id)
+    {
+        layer.open({
+            title:'运维知识项管理页面',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            cancel:function(){$('#sys_refresh').click();},
+            content: '__CONTROLLER__/knowledge?id='+id+'&version='+'用户',
+            area: ['95%', '92%']
+        });
+    }
+
+
+</script>
+</body>
+
+</html>
+
+
+
+

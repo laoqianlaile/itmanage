@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="">
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+	<![endif]-->
+
+	<link href="__PUBLICOLD__/css/bootstrap.min.css" rel="stylesheet">
+
+	<link href="__PUBLICOLD__/css/font-awesome.css" rel="stylesheet">
+	<link rel="stylesheet" href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css">
+	<link rel="stylesheet" href="__PUBLICOLD__/vendor/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+	<link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+	<link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+	<script src="__PUBLICOLD__/js/jquery1.11.1.js"></script>
+	<script src="__PUBLICOLD__/js/bootstrap.js"></script>
+	<!--<script src="__PUBLICOLD__/vendor/bootstrap/js/ie10-viewport-bug-workaround.js"></script>-->
+	<!--<script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>-->
+	<script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+	<script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+	<script type="text/javascript" src="__PUBLICOLD__/vendor/ztree/js/jquery.ztree.core.js"></script>
+	<script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+	<script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+	<script type="text/javascript" src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/jquery.form.js"></script>
+	<link href="__PUBLICOLD__/css/tablepublic.css" rel="stylesheet">
+	<!--[if lt IE 9]>
+	<script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+	<script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+	<![endif]-->
+
+	<style>
+		.form-control{width:20%;padding-left: 10px;display: inline-block}
+		hr{
+			height: 1px;border: none;border-top: 2px solid #18a594;margin-top: 0;margin-bottom: 0;margin-left: 10px;
+		}
+		.little-title{
+			font-size: 15px;height: 30px;line-height: 30px;margin-bottom: 0px;margin-top: 10px;text-align: left;
+		}
+		.chosen-choices{
+			height:300px !important;
+		}
+		.btn{
+			display: block;margin-bottom: 3px;;
+		}
+	</style>
+</head>
+<body style="width:100%;height:100%;margin-left: 30px;font-family: 微软雅黑;overflow: hidden" >
+<p class="name" style="font-size: 20px;height: 30px;line-height: 30px;margin-bottom: 10px;margin-top: 10px;margin-left: -20px;width: 98%">AD账户批量修改</p>
+<div id="treearea" style="float: left;margin-left: -20px;border: 1px solid #acacac;overflow: auto;width:25%;">
+	<div class="content_wrap" style="width: 300px;">
+		<div class="zTreeDemoBackground left" style="float: left;width: 300px;">
+			<p  style="font-size: 15px;height: 30px;line-height: 30px;margin-bottom: 0px;margin-top: 10px;text-align: left;">&nbsp;&nbsp;组织结构：</p>
+			<hr style="border-top: 3px solid #18a594">
+			<ul id="treeDemo"  class="ztree" style="width: 300px;border:0;"></ul>
+		</div>
+	</div>
+</div>
+<input type="hidden" name="choosemenu" id="choosemenu" value=""/>
+<div id="atp_wrapper" style="margin-left: 10px;float:left;width: 72%;height: 100%;border: 1px solid #adadad;">
+	<div class="col-sm-12">
+		<p class="little-title">修改信息</p><hr style="margin-left: 0px;">
+		<span class="control-label" style="line-height: 30px;height: 30px;">当前选中OU：XXXXXXX</span><br>
+		<input type="checkbox" id="isContainChild"  value="包含子OU用户" style="margin-top: 2px;">&nbsp;&nbsp;包含子OU用户 <br>
+		<p class="little-title" style="">修改用户</p><hr style="margin-left: 0px;">
+		<div style="text-align: center;vertical-align: middle">
+			<span style="display: block;float: left">
+				<label class="control-label" style="width: 100px;display: block;margin-left: -15px;">用户信息：</label>
+				<select data-placeholder="请选择" name="" id="allUser" class="chosen-select_long" style="margin-left: 30px;" multiple>
+					<option value=" ">&nbsp;</option>
+				</select>
+			</span>
+			<span style="display: inline-block;vertical-align: middle;margin-top: 150px;">
+				<button class="btn" id="leading-in">>></button>
+			</span>
+			<span style="display: inline-block;float: right">
+				<label class="control-label" style="width: 150px;display: block">需要修改的用户信息：</label>
+				<select data-placeholder="请选择" name="" id="needUpdateUser" class="chosen-select_long" style="margin-left: 30px;" multiple>
+					<option value=" ">&nbsp;</option>
+				</select>
+			</span>
+		</div>
+		<div style="display: block;margin-top: 110px;">
+			<p class="little-title" style="">修改内容登录到</p><hr style="margin-left: 0px;">
+			<div style="margin-top: 5px;">
+				<label class="control-label" style="">新增：&nbsp;</label>
+				<input id="add" type="text" class="form-control" style="margin-bottom: -5px;width:300px;">  <span style="color: red">* 多个请以，分隔</span>
+			</div>
+			<div>
+				<label class="control-label" style="">删除：&nbsp;</label>
+				<input id="delete" type="text" class="form-control" style="margin-bottom: -5px;width:300px;">  <span style="color: red">* 多个请以，分隔</span><br>
+				<input type="checkbox" id="isContainAllLoginUser"  value="1" style="margin-top: 2px;">&nbsp;&nbsp;包含登录到所有的用户 <br>
+				<button class="btn btn-success " style="margin-bottom:5px;margin-top: 3px;" type="button" id="sys_submit"><i class="fa fa-search"></i>&nbsp;提交</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" ><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+			</div>
+			<div class="modal-body">
+				...
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary">Save changes</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="sys_dlg" tabindex="-1" role="dialog" class="modal fade "></div>
+</body>
+<script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script type="text/javascript">
+	$(".chosen-select_long").chosen({disable_search_threshold: 10, search_contains: true, width: '300px'});
+
+	total = document.documentElement.clientHeight;
+	colHeight = total-100;
+	document.getElementById("treearea").style.height = colHeight+"px";
+	document.getElementById("atp_wrapper").style.height = colHeight+"px";
+	var openNodes = [];
+	var setting = {
+		view: {
+			selectedMulti: false
+		},
+		data: {
+			simpleData: {
+				enable: true,
+				idKey: "id",
+				pIdKey: "pId",
+				rootPId: 0
+			}
+		},
+		callback: {
+			beforeClick:beforeClick,
+			onClick:onClick
+		}
+	};
+
+	var table = null;
+	var zNodes = null;
+	var departmentId = '0';
+
+	function beforeClick(event, treeId, treeNode, clickFlag) {
+	}
+
+	function onClick(event, treeId, treeNode, clickFlag) {
+		var resultZtree = $.fn.zTree.getZTreeObj("treeDemo");
+		var node =  resultZtree.getSelectedNodes()[0];
+		departmentId = node.DistinguishedName;
+		openNodes.push(departmentId);
+		$("#choosemenu").val('');
+		$("#choosemenu").val(departmentId);
+
+		var isContainChild = $('#isContainChild').is(":checked");
+		$.ajax({
+			url: "__CONTROLLER__/getUsersByDept",
+			type: "post",
+			data :{dept:departmentId,isContainChild:isContainChild},
+			dataType: "json",
+			success: function (data) {
+				$('#allUser option').remove();
+				$('#allUser').trigger("chosen:updated");
+				if(data){
+					for(var i=0; i<data.length; i++){
+						$('#allUser').append('<option value="'+data[i].DistinguishedName+'" selected   >'+data[i].SAMAccountName+'</option>');
+					}
+					$('#allUser').trigger("chosen:updated");
+					$('#allUser').click();
+				}
+			}
+		});
+	}
+	$(document).ready(function() {
+		$.ajax({
+			url: "__CONTROLLER__/getAllOU",
+			type: "get",
+			async: false,
+			dataType: "json",
+			success: function (data) {
+				zNodes = data;
+			}
+		});
+		$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+
+		var resultZtree = $.fn.zTree.getZTreeObj("treeDemo");
+		var node = resultZtree.getNodes()[0];
+
+		$('#leading-in').click(function(){
+			var length = $('#allUser option:selected').length;
+			var len = $('#needUpdateUser option:selected').length;
+			var arr = [];
+			for(var i=0;i<len;i++){
+				arr.push($('#needUpdateUser option:selected').eq(i).val());
+			}
+			for(var i=0;i<length;i++){
+				var val = $('#allUser option:selected').eq(i).val();
+				var text = $('#allUser option:selected').eq(i).text();
+				if($.inArray(val, arr) == -1){
+					$('#needUpdateUser').append('<option value="'+val+'" selected   >'+text+'</option>');
+				}
+			}
+			$('#needUpdateUser').trigger("chosen:updated");
+		})
+
+
+		$('#sys_submit').on('click', function(){
+			var needUpdateUser = $('#needUpdateUser').val();
+			var add = $('#add').val();
+			var del = $('#delete').val();
+			var isContainAllLoginUser = $('#isContainAllLoginUser').is(":checked");
+
+			$.ajax({
+				url: "__CONTROLLER__/batchUpdateData",
+				type: "post",
+				data:{'needUpdateUser':needUpdateUser,'add':add,'del':del,isContainAllLoginUser:isContainAllLoginUser},
+				dataType: "json",
+				success: function (data) {
+					if(data.code>0){
+						alert('操作成功');
+					}else{
+						alert(data.message);
+					}
+				}
+			});
+		})
+
+
+	});
+
+
+
+
+</script>
+</html>
+
+
+
+
+

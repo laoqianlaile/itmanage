@@ -1,0 +1,124 @@
+﻿<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">IP地址状态修改</h4>
+        </div>
+        <div class="modal-body">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="row row-lg">
+                        <div class="col-sm-12">
+                            <div id="baseinfotoolbar" >
+                                <input type="hidden" name="ipid" id="ipid" value="{$ipid}"/>
+                                <p style="float: left;">IP总数目:<b>{$sumnum}</b>&emsp;已分配IP数目:<b>{$usenum}</b>&emsp;未分配IP数目:<b>{$notusenum}</b></p>
+                                <div style="float:right;width:25%;margin-top: 10px;">
+                                    <!--<button class="btn btn-error" type="button" id="back" style="font-weight: bold;float:right;"><i class="fa fa-eraser"></i>&nbsp;返回</button>-->
+                                </div>
+                            </div>
+                            <table id="baseinfoTable" ></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <!--<button class="btn btn-warning" type="button" id="sys_tijiao">&nbsp;确定</button>-->
+            <button type="button" data-dismiss="modal" class="btn btn-default">&nbsp;关闭</button>
+        </div>
+    </div>
+</div>
+<div id="editinfo" role="dialog" class="modal fade "></div>
+<style>
+    .modal-dialog{width: 94%;height: 70%;}
+    .modal-body{
+        padding:15px;
+    }
+    .pagination{
+        margin-bottom:5px;
+    }
+    .ibox{
+        margin-bottom:0px;
+    }
+    .bootstrap-table .table:not(.table-condensed) > tbody > tr > td{
+        padding:3px!important;
+    }
+</style>
+<script>
+
+    $(function () {
+        $('#baseinfoTable').bootstrapTable({
+            url: '__CONTROLLER__/getnuseBaseData',
+            method: 'post',
+            toolbar: '#baseinfotoolbar',
+            striped: true,
+            cache: false,
+            pagination: true,
+            iconSize: 'outline',
+            sortable: true,
+            sortName:"ipb_addressnum",
+            sortOrder: "asc",
+            queryParams: queryParamnuse,
+            sidePagination: "server",
+            pageNumber: 1,
+            pageSize: 10,
+            pageList: [5,10, 25, 50, 100],
+            search: false,
+            showColumns: false,
+            showRefresh: false,
+            minimumCountColumns: 2,
+            clickToSelect: false,
+            uniqueId: "ipb_atpid",
+            columns: [
+                [
+//                    {checkbox: true},
+                    {title: '序号', width: 40,
+                        formatter: function (value, row, index){
+                            var option =  $('#baseinfoTable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'ipb_address', title: 'IP地址', sortable: true},
+                    {field: 'ipb_status', title: '状态', sortable: false},
+                    {field: 'ipb_atpid', title: '操作', sortable: false,width:60,
+                        formatter: function (value, row, index) {
+                            var inp = "'"+  value +"'";
+                            var a = '<a  class="btn btn-danger btn-xs" onclick="editNUseInfo('+ inp +')">修改</a><br>';
+                            return a;
+                        }
+                    }
+                ]
+            ]
+        });
+
+        $('#back').click(function(){
+            history.go(-1);
+        })
+    });
+    function queryParamnuse(params) {  //配置参数
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+//            search: params.search,
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            ipid:$("#ipid").val()
+        };
+        return temp;
+    }
+
+    function editNUseInfo(id){
+        $("#editinfo").load('__CONTROLLER__/editIpInfo?id='+id, function() {
+            $("#editinfo").modal({backdrop: false});
+        });
+    }
+</script>
+</body>
+
+</html>
+
+
+
+

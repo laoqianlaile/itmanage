@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="">
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+	<![endif]-->
+
+	<link href="__PUBLICOLD__/css/bootstrap.min.css" rel="stylesheet">
+
+	<link href="__PUBLICOLD__/css/font-awesome.css" rel="stylesheet">
+	<link rel="stylesheet" href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css">
+	<link rel="stylesheet" href="__PUBLICOLD__/vendor/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+	<link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+	<link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+	<script src="__PUBLICOLD__/js/jquery1.11.1.js"></script>
+	<script src="__PUBLICOLD__/js/bootstrap.js"></script>
+	<script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+	<script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+	<script type="text/javascript" src="__PUBLICOLD__/vendor/ztree/js/jquery.ztree.core.js"></script>
+	<script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+	<script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+	<script type="text/javascript" src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/jquery.form.js"></script>
+	<link href="__PUBLICOLD__/css/tablepublic.css" rel="stylesheet">
+	<style>
+		th{
+			text-align: center;
+		}
+		.form-control{width:20%;padding-left: 10px;}
+		.btn{margin-bottom: 5px;}
+	</style>
+</head>
+<body style="width:97%;height:100%;margin-left: 30px;font-family: 微软雅黑;" >
+<div id="treearea" style="float: left;margin-left: -20px;border: 1px solid #acacac;overflow: auto;width:25%;height: 90%">
+	<div class="content_wrap" style="width: 300px;">
+		<div class="zTreeDemoBackground left" style="float: left;width: 300px;height: 95%">
+			<p  style="font-size: 15px;height: 30px;line-height: 30px;margin-bottom: 0px;margin-top: 10px;text-align: left;">&nbsp;&nbsp;组织结构</p>
+			<hr style="height: 1px;border: none;border-top: 3px solid #18a594;margin-top: 0;margin-bottom: 0;margin-left: 10px;">
+			<ul id="treeDemo"  class="ztree" style="width: 300px;border:0;height: 95%"></ul>
+			<div style="width: 300px;">
+				<button class="btn btn-info "  id="createTemporaryAccount" type="button"><span class="btn-label"><i class="fa fa-plus-circle"></i></span>创建临时账户</button>
+				<button class="btn btn-warning " id="createPublicAccount" type="button"><span class="btn-label"><i class="fa fa-pencil"></i></span>创建公共账户</button>
+			</div>
+		</div>
+
+	</div>
+</div>
+<input type="hidden" name="choosemenu" id="choosemenu" value=""/>
+
+<div id="atp_wrapper" style="margin-left: 10px;float:left;width: 75%;border: 1px solid #adadad;overflow: auto;">
+	<div class="container-fluid main">
+		<div class="wrapper wrapper-content animated fadeInRight">
+			<div class="ibox float-e-margins">
+				<div class="ibox-content">
+					<div class="row row-lg">
+						<div class="col-sm-12">
+							<p class="name" style="font-size: 20px;height: 30px;line-height: 30px;margin-bottom: 0px;margin-top: 10px;">用户信息</p>
+							<table id="atpbiztable" style=""></table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" ><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+			</div>
+			<div class="modal-body">
+				...
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary">Save changes</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="sys_dlg" tabindex="-1" role="dialog" class="modal fade "></div>
+</body>
+<script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script type="text/javascript">
+	$('#createTemporaryAccount').on('click', function(){
+		var chooseMenu = $('#choosemenu').val();
+		if(chooseMenu == ''){
+			alert('请先选择部门！');
+			return false;
+		}
+		location.href = encodeURI('__CONTROLLER__/tempCreate?deptId='+chooseMenu+'&mode=0');
+	})
+	$('#createPublicAccount').on('click', function(){
+		var chooseMenu = $('#choosemenu').val();
+		if(chooseMenu == ''){
+			alert('请先选择部门！');
+			return false;
+		}
+		location.href = encodeURI('__CONTROLLER__/tempCreate?deptId='+chooseMenu+'&mode=1');
+	})
+    $(".chosen-select").chosen({disable_search_threshold: 10, search_contains: true, width: '200px'});
+
+	total = document.documentElement.clientHeight;
+	colHeight = total-30;
+	document.getElementById("treearea").style.height = colHeight+"px";
+	document.getElementById("atp_wrapper").style.height = colHeight+"px";
+	var openNodes = [];
+	var setting = {
+		view: {
+			selectedMulti: false
+		},
+		data: {
+			simpleData: {
+				enable: true,
+				idKey: "id",
+				pIdKey: "pId",
+				rootPId: 0
+			}
+		},
+		callback: {
+			beforeClick:beforeClick,
+			onClick:onClick
+		}
+	};
+
+	var table = null;
+	var zNodes = null;
+	var departmentId = '0';
+
+	function beforeClick(event, treeId, treeNode, clickFlag) {
+	}
+
+	function onClick(event, treeId, treeNode, clickFlag) {
+		var resultZtree = $.fn.zTree.getZTreeObj("treeDemo");
+		var node =  resultZtree.getSelectedNodes()[0];
+		departmentId = node.DistinguishedName;
+		openNodes.push(departmentId);
+		departmentName = node.name;
+		$("#choosemenu").attr("value",departmentId);
+		$("#satId").attr("value",departmentId);
+		$("#treename").attr("value",departmentName);
+		$('#atpbiztable').bootstrapTable('refresh');
+	}
+	$(document).ready(function() {
+		$.ajax({
+			url: "__CONTROLLER__/getAllOU",
+			type: "get",
+			async: false,
+			data :{treename:$("#treename").val(),useType:$('#useType').val()},
+			dataType: "json",
+			success: function (data) {
+				zNodes = data;
+			},
+			error: function () {
+			}
+		});
+		$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+
+		var resultZtree = $.fn.zTree.getZTreeObj("treeDemo");
+		var node = resultZtree.getNodes()[0];
+		departmentId = node.id;
+
+	});
+	var TableObj = {
+		oTableInit:function(){
+			var nd = $('#search_nd').val();
+			$('#atpbiztable').bootstrapTable({
+				url: '__CONTROLLER__/getDataByDeptId',         //请求后台的URL（*）
+				method: 'post',                      //请求方式（*）
+				toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+				striped: true,                      //是否显示行间隔色
+				cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+				pagination: true,                   //是否显示分页（*）
+				iconSize: 'outline',
+				sortable: true,                     //是否启用排序
+				sortName:"st_name",
+				sortOrder: "asc",                   //排序方式
+				queryParams:queryParams,
+				sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+				pageNumber: 1,                       //初始化加载第一页，默认第一页
+				pageSize: 7,                       //每页的记录行数（*）
+				pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+				search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+//            strictSearch: true,
+				showColumns: false,                  //是否显示所有的列
+				showRefresh: false,                  //是否显示刷新按钮
+				minimumCountColumns: 2,             //最少允许的列数
+				clickToSelect: true,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+				uniqueId: "st_atpid",                     //每一行的唯一标识，一般为主键列
+				showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+				cardView: false,                    //是否显示详细视图
+				detailView: false,                   //是否显示父子表
+				detailFormatter: "detailFormatter",
+				rowStyle:function(row,index){
+					//这里有5个取值代表五种颜色['active','success','info','warning','danger']
+					var strclass = "";
+					if(row.isavailable == "禁用"){
+						strclass = "danger";
+					}
+					return {classes:strclass}
+				},
+				columns: [
+					[
+						{field: 'st_atpid', title: '操作',width:80, formatter: function (value, row, index){
+							var inp = row['SAMAccountName'];
+							var t = "__CONTROLLER__/AdChangePwd?id="+inp+"";
+							var t1 = "__CONTROLLER__/AdAccountattri?id="+inp+"";
+							var a = '<a  class="btn btn-info btn-xs" href='+t+'>密码配置</a><br>';
+							a += '<a  class="btn btn-info btn-xs" href='+t1+'>属性设置</a>';
+							return a;
+						}},
+						{field: 'SAMAccountName', title: '登录名'},
+						{field: 'DisplayName', title: '显示名称'},
+						{field: 'Company', title: '部门'},
+						{field: 'Department', title: '处室'},
+						{field: 'Description', title: '描述'},
+						{field: 'UserWorkstations', title: '登录到'},
+						{field: 'mail', title: '电子邮箱'}
+
+					]
+				]
+				, onDblClickRow: function (row) {
+					$("#sys_dlg").load('__CONTROLLER__/edit?ids='+row['st_atpid']+"", function() {
+						$('#sys_dlg_update').on('click',editdata);
+						$("#sys_dlg").modal({backdrop:false});
+					});
+				}
+			});
+		}
+	}
+	TableObj.oTableInit();
+	$('#back').click(function(){
+		history.go(-1)
+	})
+
+	$('#sys_refresh').on('click',function() {
+		$('#atpbiztable').bootstrapTable('destroy')
+		TableObj.oTableInit();
+	});
+
+	function queryParams(params){  //配置参数
+		var choosemenu = $('#choosemenu').val();
+		if(choosemenu == '' || choosemenu == undefined) choosemenu = 'DC=hq,DC=cast';
+		return {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+			limit: params.limit,   //页面大小
+			offset: params.offset,  //页码
+			sort: params.sort,  //排序列名
+			order: params.order,//排位命令（desc，asc）
+			choosemenu :choosemenu
+		};
+		return temp;
+	}; //传递参数（*）
+
+
+	$("#sys_search").on("click",function(){
+		$('#atpbiztable').bootstrapTable("refresh");
+	});
+
+
+</script>
+</html>
+
+
+
+
+

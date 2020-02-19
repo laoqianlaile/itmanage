@@ -1,0 +1,86 @@
+﻿
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLICOLD__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+<title>退回原因</title>
+<style>
+    .form-group{
+        margin-top: 26px;
+    }
+    .control-label{
+        width:150px;
+    }
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+</style>
+<body style="margin: 0 auto;">
+<?php $isdomainType= false; ?>
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+        <div class="tab-content" >
+            <div class="panel-body">
+                    <div class="form-group" style="margin-top: 6px">
+                        <label class="control-label" style="font-weight: 800;margin-bottom: 10px;margin-left: 22px;">退回原因：</label>
+                        <textarea name="utd_backcomment" id="utd_backcomment" class="form-control" style="width: 600px;height: 150px;margin-left: 100px;" ></textarea>
+                    </div>
+                 </div>
+            <input type="hidden" value="{$utd_id}" name="utd_id">
+        </div>
+    </form>
+    <div class="modal-footer" style="margin-top: 30px;text-align:center;">
+        <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="display:inline-block">保存</button>
+    </div>
+</body>
+<script src="__PUBLICOLD__/vendor/chosen/chosen.jquery.js"></script>
+<script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script src="__PUBLICOLD__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+$(function () {
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+    $('#sys_dlg_submit').click(function(){
+        $('#sys_dlg_form1').submit();
+    })
+
+    $.validator.setDefaults({
+        highlight:function(element){
+            $(element).parent().remove('has-success').addClass('has-error');
+        },
+        success:function(element){
+            $(element).parent().remove('has-error').addClass('has-success');
+        },
+        errorPlacement:function(error,element){
+            if(element.is(":radio") || element.is(":checkbox")){
+                error.appendTo(element.parent());
+            }else{
+                error.appendTo(element.parent());
+            }
+        },
+        errorClass:"help-block m-b-none",
+        validClass:"help-block m-b-none"
+    });
+    $('#sys_dlg_form1').validate({
+        onclick:false,
+        onfocusout:false,
+        onkeyup:false,
+        rules:{
+            utd_backcomment:'required'
+        },submitHandler:function(){
+            var formBody = $('#sys_dlg_form1');
+            $.post('__CONTROLLER__/BackSubmit',formBody.serialize(), function (data) {
+                if (data.code > 0) {
+                    parent.$('#atpbiztable').bootstrapTable('refresh');
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                } else {
+                    layer.alert(data.message);
+                }
+            },'JSON');
+        }
+    });
+
+
+});
+</script>

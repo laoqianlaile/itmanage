@@ -1,0 +1,273 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<link href="__PUBLIC__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-editable/css/bootstrap-editable.css" rel="stylesheet" >
+<style>
+    th{
+        text-align: center;
+    }
+    .form-control{
+        display: inline-block;
+        width: 250px;
+    }
+    .wrapper .wrapper-content{
+        padding-bottom: 0;
+    }
+    .control-label{
+        font-size: 14px!important;
+        width:120px;
+    }
+    .fixed-table-toolbar{
+        display: none;
+    }
+    /*table{*/
+    /*table-layout: fixed;*/
+    /*}*/
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content " style="margin-top: -30px;">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="_box" style="margin-top: 25px;">
+                <form id="sys_dlg_form1" role="form" class="form-horizontal"  enctype="multipart/form-data">
+                    <!--<label class="control-label" style="margin-left:5px;">物理服务器：</label>-->
+                    <!--<input type="text" class="form-control" style="width:300px;" name="sev_hostip" id="sev_hostip" value="<?php if(!empty($sev_hostip))echo $sev_hostip; ?>">-->
+                    <!--<input type="hidden" name="sev_hostip_id" id="sev_hostip_id" value="<?php if(!empty($sev_hostip_id))echo $sev_hostip_id; ?>">-->
+
+                    <!--<button class="btn btn-info" style="margin-left: 10px;margin-top: -5px;" type="button" id="sys_add">新增</button>-->
+                    <!--<button class="btn btn-info" style="margin-left: 10px;margin-top: -5px;" type="button" id="sys_del">删除</button>-->
+                    <label class="control-label" style="margin-left:5px;">安全产品：</label>
+                    <input type="text" class="form-control" style="width:300px;" id="name">
+                    <if condition="$biao eq null">
+                        <label class="control-label" style="margin-left:5px;">使用状态：</label>
+                        <select id="sp_status" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <foreach name="status" item="v">
+                                <option value="{$v.dic_name}">{$v.dic_name}</option>
+                            </foreach>
+                        </select>
+                    </if>
+                    <button class="btn btn-info" style="margin-left: 10px;margin-top: -5px;" type="button" id="sys_refresh">查询</button>
+                </form>
+            </div>
+            <table id="atpbiztable" ></table>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="{$id}" id="atpid">
+<input type="hidden" value="{$ids}" id="ids">
+<input type="hidden" value="{$type}" id="objType">
+<input type="hidden" value="{$biao}" id="biao">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script src="__PUBLIC__/vendor/bootstrap-table/bootstrap-table/src/extensions/editable/bootstrap-table-editable.js"></script>
+<script src="__PUBLIC__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-editable/js/bootstrap-editable.js"></script>
+<script>
+
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '100px'});
+
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getSpData',         //请求后台的URL（*）
+                method: 'post',                      //请求方式（*）
+                toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName: "sx_atpcreatetime",
+                sortOrder: "desc",                   //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 18,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+//            strictSearch: true,
+//            showColumns: true,                  //是否显示所有的列
+//            showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "rlx_zyid",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                columns: [[
+                    {checkbox: true, width: 40},
+                    {
+                        title: '序号', width: 20,
+                        formatter: function (value, row, index) {
+                            var option = $('#atpbiztable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'sp_devicecode', title: '设备编号', sortable: true, width: 100,
+                        formatter: function (value, row, index) {
+                            var inp = "'" + row.sp_atpid + "'";
+                            var a = '<a  onclick="readIp(' + inp + ')">'+value+'</a>';
+                            return a;
+                        }
+                    },
+                    {field: 'pin', title: '事项任务', sortable: true, width: 100},
+                    {field: 'rlx_useage', title: '用途', sortable: true, width: 200, editable: {
+                        type:'text',
+                        title:'用途',
+                        mode:'inline',
+                        showbuttons:false,
+                        onblur:'submit',
+                        emptytext:'null',
+                        validate:function(v){
+                            if(v === null){
+                                return '用途不能为空';
+                            }
+                        }
+                    }}
+                ]
+                ],
+                onEditableSave: function(field, row, oldValue, $el) {
+                    var id = row.rlx_atpid;
+                    var value = row.rlx_useage;
+                    getUseage(id,value);
+                }
+            });
+        }
+    }
+    TableObj.oTableInit();
+
+    function queryParams(params) {  //配置参数
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            atpid:$('#atpid').val(),
+            objType:$('#objType').val(),
+            biao:$('#biao').val(),
+            sp_status:$('#sp_status').val(),
+            name:$('#name').val()
+        };
+        return temp;
+    }
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+
+    $('#sys_add').click(function(){
+        var id = $('#sev_hostip_id').val();
+        var sxId = $('#atpid').val();
+        var objType = $('#objType').val();
+        if(id == ''){
+            layer.alert("请先选择服务器！");
+            return false;
+        }else{
+            $.ajax({
+                url:'__CONTROLLER__/relationAdd',
+                type:'post',
+                data:{id:id,sxId:sxId,objType:objType},
+                dataType:'json',
+                success:function(rep){
+                    if(rep.code > 0){
+                        $('#sev_hostip').val('');
+                        $('#sys_refresh').click();
+                    }else{
+                        layer.alert(rep.message);
+                    }
+                }
+            })
+        }
+
+
+    })
+
+    $('#sys_del').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            layer.alert("您尚未选择数据");
+        } else {
+
+            var ids = [];
+            $.each(tablerow, function () {
+                ids.push(this['rlx_atpid']);
+            });
+            deleteInRow(ids.join(','));
+
+        }
+    });
+    function getUseage(id,value){
+        $.ajax({
+            url:'__CONTROLLER__/Useage',
+            data:{id:id,useage:value},
+            type:'post',
+            success:function(rep){
+                if(rep != 'success'){
+                    layer.alert("保存失败")
+                }
+            }
+        })
+    }
+
+    //数据删除触发该方法
+    function deleteInRow(id){
+        layer.confirm('确认删除选中数据?', {btn:['确定','取消']},
+                function(){
+                    $.ajax({
+                        type:'post',
+                        url:'__CONTROLLER__/delZyRelaData',
+                        data:{id: id},
+                        success:function(data){
+                            if(data == 'success'){
+                                layer.msg('操作成功');
+                                $('#sys_refresh').click();
+                            }else{
+                                layer.alert("操作失败");
+                            }
+                        }
+                    })
+                })
+    }
+
+    /*  //物理服务器关联关系
+     $("#sev_hostip").on('click',function(){
+     var atpid = $("#ids").val();
+     //物理服务器
+     layer.open({
+     title:'物理服务器关联关系',
+     closeBtn:1,
+     type: 2,
+     shadeClose:false,
+     content: '__MODULE__/relation/sevAssetsList?flag=N&name=物理服务器&astrict=true&id='+ atpid +'&tar_id=sev_hostip_id&tar_name=sev_hostip',
+     area: ['99%', '99%']
+     });
+     });*/
+
+    function readIp(id){
+        layer.open({
+            title:'',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__MODULE__/Security/add?sp_atpid='+id+'&type='+'安全产品',
+            area: ['95%', '90%']
+        });
+    }
+
+
+
+
+
+
+</script>
+</body>
+
+</html>
+
+
+
+

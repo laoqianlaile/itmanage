@@ -1,0 +1,399 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<style>
+    th{
+        text-align: center;
+    }
+    .form-control{
+        display: inline-block;
+    }
+    .wrapper-content{
+        padding-bottom: 0;
+    }
+    .control-label{
+        width: 30%;
+        float: left;
+        text-align:center;
+        line-height: 30px;
+    }
+    .chosen-container{
+        top: -1px;
+    }
+    .form-group{
+        display: inline-block;
+        width: 24%;
+        margin-top: -7px;
+    }
+    .formEl-div{
+        float: left;
+    }
+    ._box {
+        height:28px;
+        margin: 15px 0px 0px !important;
+    }
+    .fixed-table-container{
+        padding-bottom: 0px !important;
+    }
+    table{
+        table-layout: fixed;
+        word-break: break-all;
+    }
+    .formEl-div{
+        width:70%
+    }
+    body{
+        overflow-y: hidden;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content ">
+    <div class="row">
+        <div class="col-sm-12" id='search_div'>
+            <div class="_box sel_show" style="margin-top: 5px;">
+
+                <div class="form-group">
+                    <label class="control-label" >集群</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="pv_pcol">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >物理机IP</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="pv_pip">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >虚拟机IP</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="pv_vip">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >虚拟机名称</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="pv_vname">
+                    </div>
+                </div>
+
+            </div>
+            <div class="_box">
+                <button class="btn btn-info" style="background-color: #4EA3EC;border-color: #4EA3EC;" type="button" id="sys_refresh">查询</button>
+                <button class="btn btn-info" style="background-color: #1AB394;border-color:  #1AB394;" type="button" id="sys_reset">重置</button>
+                <a class="btn btn-info " style="margin-left: 10px;background-color: yellowgreen;border-color: yellowgreen;" type="button" id="sys_add" >新增</a>
+                <button class="btn btn-info" style="margin-left: 10px;background-color: cadetblue;border-color: cadetblue;" type="button" id="sys_del">删除</button>
+                <button class="btn btn-info" style="margin-left: 10px;" type="button" id="sys_exp">导出</button>
+                <button class="btn btn-info" style="margin-left: 10px;" type="button" id="sys_export">导入</button>
+            </div>
+       </div>
+        <div class="col-sm-12">
+            <table id="atpbiztable" ></table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLIC__/img/loading/loading9.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="sort" >
+<input type="hidden" id="sortOrder" >
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<script src="__PUBLIC__/js/tablecopy.js"></script>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script>
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+
+    var formEl_div_width = parseInt($('.formEl-div').eq(0).width());
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: formEl_div_width+"px"});
+
+
+    fixed();
+    function fixed(){
+        searchDivHeight = parseInt($('#search_div').height());
+        boxShow_h = parseInt($('.box-show').height());
+        // data_body_h = $(window).height();
+        height = $(window).height()-(searchDivHeight-boxShow_h);
+        //data_body_h = $(window).height() - 132;
+        // 根据浏览器类型设置不同高度
+
+        if(window.ActiveXObject||'ActiveXObject' in window){
+            $('table').attr('data-height',height);
+        }else{
+            $('table').attr('data-height',height+13);
+        }
+    }
+
+    // 点击收起/展开按钮表格高度自适应
+    var searchDivHeight = parseInt($('#search_div').height());
+    var boxShow_h = parseInt($('.box-show').height());
+    var body_h = $(window).height();
+    var h = body_h-searchDivHeight;
+    var h_new = body_h-(searchDivHeight - boxShow_h);
+    $('#show').click(function(){
+        if($('.box-show').is(':visible')){
+            // 根据浏览器类型设置不同高度
+            if(window.ActiveXObject||'ActiveXObject' in window){
+                $('#atpbiztable').bootstrapTable("resetView",{height:h_new});
+            }else{
+                $('#atpbiztable').bootstrapTable("resetView",{height:h_new+13});
+            }
+        }else{
+            // 根据浏览器类型设置不同高度
+            if(window.ActiveXObject||'ActiveXObject' in window){
+                $('#atpbiztable').bootstrapTable("resetView",{height:h-boxShow_h-27});
+            }else{
+                $('#atpbiztable').bootstrapTable("resetView",{height:h-boxShow_h-16});
+            }
+        }
+    })
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getData',      //请求后台的URL（*）
+                method: 'post',                     //请求方式（*）
+                toolbar: '#atpbiztoolbar',          //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName: "pv_atpid",
+                sortOrder: "desc",                  //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页
+                pageSize: 15,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                uniqueId: "pv_atpid",              //每一行的唯一标识，一般为主键列
+                detailView: false,                   //是否显示父子表
+                detailFormatter: "showDataView",
+                columns: [
+                   [
+                        {checkbox: true},
+                        {
+                           field: 'pv_atpid',title: '操作', sortable: false,width: 100,
+                           formatter: function (value, row, index) {
+                               var inp = "'" + value + "'";
+                               return '<a  class="btn btn-info btn-xs"  style="margin:0" onclick="updateInRow(' + inp + ')">编辑</a>&nbsp;<a  class="btn btn-info btn-xs" onclick="deleteInRow(' + inp + ')" style="margin:0;background: #AB154D;border-color: #AB154D;">删除</a>';
+                           }
+                        },
+                        {
+                            title: '序号', width: 60,
+                            formatter: function (value, row, index) {
+                                var option = $('#atpbiztable').bootstrapTable('getOptions');
+                                return option.pageSize * (option.pageNumber - 1) + index + 1;
+                            }
+                        },
+                        {field: 'pv_pcol', title: '集群', sortable: true, width: 80},
+                        {field: 'pv_pip', title: '物理机IP', sortable: true, width: 80},
+                        {field: 'pv_vip', title: '虚拟机IP', sortable: true, width: 80},
+                        {field: 'pv_vname', title: '虚拟机名称', sortable: true, width: 120},
+                        {field: 'detail', title: '虚拟机内置服务', sortable: true, width: 220,
+                            formatter: function (value, row, index) {
+                                var inp = "'" + value + "'";
+                                var val = row.details;
+                                return '<a style="margin:0" onclick="openAll(' + inp + ')">' + val + '</a>';
+
+                            }
+                        }
+                   ]
+                ],
+                onDblClickRow: function (row) {
+                    updateInRow(row['pv_atpid']);
+                }
+            });
+        }
+    };
+    TableObj.oTableInit();
+    // fixedafter();
+    function queryParams(params) {  //配置参数
+        $('#sort').val(params.sort);
+        $('#sortOrder').val(params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            pv_pcol:$('#pv_pcol').val(),
+            pv_pip:$('#pv_pip').val(),
+            pv_vip:$('#pv_vip').val(),
+            pv_vname:$('#pv_vname').val()
+        };
+        return temp;
+    }
+
+
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+
+    $('#sys_add').on('click',function() {
+        updateInRow('');
+    });
+    $('.box-show').hide();
+    $("#show").click(function(){
+        // $(this).parent().parent().find("ul").toggle();//无动画显示隐藏
+        $('.box-show').fadeToggle();// 透明度变化 淡入淡出
+        // $('.box-show').slideToggle(); //有个上下滑动动画的展开收起效果  推荐
+    });
+
+    $('#sys_del').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            layer.alert("您尚未选择数据");
+        } else {
+            var ids = [];
+            $.each(tablerow, function () {
+                ids.push(this['pv_atpid']);
+            });
+            deleteInRow(ids.join(','));
+        }
+    });
+
+
+    //数据编辑触发该方法
+    function updateInRow(id) {
+        layer.open({
+            title:'数据编辑',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/add?pv_atpid='+id,
+            area: ['90%', '45%']
+        });
+    }
+    //数据删除触发该方法
+    function deleteInRow(id){
+        layer.confirm('确认删除选中数据?',
+        {btn:['确定','取消']},
+                function() {
+                    $.ajax({
+                        type: 'post',
+                        url: '__CONTROLLER__/delData',
+                        data: {pv_atpid: id},
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.code > 0) {
+                                layer.msg('操作成功');
+                                $('#sys_refresh').click();
+                            } else {
+                                layer.alert(data.message);
+                            }
+                        }, error: function () {
+                            layer.alert('出错啦！请稍后再试');
+                        }
+                    })
+                })
+    }
+    $('#sys_exp').click(function(){
+        $('#loading').modal('show');
+        var sort=$('#sort').val();
+        var sortOrder=$('#sortOrder').val();
+        var t = "__CONTROLLER__/getDataWithExport";
+        t = encodeURI(t);
+        $.ajax({
+            type:'post',
+            url: t,
+            dataType:'json',
+            data:{
+                sort:sort,
+                sortOrder:sortOrder,
+                vc_applyman:$('#vc_applyman').val(),
+                vc_name:$('#vc_name').val(),
+                mainvenue:$('#mainvenue option:selected').val(),
+                type:$('#type option:selected').val()
+            },
+            success:function(data){
+                $('#loading').modal('hide');
+                if(data.code > 0){
+                    location.href = data.message;
+                }else{
+                    layer.msg(data.message);
+                }
+            },error:function(){
+                $('#loading').modal('hide');
+                layer.alert('出错了！请联系管理员！');
+            }
+        })
+    })
+
+    function openAll(detail){
+        layer.open({
+            title: '内置服务',
+            closeBtn: 1,
+            type: 2,
+            shadeClose: false,
+            content: '__MODULE__/sev/detail?detail='+detail,
+            area: ['80%', '65%']
+        });
+    }
+
+    $('#sys_export').on('click',function(){
+        $("#sys_dlg").load('__CONTROLLER__/import', function() {
+            $('#sys_dlg_submit').on('click', submitimpdata);
+            $("#sys_dlg").modal({backdrop: false});
+        });
+    });
+
+    function submitimpdata()
+    {
+        var formBody = $('#sys_dlg_form2');
+        var updataexcel2007 = $("#updataexcel2007").val();
+        if(updataexcel2007 == ''){
+            layer.alert('请选择上传文件！');
+            return false;
+        }
+        formBody.ajaxSubmit({
+            type:'post',
+            url:'__CONTROLLER__/submitimpTmn',
+            dataType:'json',
+            beforeSend:function(){
+                $("#loadingText").html("正在处理请稍后");
+                $('#loading').modal('show');
+            },
+            success:function(data){
+                if(data.code == 0){
+                    layer.alert(data.message);
+                    setTimeout(function(){
+                        $('#atpbiztable').bootstrapTable('refresh');
+                    },2000);
+                }else{
+                    layer.alert(data.message);
+                    setTimeout(function(){
+                        $('#atpbiztable').bootstrapTable('refresh');
+                    },2000);
+                }
+            },
+            complete:function(){
+                $('#loading').modal('hide');
+                $("#sys_dlg").modal('hide');
+            }
+        });
+    }
+
+    $('#sys_reset').click(function(){
+        $('.form-control').val('');
+        $('.chosen-select').val('');
+        $('.chosen-select').trigger("chosen:updated");
+        $('#sys_refresh').click()
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<?xml version = "1.0" ?> 
+<definitions name="Server" targetNamespace="urn:Server" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="urn:Server" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+<types xmlns="http://schemas.xmlsoap.org/wsdl/" />
+<portType name="ServerPort"><operation name="tastNewCreate">
+<input message="tns:tastNewCreateRequest" />
+<output message="tns:tastNewCreateResponse" />
+</operation>
+<operation name="formstatus">
+<input message="tns:formstatusRequest" />
+<output message="tns:formstatusResponse" />
+</operation>
+<operation name="updateequipment">
+<input message="tns:updateequipmentRequest" />
+<output message="tns:updateequipmentResponse" />
+</operation>
+<operation name="macData">
+<input message="tns:macDataRequest" />
+<output message="tns:macDataResponse" />
+</operation>
+<operation name="ipAddressdata">
+<input message="tns:ipAddressdataRequest" />
+<output message="tns:ipAddressdataResponse" />
+</operation>
+<operation name="ipdata">
+<input message="tns:ipdataRequest" />
+<output message="tns:ipdataResponse" />
+</operation>
+</portType>
+<binding name="ServerBinding" type="tns:ServerPort">
+<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+<operation name="tastNewCreate">
+<soap:operation soapAction="urn:Server#Server\Controller\ServerController#tastNewCreate" />
+<input><soap:body use="encoded" namespace="urn:Server" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+</input>
+<output>
+<soap:body use="encoded" namespace="urn:Server" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+</output>
+</operation>
+<operation name="formstatus">
+<soap:operation soapAction="urn:Server#Server\Controller\ServerController#formstatus" />
+<input><soap:body use="encoded" namespace="urn:Server" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+</input>
+<output>
+<soap:body use="encoded" namespace="urn:Server" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+</output>
+</operation>
+<operation name="updateequipment">
+<soap:operation soapAction="urn:Server#Server\Controller\ServerController#updateequipment" />
+<input><soap:body use="encoded" namespace="urn:Server" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+</input>
+<output>
+<soap:body use="encoded" namespace="urn:Server" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+</output>
+</operation>
+<operation name="macData">
+<soap:operation soapAction="urn:Server#Server\Controller\ServerController#macData" />
+<input><soap:body use="encoded" namespace="urn:Server" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+</input>
+<output>
+<soap:body use="encoded" namespace="urn:Server" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+</output>
+</operation>
+<operation name="ipAddressdata">
+<soap:operation soapAction="urn:Server#Server\Controller\ServerController#ipAddressdata" />
+<input><soap:body use="encoded" namespace="urn:Server" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+</input>
+<output>
+<soap:body use="encoded" namespace="urn:Server" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+</output>
+</operation>
+<operation name="ipdata">
+<soap:operation soapAction="urn:Server#Server\Controller\ServerController#ipdata" />
+<input><soap:body use="encoded" namespace="urn:Server" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+</input>
+<output>
+<soap:body use="encoded" namespace="urn:Server" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+</output>
+</operation>
+</binding>
+<service name="Server">
+<documentation />
+<port name="ServerPort" binding="tns:ServerBinding"><soap:address location="http://10.78.72.244/itmanage/branch/itmanage/index.php/Server/Server/index" />
+</port>
+</service>
+<message name="tastNewCreateRequest">
+<part name="formbody" type="xsd:string" />
+</message>
+<message name="tastNewCreateResponse">
+<part name="tastNewCreate" type="xsd:string" />
+</message>
+<message name="formstatusRequest">
+<part name="formtype" type="xsd:string" />
+<part name="formid" type="xsd:string" />
+<part name="nodename" type="xsd:string" />
+<part name="subformstatus" type="xsd:string" />
+</message>
+<message name="formstatusResponse">
+<part name="formstatus" type="xsd:string" />
+</message>
+<message name="updateequipmentRequest">
+<part name="formbody" type="xsd:string" />
+</message>
+<message name="updateequipmentResponse">
+<part name="updateequipment" type="xsd:string" />
+</message>
+<message name="macDataRequest">
+<part name="mac" type="xsd:string" />
+</message>
+<message name="macDataResponse">
+<part name="macData" type="xsd:string" />
+</message>
+<message name="ipAddressdataRequest">
+<part name="miji" type="xsd:string" />
+<part name="username" type="xsd:string" />
+<part name="area" type="xsd:string" />
+<part name="louyu" type="xsd:string" />
+</message>
+<message name="ipAddressdataResponse">
+<part name="ipAddressdata" type="xsd:string" />
+</message>
+<message name="ipdataRequest">
+<part name="ip1" type="xsd:string" />
+<part name="ip2" type="xsd:string" />
+<part name="is" type="xsd:string" />
+</message>
+<message name="ipdataResponse">
+<part name="ipdata" type="xsd:string" />
+</message>
+</definitions>

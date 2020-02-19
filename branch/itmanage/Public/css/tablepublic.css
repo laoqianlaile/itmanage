@@ -1,0 +1,189 @@
+
+
+#sys_dlg_submit{
+    /*margin-right: 30px;*/
+}
+.fixed-table-pagination .pagination-info{
+    margin-left: 20px;
+}
+.table {
+    max-width: none;
+}
+.btn-info {
+    background-color: #23c6c8;
+    border-color: #23c6c8;
+    color: #FFFFFF;
+    margin-left: 10px;
+}
+
+.control-label{
+    width:90px;
+    height: 30px;
+    /*margin-right: 5px;*/
+}
+._box{
+    /*margin-bottom: 5px;;*/
+}
+.name{
+    color: #2F422F;
+    background-color: #F6F9F6;
+    text-align: left !important;
+    /* font-weight: bold; */
+    font-family: 'Microsoft YaHei';
+    font-size: 21px !important;
+    line-height: 36px;
+    margin-bottom: 15px;
+    border-left: 12px solid #0B690B;
+    padding-left: 36px;
+}
+tr{
+    color: black;
+    background-color: #f5f4f4;
+}
+/*---------------------------------optimization-----------------------------------*/
+
+.control-label{
+    font-size: 14px!important;
+    text-align: right;
+}
+/*nav*/
+.ma{
+    margin:0 auto;
+}
+th,td{
+    text-align: center;
+}
+.pagination .pagination-outline{
+    padding-right: 10px;
+    box-sizing: border-box;
+}
+#name{
+    height: 33px;
+    margin-bottom:10px ;
+}
+#layui-content{
+    /*min-height:450px!important;*/
+    height: auto;
+    overflow: auto;
+}
+#layui-layer1{
+    left: 50%;
+}
+.modal-body{
+    padding-top: 0px!important;
+}
+.layui-tab{
+    /*overflow: auto;*/
+}
+.chosen-select2{
+    position: absolute;
+}
+#frameBox{
+    margin-left: 0!important;
+    width: 100%;
+}
+.bootstrap-table{
+    width: 99%;
+}
+iframe{
+    display: block;
+}
+/*滚动条块隐藏*/
+/*::-webkit-scrollbar{*/
+/*display: none;*/
+/*}*/
+/*ie滚动条样式自定义*/
+body,html{
+    scrollbar-face-color: #eeeeee;
+    scrollbar-highlight-color: #fff;
+    scrollbar-shadow-color: #eeeeee;
+    scrollerbar-3dlight-color:#eeeeee;
+    scrollbar-arrow-color: #000;
+    scrollbar-track-color: #fff;
+    scrollbar-darkshadow-color: #fff;
+}
+/*滚动条默认显示样式*/
+::-webkit-scrollbar-thumb{
+    background-color: #eeeeee;
+    height: 20px;
+    outline-offset: 0px;
+    outline: 2px solid #fff;
+    -webkit-border-radius: 4px;
+    border: 2px solid #fff;
+}
+/*鼠标点击滚动条显示样式*/
+::-webkit-scrollbar-thumb:hover{
+    background-color: #eeeeee;
+    height: 20px;
+    -webkit-border-radius: 4px;
+}
+/*滚动条大小*/
+::-webkit-scrollbar{
+    height: 15px;
+    width: 15px;
+}
+/*滚动框背景样式*/
+::-webkit-scrollbar-track-piece{
+    background-color: #fff;
+    -webkit-border-radius: 0;
+}
+body,html{
+    font-family: '微软雅黑';
+    margin: 0;
+    padding: 0;
+}
+a{
+    cursor: pointer;
+}
+h6>p {
+    line-height: 18px;
+}
+h6 {
+    margin: 30px 0 0 0px;
+    font-size: 13px;
+    color: #940D0D;
+    /* line-height: 22px; */
+}
+.bootstrap-table .table:not(.table-condensed) > tbody > tr > td{
+    padding:4px!important;
+}
+.fixed-table-container thead th .th-inner{
+    padding:0 6px!important;
+}
+/*.table>tbody>tr>td{*/
+    /*padding: 4px!important;*/
+/*}*/
+.fixed-table-container thead th{
+    padding: 6px!important;
+    box-sizing: border-box;
+}
+/*---------------------------------optimization-----------------------------------*/
+.gray-bg{
+    background: white!important;
+}
+.wrapper .wrapper-content{
+    padding: 2px!important;
+}
+.ibox-content{
+    border-color: white;
+}
+.layui-tab-content{
+    padding: 5px!important;
+}
+.modal-body{
+    padding: 0 5px!important;
+}
+.layui-tab-title{
+    margin-bottom: 0;
+}
+._box{
+    margin: 4px 0 8px;
+}
+.layui-tab-item>iframe{
+    width: 100%;
+}
+
+
+
+
+

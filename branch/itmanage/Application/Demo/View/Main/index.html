@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>运维管理系统</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="__PUBLICOLD__/plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="__PUBLICOLD__/css/global.css" media="all">
+    <link rel="stylesheet" href="__PUBLICOLD__/vendor/font-awesome/css/font-awesome.css">
+</head>
+
+<body style="font-family: 寰蒋闆呴粦;">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header header header-demo">
+        <div class="layui-main">
+            <div class="admin-login-box">
+                <a class="logo" style="left: 0;" href="#">
+                    <span style="font-size: 22px;color: #fff">运维管理系统</span>
+                </a>
+                <div class="admin-side-toggle">
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                </div>
+            </div>
+            <ul class="layui-nav admin-header-item">
+                <li class="layui-nav-item">
+                    <a href="javascript:void(0);" class="admin-header-user" style="color: #fff">
+                        欢迎您:&nbsp;&nbsp;<span><?php echo session('realusername');?></span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd style="background-color: #393D49;">
+                            <a href="javascript:void(0);" id="updatepassword"><i class="fa fa-sign-out" aria-hidden="true"></i>鏇存敼瀵嗙爜</a>
+                        </dd>
+                        <dd style="background-color: #393D49;">
+                            <a href="../Index/loginpage.html"><i class="fa fa-sign-out" aria-hidden="true"></i>閫�鍑�</a>
+                        </dd>
+                        <input type="hidden" name="userid" id="userid" value="<?php echo session('user_id');?>"/>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="layui-side layui-bg-black" id="admin-side">
+        <div class="layui-side-scroll" id="admin-navbar-side" lay-filter="side"></div>
+    </div>
+    <div class="layui-body" style="bottom: 0;border-left: solid 2px #1AA094;" id="admin-body">
+        <div class="layui-tab admin-nav-card layui-tab-brief" lay-filter="admin-tab">
+            <ul class="layui-tab-title">
+                <li class="layui-this">
+                    <!--<i class="fa fa-dashboard" aria-hidden="true"></i>-->
+                    <cite>首页</cite>
+                </li>
+            </ul>
+            <div class="layui-tab-content" style="min-height: 150px; padding: 5px 0 0 0;">
+                <div class="layui-tab-item layui-show">
+                    <iframe src="../Welcome/index.html" id="iframe"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-footer footer footer-demo" id="admin-footer">
+        <div class="layui-main">
+            <p>2017 &copy;<a href="#">五院信息中心</a></p>
+        </div>
+    </div>
+    <!--<input id="menus" type="hidden" value='{$menus}'>-->
+
+    <script src="__PUBLICOLD__/vendor/jquery/jquery1.11.1.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap/js/bootstrap.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap/js/ie10-viewport-bug-workaround.js"></script>
+    <script type="text/javascript" src="__PUBLICOLD__/plugins/layui/layui.js"></script>
+    <!--<script type="text/javascript" src="__PUBLICOLD__/datas/nav.js"></script>-->
+    <script type="text/javascript" src="__PUBLICOLD__/js/navbar.js"></script>
+    <script>
+        var navs = '{$menus}';
+//        var navs = $('#menus').val();
+        layui.config({
+            base: '__PUBLICOLD__/js/'
+        }).use(['element', 'layer', 'navbar', 'tab'], function() {
+            var element = layui.element(),
+                    $ = layui.jquery,
+                    layer = layui.layer,
+                    navbar = layui.navbar(),
+                    tab = layui.tab({
+                        elem: '.admin-nav-card'
+                    });
+            $(window).on('resize', function() {
+                var $content = $('.admin-nav-card .layui-tab-content');
+                $content.height($(this).height() - 147);
+                $content.find('iframe').each(function() {
+                    $(this).height($content.height());
+                });
+            }).resize();
+
+
+            navbar.set({
+                spreadOne: true,
+                elem: '#admin-navbar-side',
+                cached: true,
+                data: navs
+                /*cached:true,
+                 url: 'datas/nav.json'*/
+            });
+
+            navbar.render();
+
+            navbar.on('click(side)', function(data) {
+                tab.tabAdd(data.field);
+            });
+
+            $('.admin-side-toggle').on('click', function() {
+                var sideWidth = $('#admin-side').width();
+                if(sideWidth === 200) {
+                    $('#admin-body').animate({
+                        left: '0'
+                    }); //admin-footer
+                    $('#admin-footer').animate({
+                        left: '0'
+                    });
+                    $('#admin-side').animate({
+                        width: '0'
+                    });
+                } else {
+                    $('#admin-body').animate({
+                        left: '200px'
+                    });
+                    $('#admin-footer').animate({
+                        left: '200px'
+                    });
+                    $('#admin-side').animate({
+                        width: '200px'
+                    });
+                }
+            });
+            $('.layui-tab-title').on('dblclick', function(){
+                var id = $(this).find('li i.layui-tab-close').first().attr('data-id');
+                var target = $('.layui-tab-item iframe[data-id="' + id + '"]');
+                var url = target.attr('src');
+                //鏄剧ずloading鎻愮ず
+//                var loading = layer.load();
+                target.attr('src', url).load(function () {
+                    //鍏抽棴loading鎻愮ず
+//                    layer.close(loading);
+                });
+            });
+
+            $("#updatepassword").on("click",function(){
+                var update = {
+                    "title": "更改密码",
+                    "icon": "fa-stop-circle",
+                    "href": "__CONTROLLER__/updatepwd",
+                    "spread": false
+                };
+                tab.tabAdd(update);
+            });
+        });
+    </script>
+</div>
+</body>
+</html>

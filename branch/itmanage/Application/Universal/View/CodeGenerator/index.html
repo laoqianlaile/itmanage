@@ -1,0 +1,678 @@
+﻿<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<title>代码生成器</title>
+<style>
+    .form-group{
+        margin-top: 10px;
+    }
+    .control-label{
+        width:150px;
+        display: inline-block;
+        text-align: center;
+    }
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .layui-tab-content {
+        padding-bottom: 0 !important;
+        min-height: 450px;
+    }
+    .form-group{
+        display: inline-block;
+        width: 95%;
+        margin-left: 10px;
+        margin-top: 5px;
+    }
+    .formEl-div{
+        display: inline-block;
+    }
+    ._box{
+        margin-top: 16px ;
+    }
+    .layui-tab-item>iframe{
+        width: 98%;box-sizing:border-box;overflow:hidden;border: none;
+    }
+    #layui-title li {
+        width: 12%;
+    }
+    .form-control{
+        display: inline-block;
+        color:#476DD9
+    }
+    .choose{
+        border: 1px solid #26AF3D;
+        border-radius: 5px;
+    }
+    .must_filter{
+        color: red;
+    }
+    /*.input-map{*/
+        /*color:#13C2D6*/
+    /*}*/
+</style>
+<body style="margin: 0 auto;overflow: hidden">
+<div class="layui-tab layui-tab-brief" lay-filter="demo" >
+    <ul class="layui-tab-title" id="layui-title">
+        <li class="layui-tab-item tab">选择数据来源</li>
+        <li class="layui-tab-item tab" style="display: none">建立映射关系</li>
+        <li class="layui-tab-item tab" style="display: none">搜索配置</li>
+        <li class="layui-tab-item tab" style="display: none">配置添加页面</li>
+        <button type="button"  class="btn next " style="margin-right: 40px;float: right;margin-top: 3px;background: cadetblue;color: white;">下一步</button>
+        <button type="button"  class="btn" id="saveData" style="margin-right: 40px;float: right;margin-top: 3px; background: seagreen;
+ color: white;">保存</button>
+        <button type="button"  class="btn" id="loadData" style="margin-right: 40px;float: right;margin-top: 3px;background: #4078BD;color: white;">载入数据</button>
+
+    </ul>
+        <div class="layui-tab-content" id="layui-content" style="overflow: auto">
+            <div lay-id="1" class=" layui-tab-item layui-show">
+                <div class="_box" style="">
+                    <div class="form-group" >
+                        <label class="control-label" >数据库连接</label>
+                        <div class="formEl-div" style="width: 35%">
+                            <input type="text" class="form-control" style="width:99%;" placeholder="数据库配置文件中对应的配置名,不填则识别为数据库默认连接"  id="database_mark">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" >数据表名<span class="must_filter">*</span></label>
+                        <div class="formEl-div" style="width: 35%">
+                            <input type="text" class="form-control" value="" style="width:99%;"   placeholder="输入数据库中的数据表名全称"  id="table_name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" >存放模块<span class="must_filter">*</span></label>
+                        <div class="formEl-div" style="width: 35%">
+                            <input type="text" class="form-control" value="admin" style="width:99%;"  placeholder="请输入所属模块"  id="module_name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" >控制器名称<span class="must_filter">*</span></label>
+                        <div class="formEl-div" style="width: 35%">
+                            <input type="text" class="form-control" value="" style="width:99%;"  placeholder="请输入控制器名称"  id="controller_name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" >视图层名称<span class="must_filter">*</span></label>
+                        <div class="formEl-div" style="width: 35%">
+                            <input type="text" class="form-control" value="" style="width:99%;"  placeholder="请输入HTML标题名称"  id="view_name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" >过滤字段<span class="must_filter">*</span></label>
+                        <div class="formEl-div" style="width: 35%">
+                            <input type='checkbox' id="filter_field" checked class='form-control ' style='width: 28px;height: 19px;vertical-align: middle;margin-top: -3px;'  >
+                            <button id="filter_field_question" remind="将会过滤掉带有createuser、createtime、modifyuser、modifytime的字段"  class="btn btn-info sys_save" style="margin-left: 10px;background-color: #71A1CB !important;border-color: #71A1CB;" >?</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" >以注释作为字段含义<span class="must_filter">*</span></label>
+                        <div class="formEl-div" style="width: 35%">
+                            <input type='checkbox' id="fillMeaningByComment"  class='form-control ' style='width: 28px;height: 19px;vertical-align: middle;margin-top: -3px;'  >
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div lay-id="2" id="second_content_div" style="display: none;padding-top: 20px;" class=" layui-tab-item"></div>
+            <div lay-id="3" style="display: none;padding-top: 20px;" class=" layui-tab-item"></div>
+        </div>
+</div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLIC__/img/loading/loading9.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script>
+    $(function () {
+        var searchType = JSON.parse('<?php echo $searchType; ?>');
+        //搜索类型下拉框
+        var select = '<select  class="chosen-select search-select" ><option value="">&nbsp;</option>';
+        $.each(searchType, function(k,type){
+            select += "<option value='"+k+"'>"+type+"</option>";
+        });
+        select += "</select>";
+
+        /**
+         * 获取配置搜索下拉菜单
+         * @param selectedValue 该值会选中
+         */
+        function getConfigSearchSelectStr(selectedValue){
+            if(!selectedValue) return select;
+            var selectStr = '<select  class="chosen-select search-select" ><option value="">&nbsp;</option>';
+            $.each(searchType, function(k,type){
+                var selected = '';
+                if(selectedValue == k){
+                    selected = 'selected';
+                }
+                selectStr += "<option  "+selected+"  value='"+k+"'>"+type+"</option>";
+            });
+            selectStr += "</select>";
+            return selectStr;
+        }
+
+        //表单类型下拉框
+        var formType = JSON.parse('<?php echo $formType; ?>');
+        var formTypeSelect = '<select  class="chosen-select form-type" ><option value="">&nbsp;</option>';
+        $.each(formType, function(k,type){
+            formTypeSelect += "<option value='"+type+"'>"+type+"</option>";
+        });
+        formTypeSelect += "</select>";
+
+        /**
+         * 获取表单类型下拉菜单
+         * @param selectedValue 该值会选中
+         */
+        function getFormTypeSelectStr(selectedValue){
+            if(!selectedValue) return formTypeSelect;
+
+            var selectStr = '<select  class="chosen-select form-type" ><option value="">&nbsp;</option>';
+            $.each(formType, function(k,type){
+                var selected = '';
+                if(selectedValue == type){
+                    selected = 'selected';
+                }
+                selectStr += "<option "+selected+" value='"+type+"'>"+type+"</option>";
+            });
+            selectStr += "</select>";
+
+            return selectStr;
+        }
+        $('body').on('mousemove', '#second_content_div .form-group', function () {
+            $(this).addClass('choose').siblings().removeClass('choose');
+        })
+
+
+        var fieldMap = []; //初始化字段映射关系
+        var pk_field,database_mark,table_name,controller_name,module_name,view_name,filter_field = ''; //初始化
+
+        var showIndex = "<?php echo intval(I('get.show_index')); ?>";
+        layui.use('layer', function() {
+            layer = layui.layer;
+        });
+        layui.use('element', function () {
+            var element = layui.element();
+            element.on('tab(demo)', function (data) {});
+        });
+
+        var height = document.documentElement.clientHeight -100;
+        $('#layui-content').css('height', height+'px');
+
+        $('body').on('change', '.form-type',function(){
+            var val = $(this).val();
+            var index = $('.form-type').index($(this));
+            $('.is_add').eq(index).attr('disabled', false);
+            if(val){
+                var is_add = $('.is_add').eq(index).is(':checked');
+                if(!is_add) $('.is_add').eq(index).click();
+            }else{
+                $('.is_add').eq(index).attr('checked', false);
+                $('.is_require').eq(index).attr('checked', false);
+                $('.add-order').eq(index).val('');
+            }
+            var order = $('.add-order').eq(index).val();
+            if(!order){
+                var maxOrder = getMapFieldMaxOrder('add-order');
+                $('.add-order').eq(index).val(maxOrder + 1);
+            }
+        });
+
+        $('#filter_field_question').mouseover(function(){
+            var remind = $(this).attr('remind');
+            layer.msg(remind);
+        });
+
+        //载入数据
+        $('#loadData').click(function(){
+            layer.confirm('载入数据会将您之前保存的数据渲染到页面上，这会清除当前页面数据，确认载入？',
+            {btn:['确定','取消']},
+            function(index){
+                $.ajax({
+                    type:'post',
+                    url: '__CONTROLLER__/loadData',
+                    dataType:'json',
+                    data:{
+                        database_mark:$('#database_mark').val(),
+                        table_name:$('#table_name').val()
+                    },
+                    success:function(data){
+                        if(data.code > 0){
+                            var result = data.message;
+                            $('#controller_name').val(result.controller_name);
+                            $('#module_name').val(result.module_name);
+                            $('#view_name').val(result.view_name);
+                            if(result.filter_field == 1){
+                                $('#filter_field').attr('checked', true);
+                            }else{
+                                $('#filter_field').attr('checked', false);
+                            }
+                            $('#layui-content .layui-tab-item').eq(1).html('');
+
+
+                            if(result.fieldMap.length > 0){
+                                var str = buildMapHtml(result.fieldMap);
+                                $('#layui-content .layui-tab-item').eq(1).html(str);
+                                initChosen(120);
+                                $('#loading').modal('hide');
+                                $('.tab').eq(1).css('display', '').click().addClass('layui-this');
+                            }
+                            if(result.configSearch.length > 0){
+                                var str = buildSearchHtml(result.configSearch);
+                                $('#layui-content .layui-tab-item').eq(2).html(str);
+                                initChosen();
+                                $('.tab').eq(2).css('display', '').click().addClass('layui-this');
+                            }
+                        }else{
+                            $('#loading').modal('hide');
+                            layer.alert(data.message);
+                        }
+                        layer.close(index);
+
+                    },error: function () {
+                        $('#loading').modal('hide');
+                        layer.msg('出错啦！请稍后再试！');
+                    }
+                });
+            })
+        });
+
+        //保存数据
+        $('#saveData').click(function(){
+            layer.confirm('保存数据是以数据库连接和数据表名为唯一标识生成一份数据，每一次会替换之前保存的数据，确认保存？',
+            {btn:['确定','取消']},
+            function(){
+                var selects = $('.search-select');
+                $('#myModalLabel').text("处理中。。。");
+                $('#loading').modal('show');
+                var fillMeaningByComment = $('#fillMeaningByComment').is(":checked");
+                fillMeaningByComment = fillMeaningByComment? 1: 0;
+
+                var filter_field = $('#filter_field').is(":checked");
+                filter_field = filter_field? 1: 0;
+
+                $.ajax({
+                    type:'post',
+                    url: '__CONTROLLER__/saveData',
+                    dataType:'json',
+                    data:{
+                        configSearch:getConfigSearch(),
+                        fieldMap:getMapField(),
+                        database_mark:$('#database_mark').val(),
+                        table_name:$('#table_name').val(),
+                        controller_name:$('#controller_name').val(),
+                        module_name:$('#module_name').val(),
+                        view_name:$('#view_name').val(),
+                        fillMeaningByComment:fillMeaningByComment,
+                        filter_field:filter_field
+                    },
+                    success:function(data){
+                        $('#loading').modal('hide');
+                        if(data.code > 0){
+                            layer.msg(data.message);
+                        }else{
+                            layer.alert(data.message);
+                        }
+
+                    },error: function () {
+                        $('#loading').modal('hide');
+                        layer.msg('出错啦！请稍后再试！');
+                    }
+                });
+            })
+        });
+
+        $('body').on('keyup', '.add-order',function(){
+            var val = $(this).val();
+            var index = $('.add-order').index($(this));
+            if(val){
+                var is_add = $('.is_add').eq(index).is(':checked');
+                if(!is_add) $('.is_add').eq(index).click();
+            }
+        });
+        $('body').on('click', '.is_require',function(){
+            var val = $(this).is(':checked');
+            var index = $('.is_require').index($(this));
+            if(val){
+                var is_add = $('.is_add').eq(index).is(':checked');
+                if(!is_add) $('.is_add').eq(index).click();
+            }
+        });
+
+        $('.tab').click(function(){
+            var index = $(this).index();
+            $('#layui-content .layui-tab-item').eq(index).addClass('layui-show').siblings().removeClass('layui-show');
+            if(index != 0){
+                var iframe  = $('iframe').eq(index-1);
+                var iframeLink = iframe.attr('src');
+                if(iframeLink == ''){
+                    iframe.attr('src',encodeURI(iframe.attr('url')));
+                }
+            }
+        });
+        $('.tab').eq(showIndex).click().addClass('layui-this');
+        $('#layui-content .layui-tab-item').eq(showIndex).addClass('layui-show');
+
+        //主键点击事件
+        $('body').on('click','.is_pk',function(){
+            var obj = $('.is_pk');
+            var index = $('.is_pk').index($(this));
+            if($(this).attr('checked') == true){
+                $.each(obj, function(k,checkbox){
+                    $(checkbox).attr('checked', false);
+                });
+            }else{
+                $.each(obj, function(k,checkbox){
+                    if(k != index) $(checkbox).attr('checked', false);
+                });
+            }
+        });
+
+        //填完映射关系后，算出当前最大排序号，填入表单
+        $('body').on('blur', '.input-map', function(){
+            var index = $(this).index('.input-map');
+            var order = $('.field-order').eq(index).val();
+            var val = $(this).val();
+            if(order || !val) return false;
+
+            var maxOrder = getMapFieldMaxOrder('field-order');
+            $('.field-order').eq(index).val(maxOrder + 1);
+        });
+
+        $('body').on('click','.next',function(){
+            var index =$('.tab').index($('.layui-this'));
+            switch(index){
+                case 0:
+                    database_mark = $('#database_mark').val();
+                    table_name = $('#table_name').val();
+                    controller_name = $('#controller_name').val();
+                    module_name = $('#module_name').val();
+                    view_name = $('#view_name').val();
+                    filter_field = $('#filter_field').is(":checked");
+                    filter_field = filter_field ? 1 : 0;
+                    if(table_name == ''){
+                        layer.alert("请填写数据表全称");
+                        return false;
+                    }
+                    if(controller_name == ''){
+                        layer.alert("请填写控制器信息");
+                        return false;
+                    }
+                    if(module_name == ''){
+                        layer.alert("请填写模块信息");
+                        return false;
+                    }
+                    if(view_name == ''){
+                        layer.alert("请填写视图名称");
+                        return false;
+                    }
+                    $('#myModalLabel').text("正在读取数据信息。。。");
+                    $('#loading').modal('show');
+                    $.ajax({
+                        type:'post',
+                        url: '__CONTROLLER__/checkConfigParam',
+                        dataType:'json',
+                        data:{
+                            database_mark:database_mark,
+                            table_name:table_name,
+                            controller_name:controller_name,
+                            module_name:module_name,
+                            filter_field:filter_field
+                        },
+                        success:function(data){
+                            if(data.code > 0){
+                                var fields = data.message;
+                                var str = buildMapHtml(fields);
+                                $('#layui-content .layui-tab-item').eq(index+1).html(str);
+                                initChosen(120);
+                                $('#loading').modal('hide');
+                                $('.tab').eq(index+1).css('display', '').click().addClass('layui-this');
+                            }else{
+                                $('#loading').modal('hide');
+                                layer.alert(data.message);
+                            }
+
+                        },error: function () {
+                            $('#loading').modal('hide');
+                            layer.msg('出错啦！请稍后再试！');
+                        }
+                    });
+                    break;
+                case 1:
+                    var obj = $('#layui-content .layui-tab-item').eq(index).find('.input-map');
+                    if(fieldMap.length >0) fieldMap = [];
+
+                    var checkIndexFieldOrder = []; //校验展示字段顺序是否重复
+                    $.each(obj, function(k,input){
+                        var inputVal = $(input).val().trim();
+                        if(inputVal){
+                            var order = $('.field-order').eq(k).val();
+                            var add_order = $('.add-order').eq(k).val();
+                            var is_add = $('.is_add').eq(k).is(':checked');
+                            var form_type = $('.form-type').eq(k).val();
+                            var is_require = $('.is_require').eq(k).is(':checked');
+                            if(is_add){
+                                if(!form_type ){
+                                    layer.alert('请输入'+inputVal+'在添加页面的展示方式');
+                                    throw new Error('请选择展示方式');
+                                    return false;
+                                }else{
+                                    if(!add_order){
+                                        layer.alert('请输入'+inputVal+'在添加页面时的展示顺序');
+                                        $('.add_order').eq(k).focus();
+                                        throw new Error('请输入在添加页面时的展示顺序');
+                                        return false;
+                                    }
+                                }
+                            }
+                            if(order == ''){
+                                layer.alert('请输入'+inputVal+'的展示顺序');
+                                $('.field-order').eq(k).focus();
+                                throw new Error('请输入展示顺序');
+                                return false;
+                            }else{
+                                order = parseInt(order);
+                                if($.inArray(order, checkIndexFieldOrder)>= 0){
+                                    layer.alert('展示顺序有重复项');
+                                    throw new Error('展示顺序有误');
+                                    return false;
+                                }else{
+                                    checkIndexFieldOrder.push(order);
+                                }
+                            }
+                            fieldMap.push({field: $(input).attr('id') ,name:inputVal, order:order, form_type:form_type, is_require:is_require,is_add:is_add, add_order:add_order});
+                        }
+                    });
+                    var pkObj = $('input[name="is_pk"]:checked'); //获取主键字段
+                    if(pkObj.length > 0){
+                        pk_field = pkObj.attr('id').substr(1);
+                    }else{
+                        layer.alert('请勾选主键');
+                        return false;
+                    }
+
+                    if(fieldMap.length <=0){
+                        layer.alert('映射关系为空，无法继续进行！请填写映射关系');
+                        return false;
+                    }
+                    var str = buildSearchHtml(fieldMap);
+                    $('#layui-content .layui-tab-item').eq(index+1).html(str);
+                    initChosen();
+                    $('.tab').eq(index+1).css('display', '').click().addClass('layui-this');
+                    break;
+                case 2:
+                    var selects = $('.search-select');
+                    var configSearch = [];
+                    $.each(selects, function(k, select){
+                        var obj = $(select);
+                        var val = $(select).val();
+                        if(val!= ''){
+                            configSearch.push({field:obj.parent().attr('search-field'), search_type:val, name:obj.parent().prev().text() });
+                        }
+                    });
+
+                    $('#myModalLabel').text("正在创建代码。。。");
+                    $('#loading').modal('show');
+
+                    $.ajax({
+                        type:'post',
+                        url: '__CONTROLLER__/buildCode',
+                        dataType:'json',
+                        data:{
+                            configSearch:configSearch,
+                            fieldMap:fieldMap,
+                            pkField:pk_field,
+                            database_mark:$('#database_mark').val(),
+                            table_name:$('#table_name').val(),
+                            controller_name:$('#controller_name').val(),
+                            module_name:$('#module_name').val(),
+                            view_name:$('#view_name').val()
+                        },
+                        success:function(data){
+                            $('#loading').modal('hide');
+                            if(data.code > 0){
+                                layer.alert(data.message);
+                            }else{
+                                layer.alert(data.message);
+                            }
+
+                        },error: function () {
+                            $('#loading').modal('hide');
+                            layer.msg('出错啦！请稍后再试！');
+                        }
+                    });
+                    break;
+                default :return false;
+            }
+        });
+        function initChosen(width){
+            if(typeof(width) != 'undefined'){
+                $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: width+'px'});
+            }else{
+                $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '300px'});
+            }
+        }
+
+        //获取映射字段
+        function getMapField(){
+            var obj = $('#layui-content .layui-tab-item').eq(1).find('.input-map');
+            var arr = [];
+            $.each(obj, function(k,input){
+                var inputVal = $(input).val().trim();
+                var order = $('.field-order').eq(k).val();
+                var add_order = $('.add-order').eq(k).val();
+                var is_add = $('.is_add').eq(k).is(':checked');
+                var form_type = $('.form-type').eq(k).val();
+                var is_require = $('.is_require').eq(k).is(':checked');
+                var is_pk = $('.is_pk').eq(k).is(':checked');
+                arr.push({column_name: $(input).attr('id') ,name:inputVal, order:order, form_type:form_type, is_require:is_require,is_add:is_add, add_order:add_order, is_pk:is_pk});
+            });
+            return arr;
+        }
+
+        //获取搜索配置数据
+        function getConfigSearch(){
+            var selects = $('.search-select');
+            var configSearch = [];
+            $.each(selects, function(k, select){
+                var obj = $(select);
+                var val = $(select).val();
+                configSearch.push({field:obj.parent().attr('search-field'), search_type:val, name:obj.parent().prev().text() });
+            });
+            return configSearch;
+        }
+
+
+        /**
+         * 获取传入类名的最大排序号
+         * @param className
+         * @returns {int}
+         */
+        function getMapFieldMaxOrder(className){
+            var $_obj = $('.'+className);
+            var maxOrder = 0;
+            $.each($_obj, function(k, v){
+                var val = $(v).val();
+                if(!val){
+                    val = 0;
+                }else{
+                    val = parseInt(val);
+                }
+                if(val >= maxOrder){
+                    maxOrder = val;
+                }
+            });
+            return maxOrder;
+        }
+
+        /**
+         * 生成映射关系html
+         * @param fields
+         * @returns {string}
+         */
+        function buildMapHtml(fields){
+            var str = '<h2 style="font-size: 18px;margin-top: -16px;color: #BF3A3A;"> * 填写映射的字段才会在列表上展示。字典顺序即表头顺序，该顺序必须输入有效且不重复的数字，否则将校验不通过！<br>添加展示是指创建添加页面html时是否需要填写该字段，如果需要，则请选择添加方式、填写在表单中展示顺序以及自行决定是否必填！</h2>';
+            var fillMeaningByComment = $('#fillMeaningByComment').is(":checked");
+            $.each(fields, function(k,field){
+                var comments = field['name'] ? field['name']:  ((field['comments']== null || !fillMeaningByComment) ? '':field['comments']);
+
+                var add_checked,require_checked,pk_checked,is_disabled =  '';
+                if(field['is_add'] == 'true'){
+                    add_checked = 'checked';
+                    is_disabled = '';
+                }else{
+                    is_disabled = 'disabled';
+                }
+                if(field['pk'] == '1' || field['is_pk'] == 'true') pk_checked = 'checked';
+                if(field['is_require'] == 'true') require_checked = 'checked';
+                field['add_order'] = field['add_order'] ? field['add_order'] : '';
+                field['order'] = field['order'] ? field['order'] : '';
+                field['form_type'] = field['form_type'] ? field['form_type'] : '';
+
+
+                str +=  "<div class='form-group' style='width: 99%;margin-top: 0;margin-bottom: -5px;padding-top: 5px;'>" +
+                            "<label class='control-label' style='width: 180px;word-break: break-all'>"+field['column_name']+ "</label>" +
+                            "<div class='formEl-div' style='width: 85%'>" +
+                                "<div style='width: 43%;border-right:5px solid #5FB878;display:inline-block'>" +
+                                    "<input type='text' class='form-control input-map' style='width:180px;' value='"+comments+"' placeholder='字段含义'  id='"+field['column_name']+"'>" +
+                                    "<label class='control-label' style='width: 80px'>字段顺序</label>" +
+                                    "<input type='text' class='form-control field-order' style='width:50px'  placeholder='' id='-"+field['column_name']+"' value='"+field['order']+"' >" +
+                                    "<label class='control-label'  style='width: 80px'>标记主键</label>" +
+                                    "<input type='checkbox' class='form-control is_pk' style='width: 28px;height: 19px;vertical-align: middle;margin-top: -3px;' "+pk_checked+" id='_"+field['column_name']+"' name='is_pk'>" +
+                                "</div>" +
+                                "<div  style='width: 52%;display:inline-block'>" +
+                                    "<label class='control-label'  style='width: 80px'>添加展示</label>" +
+                                    "<input type='checkbox' "+is_disabled+" class='form-control is_add'   style='width: 28px;height: 19px;vertical-align: middle;margin-top: -3px;'"+add_checked+"  name='is_add'>" +
+                                    "<label class='control-label'  style='width: 80px'>展示方式</label>"+
+                        getFormTypeSelectStr(field['form_type'])+
+                                    "<label class='control-label' style='width: 80px'>添加顺序</label>" +
+                                    "<input type='text' class='form-control add-order' style='width:50px' value='"+field['add_order']+"' >" +
+                                    "<label class='control-label'  style='width: 80px'>必填</label>" +
+                                    "<input type='checkbox' class='form-control is_require' style='width: 28px;height: 19px;vertical-align: middle;margin-top: -3px;' "+require_checked+" >" +
+                                "</div>" +
+                            "</div>" +
+                        "</div>";
+            });
+            return str;
+        }
+
+        /**
+         * 生成搜索配置html
+         * @returns {string}
+         */
+        function buildSearchHtml(fieldMap){
+            var str = '<h2 style="font-size: 18px;margin-top: -16px;color: #BF3A3A;"> * 下拉框搜索请自行在代码中写入数据来源！</h2>';
+            $.each(fieldMap, function(k,v){
+                if(!v['search_type']) v['search_type'] = '';
+                str += "<div class='form-group'> <label class='control-label'>"+v['name']+"</label><div search-field='"+v['field']+"' class='formEl-div' style='width: 85%'>"+getConfigSearchSelectStr(v['search_type'])+"</div></div>";
+            });
+            return str;
+        }
+    });
+</script>

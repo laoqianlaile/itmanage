@@ -1,0 +1,721 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>应用系统添加编辑</title>
+<style>
+    .form-group {
+        margin-top: 10px;
+        margin-bottom: 4px;
+    }
+
+    .control-label {
+        width: 150px !important;
+        font-size: 13px!important;
+    }
+    .must_filter{
+        color: red;
+    }
+    .form-control{
+        display:inline-block;
+    }
+   
+    .chosen-container{
+        top: -1px;
+    }
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .chosen-container{
+        height: 100%;
+        width:100%!important;
+    }
+    .modal-footer{
+        margin: 0px;
+        z-index: 999;
+        position: fixed;
+        bottom:0;
+        left:0;
+        font-family: cursive;
+        width: 100%;
+        height: 60px;
+        background-color: #fff;
+    }
+    .modal-footer .form-group{
+        position: absolute;
+        top: -3px;
+        left:50px;
+        width: 85%;
+    }
+    
+    .col-sm-3{
+        width:54%!important;
+        padding-left: 0!important;
+    }
+    .col-sm-3{
+        padding-left:0; 
+        padding-right:0; 
+    }
+     .remark{
+        float: left;
+        margin-top: 10px;
+        margin-right: 10px;
+        width:74px;
+        font-size: 13px;
+    }
+    #sys_dlg_submit {
+        margin-right: 30px;
+    }
+</style>
+<body style="margin: 0 auto;overflow-x:hidden;">
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content" style="padding-bottom: 50px;">
+        <div class="">
+            <div class="form-group">
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>是否院管 <span class='star'
+                            >*</span>  </label>
+                    <div class="col-sm-3" >
+                        <select  name="app_isyuan" id="app_isyuan" class="chosen-select" >
+                            <option value=""> </option>
+                            <?php foreach($is as $key=>$value){ ?>
+                            <option <?php if($data['app_isyuan'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>是否中心管 <span class='star'
+                            >*</span>  </label>
+                    <div class="col-sm-3" >
+                        <select  name="app_iszhongxin" id="app_iszhongxin" class="chosen-select" >
+                            <option value=""> </option>
+                            <?php foreach($is as $key=>$value){ ?>
+                            <option <?php if($data['app_iszhongxin'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>使用状态 </label>
+                    <div class="col-sm-3" >
+                        <select  name="app_status" id="app_status" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <foreach name="zhuangTai" item="val">
+                                <option value="{$val.dic_name}" <?php if($data['app_status'] == $val['dic_name']) echo 'selected'; ?> >{$val.dic_name}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 64%;float: left">
+                    <label class=' col-sm-2 control-label'>系统名称<span class="must_filter">*</span> </label>
+                    <div class="col-sm-3" style='width: 77.5%!important;'>
+                        <input type="text" class="form-control" style="width:99%;" name="app_name" id="app_name" value="<?php if(!empty($data['app_name']))echo $data['app_name']; ?>">
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>分类 </label>
+                    <div class="col-sm-3" >
+                        <select  name="app_toptype" id="app_toptype" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <foreach name="type" item="val">
+                                <option value="{$val.dic_name}" <?php if($data['app_toptype'] == $val['dic_name']) echo 'selected'; ?> >{$val.dic_name}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                </div>
+
+
+            </div>
+            <!--<div class="form-group">-->
+                <!--<div style="width: 100%;float: left">-->
+                    <!--<label class=' col-sm-2 control-label'>服务器IP地址 </label>-->
+                    <!--<div class="col-sm-3" style="width: 500px;">-->
+                        <!--<input type="text" id="app_host" name="app_host" style="width: 775px;" class="form-control" placeholder="点击选择" value="<?php if(!empty($app_host))echo $app_host; ?>" disabled>-->
+                        <!--<input type="hidden" id="app_host_id" name="app_host_id" value="<?php if(!empty($app_host_id))echo $app_host_id ;?>" disabled>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <div class="form-group">
+                <div style="width: 64%;float: left">
+                    <label class=' col-sm-2 control-label'>系统简称 </label>
+                    <div class="col-sm-3" style='width: 77.5%!important;'>
+                        <input type="text" class="form-control" style="width:99%;" name="app_sname" id="app_sname" value="<?php if(!empty($data['app_sname']))echo $data['app_sname']; ?>">
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>密级<span class="must_filter">*</span> </label>
+                    <div class="col-sm-3" >
+                        <select name="app_secret" id="app_secret" class="chosen-select" >
+                            <option value=""> </option>
+                            <?php foreach($miJi as $key=>$value){ ?>
+                            <option <?php if($data['app_secret'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                
+
+            </div>
+            <div class="form-group">
+                <div style="width: 64%;float: left">
+                    <label class=' col-sm-2 control-label'>建设途径</label>
+                    <div class="col-sm-3" style='width: 77.5%!important;'>
+                        <input type="text" class="form-control" name="app_jstj" style="width:99%;"  value="<?php if(!empty($data['app_jstj']))echo $data['app_jstj']; ?>">
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>关键字 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="app_keyword"  value="<?php if(!empty($data['app_keyword']))echo $data['app_keyword']; ?>">
+                    </div>
+                </div>
+
+                
+
+            </div>
+            <div class="form-group">
+                <div style="width: 64%;float: left">
+                    <label class=' col-sm-2 control-label'>应用系统URL</label>
+                    <div class="col-sm-3" style='width: 77.5%!important;'>
+                        <input type="text" class="form-control"  style="width:99%;" name="app_url"  value="<?php if(!empty($data['app_url']))echo $data['app_url']; ?>">
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>归属单位 </label>
+                    <div class="col-sm-3" >
+                        <!--<input type="text" class="form-control" style="width:99%;" name="app_mode" id="app_mode" value="<?php if(!empty($data['app_mode']))echo $data['app_mode']; ?>">-->
+                        <select  name="app_dutycompany" id="app_dutycompany" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <?php foreach($dutycompany as $key=>$value){ ?>
+                            <option <?php if($data['app_dutycompany'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div style="width: 64%;float: left">
+                    <label class=' col-sm-2 control-label'>用户范围 </label>
+                    <div class="col-sm-3" style='width: 77.5%!important;'>
+                        <input type="text" class="form-control" style="width:99%;" name="app_userscope" id="app_userscope" value="<?php if(!empty($data['app_userscope']))echo $data['app_userscope']; ?>">
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>上线时间 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="app_usedate" id="app_usedate" value="<?php if(!empty($data['app_usedate']))echo $data['app_usedate']; ?>" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>管理员A岗 </label>
+                    <div class="col-sm-3" >
+                        <select  name="app_admin" id="app_admin" class="chosen-select" >
+                            <option value="<?php echo $dutymanA['username'];?>"><?php echo $dutymanA['name'];?></option>
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>管理员B岗 </label>
+                    <div class="col-sm-3" >
+                        <select  name="app_adminb" id="app_adminb" class="chosen-select" >
+                            <option value="<?php echo $dutymanB['username'];?>"><?php echo $dutymanB['name'];?></option>
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>所属班组 </label>
+                    <div class="col-sm-3" >
+                        <select  name="app_group" id="app_group" class="chosen-select" >
+                            <option value=""> 请选择</option>
+                            <?php foreach($group as $key=>$value){ ?>
+                            <option <?php if($data['app_group'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="form-group">-->
+              <!-- -->
+
+                <!--<div style="width: 32%;float: left">-->
+                    <!--<label class=' col-sm-2 control-label'>数据库 </label>-->
+                    <!--<div class="col-sm-3" >-->
+                        <!--<select  name="app_db" id="app_db" class="chosen-select" disabled>-->
+                            <!--<option value=""> </option>-->
+                        <!--</select>-->
+                    <!--</div>-->
+                <!--</div>-->
+
+            <!--</div>-->
+            <div class="form-group">
+                <!--<div style="width: 32%;float: left">-->
+                    <!--<label class=' col-sm-2 control-label'>子系统 </label>-->
+                    <!--<div class="col-sm-3" >-->
+                        <!--&lt;!&ndash;<select  name="app_childname" id="app_childname" class="chosen-select" >&ndash;&gt;-->
+                            <!--&lt;!&ndash;<option value=""> </option>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</select>&ndash;&gt;-->
+                        <!--<input type="text" class="form-control" style="width:99%;" name="app_childname" id="app_childname" value="<?php if(!empty($data['app_childname']))echo $data['app_childname']; ?>">-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div style="width: 64%;float: left">
+                    <label class=' col-sm-2 control-label'>系统责任人 </label>
+                    <div class="col-sm-3" style='width: 77.5%!important;'>
+                        <select  name="app_dutyman" id="app_dutyman" class="chosen-select" >
+                            <option value="<?php echo $userMan['username'];?>"><?php echo $userMan['name'];?></option>
+                        </select>
+                    </div>
+                </div>
+               <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>责任部门 </label>
+                    <div class="col-sm-3">
+                        <select  class="chosen-select" id="app_dutydept" name="app_dutydept">
+                            <option value="{$data.app_dutydept}"><?php echo $app_dutydept;?></option>
+                        </select>
+                    </div>
+                </div>
+               
+
+            </div>
+            <div class="form-group">
+               <div style="width: 64%;float: left">
+                    <label class=' col-sm-2 control-label'>用户数 </label>
+                    <div class="col-sm-3" style='width: 77.5%!important;'>
+                        <input type="text" class="form-control"  style="width:99%;" name="app_usernum" value="<?php if(!empty($data['app_usernum']))echo $data['app_usernum']; ?>">
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>版本 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control"  style="width:99%;" name="app_version"  value="<?php if(!empty($data['app_version']))echo $data['app_version']; ?>">
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="form-group"> -->
+                
+                <!-- <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>技术平台 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="app_developplat" id="app_developplat" value="<?php if(!empty($data['app_developplat']))echo $data['app_developplat']; ?>">
+                    </div>
+                </div> -->
+            <!-- </div> -->
+            <!--<div class="form-group">-->
+               <!-- -->
+
+                <!--<div style="width: 32%;float: left">-->
+                    <!--<label class=' col-sm-2 control-label'>系统接口 </label>-->
+                    <!--<div class="col-sm-3" >-->
+                        <!--<input type="text" class="form-control" style="width:99%;" name="app_interface" id="app_interface" value="<?php if(!empty($data['app_interface']))echo $data['app_interface']; ?>">-->
+                    <!--</div>-->
+                <!--</div>-->
+
+            <!--</div>-->
+            <div class="form-group">
+               <div style="width: 64%;float: left">
+                    <label class=' col-sm-2 control-label'>研制单位 </label>
+                    <div class="col-sm-3" style='width: 77.5%!important;'>
+                        <!--<input type="text" class="form-control" name="app_develope" style="width:99%;"  value="<?php if(!empty($data['app_develope']))echo $data['app_develope']; ?>">-->
+                        <select  name="app_develope[]" id="app_develope" class="chosen-select" multiple>
+                            <!--<option value="">请选择</option>-->
+                            <?php foreach($develope as $key=>$value){ ?>
+                            <option <?php if(in_array($value['dic_name'],$dept)) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                 <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>是否需巡检 </label>
+                    <div class="col-sm-3" >
+                        <!--<input type="text" class="form-control" name="app_ischeck" style="width:99%;"  value="<?php if(!empty($data['app_ischeck']))echo $data['app_ischeck']; ?>">-->
+                        <select  name="app_ischeck" id="app_ischeck" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <?php foreach($ischeck as $key=>$value){ ?>
+                            <option <?php if($data['app_ischeck'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+               <div style="width: 100%;float: left">
+                    <label class=' col-sm-2 control-label'>功能简介 </label>
+                    <div class="col-sm-3" style='width: 82%!important;'>
+                        <input type="text" class="form-control" name="app_function" style="width:99%;"  value="<?php if(!empty($data['app_function']))echo $data['app_function']; ?>">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+               
+                <div style="width: 64%;float: left">
+                    <label class=' col-sm-2 control-label'>技术平台 </label>
+                    <div class="col-sm-3" style='width: 77.5%!important;'>
+                        <input type="text" class="form-control" style="width:99%;" name="app_developplat" id="app_developplat" value="<?php if(!empty($data['app_developplat']))echo $data['app_developplat']; ?>">
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>技术架构 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" name="app_structure" style="width:99%;"  value="<?php if(!empty($data['app_structure']))echo $data['app_structure']; ?>">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+               <div style="width: 64%;float: left">
+                    <label class=' col-sm-2 control-label'>中间件（版本） </label>
+                    <div class="col-sm-3" style='width: 77.5%!important;'>
+                        <input type="text" class="form-control" name="app_weblogic" style="width:99%;"  value="<?php if(!empty($data['app_weblogic']))echo $data['app_weblogic']; ?>">
+                    </div>
+                </div>
+                 <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>开发平台 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" name="app_platform" style="width:99%;"  value="<?php if(!empty($data['app_platform']))echo $data['app_platform']; ?>">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 64%;float: left">
+                    <label class=' col-sm-2 control-label'>系统员 </label>
+                    <div class="col-sm-3" style='width: 77.5%!important;'>
+                        <!--<input type="text" class="form-control" name="app_sysadmin" style="width:99%;"  value="<?php if(!empty($data['app_sysadmin']))echo $data['app_sysadmin']; ?>">-->
+                        <select  name="app_sysadmin" id="app_sysadmin" class="chosen-select" >
+                            <option value="<?php echo $sysadmin['username'];?>"><?php echo $sysadmin['name'];?></option>
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>普通用户鉴别方式 </label>
+                    <div class="col-sm-3" >
+                        <!--<input type="text" class="form-control" style="width:99%;" name="app_loginmode" id="app_loginmode" value="<?php if(!empty($data['app_loginmode']))echo $data['app_loginmode']; ?>">-->
+                        <select  name="app_loginmode" id="app_loginmode" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <?php foreach($loginmode as $key=>$value){ ?>
+                            <option <?php if($data['app_loginmode'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 64%;float: left">
+                    <label class=' col-sm-2 control-label'>安全员 </label>
+                    <div class="col-sm-3" style='width: 77.5%!important;'>
+                        <!--<input type="text" class="form-control" name="app_secadmin" style="width:99%;"  value="<?php if(!empty($data['app_secadmin']))echo $data['app_secadmin']; ?>">-->
+                        <select  name="app_secadmin" id="app_secadmin" class="chosen-select" >
+                            <option value="<?php echo $secadmin['username'];?>"><?php echo $secadmin['name'];?></option>
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>管理员鉴别方式 </label>
+                    <div class="col-sm-3" >
+                        <!--<input type="text" class="form-control" style="width:99%;" name="app_aloginmode" id="app_aloginmode" value="<?php if(!empty($data['app_aloginmode']))echo $data['app_aloginmode']; ?>">-->
+                        <select  name="app_aloginmode" id="app_aloginmode" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <?php foreach($loginmode as $key=>$value){ ?>
+                            <option <?php if($data['app_aloginmode'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                
+
+            </div>
+            <div class="form-group">
+                <div style="width: 64%;float: left">
+                    <label class=' col-sm-2 control-label'>审计员 </label>
+                    <div class="col-sm-3" style='width: 77.5%!important;'>
+                        <!--<input type="text" class="form-control" name="app_audit" style="width:99%;"  value="<?php if(!empty($data['app_audit']))echo $data['app_audit']; ?>">-->
+                        <select  name="app_audit" id="app_audit" class="chosen-select" >
+                            <option value="<?php echo $audit['username'];?>"><?php echo $audit['name'];?></option>
+                        </select>
+                    </div>
+                </div>
+               <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>数据存放方式 </label>
+                    <div class="col-sm-3" >
+                        <!--<input type="text" class="form-control" style="width:99%;" name="app_usemode" id="app_usemode" value="<?php if(!empty($data['app_usemode']))echo $data['app_usemode']; ?>">-->
+                        <select  name="app_usemode" id="app_usemode" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <?php foreach($usemode as $key=>$value){ ?>
+                            <option <?php if($data['app_usemode'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>信息资源 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="app_info" id="app_info" value="<?php if(!empty($data['app_info']))echo $data['app_info']; ?>">
+                    </div>
+                </div>
+
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>访问方式 </label>
+                    <div class="col-sm-3" >
+                        <!--<input type="text" class="form-control" style="width:99%;" name="app_mode" id="app_mode" value="<?php if(!empty($data['app_mode']))echo $data['app_mode']; ?>">-->
+                        <select  name="app_mode" id="app_mode" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <?php foreach($mode as $key=>$value){ ?>
+                            <option <?php if($data['app_mode'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>访问权限 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="app_accessauthority" id="app_accessauthority" value="<?php if(!empty($data['app_accessauthority']))echo $data['app_accessauthority']; ?>">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>立项级别 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="app_lxjb" id="app_lxjb" value="<?php if(!empty($data['app_lxjb']))echo $data['app_lxjb']; ?>">
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" value="<?php if(!empty($data['app_atpid'])) echo $data['app_atpid']; ?>" name="app_atpid" id="app_atpid">
+        </div>
+    </div>
+    <if condition="$Objtype eq null">
+        <div class="modal-footer">
+            <div class="form-group" style=''>
+                <div style="" class="cb">
+                    <label class='remark' style=''>备注 </label>
+                    <div class="" style=''>
+                        <textarea name="app_bz" id="app_bz"  style="height:50px;width:90%;float: left;"
+                                  class="form-control"><?php if(!empty($data['app_bz']))echo $data['app_bz']; ?></textarea>
+                    </div>
+                </div>
+            </div>
+            <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="">保存</button>
+            <if condition="$data['app_atpid'] neq null">
+                <button type="button"  id="oplog" class="btn btn-warning" style="margin-left: -20px;">日志</button>
+            </if>
+        </div>
+    </if>
+</form>
+
+
+
+
+
+
+
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        $('#sys_dlg_submit').click(function(){
+            $('#sys_dlg_form1').submit();
+        })
+
+        var input_width = parseInt($('.form-control').eq(0).css('width').replace('px', ''));
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: input_width+'px'});
+
+        //责任人
+        $('#app_dutyman').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+          //责任人
+        $('#app_sysadmin').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+          //责任人
+        $('#app_secadmin').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+         //责任人
+        $('#app_audit').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        //管理员A岗
+        $('#app_admin').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        //管理员B岗
+        $('#app_adminb').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        //用户单位
+        $('#app_dutydept').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assigndept'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        //开发单位
+        $('#app_developer').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assigndept'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        //服务器关联关系
+        $("#app_host").on('click',function(){
+            var atpid = $("#app_atpid").val();
+            //服务器
+            layer.open({
+                title:'服务器关联关系',
+                closeBtn:1,
+                type: 2,
+                shadeClose:false,
+                content: '__MODULE__/relation/sevAssetsList?flag=N&astrict=true&id='+ atpid +'&tar_id=app_host_id&tar_name=app_host',
+                area: ['100%', '100%']
+            });
+        });
+
+        $.validator.setDefaults({
+            highlight:function(element){
+                $(element).parent().remove('has-success').addClass('has-error');
+            },
+            success:function(element){
+                $(element).parent().remove('has-error').addClass('has-success');
+            },
+            errorPlacement:function(error,element){
+                if(element.is(":radio") || element.is(":checkbox")){
+                    error.appendTo(element.parent());
+                }else{
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass:"help-block m-b-none",
+            validClass:"help-block m-b-none"
+        });
+        $('#sys_dlg_form1').validate({
+            onclick:false,
+            onfocusout:false,
+            onkeyup:false,
+            // 如果是下拉菜单，这里的require是不生效的，需要自己在submitHandle方法中添加验证
+            rules:{
+
+            },
+            messages:{
+
+            },submitHandler:function(){
+                var app_status = $('#app_status').val();
+                var app_isyuan = $('#app_isyuan').val();
+                var app_iszhongxin = $('#app_iszhongxin').val();
+                if(app_status == ''){
+                    layer.alert("使用状态不可为空！");
+                    return false;
+                }
+                if(app_isyuan == ''){
+                    layer.alert("是否院管不可为空！");
+                    return false;
+                }
+                if(app_iszhongxin == ''){
+                    layer.alert("是否中心管不可为空！");
+                    return false;
+                }
+                var formBody = $('#sys_dlg_form1');
+                $.post('__CONTROLLER__/addData',formBody.serialize(), function (data) {
+                    if (data.code > 0) {
+//                        parent.$('#sys_refresh').click();
+                        parent.$('#atpbiztable').bootstrapTable('refresh');
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        layer.alert(data.message);
+                    }
+                },'JSON');
+            }
+        });
+    });
+
+    $('#app_dutyman').change(function(){
+        var username = $(this).val();
+        $.ajax({
+            type:'post',
+            url:'__MODULE__/ShiXiang/FindId',
+            data:{username:username},
+            dataType:'json',
+            success:function(res){
+                if(res.code > 0){
+                    var str = "<option value='" + res.message[0] + "'  " + 'selected' + ">" + res.message[1] + "</option>";
+                    $('#app_dutydept').append(str)
+                    $('#app_dutydept').trigger("chosen:updated")
+                }else{
+                    alert(res.message)
+                }
+            }
+        })
+    })
+
+    $('#oplog').click(function(){
+     var app_atpid = $('#app_atpid').val();
+        layer.open({
+            title:'日志查询',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__MODULE__/Oplog/index?id='+app_atpid,
+            area: ['95%', '95%']
+        });
+    })
+
+    //如果验证下拉框必填，请使用该方法
+    //    function checkSelectForm(objArr, messageArr){
+    //        var len = objArr.length;
+    //        for(var i=0;i<len;i++){
+    //            var obj = objArr[i];
+    //            var val = $('#'+obj).val();
+    //            if(!val){
+    //                layer.msg('请选择'+messageArr[i]);
+    //                $('#'+obj).trigger('chosen:open');
+    //                return false;
+    //            }
+    //        }
+    //        return true;
+    //    }
+</script>

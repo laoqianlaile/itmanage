@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0061)http://10.78.72.40/itsm/itom/usbkey/task/print.jsp gb2312-->
+<HTML><HEAD><TITLE>USBKEY用户确认单</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<STYLE>.title {
+	TEXT-ALIGN: center; FONT-SIZE: 15px; FONT-WEIGHT: bold
+}
+.content {
+	TEXT-ALIGN: center; FONT-SIZE: 15px
+}
+#context {
+	TEXT-ALIGN: center; FONT-SIZE: 15px; FONT-WEIGHT: bold
+}
+</STYLE>
+
+<SCRIPT type=text/javascript 
+src="__PUBLICOLD__/js/jquery-1.4.2.min.js"></SCRIPT>
+
+<!--<SCRIPT type=text/javascript src="__PUBLICOLD__/js/print.js"></SCRIPT>-->
+
+<SCRIPT type=text/javascript>
+//var path = '/itsm';
+//var intId = '889521';
+//var hkey_root, hkey_path, hkey_key;
+//hkey_root = "HKEY_CURRENT_USER";
+//hkey_path = "\\Software\\Microsoft\\Internet Explorer\\PageSetup\\";
+//
+////设置网页打印的页眉页脚为空
+//function pagesetup_null() {
+//    try {
+//        var RegWsh = new ActiveXObject("WScript.Shell");
+//        hkey_key = "header";
+//        RegWsh.RegWrite(hkey_root + hkey_path + hkey_key, "");
+//        hkey_key = "footer";
+//        RegWsh.RegWrite(hkey_root + hkey_path + hkey_key, "");
+//    } catch (e) {
+//    }
+//}
+//
+////设置网页打印的页眉页脚为默认值
+//function pagesetup_default() {
+//    try {
+//        var RegWsh = new ActiveXObject("WScript.Shell")
+//        hkey_key = "header";
+//        RegWsh.RegWrite(hkey_root + hkey_path + hkey_key, "&w&b页码，&p/&P")
+//        hkey_key = "footer";
+//        RegWsh.RegWrite(hkey_root + hkey_path + hkey_key, "&u&b&d")
+//    } catch (e) {
+//    }
+//}
+//function print() //打印函数
+//{
+//	$("#buttonTr").remove();
+//    pagesetup_null();//打印之前去掉页眉，页脚
+//    document.all.WebBrowser.ExecWB(6, 1); //打印
+//    pagesetup_default();//打印结束后页眉页脚恢复默认值
+//}
+
+</SCRIPT>
+
+<META name=GENERATOR content="MSHTML 8.00.6001.23532"></HEAD>
+<BODY>
+<OBJECT id=WebBrowser classid=ClSID:8856F961-340A-11D0-A96B-00C04Fd705A2 width=0 
+height=0></OBJECT>
+<TABLE border=0 width=630 align=center>
+  <TBODY>
+  <TR>
+    <TD align=middle><SPAN 
+      style="TEXT-ALIGN: center; FONT-FAMILY: 宋体; FONT-SIZE: 20pt">USBKEY用户确认单</SPAN> 
+
+    <TD></TD></TR></TBODY></TABLE><BR>
+<TABLE style="BORDER-COLLAPSE: collapse" border=1 cellSpacing=0 
+borderColor=#000000 cellPadding=0 width=600 align=center height=300>
+  <TBODY>
+  <TR>
+    <TD class=title height=30 width=150>姓名 </TD>
+    <TD id=userName class=content height=30 width=150>{$data.u_name}</TD>
+    <TD class=title height=30 width=150>部门 </TD>
+    <TD id=dept class=content height=30 width=150>{$data.u_depart}</TD></TR>
+  <TR>
+    <TD class=title height=30 width=150>性别 </TD>
+    <TD id=gender class=content height=30 width=150>{$data.u_gender}</TD>
+    <TD class=title height=30 width=150>联系方式 </TD>
+    <TD id=phone class=content height=30 width=150>{$data.u_phone}</TD></TR>
+  <TR>
+    <TD class=title height=30 width=150>AD域账号 </TD>
+    <TD id=upnName class=content height=30 width=150>{$data.u_account}</TD>
+    <TD class=title height=30 width=150>USBKEY编号 </TD>
+    <TD id=keyCode class=content height=30 width=150>{$data.u_code}</TD></TR>
+  <TR>
+    <TD class=title height=30 width=150>身份证号 </TD>
+    <TD id=idCard class=content height=30 width=600 colSpan=3>{$data.u_idcard}</TD></TR>
+  <TR>
+    <TD class=title height=30 width=150>用户确认签字 </TD>
+    <TD class=content height=30 width=600 colSpan=3></TD></TR>
+  <TR>
+    <TD class=title height=30 width=150>备注</TD>
+    <TD class=content height=30 width=600 colSpan=3></TD></TR>
+  <TR id=buttonTr>
+    <TD class=content height=30 width=800 colSpan=4><INPUT onclick="javascript:window.print()" value="打 印" type=button> <INPUT onclick=closeWindow(); value="取 消" type=button>
+</TD></TR></TBODY></TABLE></BODY>
+<script>
+    function closeWindow(){
+        window.close();
+    }
+</script></HTML>

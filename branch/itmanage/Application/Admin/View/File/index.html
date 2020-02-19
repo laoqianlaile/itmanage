@@ -1,0 +1,224 @@
+﻿<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<title>附件管理</title>
+<style>
+    th{
+        text-align: center;
+    }
+    .form-control{
+        display: inline-block;
+        width: 200px;
+    }
+
+    /*.control-label{
+        font-size: 16px!important;
+    }*/
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content " style="padding: 10px 20px">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row">
+                <?php  if(!isset($nopower)) {?>
+                <div class="_box" style="margin-top: 5px;">
+                    <form id="sys_dlg_form1" role="form" class="form-horizontal"  enctype="multipart/form-data">
+                        <label class="control-label" style="margin-left:14px;text-align: left;">上传附件：</label>
+                        <input type="hidden" name="objId" id="objId" value="<?php echo $objId ?>">
+                        <input type="hidden" name="objType" id="objType" value="<?php echo $objType ?>">
+
+                        <input type="file"  class="form-control"  style="display: inline-block;width: 300px;height:40px" id="file" name="file">
+                        <label class="control-label" style="margin-left:10px;">密级：</label>
+                        <select id="secret" name="secret" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <?php foreach($secrets as $key=>$value){ ?>
+                            <option value="<?php echo $value['dic_value']; ?>"><?php echo $value['dic_name']; ?></option>
+                            <?php } ?>
+                        </select>
+                        <a class="btn btn-warning " style="margin-left: 20px;background: #21A2A2;border-color: #21A2A2;display: inline-block;" type="button" id="sys_upload" >上传</a>
+                        <br/>
+                        <span style="color: red;font-size:14px !important;">说明：单个文件最大不能超过20M</span>
+                    </form>
+                </div>
+                <?php }else{ ?>
+                    <input type="hidden" name="objId" id="objId" value="<?php echo $objId ?>">
+                    <input type="hidden" name="objType" id="objType" value="<?php echo $objType ?>">
+                <?php } ?>
+                <div class="_box" style="margin-top: 5px;">
+                    <button class="btn btn-info" style="display: none"  type="button"  id="sys_refresh">查询</button>
+                </div>
+                <table id="atpbiztable" ></table>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script type="text/javascript" src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+
+<script>
+    layui.use('layer', function() {
+        layer = layui.layer;
+    });
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '100px'});
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getData',         //请求后台的URL（*）
+                method: 'post',                      //请求方式（*）
+                toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName: "f_uploadtime",
+                sortOrder: "desc",                   //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 15,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+//            strictSearch: true,
+//            showColumns: true,                  //是否显示所有的列
+//            showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "f_id",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                columns: [
+                    [
+                        <?php  if(!isset($nopower)) {?>
+                        {checkbox: true},
+                         <?php } ?>
+                        {
+                            title: '序号', width: 40,
+                            formatter: function (value, row, index) {
+                                var option = $('#atpbiztable').bootstrapTable("getOptions");
+                                return option.pageSize * (option.pageNumber - 1) + index + 1;
+                            }
+                        },
+                        {field: 'f_name', title: '文件名称', sortable: true,formatter: function (value,row) {
+                            var path = "'" + row['f_path']+"'";
+                            return '<a style="text-decoration: underline;" onclick="downloadFile(' + path + ')">'+value+'</a>';
+                        }},
+                        {field: 'f_secret', title: '密级', sortable: true, width: 60},
+                        {field: 'f_uploadtime', title: '上传时间', sortable: true, width: 170},
+//                        {field: 'f_remark', title: '备注', sortable: true, width: 150},
+                    <?php  if(!isset($nopower)) {?>
+                    {
+                            field: 'f_id', title: '操作', sortable: false, width: 150,
+                            formatter: function (value, row, index) {
+                                var inp = "'" + value + "'";
+                                return  '<a  class="btn btn-info btn-xs"  onclick="updateInRow(' + inp + ')">编辑</a>&nbsp;<a  class="btn btn-info btn-xs" onclick="deleteInRow(' + inp + ')" style="background: #AB154D;border-color: #AB154D;">删除</a><br>';
+                            }
+                        }
+                        <?php } ?>
+                    ]
+                ],
+                onDblClickRow: function (row) {
+                    updateInRow(row['f_id']);
+                }
+            });
+        }
+    };
+    TableObj.oTableInit();
+
+    function queryParams(params) {  //配置参数
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            objId:$('#objId').val(),
+            objType:$('#objType').val(),
+            search_name:$('#search_name').val(),
+            time_begin:$('#time_begin').val(),
+            time_end:$('#time_end').val()
+        };
+        return temp;
+    }
+
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+    function downloadFile(path){
+        window.open( '__APP__/Universal/File/download?path='+path);
+    }
+
+    function updateInRow(id) {
+        layer.open({
+            title:'字典编辑',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/edit?f_id='+id,
+            area: ['800px', '250px']
+        });
+    }
+
+    function deleteInRow(id){
+        layer.confirm('确认删除该文件?',
+        {btn:['确定','取消']},
+        function(){
+            $.ajax({
+                type:'post',
+                url:'__CONTROLLER__/delFile',
+                data:{id: id},
+                dataType :'json',
+                success:function(data){
+                    if(data.code > 0){
+                        layer.msg('操作成功');
+                        $('#sys_refresh').click();
+                    }else{
+                        layer.alert(data.message);
+                    }
+                }
+            })
+        })
+    }
+
+    $('#sys_upload').click(function(){
+        if($('#file').val() == ''){
+            layer.msg('请选择文件');
+            return false;
+        }else{
+            var secret = $('#secret option:selected').val();
+            if(secret ==''){
+                layer.alert('请选择密级');
+                return false;
+            }
+            var formbody = $("#sys_dlg_form1");
+            formbody.ajaxSubmit({
+                type:'post',
+                url:'__CONTROLLER__/fileUpload',
+                data:formbody,
+                dataType :'json',
+                success:function(data){
+                    $('#file').val('');
+                    if(data.code > 0){
+                        layer.msg('操作成功');
+                        $('#sys_refresh').click();
+                        parent.$('#sys_refresh').click();
+                    }else{
+                        layer.alert(data.message);
+                    }
+                }
+            })
+        }
+    })
+</script>
+</body>
+
+</html>
+
+
+
+

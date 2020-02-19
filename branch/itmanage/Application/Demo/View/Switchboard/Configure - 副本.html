@@ -1,0 +1,417 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>交换机自动配置</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+    <link rel="stylesheet" href="__PUBLICOLD__/vendor/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ztree/js/jquery.ztree.core.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+     
+    <style>
+        .table{max-width: none;}
+        .pull-left{width:100%;}
+        #atpbiztoolbar{width:100%;}
+        #dic_name{width: 20%;float: left;margin-right: 5px;}
+        .name{
+            background-color:#f0f7f5;
+            font-weight:bold;
+            margin-top:20px;
+            margin-bottom:15px;
+            float:left;
+            border-left:#18a689 8px solid;
+            padding-left: 15px;
+            line-height: 38px;
+            height:38px;
+        }
+        .tt{ size: 16px; font-weight:bold; padding-left:0px;color:#03513f;}
+        .chosen-choices{height:80px !important;}
+        .col-sm-2 {
+            width: 16.66666667%;
+        }
+        .col-sm-12 button{
+            margin-right: 20px;;
+        }
+        .col-sm-6 {
+            width: 50%;
+        }
+        .row{
+            width:100%;
+            margin-top:20px;
+        }
+        #dvResult{
+            width:100%;
+            padding:10px;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content" style="padding:5%;padding-top:1%;">
+                <div style="margin-top:20px;width:100%;">
+                    <p class="name" style="text-align: left;font-size: 20px;width:100%;">交换机信息</p>
+                </div>
+                <div class="row row-lg">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable" style="width:15%;margin-right:2%">地&emsp;区：</label>
+                            <select class="form-control" id="area" style="width: auto;">
+                                <option value="">请选择...</option>
+                                <foreach name="areaInfo" item="vo" >
+                                    <option value="{$vo.d_atpid}">{$vo.d_dictname}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable  " style="width:17%;margin-right:2%;">楼&emsp;宇：</label>
+                            <select class="form-control" id="building" style="width: auto;">
+                                <option value="">请选择...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable" style="width:15%;margin-right:2%">交换机IP：</label>
+                            <select class="form-control chosen-select_longajax" id="switchip" style="width: auto;">
+                                <option value="">请选择...</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable  " style="width:17%;margin-right:2%">端&emsp;口：</label>
+                            <select class="form-control chosen-select_longajax" id="switchport" style="width: auto;">
+                                <option value="">请选择...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top:10px;width:100%;">
+                    <p class="name" style="text-align: left;font-size: 20px;width:100%;">终端信息</p>
+                </div>
+                <div class="row row-lg">
+                    <div class="col-sm-12 form-inline" style="width:100%;">
+                        <label class="control-lable" style="width:7%;margin-right:1%">M&nbsp;A&nbsp;C：</label>
+                        <textarea class="form-control" rows="2" id="macaddress" placeholder="支持多条MAC填写，多个MAC间使用“；”分割。" style="width:69.5%;"></textarea>
+                    </div>
+                </div>
+                <div class="row row-lg">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable" style="width:15%;margin-right:2%">VLAN号：</label>
+                            <input  id="vlanno" type="text" class="form-control">
+                        </div>
+                        <div class="col-sm-6 form-inline">
+                            <label class="control-lable" style="width:17%;margin-right:2%">绑定数量：</label>
+                            <input  id="bindnum" type="text" value="1" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top:10px;width:100%;">
+                    <p class="name" style="text-align: left;font-size: 20px;width:100%;">交换机操作</p>
+                </div>
+                <div class="row row-lg">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-12 form-inline">
+                            <input type="hidden" id="switchfactory"/>
+                            <input type="hidden" id="atpid"/>
+                            <input type="hidden" id="loginuser"/>
+                            <input type="hidden" id="loginpass"/>
+                            <div id="buttons">
+                                <foreach name="modelName" item="button">
+                                    <button class="btn btn-primary" type="button" value="{$button.d_atpid}" onclick="btnSubmit('{$button.d_atpid}','{$button.d_dictname}')">
+                                        {$button.d_dictname}
+                                    </button>
+                                </foreach>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top:10px;width:100%;">
+                    <p class="name" style="text-align: left;font-size: 20px;width:100%;">执行结果显示</p>
+                    <textarea id="dvResult" class="form-control" style="cursor: auto;" readonly="readonly" rows="10"></textarea>
+                </div>
+                <div class="row row-lg">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-12 form-inline">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="sys_dept" role="dialog" class="modal fade "></div>
+        <div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+            <div class="modal-dialog" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">处理中</h4>
+                    </div>
+                    <div class="modal-body">
+                        <img src="__PUBLICOLD__/img/loading/loading8.gif" style='display: block;margin: 0 auto'>
+                        <div id="loadingText" style="text-align: center"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    CHOSEN_DEFAULT_TEXT ="";
+</script>
+<script>
+
+
+    $(function () {
+        $(".chosen-select_long").chosen({disable_search_threshold: 10, search_contains: true,width:'40%',height:'88px !imprtant'});
+
+        $(".chosen-select_longajax").chosen({disable_search_threshold: 10, search_contains: true,width:'40%',height:'88px !imprtant'});
+
+        $(".chosen-select2").chosen({disable_search_threshold: 10, search_contains: true});
+
+        $('#cancel').click(function(){
+            history.go(-1);
+        });
+
+//        $("#loadingText").html("正在处理请稍后");
+//        $('#loading').modal('show');
+        var area = '';
+        $.post('__CONTROLLER__/getNetDeviceByArea', {area: area}, function (rep) {
+            typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#switchip").children().remove();
+                var item = "";
+                item += "<option value='' selected='selected'>请选择...</option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option num='"+i+"'>" + typearr[i]['netdevice_ipaddress'] + "</option>";
+                }
+                $("#switchip").append(item);
+                $("#switchip").trigger("chosen:updated");
+            }else{
+                $("#switchip").children().remove();
+                $("#switchip").trigger("chosen:updated");
+            }
+        });
+    });
+
+    $('#area').on('change',function() {
+        var area = $("#area option:selected").val();
+        $.post('__CONTROLLER__/getbuilding', {area: area}, function (rep) {
+            var buildingarr = eval("(" + rep + ")");
+            if (buildingarr.length > 0) {
+                $("#building").children().remove();
+                var item = "";
+                item += "<option value='' selected='selected'>请选择...</option>";
+                for (var i = 0; i < buildingarr.length; i++) {
+                    item += "<option value='" + buildingarr[i]['d_atpid'] + "'>" + buildingarr[i]['d_dictname'] + "</option>";
+                }
+                $("#building").append(item);
+            }else{
+                $("#building").children().remove();
+            }
+        });
+        $.post('__CONTROLLER__/getNetDeviceByArea', {area: area}, function (rep) {
+            typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#switchip").children().remove();
+                var item = "";
+                item += "<option value='' selected='selected'>请选择...</option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option num='"+i+"'>" + typearr[i]['netdevice_ipaddress'] + "</option>";
+                }
+                $("#switchip").append(item);
+                $("#switchip").trigger("chosen:updated");
+                $("#switchport").children().remove();
+                $("#switchport").trigger("chosen:updated");
+            }else{
+                $("#switchip").children().remove();
+                $("#switchip").trigger("chosen:updated");
+                $("#switchport").children().remove();
+                $("#switchport").trigger("chosen:updated");
+            }
+        });
+    });
+
+    $('#building').on('change',function(){
+        var building = $('#building option:selected').val();
+        $.post('__CONTROLLER__/getNetDeviceByBuilding', {building: building}, function (rep) {
+            typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#switchip").children().remove();
+                var item = "";
+                item += "<option value='' selected='selected'>请选择...</option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option num='"+i+"'>" + typearr[i]['netdevice_ipaddress'] + "</option>";
+                }
+                $("#switchip").append(item);
+                $("#switchip").trigger("chosen:updated");
+                $("#switchport").children().remove();
+                $("#switchport").trigger("chosen:updated");
+            }else{
+                $("#switchip").children().remove();
+                $("#switchip").trigger("chosen:updated");
+                $("#switchport").children().remove();
+                $("#switchport").trigger("chosen:updated");
+            }
+        });
+    });
+
+    $('#switchip').on('change',function(){
+        var switchip      = $('#switchip option:selected').val();
+        $.post('__CONTROLLER__/getSWInfoByIP', {switchip: switchip}, function (rep) {
+            portarr = eval("(" + rep + ")");
+            if (portarr.length > 0) {
+                $("#switchport").children().remove();
+                $("#buttons").children().remove();
+                var item   = "";
+                item += "<option value='' selected='selected'>请选择...</option>";
+                for (var i = 0; i < portarr.length-1; i++) {
+                    item += "<option num='"+i+"'>" + portarr[i]['sw_interface'] + "</option>";
+                }
+                var button = "";
+                var buttonInfo = portarr[portarr.length-1];
+                for(var i = 0;i < buttonInfo.length; i++) {
+                    button += "<button class='btn btn-primary' type='button' value='"+buttonInfo[i]['swbat_mainid']+"' onclick=\"btnSubmit(";
+                    button += "'"+buttonInfo[i]['swbat_mainid']+"','"+buttonInfo[i]['swbat_name']+"')\">";
+                    button += buttonInfo[i]['swbat_name']+"</button>";
+                }
+                $("#switchport").append(item);
+                $("#switchport").trigger("chosen:updated");
+                $("#buttons").append(button);
+            }else{
+                $("#switchport").children().remove();
+                $("#switchport").trigger("chosen:updated");
+                $("#buttons").children().remove();
+            }
+        });
+        var num           = $('#switchip option:selected').attr('num');
+        $('#atpid').val(typearr[num]['netdevice_atpid']);
+        $('#switchfactory').val(typearr[num]['netdevice_factory']);
+        $('#loginuser').val(typearr[num]['netdevice_loginuser']);
+        $('#loginpass').val(typearr[num]['netdevice_loginpass']);
+    });
+
+    $('#switchport').on('change',function(){
+        var switchport    = $('#switchport option:selected').val();
+        var num           = $('#switchport option:selected').attr('num');
+        $('#vlanno').val(portarr[num]['sw_vlan']);
+    });
+
+    function btnSubmit(templeteId,templeteName){
+        var boardId   = $('#switchfactory').val();
+        var ip        = $('#switchip option:selected').val();
+        var user      = $('#loginuser').val();
+        var pwd       = $('#loginpass').val();
+        if((user == '') || (pwd == '')){
+            alert('用户名或密码错误，请重新配置登录信息！');
+             return null;
+        }
+        if((templeteId == '') || (boardId == '') || (ip == '')) return null;
+        var macaddress = $('#macaddress').val();
+        var atpid      = $('#atpid').val();
+        var vlanno     = $('#vlanno').val();
+        var bindnum    = $('#bindnum').val();
+        var port       = $('#switchport option:selected').val();
+        if(templeteName == '端口配置'){
+            if(isNaN(bindnum)){
+                alert('绑定数量须为数字！');
+                return false;
+            }
+            if(macaddress != ''){
+                var macaddresses = macaddress.split('；');
+                var macaddresses1 = macaddress.split(';');
+                if(macaddresses1.length>macaddresses.length) macaddresses = macaddresses1;
+                var length       = macaddresses.length;
+                if(macaddresses[length-1] == ''){
+                    if(length-1 != bindnum){
+                        alert('MAC地址与所填写数量不符，请检查！');
+                        return false;
+                    }
+                }else{
+                    if(length != bindnum){
+                        alert('MAC地址与所填写数量不符，请检查！');
+                        return false;
+                    }
+                }
+            }
+        }
+        var json = {
+            methodParam:{
+                AssemblyName: "sshtool",  //Home
+                ClassName: "main",        //Switchboard
+                MethodName: "GetData",    //Configure
+                Parameters: [
+                    { K: "%(ip)%", V: ip },
+                    { K: "%(user)%", V: user},
+                    { K: "%(pwd)%", V: pwd},
+                    { K: "%(templeteId)%", V: templeteId},
+                    { K: "%(switchBoardTypeId)%", V: boardId},
+                    { K: "%(content)%", V: 'version'},
+                    { K: "%(port)%", V: port},
+                    { K: "%(mac)%", V: macaddress},
+                    { K: "%(vlan)%", V: vlanno},
+                    { K: "%(macnumber)%", V: bindnum}
+                ]
+            }
+        };
+        var contents = templeteName+"：ip,"+ip+";端口,"+port+";MAC:"+macaddress+";vlanno,"+vlanno+";bindnum,"+bindnum+";";
+        $.ajax({
+            type: 'POST',
+            url: "__CONTROLLER__/configureRecordLog",
+            data: {contents: contents,atpid:atpid,parameter:json},
+            success: function (request, status) {
+                if(status == 'success'){
+                    $("#dvResult").val(request);
+                }
+                return true;
+            },
+            beforeSend:function(){
+                $("#loadingText").html("正在处理请稍后");
+                $('#loading').modal('show');
+            },
+            complete:function(){
+                $('#loading').modal('hide');
+            },
+            error: function (request, status) {
+                //console.log(status + "\n" + request.responseText);
+                alert("对不起,远程函数调用错误!Ex:" + status + "\n" + request.responseText);
+            },
+            dataType:'json'
+        })
+    }
+</script>
+</body>
+</html>

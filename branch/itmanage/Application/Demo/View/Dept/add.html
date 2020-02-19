@@ -1,0 +1,130 @@
+﻿
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLICOLD__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+<title>会议编辑</title>
+<style>
+    .form-group{
+        margin-top: 26px;
+    }
+    .control-label{
+        width:150px;
+    }
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+</style>
+<body style="margin: 0 auto;">
+<?php $isdomainType= false; ?>
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+        <div class="tab-content" >
+            <div class="panel-body">
+                    <div class="form-group" style="margin-top: 6px">
+                        <label class=" control-label">会议名称：</label>
+                        <input id="utd_meetname" name="utd_meetname" type="text"  value="{$data.utd_meetname}" style="width:760px;display: inline-block" class="form-control">
+                    </div>
+                    <div class="form-group" style="margin-top: 6px">
+                        <label class=" control-label">待办事项：</label>
+                        <input id="utd_name" name="utd_name" type="text"  value="{$data.utd_name}" style="width:300px;display: inline-block" class="form-control">
+                        <label class="control-label">完成形式：</label>
+                        <input id="utd_finishtype" name="utd_finishtype" type="text"  value="{$data.utd_finishtype}" style="width:300px;display: inline-block" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">计划完成时间：</label>
+                        <input id="time" name="utd_planfinishdate" class="form-control" style="width:300px;display: inline-block"  value="{$data.utd_planfinishdate}" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                        <label class="control-label">责任人：</label>
+                        <select id="zereb" name="utd_kybchargemanid" class="chosen-select" >
+                            <option value="">&nbsp;</option>
+                            <foreach name="zr" item="val">
+                                <option value="{$val.user_id}" <?php if($val['user_id']==$data['utd_kybchargemanid']){echo 'selected';}?>>{$val.user_realusername}({$val.user_name})</option>
+                            </foreach>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">责任处室：</label>
+                        <select id="zechu" name="utd_kybunitid" class="chosen-select" >
+                            <option value="">&nbsp;</option>
+                            <foreach name="dept" item="val">
+                                <option value="{$val.org_id}" <?php if($val['org_id']==$data['utd_kybunitid']){echo 'selected';}?>>{$val.org_name}</option>
+                            </foreach>
+                        </select>
+                        <label class="control-label">责任领导：</label>
+                        <select id="dep" name="utd_kybleaderid" class="chosen-select" >
+                            <option value="">&nbsp;</option>
+                            <foreach name="ling" item="val">
+                                <option value="{$val.user_id}" <?php if($val['user_id']==$data['utd_kybleaderid']){echo 'selected';}?>>{$val.user_realusername}({$val.user_name})</option>
+                            </foreach>
+                        </select>
+                    </div>
+                 </div>
+            <input type="hidden" value="{$data.utd_id}" name="utd_id">
+        </div>
+    </form>
+<div class="modal-footer" style="margin-top: 30px">
+    <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="margin-right: 20px;">保存</button>
+</div>
+</body>
+<script src="__PUBLICOLD__/vendor/chosen/chosen.jquery.js"></script>
+<script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script src="__PUBLICOLD__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+$(function () {
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+    $('#sys_dlg_submit').click(function(){
+        $('#sys_dlg_form1').submit();
+    })
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '300px'});
+
+    $("#jingbanren").chosen({disable_search_threshold: 0, search_contains: true, width: '760px'});
+
+    $('#jingbanren').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url:'__CONTROLLER__/getUserLists'
+    });
+    $.validator.setDefaults({
+        highlight:function(element){
+            $(element).parent().remove('has-success').addClass('has-error');
+        },
+        success:function(element){
+            $(element).parent().remove('has-error').addClass('has-success');
+        },
+        errorPlacement:function(error,element){
+            if(element.is(":radio") || element.is(":checkbox")){
+                error.appendTo(element.parent());
+            }else{
+                error.appendTo(element.parent());
+            }
+        },
+        errorClass:"help-block m-b-none",
+        validClass:"help-block m-b-none"
+    });
+    $('#sys_dlg_form1').validate({
+        onclick:false,
+        onfocusout:false,
+        onkeyup:false,
+        rules:{
+            td_meetid:'required'
+        },
+        messages:{
+            utd_name:'请输入待办事项'
+        },submitHandler:function(){
+            var formBody = $('#sys_dlg_form1');
+            $.post('__CONTROLLER__/submit',formBody.serialize(), function (data) {
+                if (data.code > 0) {
+                    parent.$('#atpbiztable').bootstrapTable('refresh');
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                } else {
+                    layer.alert(data.message);
+                }
+            },'JSON');
+        }
+    });
+
+
+});
+</script>

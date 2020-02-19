@@ -1,0 +1,717 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">数据编辑</h4>
+        </div>
+        <form id="sys_dlg_form" role="form">
+        <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true"> 基本信息</a>
+                                </li>
+                                <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">补充信息</a>
+                                </li>
+                                <li class=""><a data-toggle="tab" href="#tab-3" id="userpictures" aria-expanded="false">照片信息</a>
+                                </li>
+                                <li class=""><a data-toggle="tab" href="#tab-4" id="userorgs" aria-expanded="false">部门信息</a>
+                                </li>
+                                <li class=""><a data-toggle="tab" href="#tab-5" aria-expanded="false">项目办信息</a>
+                                </li>
+                                <li class=""><a data-toggle="tab" href="#tab-6" id="groupmsg" aria-expanded="false">班组信息</a>
+                                </li>
+                                <li class=""><a data-toggle="tab" href="#tab-7" id="userorder" aria-expanded="false">排序信息</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="tab-1" class="tab-pane active">
+                                    <div class="panel-body">
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>姓名&nbsp;&nbsp;(<span style="color: #f00;">*</span>)</label>
+                                                <input id="realusername" name="realusername" type="text" value="{$data.realusername}" placeholder="请输入姓名" class="form-control">
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>工卡号</label>
+                                                <input id="workno" name="workno" type="text" value="{$data.workno}" placeholder="请输入工卡号" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>性别&nbsp;&nbsp;(<span style="color: #f00;">*</span>)</label>
+                                                <select id="sex" name="sex" class="form-control m-b">
+                                                    <option value="男" <if condition="($data.sex eq '男')">selected="selected"</if>>男</option>
+                                                    <option value="女" <if condition="($data.sex eq '女')">selected="selected"</if>>女</option>
+                                                    <option value=""></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>出生日期</label>
+                                                <input id="birthday" name="birthday" type="text" value="{$data.birthday}" placeholder="请输入出生日期" class="form-control" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>政治面貌</label>
+                                                <select id="politicalstatus" name="politicalstatus" class="form-control m-b">
+                                                    <foreach name="policatical" item="vo">
+                                                        <option value="{$vo.politicalstatus}" <if condition="($data.politicalstatus eq $vo['politicalstatus'])">selected="selected"</if>>{$vo.politicalstatus}</option>
+                                                    </foreach>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>身份证号</label>
+                                                <input id="idcard" name="idcard" type="text" value="{$data.idcard}" placeholder="请输入身份证号" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>拼音</label>
+                                                <input id="pinyin" name="pinyin" type="text" value="{$data.pinyin}" placeholder="请输入拼音" class="form-control">
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>账号&nbsp;&nbsp;(<span style="color: #f00;">*</span>)</label>
+                                                <input id="username" name="username" type="text" value="{$data.username}" placeholder="请输入账号" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>域名&nbsp;&nbsp;(<span style="color: #f00;">*</span>)</label>
+                                                <input id="domainname" name="domainname" type="text" value="{$data.domainname}" placeholder="请输入域名" class="form-control">
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>密级&nbsp;&nbsp;(<span style="color: #f00;">*</span>)</label>
+                                                <select id="secretlevel" name="secretlevel" class="form-control m-b">
+                                                    <foreach name="secretlevel" item="vo">
+                                                        <option value="{$vo.secretlevel}" <if condition="($data.secretlevel eq $vo['secretlevel'])">selected="selected"</if>>{$vo.secretlevel}</option>
+                                                    </foreach>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>人力编号</label>
+                                                <input id="sid" name="sid" type="text" value="{$data.sid}"  class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>人员类型&nbsp;&nbsp;(<span style="color: #f00;">*</span>)</label>
+                                                <select id="linshi" name="linshi" class="form-control m-b">
+                                                    <option value="" <if condition="($data.linshi eq '')">selected="selected"</if>>{$vo.linshi}</option>
+                                                    <option value="正式人员" <if condition="($data.linshi eq '正式人员')">selected="selected"</if>>正式人员</option>
+                                                    <option value="临时人员" <if condition="($data.linshi eq '临时人员') or ($data.linshi eq '总体部临时人员')">selected="selected"</if>>临时人员</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>员工状态</label>
+                                                <select id="status" name="status" class="form-control m-b">
+                                                    <foreach name="status" item="vo">
+                                                        <option value="{$vo.status}" <if condition="($data.status eq $vo['status'])">selected="selected"</if>>{$vo.status}</option>
+                                                    </foreach>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>用工类型</label>
+                                                <select id="emptype" name="emptype" class="form-control m-b">
+                                                    <foreach name="emptype" item="vo">
+                                                        <option value="{$vo.emptype}" <if condition="($data.emptype eq $vo['emptype'])">selected="selected"</if>>{$vo.emptype}</option>
+                                                    </foreach>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>域邮箱</label>
+                                                <input id="domainemail" name="domainemail" type="text" value="{$data.domainemail}" placeholder="请输入域邮箱" class="form-control">
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>安全邮箱</label>
+                                                <input id="saftyemail" name="saftyemail" type="text" value="{$data.saftyemail}" placeholder="请输入安全邮箱" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <if condition="$data.id eq ''">
+                                                <div class="form-group_l">
+                                                    <label>启用状态</label>
+                                                    <input name="isavailable" id="isavailableadd" type="checkbox" class="js-switch" checked  />
+                                                </div>
+                                             <else />
+                                                <div class="form-group_l">
+                                                    <label>启用状态</label>
+                                                    <input name="isavailable" id="isavailable" type="checkbox" class="js-switch" <if condition="($data.isavailable eq '1')">checked<else /></if>  />
+                                                </div>
+                                            </if>
+                                            <div class="form-group_r">
+                                                <label>是否自动同步</label>
+                                                <input name="isinsource" id="isinsource" type="checkbox" class="js-switch" <if condition="($data.isinsource eq '1')">checked<else /></if>  />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="tab-2" class="tab-pane">
+                                    <div class="panel-body">
+                                        <div class="heng">
+                                            <div class="form-group_21">
+                                                <label style="margin-top: 0px;">办公地点1</label>
+                                                <input id="station" name="station" type="text" value="{$data.station}" placeholder="请输入办公地点1" class="form-control">
+                                            </div>
+                                            <div class="form-group_22">
+                                                <label style="margin-top: 0px;">办公电话1</label>
+                                                <input id="workphone" name="workphone" type="text" value="{$data.workphone}" placeholder="请输入办公电话1" class="form-control">
+                                            </div>
+                                            <div class="form-group_23">
+                                                <label>手机号1</label>
+                                                <input id="mobilephone" name="mobilephone" type="text" value="{$data.mobilephone}" placeholder="请输入手机号1" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_21">
+                                                <label style="margin-top: 0px;">办公地点2</label>
+                                                <input id="station2" name="station2" type="text" value="{$data.station2}" placeholder="请输入办公地点2" class="form-control">
+                                            </div>
+                                            <div class="form-group_22">
+                                                <label style="margin-top: 0px;">办公电话2</label>
+                                                <input id="workphone2" name="workphone2" type="text" value="{$data.workphone2}" placeholder="请输入办公电话2" class="form-control">
+                                            </div>
+                                            <div class="form-group_23">
+                                                <label>手机号2</label>
+                                                <input id="mobilephone2" name="mobilephone2" type="text" value="{$data.mobilephone2}" placeholder="请输入手机号2" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_21">
+                                                <label>岗位</label>
+                                                <input id="jobduty" name="jobduty" type="text" value="{$data.jobduty}" placeholder="请输入岗位" class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_22">
+                                                <label>岗位类型</label>
+                                                <input id="gwtype" name="gwtype" type="text" value="{$data.gwtype}" placeholder="请输入岗位类型" class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_23">
+                                                <label style="margin-top: 0px;">进入岗位时间</label>
+                                                <input id="gwdate" name="gwdate" type="text" value="{$data.gwdate}" placeholder="请输入进入岗位时间" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_21">
+                                                <label>籍贯</label>
+                                                <input id="jiguan" name="jiguan" type="text" value="{$data.jiguan}" placeholder="请输入籍贯" class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_22">
+                                                <label>民族</label>
+                                                <input id="nation" name="nation" type="text" value="{$data.nation}" placeholder="请输入民族" class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_23">
+                                                <label>学历</label>
+                                                <input id="xueli" name="xueli" type="text" value="{$data.xueli}" placeholder="请输入学历" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_21">
+                                                <label>学位</label>
+                                                <input id="xuewei" name="xuewei" type="text" value="{$data.xuewei}" placeholder="请输入学位" class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_22">
+                                                <label>技术职务</label>
+                                                <input id="jishuzw" name="jishuzw" type="text" value="{$data.jishuzw}" placeholder="请输入技术职务" class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_23">
+                                                <label style="margin-top: 0px;">技术职务资格时间</label>
+                                                <input id="jishuzwdate" name="jishuzwdate" type="text" value="{$data.jishuzwdate}" placeholder="请输入技术职务资格时间" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_21">
+                                                <label>入部时间</label>
+                                                <input id="jineng" name="jineng" type="text" value="{$data.jineng}" placeholder="请输入入部时间" class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_22">
+                                                <label>用工来源</label>
+                                                <input id="emplaiyuan" name="emplaiyuan" type="text" value="{$data.emplaiyuan}" placeholder="请输入工用工来源" class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_23">
+                                                <label style="margin-top: 0px;">入职前所在单位</label>
+                                                <input id="preserviceunit" name="preserviceunit" type="text" value="{$data.preserviceunit}" placeholder="请输入入职前所在单位" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_21">
+                                                <label style="margin-top: 0px;">参加工作时间</label>
+                                                <input id="beginworkdate" name="beginworkdate" type="text" value="{$data.beginworkdate}" placeholder="请输入参加工作时间" class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_22">
+                                                <label style="margin-top: 0px;">进入五院时间</label>
+                                                <input id="wuyuandate" name="wuyuandate" type="text" value="{$data.wuyuandate}" placeholder="请输入进入五院时间" class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_23">
+                                                <label>入部时间</label>
+                                                <input id="hiredate" name="hiredate" type="text" value="{$data.hiredate}" placeholder="请输入入部时间" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_21">
+                                                <label style="margin-top: 0px;">最高毕业学校</label>
+                                                <input id="school" name="school" type="text" value="{$data.school}" placeholder="请输入最高毕业学校" class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_22">
+                                                <label>专业</label>
+                                                <input id="major" name="major" type="text" value="{$data.major}" placeholder="请输入专业" class="form-control" readonly/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="tab-3" class="tab-pane">
+                                    <div class="panel-body">
+                                        <img id="userpic" style="width:300px;"  src=""/>
+                                    </div>
+                                </div>
+                                <div id="tab-4" class="tab-pane">
+                                    <div class="panel-body">
+                                        <div class="fengetitle">主职部门信息</div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>主职部门名称</label>
+                                                <select name="orgid" class="chosen-select_longajax" multiple style="height:30px;width:75%;">
+                                                    <option value=""></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>主职部门职务</label>
+                                                <input id="adminpost" name="adminpost" type="text" value="{$data.adminpost}" placeholder="请输入主职部门职务" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="fengetitle">副职部门1信息</div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label >副职部门1名称</label>
+                                                <select name="fzorg1id" class="chosen-select_longajax1" multiple style="height:30px;width:75%;">
+                                                    <option value=""></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label >副职部门1职务</label>
+                                                <input id="fzorg1post" name="fzorg1post" type="text" value="{$data.fzorg1post}" placeholder="请输入副职部门1职务" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="fengetitle">副职部门2信息</div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label >副职部门2名称</label>
+                                                <select name="fzorg2id" class="chosen-select_longajax2" multiple style="height:30px;width:75%;">
+                                                    <option value=""></option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>副职部门2职务</label>
+                                                <input id="fzorg2post" name="fzorg2post" type="text" value="{$data.fzorg2post}" placeholder="请输入副职部门2职务" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="tab-5" class="tab-pane">
+                                    <div class="panel-body">
+                                        <div class="fengetitle">主职项目办信息</div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label style="margin-top: 0px;">主职项目办名称</label>
+                                                <select name="progpid" class="projecygroup_chosen-select_longajax" multiple style="height:30px;width:75%;">
+                                                    <option value=""></option>
+                                                </select>
+                                                <!--<select id="progpid" name="progpid" class="form-control m-b">-->
+                                                    <!--<option value="">&#45;&#45;请选择&#45;&#45;</option>-->
+                                                    <!--<foreach name="projectgrouplist" item="vo">-->
+                                                        <!--<option value="{$vo.id}" <if condition="($data['progpid'] eq $vo['id'])">selected="selected"</if>>{$vo.name}</option>-->
+                                                    <!--</foreach>-->
+                                                <!--</select>-->
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label style="margin-top: 0px;">主职项目办职务</label>
+                                                <input id="progppost" name="progppost" type="text" value="{$data.progppost}" placeholder="请输入主职项目办职务" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="fengetitle">副职项目办1信息</div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label style="margin-top: 0px;">副职项目办1名称</label>
+                                                <select name="fzprogp1id" class="projecygroup_chosen-select_longajax1" multiple style="height:30px;width:75%;">
+                                                    <option value=""></option>
+                                                </select>
+                                                <!--<select id="fzprogp1id" name="fzprogp1id" class="form-control m-b">-->
+                                                    <!--<option value="">&#45;&#45;请选择&#45;&#45;</option>-->
+                                                    <!--<foreach name="projectgrouplist" item="vo">-->
+                                                        <!--<option value="{$vo.id}" <if condition="($data['fzprogp1id'] eq $vo['id'])">selected="selected"</if>>{$vo.name}</option>-->
+                                                    <!--</foreach>-->
+                                                <!--</select>-->
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label style="margin-top: 0px;">副职项目办1职务</label>
+                                                <input id="fzprogp1post" name="fzprogp1post" type="text" value="{$data.fzprogp1post}" placeholder="请输入副职项目办1职务" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="fengetitle">副职项目办２信息</div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label style="margin-top: 0px;">副职项目办2名称</label>
+                                                <select name="fzprogp2id" class="projecygroup_chosen-select_longajax2" multiple style="height:30px;width:75%;">
+                                                    <option value=""></option>
+                                                </select>
+                                                <!--<select id="fzprogp2id" name="fzprogp2id" class="form-control m-b">-->
+                                                    <!--<option value="">&#45;&#45;请选择&#45;&#45;</option>-->
+                                                    <!--<foreach name="projectgrouplist" item="vo">-->
+                                                        <!--<option value="{$vo.id}" <if condition="($data['fzprogp2id'] eq $vo['id'])">selected="selected"</if>>{$vo.name}</option>-->
+                                                    <!--</foreach>-->
+                                                <!--</select>-->
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label style="margin-top: 0px;">副职项目办2职务</label>
+                                                <input id="fzprogp2post" name="fzprogp2post" type="text" value="{$data.fzprogp2post}" placeholder="请输入副职项目办2职务" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="tab-6" class="tab-pane">
+                                    <div class="panel-body">
+                                        <div class="fengetitle">主职班组信息</div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>主职班组名称</label>
+                                                <input type="hidden" id="oldgroupid" value="{$data.groupid}"/>
+                                                <select id="groupid" name="groupid" class="form-control m-b">
+                                                    <foreach name="grouplist" item="vo">
+                                                        <option value="{$vo.id}" <if condition="($data['groupid'] eq $vo['id'])">selected="selected"</if>>{$vo.name}</option>
+                                                    </foreach>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>主职班组职务</label>
+                                                <input id="groupposition" name="groupposition" type="text" value="{$data.groupposition}" placeholder="请输入主职班组职务" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="fengetitle">副职班组1信息</div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label >副职班组1名称</label>
+                                                <input type="hidden" id="oldfzgroup1id" value="{$data.fzgroup1id}"/>
+                                                <select id="fzgroup1id" name="fzgroup1id" class="form-control m-b">
+                                                    <foreach name="grouplist1" item="vo">
+                                                        <option value="{$vo.id}" <if condition="($data['fzgroup1id'] eq $vo['id'])">selected="selected"</if>>{$vo.name}</option>
+                                                    </foreach>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>副职班组1职务</label>
+                                                <input id="fzgroup1post" name="fzgroup1post" type="text" value="{$data.fzgroup1post}" placeholder="请输入副职班组1职务" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="fengetitle">副职班组２信息</div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>副职班组2名称</label>
+                                                <input type="hidden" id="oldfzgroup2id" value="{$data.fzgroup2id}"/>
+                                                <select id="fzgroup2id" name="fzgroup2id" class="form-control m-b">
+                                                    <foreach name="grouplist2" item="vo">
+                                                        <option value="{$vo.id}" <if condition="($data['fzgroup2id'] eq $vo['id'])">selected="selected"</if>>{$vo.name}</option>
+                                                    </foreach>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>副职班组2职务</label>
+                                                <input id="fzgroup2post" name="fzgroup2post" type="text" value="{$data.fzgroup2post}" placeholder="请输入副职班组2职务" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="tab-7" class="tab-pane">
+                                    <div class="panel-body">
+                                        <div class="heng">
+                                            <div class="form-group_21" style="width:100%">
+                                                <label style="width: 10%;float: left;margin-top: 7px;">组织内排序码</label>
+                                                <input id="orgpostnum" name="orgpostnum" type="text" value="{$data.orgpostnum}" placeholder="请输入组织内排序码" class="form-control"style="width: 16%;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input id="sys_dlg_form_id" name="id" type="hidden" value="{$data.id}" class="form-control">
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>
+            <input type="submit" id="sys_dlg_submit" value="保存" class="btn btn-primary" />
+        </div>
+        </form>
+    </div>
+</div>
+<style type="text/css">
+    .modal-dialog{width: 94%;height: 80%;}
+    .col-sm-6{width:100%;}
+    .heng{width:100%;height: 50px;}
+    .form-group_l{width:50%;float: left;}
+    .form-group_r{width:50%;float: left;}
+    .heng div label{width:20%;float: left;margin-top: 7px;}
+    .form-control{width:75%;}
+    .form-group_21{width:33.3%;float:left;}
+    .form-group_22{width:33.3%;float:left;}
+    .form-group_23{width:33.3%;float:left;}
+    .fengetitle{height: 40px;margin-bottom: 10px;font-size: 20px;font-family: 微软雅黑;text-align: center;line-height: 40px;width: 60%;margin-left: 20%;border-bottom: 1px solid #cdcdcd;}
+    .searchable-select{min-width: 70%;}
+    .searchable-select-holder{height:30px;}
+</style>
+<script type="text/javascript">
+    $(document).ready(function(e){
+        $(".js-switch").each(function(){
+            new Switchery(this, {color: '#1AB394'});
+        });
+
+        $('#progpid').searchableSelect();
+        $('#fzprogp1id').searchableSelect();
+        $('#fzprogp2id').searchableSelect();
+
+        //主职部门
+        $(".chosen-select_longajax").chosen({disable_search_threshold: 10, search_contains: true,width:'75%'});
+        <foreach name="orgmsg" item="vo">
+                $('.chosen-select_longajax').append('<option value="A{$vo.id}">{$vo.name}</option>');
+        </foreach>
+        $('.chosen-select_longajax').trigger("chosen:updated");
+
+        var initselectconfig11 = new Array();
+        <foreach name="orgmsg" item="vo">
+                initselectconfig11.push("A{$vo.id}");
+        </foreach>
+        $(".chosen-select_longajax").setSelectionOrder(initselectconfig11, true);
+
+        $('.chosen-select_longajax').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__CONTROLLER__/getorglists'
+        },{
+            loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        //副职部门1
+        $(".chosen-select_longajax1").chosen({disable_search_threshold: 10, search_contains: true,width:'75%'});
+        <foreach name="fzorgmsg1" item="vo">
+                $('.chosen-select_longajax1').append('<option value="{$vo.id}">{$vo.name}</option>');
+        </foreach>
+        $('.chosen-select_longajax1').trigger("chosen:updated");
+
+        var initselectconfig112 = new Array();
+        <foreach name="fzorgmsg1" item="vo1">
+                initselectconfig112.push("{$vo1.id}");
+        </foreach>
+        $(".chosen-select_longajax1").setSelectionOrder(initselectconfig112, true);
+
+        $('.chosen-select_longajax1').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__CONTROLLER__/getorglists'
+        },{
+            loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        //副职部门2
+        $(".chosen-select_longajax2").chosen({disable_search_threshold: 10, search_contains: true,width:'75%'});
+        <foreach name="fzorgmsg2" item="vo">
+                $('.chosen-select_longajax2').append('<option value="{$vo.id}">{$vo.name}</option>');
+        </foreach>
+        $('.chosen-select_longajax2').trigger("chosen:updated");
+
+        var initselectconfig113 = new Array();
+        <foreach name="fzorgmsg2" item="vo2">
+                initselectconfig113.push("{$vo2.id}");
+        </foreach>
+        $(".chosen-select_longajax2").setSelectionOrder(initselectconfig113, true);
+
+        $('.chosen-select_longajax2').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__CONTROLLER__/getorglists'
+        },{
+            loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        //主职项目办
+        $(".projecygroup_chosen-select_longajax").chosen({disable_search_threshold: 10, search_contains: true,width:'70%'});
+        <foreach name="projectgrouplist" item="vo">
+                $('.projecygroup_chosen-select_longajax').append('<option value="{$vo.id}">{$vo.name}</option>');
+        </foreach>
+        $('.projecygroup_chosen-select_longajax').trigger("chosen:updated");
+
+        var initselectconfig11 = new Array();
+        <foreach name="projectgrouplist" item="vo">
+                initselectconfig11.push("{$vo.id}");
+        </foreach>
+        $(".projecygroup_chosen-select_longajax").setSelectionOrder(initselectconfig11, true);
+
+        $('.projecygroup_chosen-select_longajax').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__CONTROLLER__/getpglists'
+        },{
+            loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        //副职项目办1
+        $(".projecygroup_chosen-select_longajax1").chosen({disable_search_threshold: 10, search_contains: true,width:'70%'});
+        <foreach name="fzprojectgrouplist1" item="vo">
+                $('.projecygroup_chosen-select_longajax1').append('<option value="{$vo.id}">{$vo.name}</option>');
+        </foreach>
+        $('.projecygroup_chosen-select_longajax1').trigger("chosen:updated");
+
+        var initselectconfig11 = new Array();
+        <foreach name="fzprojectgrouplist1" item="vo">
+                initselectconfig11.push("{$vo.id}");
+        </foreach>
+        $(".projecygroup_chosen-select_longajax1").setSelectionOrder(initselectconfig11, true);
+
+        $('.projecygroup_chosen-select_longajax1').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__CONTROLLER__/getpglists'
+        },{
+            loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        //副职项目办2
+        $(".projecygroup_chosen-select_longajax2").chosen({disable_search_threshold: 10, search_contains: true,width:'70%'});
+        <foreach name="fzprojectgrouplist2" item="vo">
+                $('.projecygroup_chosen-select_longajax2').append('<option value="{$vo.id}">{$vo.name}</option>');
+        </foreach>
+        $('.projecygroup_chosen-select_longajax2').trigger("chosen:updated");
+
+        var initselectconfig11 = new Array();
+        <foreach name="fzprojectgrouplist2" item="vo">
+                initselectconfig11.push("{$vo.id}");
+        </foreach>
+        $(".projecygroup_chosen-select_longajax2").setSelectionOrder(initselectconfig11, true);
+
+        $('.projecygroup_chosen-select_longajax2').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__CONTROLLER__/getpglists'
+        },{
+            loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+
+
+        $("#userpictures").on("click",function(){
+            var id = $("#sys_dlg_form_id").val();
+            $("#userpic").attr("src","__CONTROLLER__/getImageFromBlob?id="+id);
+        });
+
+        $("#groupmsg").on("click",function(){
+//            //主职部门
+//            var orgid = $("#orgid").val();
+//            var fz1orgid = $("#fzorg1id").val();
+//            var fz2orgid = $("#fzorg2id").val();
+            //主职部门
+            var orgid = $('select[multiple].chosen-select_longajax').get(0).value;
+            var fz1orgid = $('select[multiple].chosen-select_longajax1').get(0).value;
+            var fz2orgid = $('select[multiple].chosen-select_longajax2').get(0).value;
+            //获取当前部门下班组和项目办信息
+            $.post('__CONTROLLER__/getgroupprojectdata', {orgid:orgid,fz1orgid:fz1orgid,fz2orgid:fz2orgid}, function(rep) {
+                if(''!= rep) {
+                    var reparr = rep.split("//");
+                    var grouplist = eval('('+reparr[0]+')');
+                    $("#groupid").children().remove();
+                    var item2 = "";
+                    for(var j=0;j<grouplist.length;j++){
+                        item2 += "<option value='"+grouplist[j]['id']+"'";
+                        if(grouplist[j]['id'] == $("#oldgroupid").val()){
+                            item2 += "selected='selected'";
+                        }
+                        item2 += ">"+grouplist[j]['name']+"</option>";
+                    }
+                    $("#groupid").append(item2);
+
+                    var grouplist1 = eval('('+reparr[1]+')');
+                    $("#fzgroup1id").children().remove();
+                    var item3 = "";
+                    for(var k=0;k<grouplist1.length;k++){
+                        item3 += "<option value='"+grouplist1[k]['id']+"'";
+                        if(grouplist1[k]['id'] == $("#oldfzgroup1id").val()){
+                            item3 += "selected='selected'";
+                        }
+                        item3 += ">"+grouplist1[k]['name']+"</option>";
+                    }
+                    $("#fzgroup1id").append(item3);
+
+                    var grouplist2 = eval('('+reparr[2]+')');
+                    $("#fzgroup2id").children().remove();
+                    var item4 = "";
+                    for(var l=0;l<grouplist2.length;l++){
+                        item4 += "<option value='"+grouplist2[l]['id']+"'";
+                        if(grouplist2[l]['id'] == $("#oldfzgroup2id").val()){
+                            item4 += "selected='selected'";
+                        }
+                        item4 += ">"+grouplist2[l]['name']+"</option>";
+                    }
+                    $("#fzgroup2id").append(item4);
+                }
+            });
+        })
+
+        //表单验证
+        $.validator.setDefaults({
+            highlight:function(element){
+                $(element).closest('.form-group').remove('has-success').addClass('has-error');
+            },
+            success:function(element){
+                $(element).closest('.form-group').remove('has-error').addClass('has-success');
+            },
+            errorElement:'span',
+            errorPlacement:function(error,element){
+                if(element.is(":radio") || element.is(":checkbox")){
+                    error.appendTo(element.parent().parent().parent());
+                }else{
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass:"help-block m-b-none",
+            validClass:"help-block m-b-none"
+        });
+        var icon = "<i class='fa fa-times-circle' style='color:#f00;'></i>";
+        $("#sys_dlg_form").validate({
+            rules :{
+                realusername :"required",
+                sex :"required",
+                username :"required",
+                domainname :"required",
+                secretlevel :"required",
+                linshi :"required"
+
+            },
+            messages:{
+                realusername : icon+"<span style='color: #f00;'>必填</span>",
+                sex : icon+"<span style='color: #f00;'>必填</span>",
+                username : icon+"<span style='color: #f00;'>必填</span>",
+                domainname : icon+"<span style='color: #f00;'>必填</span>",
+                secretlevel : icon+"<span style='color: #f00;'>必填</span>",
+                linshi : icon+"<span style='color: #f00;'>必填</span>",
+
+            },
+            submitHandler:function(){
+                var formBody = $('#sys_dlg_form');
+                $.post('__CONTROLLER__/submitdata',formBody.serialize(), function(data) {
+                    if(''==data) {
+                        $("#sys_dlg").modal("hide");
+                        $('#atpbiztable').bootstrapTable("refresh");
+                    }else {
+                        alert('保存失败');
+                    }
+                });
+            }
+
+        });
+    })
+</script>

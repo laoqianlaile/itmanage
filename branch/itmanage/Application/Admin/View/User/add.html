@@ -1,0 +1,169 @@
+﻿<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<title>用户编辑</title>
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<style>
+    .box{
+        margin: 0 auto;
+        text-align: center;
+    }
+    .form-group{
+        width: 50%;
+        margin-top:10px ;
+        text-align: left;
+    }
+
+    #xian{
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        top: 150px;
+        left: 0;
+        background: lightgrey;
+    }
+    .control-label{
+        width: 78px!important;
+    }
+
+    html{
+        overflow: hidden;
+    }
+
+    .form-control{
+        width: 250px;
+        display: inline-block;
+    }
+    .form-group{
+        margin: 35px;
+        width: 100%;
+    }
+</style>
+<body>
+<div class="box">
+<form id="sys_dlg_form" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content">
+        <div class="panel-body" style="padding-left: 28%;box-sizing: border-box">
+                <div class="form-group">
+                    <label class=" control-label ">部门：</label>
+                    <input   id="userorg_text" readonly type="text"  value="{$data.org_name}" style="width:250px;" class="form-control">
+                    <input  name="userorg_id" id="userorg_id" type="hidden"  value="{$data.user_orgid}" >
+                    <a class="btn btn-info chooseDept" fillOutObj="userorg_text"  style="position: absolute;top:9.8%;right:207px;background: cadetblue;border-color: cadetblue">
+                    <i class="fa fa-search"></i>
+                    </a>
+                </div>
+                <div class="form-group">
+                    <label class=" control-label ">密级：</label>
+                    <select id="user_secretlevel" style="text-align: left" class="chosen-select pull-left">
+                        <option value="">&nbsp;</option>
+                        <?php foreach($mijilist as $key=>$value){ ?>
+                        <option value="{$value.val}"
+                        <?php
+                             if($data['user_secretlevel'] == $value['val'])
+                             {
+                             echo "selected";
+                             }
+                        ?>
+                        >{$value.dic_name}</option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group " >
+                    <label class=" control-label" style="">姓名：</label>
+                    <input id="real_name" type="text" value="{$data.user_realusername}" style="" class="form-control">
+                </div>
+
+                <div class="form-group" >
+                    <label class=" control-label" style="">账号：</label>
+                    <input id="user_name" type="text" value="{$data.user_name}" style="" class="form-control">
+                </div>
+                <div class="form-group " >
+                    <label class=" control-label" style="">排序号：</label>
+                    <input id="user_sort" type="text" value="{$data.user_sort}" style="" class="form-control">
+                </div>
+        </div>
+    </div>
+    <input id="id" type="hidden" value="{$data.user_id}" class="form-control">
+</form>
+<!--<div id="xian" style="margin-top: 120px"></div>-->
+    <div class="modal-footer" style="border-top:1px solid lightgrey;">
+        <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="margin-top: 5px">保存</button>
+    </div>
+</div>
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+
+</body>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function () {
+            layer = layui.layer;
+        })
+        if($('#id').val().length>0) {
+            $('#user_name').attr("ReadOnly",true);
+        }
+        $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '250px'});
+
+        $('.chooseDept').click(function(){
+            var obj = $(this).attr('fillOutObj');
+            var url = encodeURI('__MODULE__/Org/chooseUserOrg?obj='+obj);
+            $("#sys_dlg").load( url, function() {
+                $("#sys_dlg").modal({backdrop:false});
+            });
+        });
+
+        $('#sys_dlg_submit').click(function () {
+            var id = $('#id').val();
+            var real_name = $('#real_name').val();
+            var user_name = $('#user_name').val();
+            var org_id = $('#userorg_id').val();
+            var user_secretlevel = $('#user_secretlevel').val();
+            var user_sort = $('#user_sort').val();
+            if (!real_name) {
+                layer.alert('请输入姓名');
+                return false;
+            }
+            if (!user_name) {
+                layer.alert('请输入账号');
+                return false;
+            }
+            if (!org_id) {
+                layer.alert('请选择部门');
+                return false;
+            }
+            if (!user_secretlevel) {
+                layer.alert('请选择密级');
+                return false;
+            }
+            $.ajax({
+                type: 'post',
+                url: '__CONTROLLER__/addSysUser',
+                data: {
+                    user_name: user_name,
+                    id: id,
+                    real_name: real_name,
+                    org_id: org_id,
+                    user_secretlevel: user_secretlevel,
+                    user_sort: user_sort
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.code > 0) {
+                        layer.msg('操作成功');
+                    } else {
+                        layer.alert(data.message);
+                        return;
+                    }
+                    parent.$('#atpbiztable').bootstrapTable('refresh');
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                }
+            })
+        })
+
+    });
+    function fillUserOrg(data, obj){
+        $('#userorg_text').val(data.org_name);
+        $('#userorg_id').val(data.org_id);
+        $("#sys_dlg").modal('hide');
+    }
+</script>

@@ -1,0 +1,198 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+
+<title>Fiber添加编辑</title>
+<style>
+    .form-group{
+        margin-top: 26px;
+    }
+    .control-label{
+        width:150px  !important;
+    }
+     .must_filter{
+        color: red;
+    }
+    .form-control{
+        display:inline-block;
+    }
+    .col-sm-3{
+        width:60%  !important;
+    }
+    .chosen-container{
+        top: -1px;
+    }
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+     .chosen-container{
+        height: 100%;
+    }
+</style>
+<body style="margin: 0 auto;">
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content" >
+        <div class="panel-body">
+           <div class="form-group">
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>光纤类型 </label>
+                    <div class="col-sm-3" >
+                    <select  name="fb_type" id="fb_type" class="chosen-select" >
+                        <option value=""></option>
+                        <foreach name="type" item="v">
+                            <option value="{$v.dic_name}" <?php if($data['fb_type'] == $v['dic_name'])echo selected;?>>{$v.dic_name}</option>
+                        </foreach>
+                    </select>
+                   </div>
+                </div>
+
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>起始点 </label>
+                    <div class="col-sm-3" >
+                    <input type="text" class="form-control" style="width:99%;" name="fb_start" id="fb_start" value="<?php if(!empty($data['fb_start']))echo $data['fb_start']; ?>">
+                   </div>
+                </div>
+
+           </div>
+           <div class="form-group">
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>终点 </label>
+                    <div class="col-sm-3" >
+                    <input type="text" class="form-control" style="width:99%;" name="fb_end" id="fb_end" value="<?php if(!empty($data['fb_end']))echo $data['fb_end']; ?>">
+                   </div>
+                </div>
+
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>总芯数 </label>
+                    <div class="col-sm-3" >
+                    <input type="text" class="form-control" style="width:99%;" name="fb_sumnum" id="fb_sumnum" value="<?php if(!empty($data['fb_sumnum']))echo $data['fb_sumnum']; ?>">
+                   </div>
+                </div>
+           </div>
+           <div class="form-group">
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>状态 </label>
+                    <div class="col-sm-3" >
+                    <input type="text" class="form-control" style="width:99%;" name="fb_status" id="fb_status" value="<?php if(!empty($data['fb_status']))echo $data['fb_status']; ?>">
+                   </div>
+                </div>
+
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>备注 </label>
+                    <div class="col-sm-3" >
+                    <input type="text" class="form-control" style="width:99%;" name="fb_remark" id="fb_remark" value="<?php if(!empty($data['fb_remark']))echo $data['fb_remark']; ?>">
+                   </div>
+                </div>
+           </div>
+
+            </div>
+        <input type="hidden" value="<?php if(!empty($data['fb_atpid'])) echo $data['fb_atpid']; ?>" name="fb_atpid" id="fb_atpid">
+        <input type="hidden" value="<?php if(!empty($data['fb_sumnum'])) echo $data['fb_sumnum']; ?>" name="sumnum" id="sumnum">
+       </div>
+    </form>
+<div class="modal-footer" style="margin-top: 15px;text-align: center;width: 100%;">
+    <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="display:inline-block">保存</button>
+    <!--<if condition="$data['fb_atpid'] neq null">-->
+        <!--<button type="button"  id="oplog" class="btn btn-warning" style="margin-left: 20px;">日志</button>-->
+    <!--</if>-->
+</div>
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        $('#sys_dlg_submit').click(function(){
+            $('#sys_dlg_form1').submit();
+        })
+                var input_width = parseInt($('.form-control').eq(0).css('width').replace('px', ''));
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: input_width+'px'});
+
+        $.validator.setDefaults({
+            highlight:function(element){
+                $(element).parent().remove('has-success').addClass('has-error');
+            },
+            success:function(element){
+                $(element).parent().remove('has-error').addClass('has-success');
+            },
+            errorPlacement:function(error,element){
+                if(element.is(":radio") || element.is(":checkbox")){
+                    error.appendTo(element.parent());
+                }else{
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass:"help-block m-b-none",
+            validClass:"help-block m-b-none"
+        });
+        $('#sys_dlg_form1').validate({
+            onclick:false,
+            onfocusout:false,
+            onkeyup:false,
+            // 如果是下拉菜单，这里的require是不生效的，需要自己在submitHandle方法中添加验证
+            rules:{
+                
+            },
+            messages:{
+                
+            },submitHandler:function(){
+                var fb_sumnum = $('#fb_sumnum').val();
+                var sumnum = $('#sumnum').val();
+                if(fb_sumnum < sumnum){
+                    layer.alert("新的总芯数不可小于之前总芯数！");
+                    return false;
+                }
+                if(fb_sumnum > 50 || fb_sumnum < 0){
+                    layer.alert("输入总芯数过大或为负数，需要修改配置！");
+                    return false;
+                }
+                var fb_type = $('#fb_type').val();
+                if(fb_type == null){
+                    layer.alert("光纤类型不可为空！");
+                    return false;
+                }
+                var formBody = $('#sys_dlg_form1');
+                $.post('__CONTROLLER__/addData',formBody.serialize(), function (data) {
+                    if (data.code > 0) {
+                        parent.$('#atpbiztable').bootstrapTable('refresh');
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        layer.alert(data.message);
+                    }
+                },'JSON');
+            }
+        });
+    });
+
+
+    $('#oplog').click(function(){
+        var fb_atpid = $('#fb_atpid').val();
+        layer.open({
+            title:'日志查询',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__MODULE__/Oplog/index?id='+fb_atpid,
+            area: ['95%', '95%']
+        });
+    })
+    //如果验证下拉框必填，请使用该方法
+//    function checkSelectForm(objArr, messageArr){
+//        var len = objArr.length;
+//        for(var i=0;i<len;i++){
+//            var obj = objArr[i];
+//            var val = $('#'+obj).val();
+//            if(!val){
+//                layer.msg('请选择'+messageArr[i]);
+//                $('#'+obj).trigger('chosen:open');
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+</script>

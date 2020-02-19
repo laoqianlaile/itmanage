@@ -1,0 +1,261 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<style>
+    th{
+        text-align: center;
+    }
+    .form-control{
+        display: inline-block;
+        width: 250px;
+    }
+    .wrapper .wrapper-content{
+        padding-bottom: 0;
+    }
+    .control-label{
+        font-size: 14px!important;
+    }
+    .fixed-table-toolbar{
+        display: none;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content " style="">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="_box" style="">
+                <label class="control-label" style="margin-left:15px;">应用系统：</label>
+                <select id="appname" class="chosen-selected" >
+                    <option value="">请选择</option>
+                    <option value="{$amd_atpid}" selected>{$amd_appname}</option>
+                </select>
+                <label class="control-label" style="margin-left:15px;">班组：</label>
+                <select id="group" class="chosen-select">
+                    <option value="">请选择</option>
+                    <foreach name="dic" item="v">
+                        <option value="{$v.dic_name}"  <?php if($v['dic_name'] == $amd_appgroup)echo selected;?>>{$v.dic_name}</option>
+                    </foreach>
+                </select>
+                <label class="control-label" style="margin-left:15px;">应用对象：</label>
+                <select id="version" class="chosen-select">
+                    <option value="">请选择</option>
+                    <foreach name="object" item="v">
+                        <option value="{$v.dic_name}"  <?php if($v['dic_name'] == $version)echo selected;?>>{$v.dic_name}</option>
+                    </foreach>
+                </select>
+                <label class="control-label" style="margin-left:35px;width: 140px;;">知识项编号/名称：</label>
+                 <input type="text" class="form-control" style="width:180px;"  id="code">
+                <div class="group" style="margin-top: 5px;">
+                    <button class="btn btn-info" style="margin-left: 10px;margin-top: -5px;" type="button" id="sys_refresh">查询</button>
+                    <button class="btn btn-info" style="margin-left: 10px;margin-top: -5px;" type="button" id="sys_add">新增</button>
+                    <button class="btn btn-info" style="margin-left: 10px;margin-top: -5px;" type="button" id="sys_del">删除</button>
+                </div>
+            </div>
+            <table id="atpbiztable" ></table>
+        </div>
+    </div>
+</div>
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<input type="hidden" value="{$amdid}" id="amdid">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script>
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+    $(".chosen-selected").chosen({disable_search_threshold: 0, search_contains: true, width: '150px'});
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '120px'});
+    $('#appname').ajaxChosen({
+        dataType: 'json',
+        type: 'POST',
+        url:'__CONTROLLER__/getAppName'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+    $('#user').ajaxChosen({
+        dataType: 'json',
+        type: 'POST',
+        url:'__CONTROLLER__/assignusered'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getDataItem',         //请求后台的URL（*）
+                method: 'post',                      //请求方式（*）
+                toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName: "amdi_itemcode",
+                sortOrder: "asc",                   //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+//            strictSearch: true,
+            showColumns: true,                  //是否显示所有的列
+//            showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "amdi_atpid",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                detailView: true,                   //是否显示父子表
+                detailFormatter: 'detailFormatter',
+                columns: [[
+                    {checkbox: true},
+                    {
+                        title: '序号', width: 40,
+                        formatter: function (value, row, index) {
+                            var option = $('#atpbiztable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'amdi_itemcode', title: '知识项编号', sortable: true, width: 100},
+                    {field: 'amd_appname', title: '应用系统', sortable: true, width: 80},
+                    {field: 'amdi_itemtype', title: '应用对象', sortable: true, width: 80},
+                    {field: 'amdi_itemmodel', title: '知识项分类', sortable: true, width: 100},
+                    {field: 'amdi_itemname', title: '知识项名称', sortable: true, width: 210},
+                    {field: 'amdi_itemkeywords', title: '检索关键字', sortable: true, width: 210},
+                    {field: 'amdi_istop', title: '是否在小Q<br/>中置顶', sortable: true, width: 100},
+                    {field: 'amdi_atpid', title: '操作区', sortable: true, width: 80, visible: true,
+                        formatter: function (value, row, index) {
+                            var inp = "'" + value + "'";
+                            var a = '<a  class="btn btn-info btn-xs" onclick="updateInRow(' + inp + ')">编辑</a><br>';
+                            return a;
+                        }
+                    }
+                ]
+                ],
+                onDblClickRow: function (row) {
+                    var appname = $('#appname').val();
+                    var version = $('#version').val();
+                    var amdid = $('#amdid').val();
+                    var id = row.amdi_atpid;
+                    layer.open({
+                        title:'运维知识项编辑',
+                        closeBtn:1,
+                        type: 2,
+                        shadeClose:false,
+                        content: '__CONTROLLER__/add?appname='+appname+'&version='+version+'&amdid='+amdid+'&id='+id,
+                        area: ['90%', '90%']
+                    });
+
+                }
+            });
+        }
+    }
+    TableObj.oTableInit();
+
+    function queryParams(params) {  //配置参数
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            appname:$('#appname').val(),
+            group:$('#group').val(),
+            version:$('#version').val(),
+            code:$('#code').val(),
+            amdid:$('#amdid').val()
+        };
+        return temp;
+    }
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+
+    function updateInRow(id)
+    {
+        var appname = $('#appname').val();
+        var version = $('#version').val();
+        var amdid = $('#amdid').val();
+        layer.open({
+            title:'运维知识项编辑',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/add?appname='+appname+'&version='+version+'&amdid='+amdid+'&id='+id,
+            area: ['90%', '90%']
+        });
+    }
+
+    $('#sys_add').on('click',function(){
+        var appname = $('#appname').val();
+        var version = $('#version').val();
+        var amdid = $('#amdid').val();
+        layer.open({
+            title:'运维知识项编辑',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/add?appname='+appname+'&version='+version+'&amdid='+amdid,
+            area: ['90%', '90%']
+        });
+    });
+
+    function detailFormatter(index, row) {
+        var html = [];
+        html.push("<div class='ibox-content'>");
+        html.push("<table class='table'  style='width:100%'>");
+        html.push("<tbody>");
+        html.push("<tr><td style='text-align: left'>"+row['amdi_itemcontent']+"</td></tr>");
+        html.push("</tbody>");
+        html.push("</table>");
+        html.push("</div>");
+        return html.join('').replace(/null/g, "").replace(/undefined/g, "");
+    }
+
+    $('#sys_del').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            layer.alert("您尚未选择数据");
+        } else {
+            var ids = [];
+            $.each(tablerow, function () {
+                ids.push(this['amdi_atpid']);
+            });
+            deleteInRow(ids.join(','));
+        }
+    });
+
+    //数据删除触发该方法
+    function deleteInRow(id){
+        layer.confirm('确认删除选中数据?',
+                {btn:['确定','取消']},
+                function(){
+                    $.ajax({
+                        type:'post',
+                        url:'__CONTROLLER__/delData',
+                        data:{amdi_atpid: id},
+                        dataType :'json',
+                        success:function(data){
+                            if(data.code > 0){
+                                layer.msg('操作成功');
+                                $('#sys_refresh').click();
+                            }else{
+                                layer.alert(data.message);
+                            }
+                        },error:function(){
+                            layer.alert('出错啦！请稍后再试');
+                        }
+                    })
+                })
+    }
+
+</script>
+</body>
+
+</html>
+
+
+
+

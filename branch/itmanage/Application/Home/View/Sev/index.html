@@ -1,0 +1,859 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<style>
+    th{
+        text-align: center;
+    }
+    .form-control{
+        display: inline-block;
+    }
+     .wrapper-content{
+        padding-bottom: 0;
+         padding-top: 0;
+    }
+
+    .control-label{
+        width: 30%;
+        float: left;
+        text-align:center;
+        line-height: 30px;
+    }
+    .chosen-container{
+        top: -1px;
+    }
+    .form-group{
+        display: inline-block;
+        width: 23%;
+        margin-top: -7px;
+    }
+    .formEl-div{
+        float: left;
+    }
+    ._box {
+        height:25px;
+        margin: 15px 0px 0px !important;
+    }
+    .fixed-table-container{
+        padding-bottom: 0px !important;
+    }
+    #button_group{
+        margin-top: 15px;
+    }
+    table{
+        table-layout: fixed;
+        word-break: break-all;
+    }
+    .formEl-div{
+        width:70%
+    }
+    body{
+        overflow-y: hidden;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content ">
+    <div class="row">
+        <div class="col-sm-12" id='search_div'>
+            <div class="_box">
+                <div class="form-group">
+                    <label class="control-label" >IP地址</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sev_ip" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >MAC地址</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sev_mac">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="control-label" >机柜</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sev_cab">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >机位</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sev_cabloc">
+                    </div>
+                </div>
+            </div>
+            <div class="_box">
+                <div class="form-group">
+                    <label class="control-label" >设备类型</label>
+                    <div class="formEl-div" >
+                        <!--<input type="text" class="form-control" style="width:99%;"  id="sev_type">-->
+                        <select name="sev_type" id="sev_type" class="chosen-select">
+                            <option value="">请选择</option>
+                            <?php foreach($sbType as $key=>$value){ ?>
+                            <option value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >出厂编号</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sev_sn">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >设备编码</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sev_devicecode">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" >部标编码</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sev_anecode">
+                    </div>
+                </div>
+
+            </div>
+            <div class="box-show" style="margin-top:15px;">
+                <div class="form-group">
+                    <label class="control-label" >使用状态</label>
+                    <div class="formEl-div" >
+                        <select id="sev_atpstatus" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <foreach name="status" item="v">
+                                <option value="{$v.dic_name}">{$v.dic_name}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >责任人</label>
+                    <div class="formEl-div" >
+                        <select id="sev_dutyman" class="chosen-select" >
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" >责任部门</label>
+                    <div class="formEl-div" >
+                        <select id="sev_dutydept" class="chosen-select" >
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" >使用人</label>
+                    <div class="formEl-div" >
+                        <select id="sev_useman" class="chosen-select" >
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+            <!-- </div>
+            <div class="_box  box-show"> -->
+                <div class="form-group">
+                    <label class="control-label" >使用部门</label>
+                    <div class="formEl-div" >
+                        <select id="sev_usedept" class="chosen-select" >
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >运行状态</label>
+                    <div class="formEl-div" >
+                        <select id="sev_yxstatus" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <option value="1">开机</option>
+                            <option value="2">关机</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >密级</label>
+                    <div class="formEl-div" >
+                        <select id="sev_secretlevel" class="chosen-select" >
+                            <option value="">请选择 </option>
+                            <?php foreach($miJi as $key=>$value){ ?>
+                            <option value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >地区</label>
+                    <div class="formEl-div" >
+                        <select id="sev_area" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <?php foreach($diQu as $key=>$value){ ?>
+                            <option value="{$value.dic_id}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+            <!--  </div>
+            <div class="_box box-show"> -->
+                <div class="form-group">
+                    <label class="control-label" >楼宇</label>
+                    <div class="formEl-div" >
+                        <select id="sev_belongfloor" class="chosen-select" ></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >厂家</label>
+                    <div class="formEl-div" >
+                        <select name="sev_factory" id="sev_factory" class="chosen-select">
+                            <option value="">请选择</option>
+                            <?php foreach($changJia as $key=>$value){ ?>
+                            <option value="{$value.dic_id}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" >型号</label>
+                    <div class="formEl-div" >
+                        <select name="sev_modelnumber" id="sev_modelnumber" class="chosen-select">
+                            <option value=""> </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" >资产来源</label>
+                    <div class="formEl-div" >
+                        <select id="sev_assetsource" class="chosen-select" >
+                            <option value="">请选择 </option>
+                            <?php foreach($zichan as $key=>$value){ ?>
+                            <option value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >操作系统</label>
+                    <div class="formEl-div" >
+                        <!--<input type="text" class="form-control" style="width:99%;"  id="sev_os">-->
+                        <select name="sev_os" id="sev_os" class="chosen-select">
+                            <option value="">请选择</option>
+                            <?php foreach($caoZuoXiTong as $key=>$value){ ?>
+                            <option value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+            <!-- </div>
+            <div class="_box box-show"> -->
+                <div class="form-group">
+                    <label class="control-label" >光纤交换机</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sev_fsip">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >直连存储</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="sev_directstorage">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >关联事项</label>
+                    <div class="formEl-div" >
+                        <select id="sev_sx" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <option value="1">是</option>
+                            <option value="2">否</option>
+                        </select>
+                    </div>
+                </div>
+                <!--<div class="_box  box-show" style="margin-top: 4px;">-->
+                    <div class="form-group">
+                        <label class="control-label" >是否院管</label>
+                        <div class="formEl-div" >
+                            <select id="sev_isyuan" class="chosen-select" >
+                                <option value="">请选择</option>
+                                <option value="是">是</option>
+                                <option value="否">否</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" >是否中心管</label>
+                        <div class="formEl-div" >
+                            <select id="sev_iszhongxin" class="chosen-select" >
+                                <option value="">请选择</option>
+                                <option value="是">是</option>
+                                <option value="否">否</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" >分类</label>
+                        <div class="formEl-div" >
+                            <select id="sev_toptype" class="chosen-select" >
+                                <option value="">请选择</option>
+                                <option value=""> </option>
+                                <?php foreach($type as $key=>$value){ ?>
+                                <option
+                                value="{$value.dic_name}">{$value.dic_name}</option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+            </div>
+            <div class="" id="button_group">
+                <button class="btn btn-info" style="background-color: #4EA3EC;border-color: #4EA3EC;" type="button" id="sys_refresh">查询</button>
+                <button class="btn btn-info" style="background-color: #1AB394;border-color: #1AB394;" type="button" id="sys_reset">重置</button>
+                <a class="btn btn-info " style="margin-left: 10px;background-color: yellowgreen;border-color: yellowgreen;" type="button" id="sys_add" >新增</a>
+                <button class="btn btn-warning" style="margin-left: 10px;" type="button" data-head="厂家,型号,出厂编号,使用状态,密级,资产来源,资产责任单位,使用责任单位,采购日期,上线/下线日期,硬盘块数,硬盘序列号,CPU颗数,HBA口数,WWN号,电源数量,电源连接端口,电源功率,地区,楼宇,房间号,机位,KVM交换机,KVM口,责任人,责任部门,使用人,使用部门,操作系统,操作系统安装时间,交换机端口,所属网络,iLo密码提示,备注,直连存储,服务器名称,内存,设备编码,部标编码,IP地址,子网掩码,默认网关,子IP地址,MAC地址,子MAC地址,iLoIP地址,iLoMAC地址" data-extraparam="" data-remark="支持从Excel批量拷贝粘贴" id="sys_batchadd" data-method="Home/Sev/saveCopyTables">批量增加</button>
+                <button class="btn btn-info" style="margin-left: 10px;background-color: cadetblue;border-color: cadetblue;" type="button" id="sys_del">删除</button>
+                <button class="btn btn-info" style="margin-left: 10px;" type="button" id="sys_exp">导出</button>
+                <button class="btn btn-info" style="margin-left: 10px;" type="button" id="show">收起/展开</button>
+            </div>
+       </div>
+        <div class="col-sm-12">
+            <table id="atpbiztable" data-height=''></table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLIC__/img/loading/loading9.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="sort" >
+<input type="hidden" id="sortOrder" >
+</body>
+<script src="__PUBLIC__/js/tablecopy.js"></script>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script>
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+
+//    layui.use('element', function(){
+//        var element = layui.element;
+//    });
+    var formEl_div_width = parseInt($('.formEl-div').eq(0).width());
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: formEl_div_width+"px"})
+    // fixed();
+    // function fixed(){
+    //     var h  = $(window).height() - 158;
+    //     $('table').attr('data-height',h);
+    // }
+
+    fixed();
+    function fixed(){
+        searchDivHeight = parseInt($('#search_div').height());
+        boxShow_h = parseInt($('.box-show').height());
+        height = $(window).height()-(searchDivHeight-boxShow_h); 
+        h = $(window).height();
+        // 根据浏览器类型设置不同高度
+        if(window.ActiveXObject||'ActiveXObject' in window){ 
+            $('#atpbiztable').attr('data-height',height-24); 
+        }else{
+            $('#atpbiztable').attr('data-height',height-11);
+        }
+    }
+    // 点击收起/展开按钮表格高度自适应
+    var searchDivHeight = parseInt($('#search_div').height());
+    var boxShow_h = parseInt($('.box-show').height());
+    var body_h = $(window).height();
+    var h_new = body_h-(searchDivHeight - boxShow_h);
+
+    $('#show').click(function(){
+        if($('.box-show').is(':visible')){
+            $('#button_group').css('margin-top','15px');  
+            // 根据浏览器类型设置不同高度
+            if(window.ActiveXObject||'ActiveXObject' in window){
+                $('#atpbiztable').bootstrapTable("resetView",{height:h_new-24});
+            }else{
+
+                $('#atpbiztable').bootstrapTable("resetView",{height:h_new-11}); 
+            }
+        }else{
+            $('#button_group').css('margin-top','0px');
+            // 根据浏览器类型设置不同高度
+            if(window.ActiveXObject||'ActiveXObject' in window){
+                $('#atpbiztable').bootstrapTable("resetView",{height:body_h-searchDivHeight-24});
+            }else{
+                
+                $('#atpbiztable').bootstrapTable("resetView",{height:body_h-searchDivHeight-11});
+            }
+        }
+    })
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getData',      //请求后台的URL（*）
+                method: 'post',                     //请求方式（*）
+                toolbar: '#atpbiztoolbar',          //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName: "sev_ip",
+                sortOrder: "asc",                  //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页
+                pageSize: 15,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                uniqueId: "sev_atpid",              //每一行的唯一标识，一般为主键列
+                detailView: true,                   //是否显示父子表
+                detailFormatter: "showDataView",
+                columns: [
+                   [
+                        {checkbox: true, width: 50},
+                       {
+                           field: 'sev_atpid',title: '操作', sortable: false,width: 100,
+                           formatter: function (value, row, index) {
+                               var inp = "'" + value + "'";
+                               return '<a  class="btn btn-info btn-xs"  style="margin:0" onclick="updateInRow(' + inp + ')">编辑</a>&nbsp;<a  class="btn btn-info btn-xs" onclick="deleteInRow(' + inp + ')" style="margin:0;background: #AB154D;border-color: #AB154D;">删除</a>';                           }
+                       },
+                        {
+                            title: '序号', width: 60,
+                            formatter: function (value, row, index) {
+                                var option = $('#atpbiztable').bootstrapTable('getOptions');
+                                return option.pageSize * (option.pageNumber - 1) + index + 1;
+                            }
+                        },
+                        {field: 'sxCount', title: '关联事项', sortable: true, width: 85,
+                            formatter: function (value, row, index) {
+                                var inp = "'" + row.sev_atpid + "'";
+                                var ip = "'" + row.sev_ip + "'";
+                                return '<a  style="margin:0" onclick="shiXiang(' + inp + ',' + ip +')">'+value+'</a>'
+                            }
+                        },
+                        {field: 'sev_devicecode', title: '设备编码', sortable: true, width: 100},
+                       {field: 'sev_cab', title: '机柜', sortable: true, width: 80},
+                       {field: 'sev_cabloc', title: '机位', sortable: true, width: 80},
+                       {field: 'sev_ip', title: 'IP地址', sortable: true, width: 90,
+                           formatter: function (value, row, index) {
+                               var inp = "'" + value + "'";
+                               return '<a  style="margin:0" onclick="Ipxiang(' + inp + ')">'+value+'</a>'
+                           }
+                       },
+                        {field: 'sev_useman', title: '使用人', sortable: true, width: 80},
+                        {field: 'sev_status', title: '使用状态', sortable: true, width: 100},
+                       {field: 'sev_factory', title: '厂家', sortable: true, width: 120},
+                       {field: 'sev_modelnumber', title: '型号', sortable: true, width: 120},
+                       {field: 'sev_sn', title: '出厂编号', sortable: true, width: 120},
+
+                        {field: 'sev_roomno', title: '房间号', sortable: true, width: 120},
+                       {field: 'ss_status', title: '运行状态', sortable: true, width: 120},
+                       {field: 'sev_secretlevel', title: '密级', sortable: true, width: 120},
+//                       {field: 'sev_name', title: '服务器名称', sortable: true, width: 120},
+//                       {field: 'ss_status', title: '运行状态', sortable: true, width: 100}
+                        {field: 'sev_app', title: '服务名称', sortable: true, width: 130},
+                        {field: 'sev_isyuan', title: '是否院管', sortable: true, width: 100},
+                        {field: 'sev_iszhongxin', title: '是否中心管', sortable: true, width: 100},
+                        {field: 'sev_toptype', title: '分类', sortable: true, width: 100}
+
+                   ]
+                ],
+                onDblClickRow: function (row) {
+                    updateInRow(row['sev_atpid'],row['ss_status']);
+                }
+//                onLoadSuccess:function(data){
+//                    var height = document.documentElement.clientHeight -50;
+//                    var searchDivHeight = parseInt($('#search_div').height());
+//                     var tabheight = $('.fixed-table-container').height();
+//                    tabheight = parseInt(tabheight);
+//                    if(tabheight < (height-searchDivHeight)){
+//                        $('.fixed-table-container').css('height', 'auto');
+//                    }else{
+//                        $('#atpbiztable').bootstrapTable("resetView",{height:height-searchDivHeight});
+//                    }
+//                }
+            });
+        }
+    };
+    TableObj.oTableInit();
+
+    function queryParams(params) {  //配置参数
+        $('#sort').val(params.sort);
+        $('#sortOrder').val(params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            sev_devicecode:$('#sev_devicecode').val(),
+            sev_anecode:$('#sev_anecode').val(),
+            sev_type:$('#sev_type').val(),
+            sev_factory:$('#sev_factory option:selected').val(),
+            sev_modelnumber:$('#sev_modelnumber option:selected').val(),
+            sev_sn:$('#sev_sn').val(),
+            sev_ip:$('#sev_ip').val(),
+            sev_mac:$('#sev_mac').val(),
+            sev_atpstatus:$('#sev_atpstatus option:selected').val(),
+            sev_dutyman:$('#sev_dutyman option:selected').val(),
+            sev_dutydept:$('#sev_dutydept option:selected').val(),
+            sev_useman:$('#sev_useman option:selected').val(),
+            sev_usedept:$('#sev_usedept option:selected').val(),
+            sev_yxstatus:$('#sev_yxstatus option:selected').val(),
+            sev_secretlevel:$('#sev_secretlevel option:selected').val(),
+            sev_area: $('#sev_area option:selected').val(),
+            sev_belongfloor:$('#sev_belongfloor option:selected').val(),
+            sev_isyuan:$('#sev_isyuan option:selected').val(),
+            sev_iszhongxin:$('#sev_iszhongxin option:selected').val(),
+            sev_toptype:$('#sev_toptype option:selected').val(),
+            sev_cab:$('#sev_cab').val(),
+            sev_cabloc:$('#sev_cabloc').val(),
+            sev_assetsource:$('#sev_assetsource').val(),
+            sev_os:$('#sev_os').val(),
+            sev_fsip:$('#sev_fsip').val(),
+            sev_directstorage:$('#sev_directstorage').val(),
+            sev_sx:$('#sev_sx').val()
+        };
+        return temp;
+    }
+
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+
+    $('#sys_add').on('click',function() {
+        updateInRow('');
+    });
+
+    $('#sys_del').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            layer.alert("您尚未选择数据");
+        } else {
+            var ids = [];
+            $.each(tablerow, function () {
+                ids.push(this['sev_atpid']);
+            });
+            deleteInRow(ids.join(','));
+        }
+    });
+
+    //数据编辑触发该方法
+    function updateInRow(id,status) {
+        layer.open({
+            title:'数据编辑',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/add?sev_atpid='+id+'&yxstatus='+status,
+            area: ['92%', '90%']
+        });
+    }
+    //数据删除触发该方法
+    function deleteInRow(id) {
+        layer.confirm('确认删除选中数据?',
+                {btn: ['确定', '取消']},
+                function () {
+                    $.ajax({
+                        type: 'post',
+                        url: '__CONTROLLER__/isGldel',
+                        data: {zy_id: id},
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.code > 0) {
+                                layer.confirm('存在关联关系，是否继续删除?',
+                                        {btn: ['确定', '取消']},
+                                        function () {
+                                            $.ajax({
+                                                type: 'post',
+                                                url: '__CONTROLLER__/delData',
+                                                data: {sev_atpid: id},
+                                                dataType: 'json',
+                                                success: function (data) {
+                                                    if (data.code > 0) {
+                                                        layer.msg('操作成功');
+                                                        $('#sys_refresh').click();
+                                                    } else {
+                                                        layer.alert(data.message);
+                                                    }
+                                                }, error: function () {
+                                                    layer.alert('出错啦！请稍后再试');
+                                                }
+                                            })
+                                        })
+                            } else {
+                                $.ajax({
+                                    type: 'post',
+                                    url: '__CONTROLLER__/delData',
+                                    data: {sev_atpid: id},
+                                    dataType: 'json',
+                                    success: function (data) {
+                                        if (data.code > 0) {
+                                            layer.msg('操作成功');
+                                            $('#sys_refresh').click();
+                                        } else {
+                                            layer.alert(data.message);
+                                        }
+                                    }, error: function () {
+                                        layer.alert('出错啦！请稍后再试');
+                                    }
+                                })
+                            }
+                        }
+                    })
+                })
+    }
+
+    function showDataView(index, row){
+        var html = [];
+        html.push("<div class='ibox-content layui-tab layui-tab-brief' lay-filter='docDemoTabBrief'>");
+//            html.push("<ul class='layui-tab-title'>");
+//                html.push("<li class='layui-this'>分类一</li>");
+//                html.push("<li>分类二</li>");
+//            html.push("</ul>");
+            html.push("<div class='layui-tab-content'>");
+                html.push("<div class='layui-tab-item layui-show tab'>");
+                    html.push("<table class='table'>");
+                        html.push("<tbody");
+                            html.push("<tr><td><b>备注</b></td><td>" + row['sev_remark'] + "</td><td><b>硬盘块数</b></td><td>" + row['sev_disknum'] + "</td><td><b>KVM交换机</b></td><td>" + row['sev_kvmsw'] + "</td><td><b>直连存储</b></td><td>" + row['sev_directstorage'] + "</td></tr>");
+                            html.push("<tr><td><b>mac地址</b></td><td>" + row['sev_mac'] + "</td><td><b>硬盘序列号</b></td><td>" + row['sev_disksn'] + "</td><td><b>KVM口</b></td><td>" + row['sev_kvmnum'] + "</td><td><b>支持漂移</b></td><td>" + row['sev_supportdrift'] + "</td></tr>");
+                            html.push("<tr><td><b>操作系统</b></td><td>" + row['sev_os'] + "</td><td><b>CPU颗数</b></td><td>" + row['sev_cpunum'] + "</td><td><b>责任部门</b></td><td>" + row['sev_dutydept'] + "</td><td><b>运行状态</b></td><td>" + row['ss_status'] + "</td></tr>");
+                            html.push("<tr><td><b>电源功率</b></td><td>" + row['sev_powergl'] + "</td><td><b>HBA口数</b></td><td>" + row['sev_hbanum'] + "</td><td><b>使用部门</b></td><td>" + row['sev_usedept'] + "</td><td><b>责任人</b></td><td>" + row['sev_dutyman'] + "</td></tr>");
+                            html.push("<tr><td><b>使用状态</b></td><td>" + row['sev_status'] + "</td><td><b>WWN号</b></td><td>" + row['sev_wwnno'] + "</td><td><b>内置服务</b></td><td>" + row['sev_app'] + "</td><td><b>设备类型</b></td><td>" + row['sev_type'] + "</td></tr>");
+//                        html.push("</tbody>");
+//                    html.push("</table>");
+//                html.push("</div>");
+//                html.push("<div class='layui-tab-item tab'>");
+//                    html.push("<table class='table'>");
+//                        html.push("<tbody");
+                            html.push("<tr><td><b>交换机IP</b></td><td>" + row['sev_swip'] + "</td><td><b>光纤交换机IP地址</b></td><td>" + row['sev_fsip'] + "</td><td><b>光纤交换机端口</b></td><td>" + row['sev_fsinterface'] + "</td><td><b>子网掩码</b></td><td>" + row['sev_mask'] + "</td></tr>");
+                            html.push("<tr><td><b>资产来源</b></td><td>" + row['sev_assetsource'] + "</td><td><b>电源数量</b></td><td>" + row['sev_powernum'] + "</td><td><b>操作系统安装时间</b></td><td>" + row['sev_osinstalltime'] + "</td><td><b>默认网关</b></td><td>" + row['sev_gateway'] + "</td></tr>");
+                            html.push("<tr><td><b>资产责任单位</b></td><td>" + row['sev_assetdutydept'] + "</td><td><b>电源连接端口</b></td><td>" + row['sev_powerport'] + "</td><td><b>交换机端口</b></td><td>" + row['sev_swinterface'] + "</td><td><b>子IP地址</b></td><td>" + row['sev_subip'] + "</td></tr>");
+                            html.push("<tr><td><b>使用责任单位</b></td><td>" + row['sev_assetusedept'] + "</td><td><b>地区</b></td><td>" + row['sev_area'] + "</td><td><b>所属网络</b></td><td>" + row['sev_net'] + "</td><td><b>子MAC地址</b></td><td>" + row['sev_submac'] + "</td></tr>");
+                            html.push("<tr><td><b>采购日期</b></td><td>" + row['sev_purchasetime'] + "</td><td><b>楼宇</b></td><td>" + row['sev_belongfloor'] + "</td><td><b>iLo密码提示</b></td><td>" + row['sev_ilopass'] + "</td><td><b>iLoIP地址</b></td><td>" + row['sev_iloip'] + "</td></tr>");
+                            html.push("<tr><td><b>上线/下线日期</b></td><td>" + row['sev_startusetime'] + "</td><td><b>服务器名称</b></td><td>" + row['sev_name'] + "</td><td><b>虚拟服务器IP</b></td><td>" + row['sev_hostip'] + "</td><td><b>iLoMAC地址</b></td><td>" + row['sev_ilomac'] + "</td></tr>");
+                        html.push("</tbody>");
+                    html.push("</table>");
+                html.push("</div>");
+            html.push("</div>");
+        html.push("</div>");
+        return html.join('').replace(/null/g, "").replace(/undefined/g, "");
+
+    }
+    //使用人
+    $('#sev_useman').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url:'__MODULE__/org/assignuser'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+    //责任人
+    $('#sev_dutyman').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url:'__MODULE__/org/assignuser'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+    //责任部门
+    $('#sev_dutydept').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url: '__MODULE__/org/assigndept'
+    }, {
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+    //使用部门
+    $('#sev_usedept').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url: '__MODULE__/org/assigndept'
+    }, {
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+
+
+
+    //选择地区触发楼宇
+    $('#sev_area').change(function () {
+        var id = $(this).val();
+        dic_louyu(id);
+    });
+
+    function dic_louyu(id){
+        if(!id)  return false;
+        $.ajax({
+            type:'post',
+            url:'__MODULE__/dic/getDicLouYu',
+            data:{pid: id},
+            dataType :'json',
+            success:function(data){
+                if (data.code > 0) {
+                    var str=  '<option value=""> </option>';
+                    $.each(data.results,function(k,v){
+                        str += "<option value='"+v['dic_id']+"'>"+v['dic_name']+"</option>";
+                    });
+                    $('#sev_belongfloor option').remove();
+                    $('#sev_belongfloor').append(str);
+                    $('#sev_belongfloor').trigger("chosen:updated");
+                } else {
+                    layer.alert(data.message);
+                }
+            },
+            error:function(){
+                layer.alert('出错啦！请联系管理员');
+            }
+        });
+    }
+
+    //选择厂家触发型号
+    $('#sev_factory').change(function () {
+        var id = $(this).val();
+        dic_xinghao(id);
+    });
+    //设置型号
+    var factoryid = $("#sev_factory").val();
+    if (factoryid != '') {
+        var next_name = "<?php echo $data['sev_modelnumber'];?>";
+        dic_xinghao(factoryid, next_name);
+    }
+    //型号
+    function dic_xinghao(id, next_name) {
+        if (next_name == 'undefined') { next_name = '' }
+        if (!id) return false;
+        $.ajax({
+            type: 'post',
+            url: '__MODULE__/dic/getDicXingHao',
+            data: { pid: id },
+            dataType: 'json',
+            success: function (data) {
+                if (data.code > 0) {
+                    var str = '<option value=""> </option>';
+                    $.each(data.results, function (k, v) {
+                        var sele = '';
+                        if (next_name == v['dic_name']) { sele = 'selected' }
+                        str += "<option " + sele + " value='" + v['dic_id'] + "'>" + v['dic_name'] + "</option>";
+                    });
+                    $('#sev_modelnumber option').remove();
+                    $('#sev_modelnumber').append(str);
+                    $('#sev_modelnumber').trigger("chosen:updated");
+                } else {
+                    layer.alert(data.message);
+                }
+            },
+            error: function () {
+                layer.alert('出错啦！请联系管理员');
+            }
+        });
+    }
+
+
+
+    $('.box-show').hide();
+    $("#show").click(function(){
+        // $(this).parent().parent().find("ul").toggle();//无动画显示隐藏
+        $('.box-show').fadeToggle();// 透明度变化 淡入淡出    
+        // $('.box-show').slideToggle(); //有个上下滑动动画的展开收起效果  推荐
+    });
+
+    $('#sys_exp').click(function(){
+        $('#loading').modal('show');
+        var sort=$('#sort').val();
+        var sortOrder=$('#sortOrder').val();
+        var t = "__CONTROLLER__/getDataWithExport";
+        t = encodeURI(t);
+        $.ajax({
+            type:'post',
+            url: t,
+            dataType:'json',
+            data:{
+                sort:sort,
+                sortOrder:sortOrder,
+                sev_devicecode:$('#sev_devicecode').val(),
+                sev_anecode:$('#sev_anecode').val(),
+                sev_type:$('#sev_type').val(),
+                sev_factory:$('#sev_factory option:selected').val(),
+                sev_modelnumber:$('#sev_modelnumber option:selected').val(),
+                sev_sn:$('#sev_sn').val(),
+                sev_ip:$('#sev_ip').val(),
+                sev_mac:$('#sev_mac').val(),
+                sev_atpstatus:$('#sev_atpstatus option:selected').val(),
+                sev_dutyman:$('#sev_dutyman option:selected').val(),
+                sev_dutydept:$('#sev_dutydept option:selected').val(),
+                sev_useman:$('#sev_useman option:selected').val(),
+                sev_usedept:$('#sev_usedept option:selected').val(),
+                sev_yxstatus:$('#sev_yxstatus option:selected').val(),
+                sev_secretlevel:$('#sev_secretlevel option:selected').val(),
+                sev_area: $('#sev_area option:selected').val(),
+                sev_belongfloor:$('#sev_belongfloor option:selected').val(),
+                sev_isyuan:$('#sev_isyuan option:selected').val(),
+                sev_iszhongxin:$('#sev_iszhongxin option:selected').val(),
+                sev_toptype:$('#sev_toptype option:selected').val(),
+                sev_cab:$('#sev_cab').val(),
+                sev_assetsource:$('#sev_assetsource').val(),
+                sev_os:$('#sev_os').val(),
+                sev_fsip:$('#sev_fsip').val(),
+                sev_directstorage:$('#sev_directstorage').val(),
+                sev_sx:$('#sev_sx').val()
+            },
+            success:function(data){
+                $('#loading').modal('hide');
+                if(data.code > 0){
+                    location.href = data.message;
+                }else{
+                    layer.msg(data.message);
+                }
+            },error:function(){
+                $('#loading').modal('hide');
+                layer.alert('出错了！请联系管理员！');
+            }
+        })
+    })
+
+    function Ipxiang(ip) {
+        layer.open({
+            title:'开关机状态查看'+'---'+ip,
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/read?ipaddress='+ip,
+            area: ['80%', '80%']
+        });
+    }
+
+    function shiXiang(id,ip){
+        layer.open({
+            title:'事项查看编辑'+'---'+ip,
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            cancel:function(){$('#atpbiztable').bootstrapTable('refresh');},
+            content: '__MODULE__/ShiXiang/table?id='+id+'&objType='+'物理服务器',
+            area: ['95%', '95%']
+        });
+    }
+    $('#sys_reset').click(function(){
+        $('.form-control').val('');
+        $('.chosen-select').val('');
+        $('.chosen-select').trigger("chosen:updated");
+        $('#sys_refresh').click()
+    })
+</script>
+</html>

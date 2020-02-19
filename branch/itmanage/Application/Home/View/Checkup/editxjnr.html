@@ -1,0 +1,160 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+
+
+<title>数据库管理添加编辑</title>
+<style>
+    .form-group{
+        margin-top: 26px;
+    }
+    .control-label{
+        width:150px  !important;
+    }
+    .must_filter{
+        color: red;
+    }
+    .form-control{
+        display:inline-block;
+    }
+    .col-sm-3{
+        width:60%  !important;
+    }
+    .chosen-container{
+        top: -1px;
+    }
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .chosen-container{
+        height: 100%;
+    }
+</style>
+<body style="margin: 0 auto;">
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content" style="padding-bottom: 50px;">
+        <div class="panel-body">
+            <div class="form-group">
+            <div style="width: 100%;">
+                <label class=' col-sm-2 control-label'>名称:</label>
+                <input type="text"  readonly= "readonly" class="form-control" style="width:750px;" name="name" id="name" value="<?php if(!empty($name))echo $name; ?>">
+            </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 48%;float: left">
+                    <label  class=' col-sm-2 control-label'>巡察周期:</label>
+                    <select name="cycle" id="cycle" class="chosen-select" style="width:99%;" >
+                            <option value=""> </option>
+                            <?php foreach($zhouQi as $key=>$value){ ?>
+                            <option <?php if($data['cycle'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                </div>
+                <div style="width: 48%;float: left">
+                    <label class=' col-sm-2 control-label'>是否重要</label>
+                    <select name="isimportant" id="isimportant" class="chosen-select" style="width:99%;" >
+                            <option value=""> </option>
+                            <?php foreach($shiFou as $key=>$value){ ?>
+                            <option <?php if($data['isimportant'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                </div>
+            </div>
+            <div >
+                <div class="form-group">
+                    <div style="width: 100%;">
+                        <label class=' col-sm-2 control-label'>巡检内容:</label>
+                        <textarea class="form-control" style="height:100px;width:750px;"  name="content" id="content"><?php if(!empty($data['content']))echo $data['content']; ?></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div style="width: 100%;">
+                        <label class=' col-sm-2 control-label'>巡检要求:</label>
+                        <textarea class="form-control" style="height:100px;width:750px;"  name="require" id="require"><?php if(!empty($data['require']))echo $data['require']; ?></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input id="atpid" value="{$atpid}" hidden>
+        <input id="admina" value="{$admina}" hidden>
+        <input id="adminb" value="{$adminb}" hidden>
+        <input id="type" value="{$type}" hidden>
+        <input id="id" type="hidden" value="{$data.checkupid}" class="form-control">
+    </div>
+</form>
+<div class="modal-footer" style="margin: 0px;text-align:center;z-index: 999;position: fixed;bottom:0;left:0;font-family: cursive; width: 100%;height: 60px;background-color: #fff;">
+    <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="display:inline-block;text-align:center;">保存</button>
+</div>
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function () {
+            layer = layui.layer;
+        })
+        $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '255px'});
+        $(".js-switch").each(function () {
+            new Switchery(this, {color: '#1AB394'});
+        });
+
+        $('#sys_dlg_submit').click(function () {
+            var checkupid = $('#id').val();
+            var atpid = $('#atpid').val();
+            var ip=$('#ip').val();
+            var content=$('#content').val();
+            var require=$('#require').val();
+            var cycle=$('#cycle').val();
+            var admina=$('#admina').val();
+            var adminb=$('#adminb').val();
+            var type = $('#type').val();
+            var name = $('#name').val();
+            var isimportant = $('#isimportant').val();
+
+            if (!content) {
+                layer.alert('请输入巡检内容');
+                return false;
+            }
+            if (!require) {
+                layer.alert('请输入巡检要求');
+                return false;
+            }
+
+            $.ajax({
+                type: 'post',
+                url: '__CONTROLLER__/xjnrsubmit',
+                data: {
+                    atpid: atpid,
+                    checkupid: checkupid,
+                    ip:ip,
+                    content:content,
+                    require:require,
+                    cycle:cycle,
+                    admina:admina,
+                    adminb:adminb,
+                    type:type,
+                    name:name,
+                    isimportant:isimportant
+
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.code > 0) {
+                        layer.alert('操作成功');
+                    } else {
+                        layer.alert(data.message);
+                        return;
+                    }
+                    parent.$('#checkuptable').bootstrapTable('refresh');
+//                    parent.parent.$('#itemtable').bootstrapTable('refresh');
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                }
+            })
+        })
+    });
+</script>

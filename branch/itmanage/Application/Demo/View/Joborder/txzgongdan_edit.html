@@ -1,0 +1,242 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title">通信站派工单</h3>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div  class="panel-body">
+                        <form id="sys_dlg_form" role="form" >
+                            <div class="heng">
+                                <div class="form-group_heng">
+                                <div class="form-group_l">
+                                    <label class="control-lable "style="width:20%">编号</label>
+                                    <input id="tongxinid" name="txz_tongxinid" type="text" value="{$data.txz_tongxinid}" class="form-control" readonly>
+                                    <input name="txz_atpid" type="hidden" value="{$data.txz_atpid}" class="form-control" >
+                                    <input name="txz_sign" type="hidden" value="on" class="form-control" >
+                                    </input>
+                                </div>
+                                <div class="form-group_r">
+                                    <label class="control-lable  ">提交日期</label>
+                                    <input id="submittime" name="txz_submittime" type="text" value="{$data.txz_submittime}" class="form-control" readonly>
+                                    </input>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="heng" style="margin-top: 20px">
+                                <div class="form-group_heng">
+                                        <label class="control-lable ">任务类型&nbsp;</label>
+                                        <lable class ="control-lable ">
+                                            <input type="checkbox" name="checkbox[]"  value="更换内网信息点布线" />更换内网信息点布线&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </lable>
+                                        <lable class ="control-lable ">
+                                            <input type="checkbox" name="checkbox[]" value="新增加内网信息点"  />新增加内网信息点&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </lable>
+                                        <lable class ="control-lable ">
+                                            <input type="checkbox" name="checkbox[]" value="查交换机端口"  />查交换机端口&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </lable>
+                                </div>
+                            </div>
+                                    <div class="heng">
+                                        <div class="form-group_heng">
+                                            <label class="control-lable "style="padding-left: 58px">&nbsp;</label>
+                                        <lable class ="control-lable ">
+                                            <input type="checkbox" name="checkbox[]" value="检查网络硬件"  />检查网络硬件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </lable>
+                                        <lable class ="control-lable ">
+                                            <input type="checkbox" name="checkbox[]" value="领取网线" />领取网线&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </lable>
+                                        <lable class ="control-lable ">
+                                            <input type="checkbox" name="checkbox[]" value="网络设备安装"  />网络设备安装&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </lable>
+                                    </div>
+                                    </div>
+                            <div style="margin-top: 15px"><span class="label label-primary" >用户信息</span></div>
+                            <div class="heng">
+                                <div class="form-group_l">
+                                    <label class="control-lable  ">姓名</label>
+                                    <input id="user_z" name="txz_user" type="text" value="{$data.txz_user}" class="form-control" >
+                                    </input>
+                                </div>
+                                <div class="form-group_r">
+                                    <button class="btn btn-info btn-sm" type="button" id="user_search"><i class="fa fa-search"></i>查询</button>
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_l">
+                                    <label class="control-lable  ">部门</label>
+                                    <input id="depart" name="txz_depart" type="text" value="{$data.txz_depart}" class="form-control" >
+                                    </input>
+                                </div>
+                                <div class="form-group_r">
+                                    <label class="control-lable  ">科室</label>
+                                    <input id="office" name="txz_office" type="text" value="{$data.txz_office}" class="form-control" >
+                                    </input>
+                                </div>
+                            </div>
+
+                            <div class="heng">
+                                <div class="form-group_l">
+                                    <label class="control-lable  ">地址</label>
+                                    <input id="address" name="txz_address" type="text" value="{$data.txz_address}" class="form-control" >
+                                    </input>
+                                </div>
+                                <div class="form-group_r">
+                                    <label class="control-lable  ">电话</label>
+                                    <input id="phone" name="txz_phone" type="text" value="{$data.txz_phone}" class="form-control" >
+                                    </input>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 15px"><span class="label label-primary" >信息中心意见</span></div>
+
+                            <div class="heng">
+                                <div class="form-group_l">
+                                    <label class="control-lable" style="width: 28%">交换机地址</label>
+                                    <input id="xswitch" name="txz_xswitch" type="text" value="{$data.txz_xswitch}" class="form-control" >
+                                    </input>
+                                </div>
+                                <div class="form-group_r">
+                                    <label class="control-lable  ">交换机端口</label>
+                                    <input id="xport" name="txz_xport" type="text" value="{$data.txz_xport}" class="form-control" >
+                                    </input>
+                                </div>
+                            </div>
+
+                            <div class="heng" >
+                                <div class="form-group_heng"  style="width:100%;">
+                                    <div class="form-group_l1" style="width: 97%;">
+                                        <label class="control-lable" style="width: 14%;float: left;">任务内容</label>
+                                        <textarea id="detail" name="txz_detail" rows="5" class="form-control" style="width:86%;">{$data.txz_detail}</textarea>
+                                    </div>
+                                        <!--<div class="form-group_r1" >-->
+                                    <!-- -->
+                                <!--</div>-->
+                                </div>
+                            </div>
+
+                            <!--<form id="sys_dlg_form1" role="form" >-->
+                                <!--<div style="margin-top: 15px"><span class="label label-primary" >通信站</span></div>-->
+
+                            <!--<div class="heng">-->
+                                <!--<div class="form-group_l">-->
+                                    <!--<label class="control-lable">交换机地址</label>-->
+                                    <!--<input id="tswitch" name="txz_tswitch" type="text" value="{$data.txz_tswitch}" class="form-control" >-->
+                                    <!--</input>-->
+                                <!--</div>-->
+                                <!--<div class="form-group_r">-->
+                                    <!--<label class="control-lable  ">交换机端口</label>-->
+                                    <!--<input id="tport" name="txz_tport" type="text" value="{$data.txz_tport}" class="form-control" >-->
+                                    <!--</input>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="heng">-->
+                                <!--<div class="form-group_l">-->
+                                    <!--<label class="control-lable  ">通信站意见</label>-->
+                                    <!--<input id="tresult" name="txz_tresult" type="text" value="{$data.txz_tresult}" class="form-control" >-->
+                                    <!--</input>-->
+                                <!--</div>-->
+                                <!--<div class="form-group_r">-->
+                                    <!--<label class="control-lable  ">实施人</label>-->
+                                    <!--<input id="taccountname" name="txz_taccountname" type="text" value="{$data.txz_taccountname}" class="form-control" >-->
+                                    <!--</input>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="heng">-->
+                                <!--<div class="form-group_l">-->
+                                    <!--<label class="control-lable  ">用料情况</label>-->
+                                    <!--<input id="meterial" name="txz_meterial" type="text" value="{$data.txz_meterial}" class="form-control" >-->
+                                    <!--</input>-->
+                                <!--</div>-->
+                                <!--<div class="form-group_r">-->
+                                    <!--<label class="control-lable  ">完成时间</label>-->
+                                    <!--<input id="completetime" name="txz_completetime" type="text" value="{$data.txz_completetime}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:dd'})" class="form-control" >-->
+                                    <!--</input>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="heng">-->
+                                <!--<div class="form-group_l">-->
+                                    <!--<label class="control-lable  ">备注</label>-->
+                                    <!--<input id="ps" name="txz_ps" type="text" value="{$data.txz_ps}" class="form-control" >-->
+                                    <!--</input>-->
+                                <!--</div>-->
+                                <!--<div class="form-group_r">-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary">提交</button>
+            <button type="button" data-dismiss="modal" class="btn btn-default" style="">取消</button>
+
+        </div>
+    </div>
+</div>
+
+<!--<link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLICOLD__/vendor/tabs/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/font-awesome.css?v=4.4.0" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/animate.css" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/style.css?v=4.0.0" rel="stylesheet"> -->
+<style type="text/css">
+    .modal-dialog{width:80%;height: 80%;margin-left:10%;}
+    .col-sm-6{width:100%;}
+    .heng{width:100%;height: 50px;}
+    .form-group_heng{width:90%;height: 50px;}
+    .form-group_l{width:48%;float: left;margin-top: 10px;}
+    .form-group_r{width:48%;float: right;margin-top: 10px;}
+    .form-group_l1{width:96%;float: left;margin-top: 10px;}
+    /*.form-group_r1{width:28%;float: right;margin-top: 10px;}*/
+    .form-group_l1 label{width:20%;float: left;margin-top: 7px;}
+    .form-group_r label{width:24%;float: left;margin-top: 7px;}
+    .form-group_l label{width:24%;float: left;margin-top: 7px;}
+    .form-control{width:70%;}
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function(e) {
+        var data_array="{$data.txz_type}".split(',');
+        $("input:checkbox").each(function(){
+            for (var i = 0; i < data_array.length; i++) {
+                var j=data_array[i];
+                $("input:checkbox[value='"+j+"']").attr('checked','true');
+            }});
+        $(".js-switch").each(function () {
+            new Switchery(this, {color: '#1AB394'});
+        });
+    });
+
+    $('#sys_dlg_submit').on('click',function() {
+        var formbody = $("#sys_dlg_form");
+        $.post('__CONTROLLER__/txzsubmit', formbody.serialize(), function (rep) {
+                    if (rep == "success") {
+                        $('#atpbiztable').bootstrapTable('refresh');
+                    } else {
+                        alert("保存失败！");
+                        $('#atpbiztable').bootstrapTable('refresh');
+                    }
+
+                }
+        );
+    });
+
+
+    $('#user_search').on('click',function() {
+        var username =$('#user_z').val();
+        $.post('__CONTROLLER__/getuserdept_z', {username:username}, function (rep) {
+            $('#depart').val(rep[0]);$('#office').val(rep[1]);
+        })
+    });
+</script>
+
+

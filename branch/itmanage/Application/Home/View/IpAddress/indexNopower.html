@@ -1,0 +1,203 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<style>
+    th{
+        text-align: center;
+    }
+    .form-control{
+        display: inline-block;
+        width: 250px;
+    }
+    .wrapper .wrapper-content{
+        padding-bottom: 0;
+    }
+    .control-label{
+        font-size: 14px!important;
+    }
+    .fixed-table-toolbar{
+        display: none;
+    }
+    table{
+        table-layout: fixed;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content " style="">
+    <div class="row">
+        <div class="col-sm-12">
+            <table id="atpbiztable" ></table>
+        </div>
+    </div>
+</div>
+<input type="hidden" value="{$status}" id="status">
+<input type="hidden" value="{$id}" id="id">
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script>
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '180px'});
+    fixed();
+    function fixed(){
+        var h  = $(window).height() - 80;
+        $('table').attr('data-height',h);
+    }
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getNopowerData',         //请求后台的URL（*）
+                method: 'post',                      //请求方式（*）
+                toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName: "ipb_atpid",
+                sortOrder: "asc",                   //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 18,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+//            strictSearch: true,
+//            showColumns: true,                  //是否显示所有的列
+//            showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "ipb_atpid",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                columns: [[
+                    {
+                        title: '序号', width: 40,
+                        formatter: function (value, row, index) {
+                            var option = $('#atpbiztable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'ipb_address', title: 'IP地址', sortable: true, width: 100},
+                    {field: 'ipb_status', title: '状态', sortable: true, width: 100, visible: true,
+                        formatter: function (value, row, index) {
+                            if(value == null || value == '0'){
+                                return '未使用';
+                            }else if(value == '1'){
+                                return '预分配'
+                            }else if(value == '2'){
+                                return '已使用'
+                            }
+
+                        }
+                    },
+                    {field: 'ipb_atpid', title: '操作', sortable: true, width: 100, visible: true,
+                        formatter: function (value, row, index) {
+                            var status  =row.ipb_status;
+                            var inp = "'" + row.ipb_atpid + "'";
+                            var ip = "'" + row.ipb_address + "'";
+                            if(status != 2){
+                                var a = '<a  class="btn btn-info btn-xs" onclick="updateInRow(' + inp + ')">修改</a><br>';
+                            }else{
+                                var a = '<a  class="btn btn-warning btn-xs" onclick="read(' + ip + ')">查看</a>';
+                            }
+                            return a;
+                        }
+                    }
+                ]
+                ]
+            });
+        }
+    }
+    TableObj.oTableInit();
+
+    function queryParams(params) {  //配置参数
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            status:$('#status').val(),
+            id:$('#id').val()
+        };
+        return temp;
+    }
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+
+    function updateInRow(id)
+    {
+        layer.open({
+            title:'管理员手册更新页面',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/word?id='+id,
+            area: ['95%', '95%']
+        });
+    }
+
+    function guanLi(id)
+    {
+        layer.open({
+            title:'运维知识项管理页面',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            cancel:function(){$('#sys_refresh').click();},
+            content: '__CONTROLLER__/knowledge?id='+id+'&version='+'管理员',
+            area: ['95%', '92%']
+        });
+    }
+
+    function yongHu(id)
+    {
+        layer.open({
+            title:'运维知识项管理页面',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            cancel:function(){$('#sys_refresh').click();},
+            content: '__CONTROLLER__/knowledge?id='+id+'&version='+'用户',
+            area: ['95%', '92%']
+        });
+    }
+
+    function updateInRow(id)
+    {
+        layer.open({
+            title:'IP地址状态修改',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/status?id='+id,
+            area: ['70%', '40%']
+        });
+    }
+
+    function read(ip)
+    {
+        layer.open({
+            title:'IP地址'+'--'+ip,
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/indexView?ip='+ip,
+            area: ['99%', '99%']
+        });
+    }
+
+
+</script>
+</body>
+
+</html>
+
+
+
+

@@ -1,0 +1,257 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+     
+    <style>
+        .table{max-width: none;}
+        .pull-left{width:100%;}
+        #atpbiztoolbar{width:100%;}
+        #dic_name{width: 20%;float: left;margin-right: 5px;}
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <div id="atpbiztoolbar" >
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">登录名&nbsp;</label>
+                            <input  id="account" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;" >
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">计算机名&nbsp;</label>
+                            <input  id="computername" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;" >
+                        </div>
+                        <div style="float:left;width:100%;margin-top: 5px;">
+                            <button class="btn btn-success " type="button" id="sys_search"><i class="fa fa-search"></i>&nbsp;查询</button>
+                        </div>
+                    </div>
+                    <table id="atpbiztable" ></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<script>
+
+    $(function () {
+        $('#atpbiztable').bootstrapTable({
+            url: '__CONTROLLER__/getData2',         //请求后台的URL（*）
+            method: 'post',                      //请求方式（*）
+            toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            iconSize: 'outline',
+            sortable: true,                     //是否启用排序
+            sortName:"t_arrivetime",
+            sortOrder: "asc",                   //排序方式
+            queryParams: queryParams,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber: 1,                       //初始化加载第一页，默认第一页
+            pageSize: 10,                       //每页的记录行数（*）
+            pageList: [5,10, 25, 50, 100],        //可供选择的每页的行数（*）
+            search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+//            strictSearch: true,
+            showColumns: false,                  //是否显示所有的列
+            showRefresh: false,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+            clickToSelect: false,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            uniqueId: "t_atpid",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+            detailView: false,                   //是否显示父子表
+            detailFormatter: "detailFormatter",
+            columns: [
+                [
+//                    {checkbox: true},
+                    {title: '序号', width: 40,
+                        formatter: function (value, row, index){
+                            var option =  $('#atpbiztable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'taskidurl', title: '登录名', sortable: true},
+                    {field: 't_name', title: '显示名称', sortable: true},
+                    {field: 't_problemtype', title: '密级', sortable: true},
+                    {field: 'bdidurl', title: '部门', sortable: true},
+                    {field: 't_rwtype', title: '处室', sortable: true},
+                    {field: 't_tasktype', title: '描述', sortable: true},
+                    {field: 't_arrivetime', title: '登录到', sortable: true},
+                    {field: 't_atpid', title: '操作', sortable: false,width:60,
+                        formatter: function (value, row, index) {
+                            var inp = "'"+  value +"'";
+                            var a = '<a  class="btn btn-info btn-xs" onclick="updateInRow(' + inp + ')">处理</a><br>';
+                            return a;
+                        }
+                    },
+                    {field: 't_atpid', title: '主键', sortable: true, visible:false}
+                ]
+            ],
+            onSort: function (name, order) {
+            },
+        });
+    });
+    function queryParams(params) {  //配置参数
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            search: params.search,
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            account: $('#account').val(),
+            computername: $('#computername').val()
+        };
+        return temp;
+    }
+    $('#sys_search').on('click',function() {
+        $('#atpbiztable').bootstrapTable('refresh')
+    });
+    function dataCellFormatter(value, row) {
+        var color = '#'+Math.floor(Math.random() * 6777215).toString(16);
+        return '<div  style="color: ' + color + '">' + '<i class="glyphicon glyphicon-usd"></i>' + value + '</div>';
+    }
+    function updateInRow(id)
+    {
+        $.post('__CONTROLLER__/gettask', {id: id}, function (rep) {
+            var lastid = $('#t_atpid').val();
+            var typearr = eval("(" + rep + ")");
+            if(lastid !="" && typearr['t_atpid'] !=lastid)
+            {
+                alert("您有正在处理的工单，请完成处理");
+            }
+            else{
+                if(typearr['t_tasktype'] == '一线')
+                {
+                    if (typearr['t_rwtype'] == 'BD') {
+                        $("#sovltype").children().remove();
+                        var item = "";
+                        item += "<option value='' selected='selected'></option>";
+                        item += "<option value='1' >正常处理</option>";
+                        item += "<option value='2' >跳过处理</option>";
+                        $("#sovltype").append(item);
+                        $("#erxianperson").hide();
+                        $("#sys_bd").show();
+                    }
+                    else if (typearr['t_rwtype'] == 'BZ') {
+                        $("#sovltype").children().remove();
+                        var item = "";
+                        item += "<option value='' selected='selected'></option>";
+                        item += "<option value='1' >正常处理</option>";
+                        item += "<option value='2' >跳过处理</option>";
+                        $("#sovltype").append(item);
+                        $("#erxianperson").hide();
+                    }
+                    else if (typearr['t_rwtype'] == 'YW') {
+                        $("#sovltype").children().remove();
+                        var item = "";
+                        item += "<option value='' selected='selected'></option>";
+                        item += "<option value='1' >正常处理</option>";
+                        item += "<option value='2' >跳过处理</option>";
+                        item += "<option value='3' >转派二线</option>";
+                        item += "<option value='2' >转派通信站</option>";
+                        $("#sovltype").append(item);
+                    }
+                }
+                else if(typearr['t_tasktype'] == '二线')
+                {
+                    $("#sovltype").children().remove();
+                    var item = "";
+                    item += "<option value='' selected='selected'></option>";
+                    item += "<option value='1' >正常处理</option>";
+                    item += "<option value='2' >跳过处理</option>";
+                    $("#sovltype").append(item);
+//                    $("#erxianperson").hide();
+
+                }
+                $('#telphone').attr("value", typearr['t_phone']);
+                $('#person').attr("value", typearr['t_name']);
+                $('#depart').attr("value", typearr['t_depart']);
+                $('#zd_memo').attr("value", typearr['t_description']);
+                $('#taskid').attr("value", typearr['t_taskid']);
+                $('#workid').attr("value", typearr['t_rwid']);
+                $('#arrivetime').attr("value", typearr['t_arrivetime']);
+                $('#t_atpid').attr("value", typearr['t_atpid']);
+                $('#problemtype').attr("value", typearr['t_problemtype']);
+                $('#taskfrom').attr("value", typearr['t_rwtype']);
+                $('#t_tasktype').attr("value", typearr['t_tasktype']);
+
+            }
+        });
+
+    }
+    function submitdata() {
+        var formbody = $("#sys_dlg_form");
+        $.post('__CONTROLLER__/submit', formbody.serialize(),function (rep) {
+            if(rep == "success"){
+                $('#atpbiztable').bootstrapTable('refresh');
+            }else{
+                alert("保存失败！");
+                $('#atpbiztable').bootstrapTable('refresh');
+            }
+
+        }
+        );
+    }
+    function opentaskdetail(taskid){
+        $("#sys_dlg").load('__CONTROLLER__/detail?id='+taskid, function() {
+            $("#sys_dlg").modal({backdrop: false});
+        });
+
+    }
+    function openbddetail(bdid){
+        $("#sys_dlg").load('__CONTROLLER__/bddetail?id='+bdid, function() {
+            $("#sys_dlg").modal({backdrop: false});
+        });
+
+    }
+
+</script>
+</body>
+
+</html>
+
+
+
+

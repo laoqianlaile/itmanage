@@ -1,0 +1,550 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>漏洞扫描设备管理添加编辑</title>
+<style>
+   .form-group {
+      margin-top: 26px;
+   }
+
+   .control-label {
+      width: 150px !important;
+   }
+
+   .must_filter {
+      color: red;
+   }
+
+   .form-control {
+      display: inline-block;
+   }
+
+   .col-sm-3 {
+      width: 60% !important;
+   }
+
+   .chosen-container {
+      top: -1px;
+   }
+
+   .chosen-container .chosen-results {
+      max-height: 180px;
+   }
+
+   .chosen-container {
+      height: 100%;
+   }
+</style>
+
+<body style="margin: 0 auto;">
+   <form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+      <div class="tab-content" style="padding-bottom: 50px;">
+         <div class="panel-body">
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>设备编码 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="ls_devicecode" id="ls_devicecode"
+                        value="<?php if(!empty($data['ls_devicecode']))echo $data['ls_devicecode']; ?>">
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>部标编码 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="ls_anecode" id="ls_anecode"
+                        value="<?php if(!empty($data['ls_anecode']))echo $data['ls_anecode']; ?>">
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>IP地址 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="ls_ip" id="ls_ip"
+                        value="<?php if(!empty($data['ls_ip']))echo $data['ls_ip']; ?>">
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>子网掩码 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="ls_mask" id="ls_mask"
+                        value="<?php if(!empty($data['ls_mask']))echo $data['ls_mask']; ?>">
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>默认网关 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="ls_gateway" id="ls_gateway"
+                        value="<?php if(!empty($data['ls_gateway']))echo $data['ls_gateway']; ?>">
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>MAC地址 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="ls_mac" id="ls_mac"
+                        value="<?php if(!empty($data['ls_mac']))echo $data['ls_mac']; ?>">
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>名称 <span class="must_filter">*</span></label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="ls_name" id="ls_name"
+                        value="<?php if(!empty($data['ls_name']))echo $data['ls_name']; ?>">
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>主要用途 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="ls_usage" id="ls_usage"
+                        value="<?php if(!empty($data['ls_usage']))echo $data['ls_usage']; ?>">
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>厂家 </label>
+                  <div class="col-sm-3">
+                     <select name="ls_factory" id="ls_factory" class="chosen-select">
+                        <option value=""> </option>
+                        <?php foreach($changJia as $key=>$value){ ?>
+                        <option <?php if($data['ls_factory'] == $value['dic_name']) echo 'selected'; ?>
+                           value="{$value.dic_id}">{$value.dic_name}</option>
+                        <?php } ?>
+                     </select>
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>型号 </label>
+                  <div class="col-sm-3">
+                     <select name="ls_modelnumber" id="ls_modelnumber" class="chosen-select">
+                        <option value=""> </option>
+                     </select>
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>出厂编号 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="ls_sn" id="ls_sn"
+                        value="<?php if(!empty($data['ls_sn']))echo $data['ls_sn']; ?>">
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>使用状态 </label>
+                  <div class="col-sm-3">
+                     <select name="ls_status" id="ls_status" class="chosen-select">
+                        <option value=""></option>
+                        <?php foreach($zhuangTai as $key=>$value){ ?>
+                        <option <?php if($data['ls_status'] == $value['dic_name']) echo 'selected'; ?>
+                           value="{$value.dic_name}">{$value.dic_name}</option>
+                        <?php } ?>
+                     </select>
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>密级 </label>
+                  <div class="col-sm-3">
+                     <select name="ls_secretlevel" id="ls_secretlevel" class="chosen-select">
+                        <option value=""> </option>
+                        <?php foreach($miJi as $key=>$value){ ?>
+                        <option <?php if($data['ls_secretlevel'] == $value['dic_name']) echo 'selected'; ?>
+                           value="{$value.dic_name}">{$value.dic_name}</option>
+                        <?php } ?>
+                     </select>
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>资产来源 </label>
+                  <div class="col-sm-3">
+                     <select name="ls_assetsource" id="ls_assetsource" class="chosen-select">
+                        <option value=""> </option>
+                        <?php foreach($ziYuanLaiYuan as $key=>$value){ ?>
+                        <option <?php if($data['ls_assetsource'] == $value['dic_name']) echo 'selected'; ?>
+                           value="{$value.dic_name}">{$value.dic_name}</option>
+                        <?php } ?>
+                     </select>
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>资产责任单位 </label>
+                  <div class="col-sm-3">
+                     <select name="ls_assetdutydept" id="ls_assetdutydept" class="chosen-select" >
+                        <option value="<?php echo $dutydept['id'];?>"><?php echo $dutydept['name'];?></option>
+                     </select>
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>使用责任单位 </label>
+                  <div class="col-sm-3">
+                     <select  name="ls_assetusedept" id="ls_assetusedept" class="chosen-select" >
+                        <option value="<?php echo $usedept['id'];?>"><?php echo $usedept['name'];?></option>
+                     </select>
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>采购日期 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="ls_purchasetime"
+                        id="ls_purchasetime"
+                        value="<?php if(!empty($data['ls_purchasetime']))echo $data['ls_purchasetime']; ?>"
+                        onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>启用日期 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="ls_startusetime"
+                        id="ls_startusetime"
+                        value="<?php if(!empty($data['ls_startusetime']))echo $data['ls_startusetime']; ?>"
+                        onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>地区 </label>
+                  <div class="col-sm-3">
+                     <select name="ls_area" id="ls_area" class="chosen-select">
+                        <option value=""> </option>
+                        <?php foreach($diQu as $key=>$value){ ?>
+                        <option <?php if($data['ls_area'] == $value['dic_name']) echo 'selected'; ?>
+                           value="{$value.dic_id}">{$value.dic_name}</option>
+                        <?php } ?>
+                     </select>
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>楼宇 </label>
+                  <div class="col-sm-3">
+                     <select name="ls_belongfloor" id="ls_belongfloor" class="chosen-select">
+                        <option value=""> </option>
+                     </select>
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>责任人 </label>
+                  <div class="col-sm-3">
+                     <select name="ls_dutyman" id="ls_dutyman" class="chosen-select">
+                        <option value="<?php echo $dutuser['username'];?>"><?php echo $dutuser['name'];?></option>
+                     </select>
+                  </div>
+               </div>
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>使用人 </label>
+                  <div class="col-sm-3">
+                     <select name="ls_useman" id="ls_useman" class="chosen-select">
+                        <option value="<?php echo $userman['username'];?>"><?php echo $userman['name'];?></option>
+                     </select>
+                  </div>
+               </div>
+            </div>
+            <!-- <div class="form-group">
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>责任部门 </label>
+                    <div class="col-sm-3" >
+                    <select  name="ls_dutydept" id="ls_dutydept" class="chosen-select" ></select>
+                   </div>
+                </div>
+                <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>使用部门 </label>
+                     <div class="col-sm-3" >
+                     <select  name="ls_usedept" id="ls_usedept" class="chosen-select" ></select>
+                    </div>
+                 </div>
+                
+
+           </div> -->
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>房间号 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="ls_roomno" id="ls_roomno"
+                        value="<?php if(!empty($data['ls_roomno']))echo $data['ls_roomno']; ?>">
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>所属网络 </label>
+                  <div class="col-sm-3">
+                     <select name="ls_net" id="ls_net" class="chosen-select">
+                        <option value=""> </option>
+                        <?php foreach($suoShuWangLuo as $key=>$value){ ?>
+                        <option <?php if($data['ls_net'] == $value['dic_name']) echo 'selected'; ?>
+                           value="{$value.dic_name}">{$value.dic_name}</option>
+                        <?php } ?>
+                     </select>
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>备注 </label>
+                  <div class="col-sm-3">
+                     <textarea name="ls_remark" id="ls_remark" style="height:40px"
+                        class="form-control"><?php if(!empty($data['ls_remark']))echo $data['ls_remark']; ?></textarea>
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>有效期 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="ls_yxq" id="ls_yxq"
+                        value="<?php if(!empty($data['ls_yxq']))echo $data['ls_yxq']; ?>"
+                        onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>证书名称 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="ls_zsname" id="ls_zsname"
+                        value="<?php if(!empty($data['ls_zsname']))echo $data['ls_zsname']; ?>">
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>证书编号 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="ls_zssn" id="ls_zssn"
+                        value="<?php if(!empty($data['ls_zssn']))echo $data['ls_zssn']; ?>">
+                  </div>
+               </div>
+
+            </div>
+         </div>
+         <input type="hidden" value="<?php if(!empty($data['ls_atpid'])) echo $data['ls_atpid']; ?>" name="ls_atpid">
+      </div>
+   </form>
+   <div class="modal-footer" style="margin: 0px;text-align:center;z-index: 999;position: fixed;bottom:0;left:0;font-family: cursive; width: 100%;height: 60px;background-color: #fff;">
+      <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="display:inline-block;text-align:center;">保存</button>
+  </div>
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+   $(function () {
+      layui.use('layer', function () {
+         layer = layui.layer;
+      })
+      $('#sys_dlg_submit').click(function () {
+         $('#sys_dlg_form1').submit();
+      })
+      var input_width = parseInt($('.form-control').eq(0).css('width').replace('px', ''));
+      $('.chosen-select').chosen({ disable_search_threshold: 0, search_contains: true, width: input_width + 'px' });
+      //使用人
+      $('#ls_useman').ajaxChosen({
+         dataType: 'json',
+         type: 'post',
+         url: '__MODULE__/org/assignuser'
+      }, {
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+         });
+      //责任人
+      $('#ls_dutyman').ajaxChosen({
+         dataType: 'json',
+         type: 'post',
+         url: '__MODULE__/org/assignuser'
+      }, {
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+         });
+         //使用责任单位
+        $('#ls_assetusedept').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assigndept'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        //资产责任单位
+        $('#ls_assetdutydept').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assigndept'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+      //选择地区触发楼宇
+      $('#ls_area').change(function () {
+         var id = $(this).val();
+         dic_louyu(id);
+      });
+
+      //设置楼宇
+      var areaid = $("#ls_area").val();
+      if (areaid != '') {
+         var next_id = "<?php echo $data['ls_belongfloor'];?>";
+         dic_louyu(areaid, next_id);
+      }
+
+      //楼宇
+      function dic_louyu(id, next_id) {
+         if (next_id == 'undefined') { next_id = '' }
+         if (!id) return false;
+         $.ajax({
+            type: 'post',
+            url: '__MODULE__/dic/getDicLouYu',
+            data: { pid: id },
+
+            dataType: 'json',
+            success: function (data) {
+               if (data.code > 0) {
+                  var str = '<option value=""> </option>';
+                  $.each(data.results, function (k, v) {
+                     var sele = '';
+                     if (next_id == v['dic_name']) { sele = 'selected' }
+                     str += "<option " + sele + " value='" + v['dic_id'] + "'>" + v['dic_name'] + "</option>";
+                  });
+                  $('#ls_belongfloor option').remove();
+                  $('#ls_belongfloor').append(str);
+                  $('#ls_belongfloor').trigger("chosen:updated");
+               } else {
+                  layer.alert(data.message);
+               }
+            },
+            error: function () {
+               layer.alert('出错啦！请联系管理员');
+            }
+         });
+      }
+
+      //选择厂家触发型号
+      $('#ls_factory').change(function () {
+         var id = $(this).val();
+         dic_xinghao(id);
+      });
+      //设置型号
+      var factoryid = $("#ls_factory").val();
+      if (factoryid != '') {
+         var next_id = "<?php echo $data['ls_modelnumber'];?>";
+         dic_xinghao(factoryid, next_id);
+      }
+      //型号
+      function dic_xinghao(id, next_id) {
+         if (next_id == 'undefined') { next_id = '' }
+         if (!id) return false;
+         $.ajax({
+            type: 'post',
+            url: '__MODULE__/dic/getDicXingHao',
+            data: { pid: id, pid2: '漏洞扫描设备' },
+            dataType: 'json',
+            success: function (data) {
+               if (data.code > 0) {
+                  var str = '<option value=""> </option>';
+                  $.each(data.results, function (k, v) {
+                     var sele = '';
+                     if (next_id == v['dic_name']) { sele = 'selected' }
+                     str += "<option " + sele + " value='" + v['dic_id'] + "'>" + v['dic_name'] + "</option>";
+                  });
+                  $('#ls_modelnumber option').remove();
+                  $('#ls_modelnumber').append(str);
+                  $('#ls_modelnumber').trigger("chosen:updated");
+               } else {
+                  layer.alert(data.message);
+               }
+            },
+            error: function () {
+               layer.alert('出错啦！请联系管理员');
+            }
+         });
+      }
+      $.validator.setDefaults({
+         highlight: function (element) {
+            $(element).parent().remove('has-success').addClass('has-error');
+         },
+         success: function (element) {
+            $(element).parent().remove('has-error').addClass('has-success');
+         },
+         errorPlacement: function (error, element) {
+            if (element.is(":radio") || element.is(":checkbox")) {
+               error.appendTo(element.parent());
+            } else {
+               error.appendTo(element.parent());
+            }
+         },
+         errorClass: "help-block m-b-none",
+         validClass: "help-block m-b-none"
+      });
+      $('#sys_dlg_form1').validate({
+         onclick: false,
+         onfocusout: false,
+         onkeyup: false,
+         // 如果是下拉菜单，这里的require是不生效的，需要自己在submitHandle方法中添加验证
+         rules: {
+            ls_name: 'required'
+         },
+         messages: {
+            ls_name: '请输入名称'
+         }, submitHandler: function () {
+            var ls_status = $('#ls_status').val();
+            if(ls_status == null){
+               layer.alert("使用状态不可为空！");
+               return false;
+            }
+            var formBody = $('#sys_dlg_form1');
+            $.post('__CONTROLLER__/addData', formBody.serialize(), function (data) {
+               if (data.code > 0) {
+                  parent.$('#atpbiztable').bootstrapTable('refresh');
+                  var index = parent.layer.getFrameIndex(window.name);
+                  parent.layer.close(index);
+               } else {
+                  layer.alert(data.message);
+               }
+            }, 'JSON');
+         }
+      });
+   });
+    //如果验证下拉框必填，请使用该方法
+//    function checkSelectForm(objArr, messageArr){
+//        var len = objArr.length;
+//        for(var i=0;i<len;i++){
+//            var obj = objArr[i];
+//            var val = $('#'+obj).val();
+//            if(!val){
+//                layer.msg('请选择'+messageArr[i]);
+//                $('#'+obj).trigger('chosen:open');
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+</script>

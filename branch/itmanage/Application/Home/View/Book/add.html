@@ -1,0 +1,269 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>运维知识项编辑</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLIC__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLIC__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+
+    <script src="__PUBLIC__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLIC__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="__PUBLIC__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLIC__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+
+    <script type="text/javascript" charset="utf-8" src="__PUBLIC__/vendor/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="__PUBLIC__/vendor/ueditor/ueditor.all.min.js"> </script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLIC__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLIC__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+
+        .an button{
+            width: 100px;
+            height: 30px;
+            font-weight: bold;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+        .an{
+            margin-top: 50px;
+        }
+        #editor{
+            float:left;
+            width:85%;
+        }
+        .col-sm-12{
+            width:100%;
+        }
+        .control-label{
+            font-size: 14px!important;
+            margin-top: 7px;
+        }
+        .form-control{
+            display: inline-block;
+            width: 300px;
+        }
+        font{
+            font-weight: bold;
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <form id="atpform" role="form"　class="form-inline">
+            <div class="ibox-content" style="padding:5%;padding-top:1%;">
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline" style="float: left;display: block;width: 50%;float: left;">
+                        <label class='col-sm-2 control-label' style="width: 35%">应用系统 </label>
+                        <input type="text" value="{$appname}" class="form-control" style="border: 0px;background-color: white;width:65%" readonly>
+                    </div>
+                    <div class="form-group form-inline" style="display: block;width: 50%;float: left;">
+                        <label class=' col-sm-2 control-label' style="width: 35%;">所属模块 </label>
+                        <input type="text" class="form-control" name="amdi_itemmodel" id="amdi_itemmodel" style="width: 62%" value="{$data.amdi_itemmodel}">
+                    </div>
+                </div>
+                <div class="row row-lg" style="width:100%;">
+                    <div class="form-group form-inline" style="display: block">
+                        <label class=' col-sm-2 control-label' style="width:16%">知识项名称（<font>*</font>）</label>
+                        <input type="text" class="form-control" name="amdi_itemname" id="amdi_itemname" style="width: 82.5%;" value="{$data.amdi_itemname}">
+                    </div>
+                </div>
+                <div class="row row-lg" style="width:100%;">
+                    <div class="form-group form-inline" style="float: left;display: block;width: 50%;">
+                        <label class='col-sm-2 control-label' style="width: 32%;">知识项应用对象</label>
+                        <select  name="amdi_itemtype" class="form-control" style="width:65%" >
+                            <foreach name="ying" item="val">
+                                <option value="{$val.dic_name}" <?php if($version == $val['dic_name'])echo selected;?>>{$val.dic_name}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                    <div class="form-group form-inline" style="display: block;width: 50%;float: left;">
+                        <label class=' col-sm-2 control-label' style="width: 35%;">是否在小Q中置顶</label>
+                        <select name="amdi_istop" class="form-control" style="width:62%" >
+                            <option value=""></option>
+                            <if condition="$data['amdi_istop'] eq null">
+                                <option value="否" selected>否</option>
+                                <option value="是" >是</option>
+                            <else/>
+                                <foreach name="is" item="val">
+                                    <option value="{$val.dic_name}" <?php if($val['dic_name'] == $data['amdi_istop'])echo selected;?>>{$val.dic_name}</option>
+                                </foreach>
+                            </if>
+                        </select>
+                    </div>
+                </div>
+                <div class="row row-lg" style="width:100%;">
+                    <div class="form-group form-inline" style="display: block">
+                        <label class=' col-sm-2 control-label' style="width: 16%">关键词</label>
+                        <input type="text" class="form-control" name="amdi_itemkeywords" style="width: 82.5%" value="{$data.amdi_itemkeywords}"><br/>
+                        <font style="margin-left: 16%;">以空格分割。例如：学习 入门 新手指南</font>
+                    </div>
+                </div>
+                <div class="row row-lg" style="width:100%;">
+                    <div class="form-group form-inline" style="display: block">
+                        <label class=' col-sm-2 control-label' style="width: 16%">链接文字</label>
+                        <input type="text" class="form-control" name="amdi_itemtext" style="width: 82.5%;" value="{$data.amdi_itemtext}"><br/>
+                        <font style="margin-left: 16%;">用于小Q回复用户外部链接时显示。例如：查看培训手册请点击这里</font>
+                    </div>
+                </div>
+                <div class="row row-lg" style="width:100%;">
+                    <div class="form-group form-inline" style="display: block">
+                        <label class=' col-sm-2 control-label' style="width: 16%">链接文字对应地址</label>
+                        <input type="text" class="form-control" name="amdi_itemtextlink" style="width: 82.5%" value="{$data.amdi_itemtextlink}"><br/>
+                        <font style=";margin-left: 16%;">用于小Q回复用户的外部链接。例如：http://www.portal.cast/ztzl/avidm/Pages/培训手册.aspx</font>
+                    </div>
+                </div>
+                <div class="row row-lg" style="width:100%;">
+                    <div class="form-group form-inline" style="display: block">
+                        <label class=' col-sm-2 ' style="width: 16%">文字版解决方案</label>
+                        <textarea  class="form-control" name="amdi_itemtextcontent" style="width: 82.5%;height: 150px;">{$data.amdi_itemtextcontent}</textarea><br/>
+                        <font style="margin-left: 16%;">面向用户的知识项不得出现用户名和密码</font>
+                    </div>
+                </div>
+                <div class="row row-lg" style="width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-12 form-inline" style="width:100%;">
+                            <label class="control-lable" style="width:120px;margin-right:1.5%;vertical-align: top;float: left;">图文版解决方案</label>
+                            <font>面向用户的知识项不得出现用户名和密码,URL地址一定要增加超链接，方便点击，图片不要缩放</font>
+                            <div id="editors" class="" style="margin: 0;width:100%;"><script id="editor" type="text/plain" style="height:500px;">{$data.amdi_itemcontent}</script></div>
+                            <textarea name="amdi_itemcontent" id="m_content"  class="form-control" style="width: 85%;height: 200px;display:none;float: left;">{$data.amdi_itemcontent}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="an" style="text-align: center">
+                    <input type="hidden" name="amdi_amdid" id="amdid" value="{$amdid}"/>
+                    <input type="hidden" name="amdi_atpid" id="amdi_atpid" value="{$data.amdi_atpid}"/>
+                    <button type="button" style="background-color:#104aad;color:#fff" onclick="submitMatter();">提交</button>
+                    <!--<button type="button" id="cancel">取消</button>-->
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+    <div id="sys_dept" role="dialog" class="modal fade "></div>
+    <div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+        <div class="modal-dialog" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">处理中</h4>
+                </div>
+                <div class="modal-body">
+                    <img src="__PUBLIC__/img/loading/loading8.gif" style='display: block;margin: 0 auto'>
+                    <div id="loadingText" style="text-align: center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<script>
+    CHOSEN_DEFAULT_TEXT ="";
+</script>
+<script>
+
+
+    $(function () {
+        var ue = UE.getEditor('editor',{
+            toolbars:[
+                ['fullscreen',
+                    'bold', 'italic', 'underline', 'autotypeset', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|',
+                    'rowspacingtop', 'rowspacingbottom', 'lineheight', '|', 'paragraph', 'fontfamily', 'fontsize', '|', 'indent',
+                    'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|',
+                    'simpleupload', 'horizontal','link','snapscreen','|']
+            ]
+        });
+
+        ue.ready(function(){
+            var htmlStr = $('#m_content').val();
+            ue.setContent(htmlStr);
+        });
+
+    });
+
+    function submitMatter(){
+
+        $('#m_content').val(UE.getEditor('editor').getContent());
+        var m_content  = $('#m_content');
+//        var m_mtid     = $("#m_mtid");
+        var res = checkSub([m_content]); //验证非空
+        var formbody   = $("#atpform");
+        // var amdi_itemmodel = $('#amdi_itemmodel').val();
+        var amdi_itemname = $('#amdi_itemname').val();
+        // if(amdi_itemmodel == ''){
+        //     alert("知识项分类不可为空！");
+        //     return false;
+        // }
+        if(amdi_itemname == ''){
+            alert("知识项名称不可为空！");
+            return false;
+        }
+        $.ajax({
+            type:'post',
+            url:'__CONTROLLER__/Mattersubmit',
+            data:formbody.serialize(),
+            beforeSend:function(){
+                $("#loadingText").html("正在处理请稍后");
+                $('#loading').modal('show');
+            },
+            success:function(res){
+                if(res.code != 0){
+                    alert(res.message);
+                    return false;
+                }else{
+                    alert(res.message);
+                    parent.$('#atpbiztable').bootstrapTable('refresh');
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                }
+            },
+            complete:function(){
+                $('#loading').modal('hide');
+            },
+            dataType:'json'
+        });
+    }
+
+    function checkSub(para){
+        var err  = 0;
+        for(var i = 0;i<para.length;i++){
+            if(para[i].val() == ''){
+                para[i].parent().addClass('has-error');
+                err = 1;
+            }else{
+                para[i].parent().removeClass('has-error');
+                para[i].parent().addClass('has-success');
+            }
+        }
+        if(err == 1){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+
+
+</script>
+</body>
+
+</html>
+
+
+
+

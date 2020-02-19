@@ -1,0 +1,354 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link rel="stylesheet" href="__PUBLIC__/vendor/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<title>部门树</title>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    html,body{
+        width: 100%;
+        height: 100%;
+        *overflow: hidden;
+        font-family: 微软雅黑;
+    }
+    #main{
+        width:100%;
+        height:100%;
+        position:relative;
+        min-width: 1270px;
+        margin:0 auto;
+    }
+    .form-group >div{
+        margin-top: 3px;
+        margin-bottom: 3px;
+    }
+    .control-label:nth-of-type(even){
+        margin-left: 0 !important;
+    }
+    .z-tab button{
+        margin: 10px;
+        display: inline-block;
+    }
+    #search {
+        width: 50px;
+        border: 0;
+        height: 30px;
+        background-color: #009688;
+        line-height: 24px;
+        color: #fff;
+    }
+    .row{
+        margin: 0;
+    }
+    #treearea{
+        position: absolute;
+        left:5px;
+        top:5px;
+        bottom:0;
+        width:300px;
+        height:auto;
+        overflow:auto;
+        border: 1px solid grey;
+    }
+    #atp_wrapper{
+        position: absolute;
+        top:5px;
+        left: 310px;
+        right: 5px;
+        bottom:0;
+        width: auto;
+        height:auto;
+        overflow: hidden;
+        border: 1px solid grey;
+    }
+    #atp_wrapper #top_nav{
+        position: absolute;
+        top:5px;
+        left:5px;
+        right:5px;
+        width:auto;
+        height:50px;
+    }
+    #atp_wrapper .content{
+        position: absolute;
+        top:55px;
+        left:5px;
+        right: 5px;
+        bottom: 5px;
+        height: auto;
+        width: auto;
+        overflow: auto;
+    }
+    .show_div{
+        display: none;
+        height:100%;
+        overflow-y: auto
+    }
+    #atpbiztable td{
+        vertical-align:middle;
+    }
+    iframe{
+        width: 100%;
+        height:100%;
+        overflow-y:hidden;
+        border: none;
+    }
+    /*::-webkit-scrollbar{*/
+    /*display: none;*/
+    /*}*/
+    #top_nav .z-tab{
+        display: inline-block;
+    }
+    #top_nav .z-tab button{
+        width: 150px;
+        margin-left: -4px;
+        color: black;
+    }
+    #search_project_name{
+        border-top: 1px solid #a9a9a9!important;
+        border-bottom: 1px solid #a9a9a9;
+        border-left: 1px solid #a9a9a9!important;
+        border-right: 1px solid #a9a9a9;
+    }
+    .arrow{
+        position: absolute;
+        top: 50%;
+        left: 292px;
+        margin-top: -15px;
+        display: block;
+        width: 18px;
+        height: 30px;
+        background: #009cd6;
+        z-index: 6666666;
+        text-align: center;
+    }
+    .arrow:hover{
+        background: #009688;
+    }
+    .arrow i{
+        display: inline-block;
+        line-height: 30px;
+        color: #fff;
+    }
+</style>
+<body>
+<div id="main">
+    <!--treearea start-->
+    <div id="treearea">
+        <div class="content_wrap" style="overflow-x: hidden;min-height: 300px;">
+            <div class="zTreeDemoBackground left" style="float: left;">
+                <div>
+                    <p  style="font-size: 15px;height: 30px;line-height: 30px;margin-bottom: 0;margin-top: 10px;text-align: left;">&nbsp;&nbsp;部门列表</p>
+                    <hr style="height: 1px;border: none;border-top: 3px solid #18a594;margin-top: 0;margin-bottom: 0;margin-left: 10px;">
+                </div>
+
+                <div style="margin-top: 4px;*margin-top:4px;width: 100%;">
+                    <div style="display: inline-block;margin-left: 7px;">
+                        <select name="" id="org_type" class="chosen-select">
+                            <option value="外部组织" >外部组织</option>
+                            <option value="内部部门" selected>内部部门</option>
+                        </select>
+                    </div>
+                    <input  id="org_name" value=""  class="form-control" style="width: 100px;height: 33px;margin-left: 3px;display: inline-block"/>
+                    <input type="button" id="search" value="搜索"/>
+                </div>
+                <ul id="treeDemo"  class="ztree" style="width: 290px;border:0;"></ul>
+            </div>
+        </div>
+    </div>
+    <!--treearea end-->
+
+
+    <span class="arrow">
+        <i class="fa fa-angle-double-left" ></i>
+    </span>
+
+    <div id="atp_wrapper">
+        <!-- <div style="margin-top: 15px;">
+            <button class="btn btn-info" style="margin-left: 10px;" type="button" id="sys_refresh"><i class="fa fa-eraser"></i>查询</button>
+        </div> 
+
+        <div class="content">
+            <table id="atpbiztable" ></table>
+        </div>-->
+    </div>
+</div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLIC__/img/loading/loading9.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" name="choosemenu" id="choosemenu" value=""/>
+<input type="hidden" id="sort" >
+<input type="hidden" id="sortOrder" >
+</body>
+<script src="__PUBLIC__/vendor/jquery/jquery1.11.1.js"></script>
+<script src="__PUBLIC__/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="__PUBLIC__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+<script src="__PUBLIC__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+<script type="text/javascript" src="__PUBLIC__/vendor/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script type="text/javascript" src="__PUBLIC__/vendor/layui/layui.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/banBackSpace.js"></script>
+
+<script type="text/javascript">
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+    $(".chosen-select").chosen({disable_search_threshold: 10, search_contains: false, width: '110px'});
+
+    $('.arrow').click(function(){
+        if($('#treearea').is(':visible')){
+            $('#atp_wrapper').stop().animate({left:'5px'});
+            $('.arrow').stop().animate({left:'2px'});
+            $('#treearea').hide(300);
+            $('.arrow i').removeClass('fa fa-angle-double-left').addClass('fa fa-angle-double-right');
+        }else{
+            $('#atp_wrapper').stop().animate({left:'310px'});
+            $('.arrow').stop().animate({left:'292px'});
+            $('#treearea').show(300);
+            $('.arrow i').removeClass('fa fa-angle-double-right').addClass('fa fa-angle-double-left');
+        }
+    })
+
+    $('#org_name').bind('keypress', function (event) {
+        if(event.keyCode == "13"){
+            if($(this).val() != ''){
+                refreshZTree();
+            }
+        }
+    })
+    var setting = {
+        view: {
+            selectedMulti: false
+        },
+        data: {
+            simpleData: {
+                enable: true,
+                idKey: "id",
+                pIdKey: "pid",
+                rootPId: '0'
+            }
+        },
+        callback: {
+            onClick:onClick
+        }
+    };
+    var zNodes = null;
+    function onClick(event, treeId, treeNode, clickFlag) {
+        var resultZtree = $.fn.zTree.getZTreeObj("treeDemo");
+        var node =  resultZtree.getSelectedNodes()[0];
+        $('#choosemenu').val(node.id);
+        $('#sys_refresh').click();
+    }
+    refreshZTree();
+    function refreshZTree() {
+        $.ajax({
+            url: "__CONTROLLER__/getOrgTree",
+            type: "post",
+            async: false,
+            data:{
+                org_name:$('#org_name').val(),
+                org_type:$('#org_type option:selected').val()
+            },
+            dataType: "json",
+            success: function (data) {
+                zNodes = data;
+            },
+            error: function () {
+                layer.alert('获取数据失败');
+            }
+        });
+        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+
+        var resultZtree = $.fn.zTree.getZTreeObj("treeDemo");
+        var node = resultZtree.getNodes()[0];
+    }
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getData',         //请求后台的URL（*）
+                method: 'post',                      //请求方式（*）
+                toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: false,                     //是否启用排序
+                sortName: "org_createtime",
+                sortOrder: "asc",                   //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 15,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+//            strictSearch: true,
+//            showColumns: true,                                  //是否显示所有的列
+//            showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "org_id",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                columns: [[
+                    {checkbox: true},
+                    {
+                        title: '序号', width: 40,
+                        formatter: function (value, row, index) {
+                            var option = $('#atpbiztable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'org_name', title: '名称', sortable: true},
+                    {field: 'org_fullname', title: '全称', sortable: true},
+                    {field: 'org_pname', title: '父级部门', sortable: true},
+                    {field: 'org_fullnum', title: '排序', sortable: true, width: 100}
+                ]]
+            })
+        }
+    };
+    TableObj.oTableInit();
+    function queryParams(params) {  //配置参数
+        $('#sort').val(params.sort);
+        $('#sortOrder').val(params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            choosemenu:$('#choosemenu').val(),
+            org_type:$('#org_type').val()
+        };
+        return temp;
+    }
+    $('#org_type').change(function(){
+        $('#choosemenu').val('');
+        refreshZTree();
+        $('#sys_refresh').click();
+    })
+
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+    $('#search').click(function(){
+        refreshZTree();
+    })
+</script>
+</html>

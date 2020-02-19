@@ -1,0 +1,590 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">信息编辑</h4>
+        </div>
+        <form id="sys_dlg_form" role="form">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="panel-body">
+                            <div class="heng">
+                                <div class="form-group_l form-inline">
+                                    <label>设备名称</label>
+                                    <input id="" name="" type="text" value="" class="form-control">
+                                </div>
+                                <div class="form-group_r form-inline">
+                                    <label>设备编码</label>
+                                    <input id="netdevice_anecode" name="" type="text" value="" class="form-control">
+                                    <span style="color: #f00;">*</span>
+                                </div>
+                                <div class="form-group_l form-inline">
+                                    <label>出厂编号</label>
+                                    <input id="" name="" type="text" value="" class="form-control">
+                                </div>
+                                <div class="form-group_r form-inline">
+                                    <label>IP地址</label>
+                                    <input id="netdevice_ipaddress" name="netdevice_ipaddress" type="text" value="{$data.netdevice_ipaddress}" class="form-control">
+                                    <span style="color: #f00;">*</span>
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_l form-inline">
+                                    <label>MAC地址</label>
+                                    <input id="netdevice_mask" name="netdevice_mask" type="text" value="{$data.netdevice_mask}" class="form-control">
+                                    <span style="color: #f00;">*</span>
+                                </div>
+                                <div class="form-group_l form-inline">
+                                    <label>状态</label>
+                                    <select name="netdevice_status" id="netdevice_status" class="form-control" style="margin-bottom: -5px;width:65%;">
+                                        <option value="">--请选择--</option>
+                                        <option value="1"
+                                        <if condition="($data.netdevice_status eq '1')">selected="selected"</if>
+                                        >扫描</option>
+                                        <option value="0"
+                                        <if condition="($data.netdevice_status eq '0')">selected="selected"</if>
+                                        >不扫描</option>
+                                    </select>
+                                    <span style="color: #f00;">*</span>
+                                </div>
+                                <div class="form-group_l form-inline">
+                                    <label>厂家</label>
+                                    <select name="netdevice_factory" class="form-control" id="netdevice_factory" style="margin-bottom: -5px;width:65%;">
+                                        <option value="">--请选择--</option>
+                                    </select>
+                                    <span style="color: #f00;">*</span>
+                                </div>
+                                <div class="form-group_r form-inline">
+                                    <label>型号</label>
+                                    <select name="netdevice_model" class="form-control" id="netdevice_model" style="margin-bottom: -5px;width:65%;">
+                                        <option value="">--请选择--</option>
+                                    </select>
+                                    <span style="color: #f00;">*</span>
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_r form-inline">
+                                    <label>密级</label>
+                                    <select name="netdevice_secretlevel" id="netdevice_secretlevel" class="form-control" style="margin-bottom: -5px;width:65%;">
+                                        <option value="">--请选择--</option>
+                                        <foreach name="ds_miji" item="vo">
+                                            <option value="{$vo.d_atpid}"
+                                            <if condition="($data.netdevice_secretlevel eq $vo['d_atpid'])">
+                                                selected="selected"
+                                            </if>
+                                            >{$vo.d_dictname}</option>
+                                        </foreach>
+                                    </select>
+                                    <span style="color: #f00;">*</span>
+                                </div>
+                                <div class="form-group_l form-inline">
+                                    <label>地区</label>
+                                    <select name="netdevice_area" class="form-control" id="netdevice_area" style="margin-bottom: -5px;width:65%;">
+                                        <option value="">--请选择--</option>
+                                        <foreach name="ds_area" item="vo">
+                                            <option value="{$vo.d_atpid}"
+                                            <if condition="($data.netdevice_area eq $vo['d_atpid'])">selected</if>>
+                                            {$vo.d_dictname}</option>
+                                        </foreach>
+                                    </select>
+                                    <span style="color: #f00;">*</span>
+                                </div>
+                                <div class="form-group_r form-inline">
+                                    <label>楼宇</label>
+                                    <select name="netdevice_building" class="form-control" id="netdevice_building" style="margin-bottom: -5px;width:65%;">
+                                        <!--<option value=""></option>-->
+                                    </select>
+                                    <span style="color: #f00;">*</span>
+                                </div>
+                                <div class="form-group_l form-inline">
+                                    <label>房间号</label>
+                                    <input id="netdevice_room" name="netdevice_room" type="text" value="{$data.netdevice_room}" class="form-control">
+                                    <span style="color: #f00;">*</span>
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_r form-inline">
+                                    <label>上联端口</label>
+                                    <input id="netdevice_upport" name="netdevice_upport" type="text" value="{$data.netdevice_upport}" class="form-control">
+                                    <span style="color: #f00;">*</span>
+                                </div>
+                                <div class="form-group_r form-inline">
+                                    <label>下联端口</label>
+                                    <input id="" name="" type="text" value="" class="form-control">
+                                    <span style="color: #f00;">*</span>
+                                </div>
+                                <div class="form-group_r form-inline">
+                                    <label>所属网络</label>
+                                    <input id="" name="" type="text" value="" class="form-control">
+                                </div>
+                                <div class="form-group_r form-inline">
+                                    <label>用途</label>
+                                    <input id="netdevice_usage" name="netdevice_usage" type="text" value="{$data.netdevice_usage}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_l form-inline">
+                                    <label>是否核心</label>
+                                    <input id="" name="" type="text" value="" class="form-control">
+                                </div>
+                                <div class="form-group_l form-inline">
+                                    <label>维修状态</label>
+                                    <input id="" name="" type="text" value="" class="form-control">
+                                </div>
+                                <div class="form-group_l form-inline">
+                                    <label>登录方式</label>
+                                    <input id="netdevice_protocol" name="netdevice_protocol" type="text" value="{$data.netdevice_protocol}" class="form-control">
+                                </div>
+                                <div class="form-group_r form-inline">
+                                    <label></label>
+                                    <input id="" name="" type="text" value=""
+                                class="form-control">
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_r form-inline">
+                                    <label>管理方式</label>
+                                    <input id="" name="" type="text" value="" class="form-control">
+                                </div>
+                                <div class="form-group_r form-inline">
+                                    <label>资产来源</label>
+                                    <input id="" name="" type="text" value="" class="form-control">
+                                </div>
+                                <div class="form-group_l form-inline">
+                                    <label>采购日期</label>
+                                    <input id="" name="" type="text" value="" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="form-control">
+                                </div>
+                                <div class="form-group_r form-inline">
+                                    <label>到保日期</label>
+                                    <input id="" name="" type="text" value="" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="form-control">
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_r">
+                                    <label>维保日期</label>
+                                    <input id="" name="" type="text" value="" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="form-control">
+                                </div>
+                                <div class="form-group_r form-inline">
+                                    <label>启用日期</label>
+                                    <input id="" name="" type="text" value="" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="form-control">
+                                </div>
+                                <div class="form-group_l form-inline">
+                                    <label>保密台账</label>
+                                    <select name="" id="" class="form-control" style="margin-bottom: -5px;width:65%;">
+                                        <option value="">--请选择--</option>
+                                        <foreach name="ds_bmtz" item="vo">
+                                            <option value="{$vo.d_atpid}"
+                                            <if condition="($data.zd_privacybook eq $vo['d_atpid'])">
+                                                selected="selected"
+                                            </if>
+                                            >{$vo.d_dictname}</option>
+                                        </foreach>
+                                    </select>
+                                </div>
+                                <div class="form-group_r form-inline">
+                                    <label>仪设台账</label>
+                                    <select name="" id="" class="form-control" style="margin-bottom: -5px;width:65%;">
+                                        <option value="">--请选择--</option>
+                                        <foreach name="ds_zctz" item="vo">
+                                            <option value="{$vo.d_atpid}"
+                                            <if condition="($data.zd_devicebook eq $vo['d_atpid'])">
+                                                selected="selected"
+                                            </if>
+                                            >{$vo.d_dictname}</option>
+                                        </foreach>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_l">
+                                    <label>责任人</label>
+                                    <select name="" class="chosen-select_longajax" id="" style="margin-bottom: -5px;width:56%;">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                                <div class="form-group_r">
+                                    <label>责任部门</label>
+                                    <select name="" class="form-control" id="" style="margin-bottom: -5px;width:65%;">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_heng">
+                                    <label style="float: left; width: 6.3%;">备注</label>
+                                    <textarea id="" name="" class="form-control" style="width: 91%;"></textarea>
+                                </div>
+                            </div>
+                            <input id="netdevice_atpid" name="netdevice_atpid" type="hidden" value="{$data.netdevice_atpid}"
+                                   class="form-control">
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>
+                <input type="submit" id="sys_dlg_submit" value="保存" class="btn btn-primary"/>
+                <!--<button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary">保存</button>-->
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--<link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLICOLD__/vendor/tabs/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/font-awesome.css?v=4.4.0" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/animate.css" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/style.css?v=4.0.0" rel="stylesheet"> -->
+<style type="text/css">
+    .modal-dialog {
+        width: 94%;
+        height: 80%;
+    }
+
+    .col-sm-6 {
+        width: 100%;
+    }
+
+    .heng {
+        width: 100%;
+        height: 50px;
+    }
+
+    .form-group_heng {
+        width: 100%;
+        height: 50px;
+    }
+
+    .form-group_l {
+        width: 25%;
+        float: left;
+    }
+
+    .form-group_r {
+        width: 25%;
+        float: left;
+    }
+
+    .form-group_r label {
+        width: 25%;
+        float: left;
+        margin-top: 7px;
+    }
+
+    .form-group_l label {
+        width: 25%;
+        float: left;
+        margin-top: 7px;
+    }
+
+    /*.heng div label{width:20%;float: left;margin-top: 7px;}*/
+    .form-control {
+        width: 65%;
+    }
+
+    .form-group_21 {
+        width: 33.3%;
+        float: left;
+    }
+
+    .form-group_22 {
+        width: 33.3%;
+        float: left;
+    }
+
+    .form-group_23 {
+        width: 33.3%;
+        float: left;
+    }
+
+    .fengetitle {
+        height: 40px;
+        margin-bottom: 10px;
+        font-size: 20px;
+        font-family: 微软雅黑;
+        text-align: center;
+        line-height: 40px;
+        width: 60%;
+        margin-left: 20%;
+        border-bottom: 1px solid #cdcdcd;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        $(".js-switch").each(function () {
+            new Switchery(this, {color: '#1AB394'});
+        });
+        /*here for edit 下拉框多级联动自动选中*/
+        var area = $("#netdevice_area option:selected").val();
+        $.post('__CONTROLLER__/getbuilding', {area: area}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#netdevice_building").children().remove();
+                var item = "";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'";
+                    if (typearr[i]['d_atpid'] == "{$data.netdevice_building}")
+                        item += " selected>" + typearr[i]['d_dictname'] + "</option>";
+                    else
+
+                        item += ">" + typearr[i]['d_dictname'] + "</option>";
+
+                }
+                $("#netdevice_building").append(item);
+            }
+            else {
+                $("#netdevice_building").children().remove();
+            }
+
+        });
+        var sbtype = '154118';
+        $.post('__CONTROLLER__/getfactory', {sbtype: sbtype,options: 1}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#netdevice_factory").children().remove();
+                var item = "";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'";
+                    if (typearr[i]['d_atpid'] == "{$data.netdevice_factory}")
+                        item += " selected>" + typearr[i]['d_dictname'] + "</option>";
+                    else
+                        item += ">" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#netdevice_factory").append(item);
+            }
+            else
+                $("#netdevice_factory").children().remove();
+            var factory = $("#netdevice_factory option:selected").val();
+            $.post('__CONTROLLER__/getmodel', {factory: factory}, function (rep) {
+                var typearr = eval("(" + rep + ")");
+                if (typearr.length > 0) {
+//                    alert(typearr.length);
+                    $("#netdevice_model").children().remove();
+                    var item = "";
+                    for (var i = 0; i < typearr.length; i++) {
+                        item += "<option value='" + typearr[i]['d_atpid'] + "'";
+                        if (typearr[i]['d_atpid'] == "{$data.netdevice_model}")
+                            item += " selected>" + typearr[i]['d_dictname'] + "</option>";
+                        else
+                            item += ">" + typearr[i]['d_dictname'] + "</option>";
+                    }
+                    $("#netdevice_model").append(item);
+                }
+                else
+                    $("#netdevice_model").children().remove();
+
+
+            });
+        });
+
+        $(".chosen-select_longajax").chosen({disable_search_threshold: 0, search_contains: true, width: '65%'});
+
+        $('#zd_dutyman').trigger("chosen:updated");
+        var dutyman = $("#zd_dutyman option:selected").val();
+
+        $.post('__CONTROLLER__/getdutydept', {dutyman: dutyman}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#zd_dutydeptid").children().remove();
+                var item = "";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['id'] + "'";
+                    if (typearr[i]['id'] == "{$data.zd_dutydeptid}")
+                        item += " selected>" + typearr[i]['fullname'] + "</option>";
+                    else
+                        item += ">" + typearr[i]['fullname'] + "</option>";
+                }
+                $("#zd_dutydeptid").append(item);
+            }
+            else
+                $("#zd_dutydeptid").children().remove();
+        });
+        $('#zd_dutyman').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url: '__CONTROLLER__/assignuser'
+        }, {
+            loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        $('#zd_useman').trigger("chosen:updated");
+        $('#zd_useman').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url: '__CONTROLLER__/assignuser'
+        }, {
+            loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        $.validator.setDefaults({
+            highlight: function (element) {
+                $(element).closest('.form-group').remove('has-success').addClass('has-error');
+            },
+            success: function (element) {
+                $(element).closest('.form-group').remove('has-error').addClass('has-success');
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                if (element.is(":radio") || element.is(":checkbox")) {
+                    error.appendTo(element.parent().parent().parent());
+                } else {
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass: "help-block m-b-none",
+            validClass: "help-block m-b-none"
+        });
+        $.validator.addMethod("checkip", function (value, element) {
+            var ipaddr = $('#netdevice_ipaddress').val();
+            var flag = ip_verify(ipaddr);
+            return flag;
+        });
+        $.validator.addMethod("checkmac", function (value, element) {
+            var macaddr = $('#netdevice_mask').val();
+            var flag = mac_verify(macaddr);
+            return flag;
+        });
+        $("#sys_dlg_form").validate({
+            rules: {
+//                zd_name: "required",    // 设备编码
+//                zd_devicecode: "required", //下联端口
+                netdevice_ipaddress: {
+                    required: "true",
+                    checkip: "true"
+                },
+                netdevice_mask: {
+                    required: "true",
+                    checkmac: "true"
+                },
+                netdevice_factory: "required",
+                netdevice_status: "required",
+                netdevice_model: "required",
+                netdevice_building: "required",
+                netdevice_area: "required",
+                netdevice_room: "required",
+                netdevice_upport: "required",
+                netdevice_secretlevel: "required"
+
+            },
+            messages: {
+//                zd_name: "必填",
+//                zd_devicecode: "必填",
+                netdevice_ipaddress: {
+                    required: "必填",
+                    checkip: "IP地址不合法"
+                },
+                netdevice_mask: {
+                    required: "必填",
+                    checkmac: "MAC地址不合法"
+                },
+                netdevice_factory: "必填",
+                netdevice_status: "必填",
+                netdevice_model: "必填",
+                netdevice_building: "必填",
+                netdevice_area: "必填",
+                netdevice_upport: "必填",
+                netdevice_secretlevel: "必填",
+                netdevice_room: "必填"
+
+            },
+            submitHandler: function () {
+                var formBody = $('#sys_dlg_form');
+                $.post('__CONTROLLER__/NDsubmit', formBody.serialize(), function (data) {
+                    if ("success" == data) {
+                        $("#sys_dlg").modal("hide");
+                        $('#atpbiztable').bootstrapTable("refresh");
+                    } else {
+                        alert('保存失败');
+                    }
+                });
+            }
+
+        });
+    })
+    $('#netdevice_factory').on('change', function () {
+        var factory = $("#netdevice_factory option:selected").val();
+        $.post('__CONTROLLER__/getmodel', {factory: factory}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#netdevice_model").children().remove();
+                var item = "<option value=''>--请选择--</option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'";
+                    if (typearr[i]['d_atpid'] == "{$data.netdevice_model}")
+                        item += " selected>" + typearr[i]['d_dictname'] + "</option>";
+                    else
+                        item += ">" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#netdevice_model").append(item);
+            }
+            else
+                $("#netdevice_model").children().remove();
+
+        });
+    });
+    $('#netdevice_area').on('change', function () {
+        var area = $("#netdevice_area option:selected").val();
+        $.post('__CONTROLLER__/getbuilding', {area: area}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#netdevice_building").children().remove();
+                var item = "<option value=''>--请选择--</option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'";
+                    if (typearr[i]['d_atpid'] == "{$data.netdevice_building}")
+                        item += " selected>" + typearr[i]['d_dictname'] + "</option>";
+                    else
+                        item += ">" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#netdevice_building").append(item);
+            }
+            else {
+                $("#netdevice_building").children().remove();
+            }
+
+
+        });
+    });
+    $('#zd_dutyman').on('change', function () {
+
+        var dutyman = $("#zd_dutyman option:selected").val();
+        $.post('__CONTROLLER__/getdutydept', {dutyman: dutyman}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#zd_dutydeptid").children().remove();
+                var item = "";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['id'] + "'";
+                    if (typearr[i]['id'] == "{$data.zd_dutydeptid}")
+                        item += " selected>" + typearr[i]['fullname'] + "</option>";
+                    else
+                        item += ">" + typearr[i]['fullname'] + "</option>";
+                }
+                $("#zd_dutydeptid").append(item);
+            }
+            else
+                $("#zd_dutydeptid").children().remove();
+        });
+    });
+    function ip_verify(addr) {
+        var reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])){3}$/;
+        if (addr.match(reg)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    function mac_verify(addr) {
+        var reg = /[A-Fa-f0-9]{4}.[A-Fa-f0-9]{4}.[A-Fa-f0-9]{4}/;
+        if (addr.match(reg)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+</script>

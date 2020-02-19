@@ -1,0 +1,1195 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>服务器资产管理界面添加编辑</title>
+<style>
+    .form-group {
+        margin-top: 7px;
+        margin-bottom: 4px;
+    }
+
+    .control-label {
+        width: 150px !important;
+        font-size: 13px!important;
+    }
+
+    .must_filter {
+        color: red;
+    }
+
+    .form-control {
+        display: inline-block;
+    }
+
+    .col-sm-3 {
+        width: 60% !important;
+    }
+
+    .chosen-container {
+        top: -1px;
+    }
+
+    .chosen-container .chosen-results {
+        height: 104px!important;
+        max-height: 150px;
+    }
+
+    .chosen-container {
+        height: 100%;
+    }
+
+    /* Tab效果 */
+    .layui-tab-content {
+        padding-bottom: 0 !important;
+        padding-top: 0;
+    }
+
+    .layui-tab {
+        margin-bottom: 0 !important;
+        margin-top: 0;
+    }
+
+    .layui-tab-title {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 40px;
+        background: #fff;
+        z-index: 999;
+    }
+
+    #layui-title li {
+        width: 10%;
+    }
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+    .modal-footer{
+        margin: 0px;
+        z-index: 999;
+        position: fixed;
+        bottom:0;
+        left:0;
+        font-family: cursive;
+        width: 100%;
+        height: 60px;
+        background-color: #fff;
+    }
+    .modal-footer .form-group{
+        position: absolute;
+        top: -3px;
+        left:50px;
+        width: 85%;
+    }
+    .modal-body {
+        padding: 3px !important;
+    }
+    .star{
+        color:red;
+    }
+    .col-sm-3{
+        width:58%!important;
+        padding-left: 0!important;
+    }
+    .col-sm-3{
+        padding-left:0; 
+        padding-right:0; 
+    }
+    .remark{
+        float: left;
+        margin-top: 10px;
+        margin-right: 10px;
+        width:74px;
+        font-size: 13px;
+    }
+    #sys_dlg_submit {
+        margin-right: 30px;
+    }
+</style>
+
+<body style="margin: 0 auto;overflow-x:hidden;">
+    <form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+        <div class="tab-content" style="padding: 0 0 65px 0;">
+            <!--<div class="panel-body">-->
+                    <!--<div class="layui-tab-content" id="layui-content">-->
+
+                            <div class="form-group">
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>是否院管<span class='star'
+                                            >*</span>   </label>
+                                    <div class="col-sm-3" >
+                                        <select  name="sev_isyuan" id="sev_isyuan" class="chosen-select" >
+                                            <option value=""> </option>
+                                            <?php foreach($is as $key=>$value){ ?>
+                                            <option <?php if($data['sev_isyuan'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>是否中心管<span class='star'
+                                            >*</span>   </label>
+                                    <div class="col-sm-3" >
+                                        <select  name="sev_iszhongxin" id="sev_iszhongxin" class="chosen-select" >
+                                            <option value=""> </option>
+                                            <?php foreach($is as $key=>$value){ ?>
+                                            <option <?php if($data['sev_iszhongxin'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>使用状态<span class='star'
+                                            >*</span>  </label>
+                                    <div class="col-sm-3">
+                                        <select name="sev_status" id="sev_status" class="chosen-select">
+                                            <option value=""></option>
+                                            <?php foreach($zhuangTai as $key=>$value){ ?>
+                                            <option
+                                            <?php if($data['sev_status'] == $value['dic_name']) echo 'selected'; ?>
+                                            value="{$value.dic_name}">{$value.dic_name}</option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>设备编码<span class='star'
+                                            >*</span></label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_devicecode"
+                                               id="sev_devicecode"
+                                               value="<?php if(!empty($data['sev_devicecode']))echo $data['sev_devicecode']; ?>">
+                                    </div>
+                                </div>
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>分类</label>
+                                    <div class="col-sm-3">
+                                        <div class="col-sm-3">
+                                            <select name="sev_toptype" id="sev_toptype" class="chosen-select">
+                                                <option value="">请选择</option>
+                                                <?php foreach($type as $key=>$value){ ?>
+                                                <option
+                                                <?php if($data['sev_toptype'] == $value['dic_name']) echo 'selected'; ?>
+                                                value="{$value.dic_name}">{$value.dic_name}</option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                 <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>设备类型<span class='star'
+                                    >*</span></label>
+                                    <div class="col-sm-3">
+                                        <div class="col-sm-3">
+                                            <select name="sev_type" id="sev_type" class="chosen-select">
+                                                <option value=""> </option>
+                                                <?php foreach($sbType as $key=>$value){ ?>
+                                                <option
+                                                <?php if($data['sev_type'] == $value['dic_name']) echo 'selected'; ?>
+                                                value="{$value.dic_name}">{$value.dic_name}</option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>厂家<span class='star'
+                                    >*</span> </label>
+                                    <div class="col-sm-3">
+                                        <select name="sev_factory" id="sev_factory" class="chosen-select">
+                                            <option value=""> </option>
+                                            <?php foreach($changJia as $key=>$value){ ?>
+                                            <option
+                                            <?php if($data['sev_factory'] == $value['dic_name']) echo 'selected'; ?>
+                                            value="{$value.dic_id}">{$value.dic_name}</option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>型号<span class='star'
+                                    >*</span> </label>
+                                    <div class="col-sm-3">
+                                        <select name="sev_modelnumber" id="sev_modelnumber" class="chosen-select">
+                                            <option value=""> </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>出厂编号<span class='star'
+                                    >*</span> </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_sn"
+                                               id="sev_sn"
+                                               value="<?php if(!empty($data['sev_sn']))echo $data['sev_sn']; ?>">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        <div class="form-group">
+                            
+                            <div style="width: 32%;float: left">
+                                <label class=' col-sm-2 control-label'>IP地址 <span class='star'>*</span></label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" style="width:99%;" name="sev_ip"
+                                           id="sev_ip"
+                                           value="<?php if(!empty($data['sev_ip']))echo $data['sev_ip']; ?>">
+                                    <input type="hidden" name="old_ip" id="old_ip"
+                                           value="<?php if(!empty($data['sev_ip']))echo $data['sev_ip']; ?>">
+                                </div>
+                            </div>
+                            <div style="width: 67%;float: left">
+                                <label class=' col-sm-2 control-label'>子IP地址 </label>
+                                <div class="col-sm-3" style='width: 76%!important;'>
+                                    <input type="text" class="form-control" style="width:99%;" name="sev_subip"
+                                           id="sev_subip"
+                                           value="<?php if(!empty($data['sev_subip']))echo $data['sev_subip']; ?>">
+                                </div>
+                            </div>
+                        </div>
+
+                            <div class="form-group">
+                                
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>MAC地址 <span class='star'>*</span></label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_mac"
+                                            id="sev_mac"
+                                            value="<?php if(!empty($data['sev_mac']))echo $data['sev_mac']; ?>">
+                                    </div>
+                                </div>
+                                <div style="width: 67%;float: left">
+                                    <label class=' col-sm-2 control-label'>子MAC地址 </label>
+                                    <div class="col-sm-3" style='width: 76%!important;'>
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_submac"
+                                               id="sev_submac"
+                                               value="<?php if(!empty($data['sev_submac']))echo $data['sev_submac']; ?>">
+                                    </div>
+                                </div>          
+                            </div>
+                        <div class="form-group">
+                            <div style="width: 32%;float: left">
+                                <label class=' col-sm-2 control-label'>iLoIP地址 </label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" style="width:99%;" name="sev_iloip"
+                                           id="sev_iloip"
+                                           value="<?php if(!empty($data['sev_iloip']))echo $data['sev_iloip']; ?>">
+                                </div>
+                            </div>
+                            <div style="width: 32%;float: left">
+                                <label class=' col-sm-2 control-label'>iLoMAC地址 </label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" style="width:99%;" name="sev_ilomac"
+                                           id="sev_ilomac"
+                                           value="<?php if(!empty($data['sev_ilomac']))echo $data['sev_ilomac']; ?>">
+                                </div>
+                            </div>
+
+                            <div style="width: 32%;float: left">
+                                <label class=' col-sm-2 control-label'>部标编码</label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" style="width:99%;" name="sev_anecode"
+                                           id="sev_anecode"
+                                           value="<?php if(!empty($data['sev_anecode']))echo $data['sev_anecode']; ?>">
+                                </div>
+                            </div>
+
+                        </div>
+                           
+                            <div class="form-group">
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>责任人 </label>
+                                    <div class="col-sm-3">
+                                        <select name="sev_dutyman" id="sev_dutyman" class="chosen-select">
+                                            <option value="<?php echo $dutuser['username'];?>">
+                                                <?php echo $dutuser['name'];?>
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>使用人 </label>
+                                    <div class="col-sm-3">
+                                        <select name="sev_useman" id="sev_useman" class="chosen-select">
+                                            <option value="<?php echo $userman['username'];?>">
+                                                <?php echo $userman['name'];?>
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>服务名称 </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_app"
+                                               id="sev_app"
+                                               value="<?php if(!empty($data['sev_app']))echo $data['sev_app']; ?>">
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <!--<div class="form-group">-->
+                                    <!--<div style="width: 50%;float: left">-->
+                                        <!--<label class=' col-sm-2 control-label'>使用人部门 </label>-->
+                                        <!--<div class="col-sm-3" >-->
+                                            <!--<span><?php echo $userDept;?></span>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                    <!--<div style="width: 50%;float: left">-->
+                                        <!--<label class=' col-sm-2 control-label'>责任人部门 </label>-->
+                                        <!--<div class="col-sm-3" >-->
+                                            <!--<span><?php echo $dutyDept;?></span>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div> -->
+                            <!-- <iframe  class="framecontent" url="__CONTROLLER__/typeInSuggestSalary?year=<?php echo I('get.year') ?>" src="" frameborder="0"></iframe> -->
+                        <div class="form-group">
+                            <div style="width: 32%;float: left">
+                                <label class=' col-sm-2 control-label'>上线/下线日期<span class='star'
+                                    >*</span> </label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" style="width:99%;"
+                                           name="sev_startusetime" id="sev_startusetime"
+                                           value="<?php if(!empty($data['sev_startusetime']))echo $data['sev_startusetime']; ?>"
+                                           onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                                </div>
+                            </div>
+                            <div style="width: 32%;float: left">
+                                <label class=' col-sm-2 control-label'>采购日期 </label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" style="width:99%;"
+                                           name="sev_purchasetime" id="sev_purchasetime"
+                                           value="<?php if(!empty($data['sev_purchasetime']))echo $data['sev_purchasetime']; ?>"
+                                           onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                                </div>
+                            </div>
+                            <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>密级</label>
+                                    <div class="col-sm-3">
+                                        <select name="sev_secretlevel" id="sev_secretlevel" class="chosen-select">
+                                            <option value=""> </option>
+                                            <?php foreach($miJi as $key=>$value){ ?>
+                                            <option
+                                            <?php if($data['sev_secretlevel'] == $value['dic_name']) echo 'selected'; ?>
+                                            value="{$value.dic_name}">{$value.dic_name}</option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                        </div>
+
+                            
+
+                            <div class="form-group">
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>地区 </label>
+                                    <div class="col-sm-3">
+                                        <select name="sev_area" id="sev_area" class="chosen-select">
+                                            <option value=""> </option>
+                                            <?php foreach($diQu as $key=>$value){ ?>
+                                            <option <?php if($data['sev_area'] == $value['dic_name']) echo 'selected'; ?>
+                                            value="{$value.dic_id}" >{$value.dic_name}</option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>楼宇 </label>
+                                    <div class="col-sm-3">
+                                        <select name="sev_belongfloor" id="sev_belongfloor" class="chosen-select">
+                                            <option value=""> </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>房间号 </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_roomno"
+                                               id="sev_roomno"
+                                               value="<?php if(!empty($data['sev_roomno']))echo $data['sev_roomno']; ?>">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                
+                                <div style="width: 32%;float: left">
+
+                                <!--<div style="width: 50%;float: left">-->
+                                    <!--<label class=' col-sm-2 control-label'>机柜 </label>-->
+                                    <!--<div class="col-sm-3">-->
+                                        <!--<input type="text" class="form-control" style="width:99%;" name="sev_cab"-->
+                                               <!--id="sev_cab" value="<?php if(!empty($sev_cab)) echo $sev_cab; ?>">-->
+                                        <!--<input type="hidden" name="sev_cab_id" id="sev_cab_id"-->
+                                               <!--value="<?php if(!empty($sev_cab_id)) echo $sev_cab_id; ?>">-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                    <label class=' col-sm-2 control-label'>机柜 </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_cab"
+                                               id="sev_cab" value="<?php if(!empty($data['sev_cab'])) echo $data['sev_cab']; ?>">
+                                    </div>
+                                </div>
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>机位 </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_cabloc"
+                                               id="sev_cabloc"
+                                               value="<?php if(!empty($data['sev_cabloc']))echo $data['sev_cabloc']; ?>">
+                                    </div>
+                                </div>
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>资产来源 </label>
+                                    <div class="col-sm-3">
+                                        <select name="sev_assetsource" id="sev_assetsource" class="chosen-select">
+                                            <option value=""> </option>
+                                            <?php foreach($ziYuanLaiYuan as $key=>$value){ ?>
+                                            <option
+                                            <?php if($data['sev_assetsource'] == $value['dic_name']) echo 'selected'; ?>
+                                            value="{$value.dic_name}">{$value.dic_name}</option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            
+                        <div class="form-group">
+                            <div style="width: 32%;float: left">
+                                <label class=' col-sm-2 control-label'>操作系统 </label>
+                                <div class="col-sm-3">
+                                    <select name="sev_os" id="sev_os" class="chosen-select">
+                                        <option value=""> </option>
+                                        <?php foreach($caoZuoXiTong as $key=>$value){ ?>
+                                        <option <?php if($data['sev_os'] == $value['dic_name']) echo 'selected'; ?>
+                                        value="{$value.dic_name}">{$value.dic_name}</option>
+                                        <?php } ?>
+                                    </select>
+                                    <!--<input type="text" class="form-control" style="width:99%;" name="sev_os"-->
+                                           <!--id="sev_os"-->
+                                           <!--value="<?php if(!empty($data['sev_os']))echo $data['sev_os']; ?>">-->
+                                </div>
+                            </div>
+                            <div style="width: 32%;float: left">
+                                <label class=' col-sm-2 control-label'>OS安装时间 </label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" style="width:99%;"
+                                           name="sev_osinstalltime" id="sev_osinstalltime"
+                                           value="<?php if(!empty($data['sev_osinstalltime']))echo $data['sev_osinstalltime']; ?>"
+                                           onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                                </div>
+                            </div>
+                            <div style="width: 32%;float: left">
+                                <label class=' col-sm-2 control-label'>硬盘块数 </label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" style="width:99%;" name="sev_disknum"
+                                           id="sev_disknum"
+                                           value="<?php if(!empty($data['sev_disknum']))echo $data['sev_disknum']; ?>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                        
+                            <div style="width: 64%;float: left">
+                                <label class=' col-sm-2 control-label'>硬盘序列号 </label>
+                                <div class="col-sm-3" style='width: 79.5%!important;'>
+                                    <input type="text"    class="form-control" style="width:99%;" name="sev_disksn"
+                                           id="sev_disksn"
+                                           value="<?php if(!empty($data['sev_disksn']))echo $data['sev_disksn']; ?>">
+                                </div>
+                            </div>
+                            
+                            <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>内置服务 </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;"
+                                               id="detail" value="<?php if(!empty($detail))echo $detail; ?>">
+                                        <!--<input type="hidden" name="sev_app_id" id="sev_app_id"-->
+                                               <!--value="<?php if(!empty($sev_app_id))echo $sev_app_id; ?>" disabled>-->
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="form-group">
+                            <div style="width: 32%;float: left">
+                                <label class=' col-sm-2 control-label'>交换机IP地址 </label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" style="width:99%;" name="sev_swip"
+                                           id="sev_swip"
+                                           value="<?php if(!empty($data['sev_swip']))echo $data['sev_swip']; ?>">
+                                </div>
+                            </div>
+                            <div style="width: 32%;float: left">
+                                <label class=' col-sm-2 control-label'>交换机端口 </label>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" style="width:99%;"
+                                           name="sev_swinterface" id="sev_swinterface"
+                                           value="<?php if(!empty($data['sev_swinterface']))echo $data['sev_swinterface']; ?>">
+                                </div>
+                            </div>
+                            <div style="width: 32%;float: left">
+                                <label class=' col-sm-2 control-label'>所属网络 </label>
+                                <div class="col-sm-3">
+                                    <select name="sev_net" id="sev_net" class="chosen-select">
+                                        <option value=""> </option>
+                                        <?php foreach($suoShuWangLuo as $key=>$value){ ?>
+                                        <option <?php if($data['sev_net'] == $value['dic_name']) echo 'selected'; ?>
+                                        value="{$value.dic_name}">{$value.dic_name}</option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                            <div class="form-group">
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>光纤交换机IP地址 </label>
+                                    <div class="col-sm-3">
+                                        <!--<input type="text" class="form-control" name="sev_fsip" style="width:99%;"-->
+                                            <!--id="sev_fsip" value="<?php if(!empty($sev_fsip))echo $sev_fsip; ?>">-->
+                                        <!--<input type="hidden" name="sev_fsip_id" id="sev_fsip_id"-->
+                                            <!--value="<?php if(!empty($sev_fsip_id))echo $sev_fsip_id; ?>">-->
+
+                                        <input type="text" class="form-control" name="sev_fsip" style="width:99%;"
+                                               id="sev_fsip" value="<?php if(!empty($data['sev_fsip']))echo $data['sev_fsip']; ?>">
+                                </div>
+                                </div>
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>光纤交换机端口 </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_fsinterface"
+                                               id="sev_fsinterface"
+                                               value="<?php if(!empty($data['sev_fsinterface']))echo $data['sev_fsinterface']; ?>">
+                                    </div>
+                                </div>
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>直连存储 </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;"
+                                               name="sev_directstorage" id="sev_directstorage"
+                                               value="<?php if(!empty($data['sev_directstorage']))echo $data['sev_directstorage']; ?>">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>KVM交换机IP地址 </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_kvmsw"
+                                               id="sev_kvmsw"
+                                               value="<?php if(!empty($data['sev_kvmsw']))echo $data['sev_kvmsw']; ?>">
+                                    </div>
+                                </div>
+
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>KVM交换机端口 </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_kvmnum"
+                                               id="sev_kvmnum"
+                                               value="<?php if(!empty($data['sev_kvmnum']))echo $data['sev_kvmnum']; ?>">
+                                    </div>
+                                </div>
+                                 <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>服务器名称 <span
+                                            class="must_filter">*</span></label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_name"
+                                               id="sev_name"
+                                               value="<?php if(!empty($data['sev_name']))echo $data['sev_name']; ?>">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                               
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>HBA口数 </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_hbanum"
+                                               id="sev_hbanum"
+                                               value="<?php if(!empty($data['sev_hbanum']))echo $data['sev_hbanum']; ?>">
+                                    </div>
+                                </div>
+                                <div style="width: 67%;float: left">
+                                    <label class=' col-sm-2 control-label'>WWN号 </label>
+                                    <div class="col-sm-3" style='width: 76%!important;'>
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_wwnno"
+                                            id="sev_wwnno"
+                                            value="<?php if(!empty($data['sev_wwnno']))echo $data['sev_wwnno']; ?>">
+                                    </div>
+                                </div>
+
+                            </div>
+                           
+                            <!--<div class="form-group">-->
+                                <!--<div style="width: 50%;float: left">-->
+                                    <!--<label class=' col-sm-2 control-label'>责任部门 </label>-->
+                                    <!--<div class="col-sm-3" >-->
+                                        <!--<select  name="sev_dutydept" id="sev_dutydept" class="chosen-select" ></select>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div style="width: 50%;float: left">-->
+                                    <!--<label class=' col-sm-2 control-label'>使用部门 </label>-->
+                                    <!--<div class="col-sm-3" >-->
+                                        <!--<select  name="sev_usedept" id="sev_usedept" class="chosen-select" ></select>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <div class="form-group">
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>电源数量 </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_powernum"
+                                               id="sev_powernum"
+                                               value="<?php if(!empty($data['sev_powernum']))echo $data['sev_powernum']; ?>">
+                                    </div>
+                                </div>
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>电源连接端口 </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_powerport"
+                                               id="sev_powerport"
+                                               value="<?php if(!empty($data['sev_powerport']))echo $data['sev_powerport']; ?>">
+                                    </div>
+                                </div>
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>电源功率 </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_powergl"
+                                               id="sev_powergl"
+                                               value="<?php if(!empty($data['sev_powergl']))echo $data['sev_powergl']; ?>">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div style="width: 64%;float: left">
+                                    <label class=' col-sm-2 control-label'>虚拟服务器IP </label>
+                                    <div class="col-sm-3" style='width: 79.5%!important;'>
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_hostip"
+                                               id="sev_hostip" value="<?php if(!empty($sev_hostip))echo $sev_hostip; ?>" disabled>
+                                        <input type="hidden" name="sev_hostip_id" id="sev_hostip_id"
+                                               value="<?php if(!empty($sev_hostip_id))echo $sev_hostip_id; ?>" disabled>
+                                    </div>
+                                </div>
+
+                                <div style="width: 32%;float: left;">
+                                    <label class=' col-sm-2 control-label'>iLo密码提示 </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_ilopass"
+                                            id="sev_ilopass"
+                                            value="<?php if(!empty($data['sev_ilopass']))echo $data['sev_ilopass']; ?>">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>资产责任单位 </label>
+                                    <div class="col-sm-3">
+                                        <select name="sev_assetdutydept" id="sev_assetdutydept" class="chosen-select">
+                                            <option value=""> </option>
+                                            <?php foreach($zcDept as $key=>$value){ ?>
+                                            <option <?php if($data['sev_assetdutydept'] == $value['dic_name']) echo 'selected'; ?>
+                                            value="{$value.dic_name}">{$value.dic_name}</option>
+                                            <?php } ?>
+                                        </select>
+                                        </div>
+                                        <!--<input type="text" class="form-control" style="width:99%;" name="sev_assetdutydept"-->
+                                               <!--id="sev_assetdutydept"-->
+                                               <!--value="<?php if(!empty($data['sev_assetdutydept']))echo $data['sev_assetdutydept']; ?>">                                    </div>-->
+                                </div>
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>使用责任单位 </label>
+                                    <div class="col-sm-3">
+                                        <select name="sev_assetusedept" id="sev_assetusedept" class="chosen-select">
+                                            <option value=""> </option>
+                                            <?php foreach($syDept as $key=>$value){ ?>
+                                            <option <?php if($data['sev_assetusedept'] == $value['dic_name']) echo 'selected'; ?>
+                                            value="{$value.dic_name}">{$value.dic_name}</option>
+                                            <?php } ?>
+                                        </select>
+                                        </div>
+                                        <!--<input type="text" class="form-control" style="width:99%;" name="sev_assetusedept"-->
+                                               <!--id="sev_assetusedept"-->
+                                               <!--value="<?php if(!empty($data['sev_assetusedept']))echo $data['sev_assetusedept']; ?>">                                    </div>-->
+
+                                </div>
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>CPU </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_cpunum"
+                                               id="sev_cpunum"
+                                               value="<?php if(!empty($data['sev_cpunum']))echo $data['sev_cpunum']; ?>">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <!--<div style="width: 50%;float: left">-->
+                                    <!--<label class=' col-sm-2 control-label'>支持漂移 </label>-->
+                                    <!--<div class="col-sm-3">-->
+                                        <!--<input type="text" class="form-control" style="width:99%;"-->
+                                            <!--name="sev_supportdrift" id="sev_supportdrift"-->
+                                            <!--value="<?php if(!empty($data['sev_supportdrift']))echo $data['sev_supportdrift']; ?>">-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>子网掩码 </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_mask"
+                                            id="sev_mask"
+                                            value="<?php if(!empty($data['sev_mask']))echo $data['sev_mask']; ?>" readonly>
+                                    </div>
+                                </div>
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>默认网关 </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_gateway"
+                                            id="sev_gateway"
+                                            value="<?php if(!empty($data['sev_gateway']))echo $data['sev_gateway']; ?>" readonly>
+                                    </div>
+                                </div>
+                                <div style="width: 32%;float: left">
+                                    <label class=' col-sm-2 control-label'>内存 </label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" style="width:99%;" name="sev_memory"
+                                               id="sev_memory"
+                                               value="<?php if(!empty($data['sev_memory']))echo $data['sev_memory']; ?>">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--<div class="form-group">-->
+                                <!-- <div style="width: 50%;float: left">
+                                    <label class=' col-sm-2 control-label'>备注 </label>
+                                    <div class="col-sm-3">
+                                        <textarea name="sev_remark" id="sev_remark" style="height:40px"
+                                                  class="form-control"><?php if(!empty($data['sev_remark']))echo $data['sev_remark']; ?></textarea>
+                                    </div>
+                                </div> -->
+                            <!--</div>-->
+                            
+                            
+                </div>
+
+
+            </div>
+            <input type="hidden" value="<?php if(!empty($data['sev_atpid'])) echo $data['sev_atpid']; ?>"
+                name="sev_atpid" id="sev_atpid">
+            <!--<input type="hidden" value="<?php if(!empty($sev_type)) echo $sev_type; ?>" name="sev_type">-->
+        <if condition="$Objtype eq null">
+            <div class="modal-footer">
+                <div class="form-group" style=''>
+                    <div style="" class="cb">
+                        <label class='remark' style=''>备注 </label>
+                        <div class="" style=''>
+                        <textarea name="sev_remark" id="sev_remark" style="height:50px;width:90%;float: left;"
+                                  class="form-control"><?php if(!empty($data['sev_remark']))echo $data['sev_remark']; ?></textarea>
+                        </div>
+                    </div>
+                    <!-- <iframe  class="framecontent" url="__CONTROLLER__/beforehandLead?year=<?php echo I('get.year') ?>" src="" frameborder="0"></iframe> -->
+                </div>
+                <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary"
+                        style="">保存</button>
+                <if condition="$data['sev_atpid'] neq null">
+                    <button type="button"  id="oplog" class="btn btn-warning" style="margin-left: -20px;">日志</button>
+                </if>
+            </div>
+        </if>
+    </form>
+    <!-- <div class="modal-footer" style="margin-top: 15px;text-align: center;width: 100%;"> -->
+
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+
+<script>
+    $(function () {
+        layui.use('layer', function () {
+            layer = layui.layer;
+        })
+
+
+      /*  $("#sev_disksn").on('blur', function (){
+            var maxLen = 50;
+            var sev_disksn = $('#sev_disksn').val().length;
+            if(sev_disksn > maxLen  ) {
+                layer.alert("硬盘序列号超过指定字符长度！")
+                return false;
+            }
+        });*/
+
+        /* Tab效果 */
+        layui.use('element', function () {
+            var element = layui.element();
+            element.on('tab(demo)', function (data) {
+            });
+        })
+        var content_obj = $('#layui-content').children();
+        var title_obj = $('#layui-title').children();
+
+        content_obj.eq(0).addClass('layui-show');
+        title_obj.eq(0).addClass('layui-this');
+        
+        $('.tab').click(function () {
+            var index = $(this).index();
+            $('#layui-content').children().eq(index).addClass('layui-show').siblings().removeClass('layui-show');
+        });
+        /* Tab效果END */
+
+        $('#sys_dlg_submit').click(function () {
+            $('#sys_dlg_form1').submit();
+        })
+        var input_width = parseInt($('.form-control').eq(0).css('width').replace('px', ''));
+        $('.chosen-select').chosen({ disable_search_threshold: 0, search_contains: true, width: input_width + 'px' });
+
+        //        $('#sev_useman').chosen({disable_search_threshold: 0, search_contains: true, width: '240px'});
+        //使用人
+        $('#sev_useman').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url: '__MODULE__/org/assignuser'
+        }, {
+                loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+            });
+        //责任人
+        $('#sev_dutyman').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url: '__MODULE__/org/assignuser'
+        }, {
+                loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+            });
+        //使用责任单位
+//        $('#sev_assetusedept').ajaxChosen({
+//            dataType: 'json',
+//            type: 'post',
+//            url: '__MODULE__/org/assigndept'
+//        }, {
+//            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+//        });
+//        //资产责任单位
+//        $('#sev_assetdutydept').ajaxChosen({
+//            dataType: 'json',
+//            type: 'post',
+//            url: '__MODULE__/org/assigndept'
+//        }, {
+//                loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+//            });
+
+        //资产责任单位
+        // $("#sev_assetdutydept").on('click',function(){
+        //     layer.open({
+        //         title:'选择单位',
+        //         closeBtn:1,
+        //         type: 2,
+        //         shadeClose:false,
+        //         content: '__MODULE__/org/DeparList',
+        //         area: ['50%', '100%']
+        //     });
+        // });
+        //ip查重
+        $("#sev_ip").on('blur', function () {
+            var ip = $(this).val();
+//            var old_ip = $("#old_ip").val();
+//            if (old_ip != ip) {
+//                $.ajax({
+//                    type: 'post',
+//                    url: '__CONTROLLER__/ajaxIpCheck',
+//                    data: { 'sev_ip': ip },
+//                    dataType: 'json',
+//                    async: false,
+//                    success: function (data) {
+//                        if (data.code < 0) {
+//                            layer.alert(data.message);
+//                        }else{
+                            $.ajax({
+                                type: 'post',
+                                url: '__CONTROLLER__/getSonip',
+                                data: {'sev_ip': ip},
+                                dataType: 'json',
+                                success:function(rep){
+                                    if(rep.code > 0){
+                                        $('#sev_mask').val(rep.message);
+                                        $('#sev_gateway').val('255.255.255.0');
+                                    }
+                                }
+                            })
+//                        }
+//                    },
+//                    error: function () {
+//                        layer.alert('出错啦！请联系管理员');
+//                    }
+//                });
+//            }else{
+//                $.ajax({
+//                    type: 'post',
+//                    url: '__CONTROLLER__/getSonip',
+//                    data: {'sev_ip': ip},
+//                    dataType: 'json',
+//                    success:function(rep){
+//                        if(rep.code > 0){
+//                            $('#sev_mask').val(rep.message);
+//                            $('#sev_gateway').val('255.255.255.0');
+//                        }
+//                    }
+//                })
+//            }
+        });
+
+
+
+
+
+
+        //选择地区触发楼宇
+        $('#sev_area').change(function () {
+            var id = $(this).val();
+            dic_louyu(id);
+        });
+
+        //设置楼宇
+        var areaid = $("#sev_area").val();
+        if (areaid != '') {
+            var next_name = "<?php echo $data['sev_belongfloor'];?>";
+            dic_louyu(areaid, next_name);
+        }
+
+        //楼宇
+        function dic_louyu(id, next_name) {
+            if (next_name == 'undefined') { next_name = '' }
+            if (!id) return false;
+            $.ajax({
+                type: 'post',
+                url: '__MODULE__/dic/getDicLouYu',
+                data: { pid: id },
+
+                dataType: 'json',
+                success: function (data) {
+                    if (data.code > 0) {
+                        var str = '<option value=""> </option>';
+                        $.each(data.results, function (k, v) {
+                            var sele = '';
+                            if (next_name == v['dic_name']) { sele = 'selected' }
+                            str += "<option " + sele + " value='" + v['dic_id'] + "'>" + v['dic_name'] + "</option>";
+                        });
+                        $('#sev_belongfloor option').remove();
+                        $('#sev_belongfloor').append(str);
+                        $('#sev_belongfloor').trigger("chosen:updated");
+                    } else {
+                        layer.alert(data.message);
+                    }
+                },
+                error: function () {
+                    layer.alert('出错啦！请联系管理员');
+                }
+            });
+        }
+
+        //选择厂家触发型号
+        $('#sev_factory').change(function () {
+            var id = $(this).val();
+            dic_xinghao(id);
+        });
+        //设置型号
+        var factoryid = $("#sev_factory").val();
+        if (factoryid != '') {
+            var next_name = "<?php echo $data['sev_modelnumber'];?>";
+            dic_xinghao(factoryid, next_name);
+        }
+        //型号
+        function dic_xinghao(id, next_name) {
+            if (next_name == 'undefined') { next_name = '' }
+            if (!id) return false;
+            $.ajax({
+                type: 'post',
+                url: '__MODULE__/dic/getDicXingHao',
+                data: { pid: id },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.code > 0) {
+                        var str = '<option value=""> </option>';
+                        $.each(data.results, function (k, v) {
+                            var sele = '';
+                            if (next_name == v['dic_name']) { sele = 'selected' }
+                            str += "<option " + sele + " value='" + v['dic_id'] + "'>" + v['dic_name'] + "</option>";
+                        });
+                        $('#sev_modelnumber option').remove();
+                        $('#sev_modelnumber').append(str);
+                        $('#sev_modelnumber').trigger("chosen:updated");
+                    } else {
+                        layer.alert(data.message);
+                    }
+                },
+                error: function () {
+                    layer.alert('出错啦！请联系管理员');
+                }
+            });
+        }
+
+        //交换机关联关系
+//        $("#sev_fsip").on('click', function () {
+//            var atpid = $("#sev_atpid").val();
+//            //交换机
+//            layer.open({
+//                title: '交换机关联关系',
+//                closeBtn: 1,
+//                type: 2,
+//                shadeClose: false,
+//                content: '__MODULE__/relation/netAssetsList?flag=N&name=光纤交换机&astrict=true&id=' + atpid + '&tar_id=sev_fsip_id&tar_name=sev_fsip',
+//                area: ['100%', '100%']
+//            });
+//        });
+        //机柜关联关系
+//        $("#sev_cab").on('click', function () {
+//            var atpid = $("#sev_atpid").val();
+//            //机柜
+//            layer.open({
+//                title: '机柜关联关系',
+//                closeBtn: 1,
+//                type: 2,
+//                shadeClose: false,
+//                content: '__MODULE__/relation/jiguiAssetsList?flag=N&astrict=true&id=' + atpid + '&tar_id=sev_cab_id&tar_name=sev_cab',
+//                area: ['100%', '100%']
+//            });
+//        });
+//        //应用系统关联关系
+//        $("#sev_app").on('click', function () {
+//            var atpid = $("#sev_atpid").val();
+//            //应用系统
+//            layer.open({
+//                title: '应用系统关联关系',
+//                closeBtn: 1,
+//                type: 2,
+//                shadeClose: false,
+//                content: '__MODULE__/relation/appAssetsList?flag=N&astrict=true&id=' + atpid + '&tar_id=sev_app_id&tar_name=sev_app',
+//                area: ['100%', '100%']
+//            });
+//        });
+        //虚拟服务器关联关系
+        $("#sev_hostip").on('click', function () {
+            var atpid = $("#sev_atpid").val();
+            //虚拟服务器
+            layer.open({
+                title: '虚拟服务器关联关系',
+                closeBtn: 1,
+                type: 2,
+                shadeClose: false,
+                content: '__MODULE__/relation/sevAssetsList?flag=N&name=虚拟服务器&astrict=true&id=' + atpid + '&tar_id=sev_hostip_id&tar_name=sev_hostip',
+                area: ['100%', '100%']
+            });
+        });
+
+        $.validator.setDefaults({
+            highlight: function (element) {
+                $(element).parent().remove('has-success').addClass('has-error');
+            },
+            success: function (element) {
+                $(element).parent().remove('has-error').addClass('has-success');
+            },
+            errorPlacement: function (error, element) {
+                if (element.is(":radio") || element.is(":checkbox")) {
+                    error.appendTo(element.parent());
+                } else {
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass: "help-block m-b-none",
+            validClass: "help-block m-b-none"
+        });
+        $('#sys_dlg_form1').validate({
+            onclick: false,
+            onfocusout: false,
+            onkeyup: false,
+            // 如果是下拉菜单，这里的require是不生效的，需要自己在submitHandle方法中添加验证
+           submitHandler: function () {
+               var sev_status = $('#sev_status').val();
+               var sev_iszhongxin = $('#sev_iszhongxin').val();
+               var sev_isyuan = $('#sev_isyuan').val();
+               if(sev_status == ''){
+                   layer.alert("使用状态不可为空！");
+                   return false;
+               }
+               if(sev_isyuan == ''){
+                   layer.alert("是否院管不可为空！");
+                   return false;
+               }
+               if(sev_iszhongxin == ''){
+                   layer.alert("是否中心管不可为空！");
+                   return false;
+               }
+                var res = checkSelectForm(['sev_devicecode','sev_type','sev_factory','sev_modelnumber','sev_sn','sev_status','sev_startusetime'], ['设备编码','设备类型','厂家','型号','出厂编号','使用状态','上线/下线日期']);
+                if(!res) return false;
+                 //验证硬盘序列号长度
+                var sev_disksn = $('#sev_disksn').val().length;
+                if(sev_disksn > 50  ) {
+                   layer.msg("硬盘序列号超过指定字符长度！");
+                }
+               var sev_devicecode = $('#sev_devicecode').val();
+                var sev_type = $('#sev_type').val();
+                var formBody = $('#sys_dlg_form1');
+                $.post('__CONTROLLER__/addData', formBody.serialize(), function (data) {
+                    if (data.code > 0) {
+//                        parent.$('#sys_refresh').click();
+                        parent.$('#atpbiztable').bootstrapTable('refresh');
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        layer.alert(data.message);
+                    }
+                }, 'JSON');
+            }
+        });
+    });
+    $('#detail').click(function(){
+        var detail = $('#detail').val();
+        layer.open({
+            title: '内置服务',
+            closeBtn: 1,
+            type: 2,
+            shadeClose: false,
+            content: '__CONTROLLER__/detail?detail='+detail,
+            area: ['70%', '60%']
+        });
+    })
+
+    $('#oplog').click(function(){
+        var sev_atpid = $('#sev_atpid').val();
+        var sev_ip = $('#sev_ip').val();
+        layer.open({
+            title:'日志查询'+'---'+sev_ip,
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__MODULE__/Oplog/index?id='+sev_atpid,
+            area: ['95%', '95%']
+        });
+    })
+
+    //如果验证下拉框必填，请使用该方法
+    function checkSelectForm(objArr, messageArr){
+        var len = objArr.length;
+        for(var i=0;i<len;i++){
+            var obj = objArr[i];
+            var val = $('#'+obj).val();
+            if(!val){
+                layer.msg(messageArr[i]+'不可为空');
+                $('#'+obj).trigger('chosen:open');
+                return false;
+            }
+        }
+        return true;
+    }
+
+</script>

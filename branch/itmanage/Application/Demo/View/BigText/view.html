@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>内容查看</title>
+</head>
+<style>
+    .modal-content {
+        overflow-x: auto;
+        -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
+        box-shadow: 0 5px 15px rgba(0,0,0,.5);
+        position: relative;
+        background-color: #fff;
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+        border: 1px solid #999;
+        border-radius: 6px;
+        outline: 0;
+    }
+    .modal-header{
+        box-shadow:   0 5px 5px rgba(0,0,0,.5);
+        position:fixed;
+        width:97%;
+    }
+    .modal-body {
+        padding:40px 20px;
+        margin-top: 15px;
+        width: 95%;
+    }
+    .btn-primary {
+        color: #fff;
+        background-color: #428bca;
+        border-color: #357ebd;
+    }
+</style>
+<body>
+<div class="modal-dialog">
+    <div class="modal-content" id="content">
+        <div class="modal-header " style="background-color: #eee;padding-top:10px;padding-bottom: 10px;">
+            <div style="height:36px;display:inline-block;line-height:35px;padding-left:32px;font-size: 16px;">
+               {$data.bt_title}
+            </div>
+        </div>
+        <div class="modal-body"  id ='modal-body' style="display: inline-block;">
+            {$data.bt_content}
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+<script type="text/javascript">
+    var windowHeight = document.documentElement.clientHeight -25;
+    $('#modal-body').css('height', windowHeight+'px');
+    $('#content').css('height', windowHeight+'px');
+</script>

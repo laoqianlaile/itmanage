@@ -1,0 +1,78 @@
+@charset "UTF-8";
+/*清除浮动*/
+.cb{
+    *zoom: 1;
+}
+.cb:after{
+    content: "";
+    display: block;
+    height: 0;
+    clear: both;
+}
+/*左浮动*/
+.fl{
+    float: left;
+}
+/*右浮动*/
+.fr{
+    float: right;
+}
+/*绝对定位*/
+.pa{
+    position: absolute;
+}
+/*相对定位*/
+.pr{
+    position: relative;
+}
+/*固定定位*/
+.pf{
+    position: fixed;
+}
+/*文本居中对齐*/
+.tc{
+    text-align: center;
+}
+/*文本右对齐*/
+.tr{
+    text-align: right;;
+}
+/*文本左对齐*/
+.tl{
+    text-align: left;
+}
+/*块元素水平居中*/
+.ma{
+    margin: 0 auto;
+}
+/*溢出隐藏*/
+.oh{
+    overflow: hidden;
+}
+/*重新计算盒模型*/
+.bb{
+    box-sizing: border-box;
+}
+/*元素设置成块元素*/
+.db{
+    display: block;
+}
+/*元素设置成航元素*/
+.di{
+    display: inline;
+}
+/*元素设置成行级块元素*/
+.dib{
+    display: inline-block;
+}
+/*隐藏元素（隐藏后该元素不占位置）*/
+.dn{
+    display: none;
+}
+/*隐藏元素（隐藏后该元素占位置）*/
+.vh{
+    visibility: hidden;
+}
+
+
+

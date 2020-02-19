@@ -1,0 +1,576 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>服务器资产管理界面添加编辑</title>
+<style>
+    .form-group {
+        margin-top: 10px;
+        margin-bottom: 4px;
+    }
+
+    .control-label {
+        width: 150px !important;
+        font-size: 13px!important;
+    }
+    
+    .must_filter{
+        color: red;
+    }
+    .form-control{
+        display:inline-block;
+    }
+    .col-sm-3{
+        width:60%  !important;
+    }
+    .chosen-container{
+        top: -1px;
+    }
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .chosen-container{
+        height: 100%;
+    }
+    .modal-footer{
+        margin: 0px;
+        z-index: 999;
+        position: fixed;
+        bottom:0;
+        left:0;
+        font-family: cursive;
+        width: 100%;
+        height: 60px;
+        background-color: #fff;
+    }
+    .modal-footer .form-group{
+        position: absolute;
+        top: -3px;
+        left:50px;
+        width: 85%;
+    }
+    .star{
+        color:red;
+    }
+    .col-sm-3{
+        width:54%!important;
+        padding-left: 0!important;
+    }
+    .col-sm-3{
+        padding-left:0; 
+        padding-right:0; 
+    }
+    .remark{
+        float: left;
+        margin-top: 10px;
+        margin-right: 10px;
+        width:74px;
+        font-size: 13px;
+    }
+    #sys_dlg_submit {
+        margin-right: 18px;
+    }
+</style>
+<body style="margin: 0 auto;overflow-x:hidden;">
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content" style="padding-bottom: 50px;">
+        <div class="">
+            <div class="form-group">
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>是否院管<span class='star'
+                            >*</span>   </label>
+                    <div class="col-sm-3" >
+                        <select  name="sevv_isyuan" id="sevv_isyuan" class="chosen-select" >
+                            <option value=""> </option>
+                            <?php foreach($is as $key=>$value){ ?>
+                            <option <?php if($data['sevv_isyuan'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>是否中心管<span class='star'
+                            >*</span>   </label>
+                    <div class="col-sm-3" >
+                        <select  name="sevv_iszhongxin" id="sevv_iszhongxin" class="chosen-select" >
+                            <option value=""> </option>
+                            <?php foreach($is as $key=>$value){ ?>
+                            <option <?php if($data['sevv_iszhongxin'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>使用状态<span class="must_filter">*</span> </label>
+                    <div class="col-sm-3" >
+                        <select  name="sevv_status" id="sevv_status" class="chosen-select" >
+                            <option value=""></option>
+                            <?php foreach($zhuangTai as $key=>$value){ ?>
+                            <option <?php if($data['sevv_status'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>虚拟服务器名称 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="sevv_name" id="sevv_name" value="<?php if(!empty($data['sevv_name']))echo $data['sevv_name']; ?>">
+                    </div>
+                </div>
+                <div style="width: 67%;float: left">
+                    <label class=' col-sm-2 control-label'>内置服务 </label>
+                    <div class="col-sm-3" style='width: 74%!important;'>
+                        <input type="text" class="form-control" style="width:99%;" id="detail" value="<?php if(!empty($detail))echo $detail; ?>">
+                    </div>
+                </div>
+                
+            </div>
+            <div class="form-group">
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>IP地址 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="sevv_ip" id="sevv_ip" value="<?php if(!empty($data['sevv_ip']))echo $data['sevv_ip']; ?>">
+                        <input type="hidden" id="old_ip" name="old_ip" value="<?php if(!empty($data['sevv_ip']))echo $data['sevv_ip']; ?>">
+                    </div>
+                </div>
+                <div style="width: 67%;float: left">
+                    <label class=' col-sm-2 control-label'>子IP地址 </label>
+                    <div class="col-sm-3" style='width: 74%!important;'>
+                        <input type="text" class="form-control" style="width:99%;" name="sevv_subip"
+                               id="sevv_subip"
+                               value="<?php if(!empty($data['sevv_subip']))echo $data['sevv_subip']; ?>">
+                    </div>
+                </div>
+
+
+                
+            </div>
+            <div  class="form-group">
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>MAC地址 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="sevv_mac" id="sevv_mac" value="<?php if(!empty($data['sevv_mac']))echo $data['sevv_mac']; ?>">
+                    </div>
+                </div>
+
+                <div style="width: 67%;float: left">
+                    <label class=' col-sm-2 control-label'>子MAC地址 </label>
+                    <div class="col-sm-3"  style='width: 74%!important;'>
+                        <input type="text" class="form-control" style="width:99%;" name="sevv_submac" id="sevv_submac" value="<?php if(!empty($data['sevv_submac']))echo $data['sevv_submac']; ?>">
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="form-group">
+                    <div style="width: 32%;float: left">
+                        <label class=' col-sm-2 control-label'>分类 </label>
+                        <div class="col-sm-3" >
+                            <select  name="sevv_toptype" id="sevv_toptype" class="chosen-select" >
+                                <option value="">请选择</option>
+                                <?php foreach($type as $key=>$value){ ?>
+                                <option <?php if($data['sevv_toptype'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>OS安装时间 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="sevv_osinstalltime" id="sevv_osinstalltime" value="<?php if(!empty($data['sevv_osinstalltime']))echo $data['sevv_osinstalltime']; ?>" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>责任人 </label>
+                    <div class="col-sm-3" >
+                        <select  name="sevv_dutyman" id="sevv_dutyman" class="chosen-select" >
+                            <option value="<?php echo $dutuser['username'];?>"><?php echo $dutuser['name'];?></option>
+                        </select>
+                    </div>
+                </div>
+                
+
+            </div>
+            <!-- <div class="form-group">
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>使用人部门 </label>
+                    <div class="col-sm-3" >
+                        <span><?php echo $userDept;?></span>
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>责任人部门 </label>
+                    <div class="col-sm-3" >
+                        <span><?php echo $dutyDept;?></span>
+                    </div>
+                </div>
+
+            </div> -->
+
+           
+
+            <div class="form-group">
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>上线/下线日期<span class='star'
+                        >*</span> </label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" style="width:99%;"
+                               name="sevv_startusetime" id="sevv_startusetime"
+                               value="<?php if(!empty($data['sevv_startusetime']))echo $data['sevv_startusetime']; ?>"
+                               onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>使用人 </label>
+                    <div class="col-sm-3" >
+                        <select  name="sevv_useman" id="sevv_useman" class="chosen-select" >
+                            <option value="<?php echo $userman['username'];?>"><?php echo $userman['name'];?></option>
+                        </select>
+                    </div>
+                </div>
+               <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>密级<span class="must_filter">*</span> </label>
+                    <div class="col-sm-3" >
+                        <select name="sevv_secretlevel" id="sevv_secretlevel" class="chosen-select" >
+                            <option value="">&nbsp;</option>
+                            <?php foreach($miJi as $key=>$value){ ?>
+                            <option <?php if($data['sevv_secretlevel'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+               
+                
+                
+            </div>
+          
+
+            <div class="form-group">
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>宿主机IP </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="sevv_hostip" id="sevv_hostip" value="<?php if(!empty($sevv_hostip))echo $sevv_hostip; ?>">
+                        <input type="hidden" name="sevv_hostip_id" id="sevv_hostip_id" value="<?php if(!empty($sevv_hostip_id))echo $sevv_hostip_id; ?>">
+                    </div>
+                </div>
+
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>直连存储 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="sevv_directstorage" id="sevv_directstorage" value="<?php if(!empty($data['sevv_directstorage']))echo $data['sevv_directstorage']; ?>">
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>支持漂移 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="sevv_supportdrift" id="sevv_supportdrift" value="<?php if(!empty($data['sevv_supportdrift']))echo $data['sevv_supportdrift']; ?>">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>CPU </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="sevv_cpunum" id="sevv_cpunum" value="<?php if(!empty($data['sevv_cpunum']))echo $data['sevv_cpunum']; ?>">
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>内存 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="sevv_memory" id="sevv_memory" value="<?php if(!empty($data['sevv_memory']))echo $data['sevv_memory']; ?>">
+                    </div>
+                </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>设备类型 </label>
+                    <div class="col-sm-3" >
+                        <select  name="sevv_type" id="sevv_type" class="chosen-select" >
+                            <option value="">&nbsp;</option>
+                            <?php foreach($sbType as $key=>$value){ ?>
+                            <option <?php if($data['sevv_type'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>子网掩码 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="sevv_mask" id="sevv_mask" value="<?php if(!empty($data['sevv_mask']))echo $data['sevv_mask']; ?>" readonly>
+                    </div>
+                </div>
+            <div style="width: 32%;float: left">
+                <label class=' col-sm-2 control-label'>默认网关 </label>
+                <div class="col-sm-3" >
+                    <input type="text" class="form-control" style="width:99%;" name="sevv_gateway" id="sevv_gateway" value="<?php if(!empty($data['sevv_gateway']))echo $data['sevv_gateway']; ?>" readonly>
+                </div>
+            </div>
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>服务名称</label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="sevv_app" id="sevv_app" value="<?php if(!empty($data['sevv_app']))echo $data['sevv_app']; ?>" >
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 32%;float: left">
+                    <label class=' col-sm-2 control-label'>操作系统 </label>
+                    <div class="col-sm-3" >
+                        <select  name="sevv_os" id="sevv_os" class="chosen-select" >
+                            <option value="">&nbsp;</option>
+                            <?php foreach($caoZuoXiTong as $key=>$value){ ?>
+                            <option <?php if($data['sevv_os'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <input type="hidden" value="<?php if(!empty($data['sevv_atpid'])) echo $data['sevv_atpid']; ?>" name="sevv_atpid" id="sevv_atpid">
+        <if condition="$Objtype eq null">
+            <div class="modal-footer" style="">
+                <div class="form-group">
+                    <div style="" class="cb">
+                        <label class='remark' style=''>备注 </label>
+                        <div >
+                            <textarea name="sevv_remark" id="sevv_remark"   style="height:50px;width:90%;float: left;" class="form-control"><?php if(!empty($data['sevv_remark']))echo $data['sevv_remark']; ?></textarea>
+                        </div>
+                    </div>
+
+                </div>
+                <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" >保存</button>
+                <if condition="$data['sevv_atpid'] neq null">
+                    <button type="button"  id="oplog" class="btn btn-warning" style="margin-left: -10px;">日志</button>
+                </if>
+            </div>
+
+        </if>
+    </div>
+</form>
+
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        $('#sys_dlg_submit').click(function(){
+            $('#sys_dlg_form1').submit();
+        })
+        var input_width = parseInt($('.form-control').eq(0).css('width').replace('px', ''));
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: input_width+'px'});
+
+//        $('#sevv_useman').chosen({disable_search_threshold: 0, search_contains: true, width: '240px'});
+        //使用人
+        $('#sevv_useman').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        //责任人
+        $('#sevv_dutyman').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        //资产责任单位
+        $("#sevv_assetdutydept").on('click',function(){
+            layer.open({
+                title:'选择单位',
+                closeBtn:1,
+                type: 2,
+                shadeClose:false,
+                content: '__CONTROLLER__/sevDeparList',
+                area: ['100%', '100%']
+            });
+        });
+
+        //ip查重
+        $("#sevv_ip").on('blur',function(){
+            var ip = $(this).val();
+//            var old_ip = $("#old_ip").val();
+//            if (old_ip != ip) {
+//                $.ajax({
+//                    type:'post',
+//                    url:'__CONTROLLER__/ajaxIpCheck',
+//                    data:{'sevv_ip': ip},
+//                    dataType :'json',
+//                    async:false,
+//                    success:function(data){
+//                        if (data.code < 0) {
+//                            layer.alert(data.message);
+//                        }else{
+                            $.ajax({
+                                type: 'post',
+                                url: '__CONTROLLER__/getSonip',
+                                data: {'sev_ip': ip},
+                                dataType: 'json',
+                                success:function(rep){
+                                    if(rep.code > 0){
+                                        $('#sevv_mask').val(rep.message);
+                                        $('#sevv_gateway').val('255.255.255.0');
+                                    }
+                                }
+                            })
+//                        }
+//                    },
+//                    error:function(){
+//                        layer.alert('出错啦！请联系管理员');
+//                    }
+//                });
+//            }else{
+//                $.ajax({
+//                    type: 'post',
+//                    url: '__CONTROLLER__/getSonip',
+//                    data: {'sev_ip': ip},
+//                    dataType: 'json',
+//                    success:function(rep){
+//                        if(rep.code > 0){
+//                            $('#sevv_mask').val(rep.message);
+//                            $('#sevv_gateway').val('255.255.255.0');
+//                        }
+//                    }
+//                })
+//            }
+        });
+
+        $.validator.setDefaults({
+            highlight:function(element){
+                $(element).parent().remove('has-success').addClass('has-error');
+            },
+            success:function(element){
+                $(element).parent().remove('has-error').addClass('has-success');
+            },
+            errorPlacement:function(error,element){
+                if(element.is(":radio") || element.is(":checkbox")){
+                    error.appendTo(element.parent());
+                }else{
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass:"help-block m-b-none",
+            validClass:"help-block m-b-none"
+        });
+        $('#sys_dlg_form1').validate({
+            onclick:false,
+            onfocusout:false,
+            onkeyup:false,
+            // 如果是下拉菜单，这里的require是不生效的，需要自己在submitHandle方法中添加验证
+            rules:{
+                sevv_name:'required'
+            },
+            messages:{
+                sevv_name:'请输入服务器名称'
+            },submitHandler:function(){
+                var sevv_status = $('#sevv_status').val();
+                var sevv_isyuan = $('#sevv_isyuan').val();
+                var sevv_iszhongxin = $('#sevv_iszhongxin').val();
+                if(sevv_status == ''){
+                    layer.alert("使用状态不可为空！");
+                    return false;
+                }
+                if(sevv_isyuan == ''){
+                    layer.alert("是否院管不可为空！");
+                    return false;
+                }
+                if(sevv_iszhongxin == ''){
+                    layer.alert("是否中心管不可为空！");
+                    return false;
+                }
+                var formBody = $('#sys_dlg_form1');
+                $.post('__CONTROLLER__/addXnData',formBody.serialize(), function (data) {
+                    if (data.code > 0) {
+                        parent.$('#atpbiztable').bootstrapTable('refresh');
+//                        parent.$('#sys_refresh').click();
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        layer.alert(data.message);
+                    }
+                },'JSON');
+            }
+        });
+    });
+    //应用系统关联关系
+//    $("#sevv_app").on('click',function(){
+//            var atpid = $("#sevv_atpid").val();
+//            //应用系统
+//            layer.open({
+//                title:'应用系统关联关系',
+//                closeBtn:1,
+//                type: 2,
+//                shadeClose:false,
+//                content: '__MODULE__/relation/appAssetsList?flag=N&astrict=true&id='+ atpid +'&tar_id=sevv_app_id&tar_name=sevv_app',
+//                area: ['100%', '100%']
+//            });
+//        });
+        //物理服务器关联关系
+        $("#sevv_hostip").on('click',function(){
+            var atpid = $("#sevv_atpid").val();
+            //物理服务器
+            layer.open({
+                title:'物理服务器关联关系',
+                closeBtn:1,
+                type: 2,
+                shadeClose:false,
+                content: '__MODULE__/relation/sevAssetsList?flag=N&name=物理服务器&astrict=true&id='+ atpid +'&tar_id=sevv_hostip_id&tar_name=sevv_hostip',
+                area: ['100%', '100%']
+            });
+        });
+
+    $('#detail').click(function(){
+        var detail = $('#detail').val();
+        layer.open({
+            title: '内置服务',
+            closeBtn: 1,
+            type: 2,
+            shadeClose: false,
+            content: '__CONTROLLER__/detail?detail='+detail,
+            area: ['80%', '65%']
+        });
+    })
+
+    $('#oplog').click(function(){
+        var sevv_atpid = $('#sevv_atpid').val();
+        var sevv_ip = $('#sevv_ip').val();
+        layer.open({
+            title:'日志查询'+'---'+sevv_ip,
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__MODULE__/Oplog/index?id='+sevv_atpid,
+            area: ['95%', '95%']
+        });
+    })
+    //如果验证下拉框必填，请使用该方法
+    //    function checkSelectForm(objArr, messageArr){
+    //        var len = objArr.length;
+    //        for(var i=0;i<len;i++){
+    //            var obj = objArr[i];
+    //            var val = $('#'+obj).val();
+    //            if(!val){
+    //                layer.msg('请选择'+messageArr[i]);
+    //                $('#'+obj).trigger('chosen:open');
+    //                return false;
+    //            }
+    //        }
+    //        return true;
+    //    }
+</script>

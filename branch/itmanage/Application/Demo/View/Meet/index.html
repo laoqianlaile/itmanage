@@ -1,0 +1,600 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link rel="stylesheet" href="__PUBLICOLD__/vendor/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<link href="__PUBLICOLD__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+<title>会议基线</title>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        font-family: 'Microsoft YaHei';
+    }
+    html,body{
+        width: 100%;
+        height: 100%;
+        *overflow: hidden;
+        /*font-family: 微软雅黑;*/
+    }
+    #main{
+        width:100%;
+        height:100%;
+        position:relative;
+        margin:0 auto;
+    }
+    .form-group >div{
+        margin-top: 3px;
+        margin-bottom: 3px;
+    }
+    .control-label:nth-of-type(even){
+        margin-left: 0 !important;
+    }
+    .z-tab button{
+        margin: 10px;
+        display: inline-block;
+    }
+    #search {
+        width: 50px;
+        border: 0;
+        height: 33px;
+        background-color: #009688;
+        line-height: 25px;
+        color: #fff;
+    }
+    #treearea{
+        position: absolute;
+        left:5px;
+        top:5px;
+        bottom:0;
+        width:280px;
+        height:auto;
+        overflow:auto;
+        border: 1px solid grey;
+    }
+    #atp_wrapper{
+        position: absolute;
+        top:5px;
+        left: 303px;
+        right: 5px;
+        bottom:0;
+        width: auto;
+        height:auto;
+        overflow: hidden;
+        border: 1px solid grey;
+    }
+    #atp_wrapper #top_nav{
+        position: absolute;
+        top:5px;
+        left:5px;
+        right:5px;
+        width:auto;
+        height:50px;
+    }
+    #atp_wrapper .content{
+        position: absolute;
+        top:5px;
+        left:5px;
+        right: 5px;
+        bottom: 5px;
+        height: auto;
+        width: auto;
+        overflow: auto;
+    }
+    .show_div{
+        display: none;
+        height:100%;
+        overflow-y: auto
+    }
+    #atpbiztable td{
+        vertical-align:middle;
+    }
+    iframe{
+        width: 100%;
+        height:100%;
+        overflow-y:hidden;
+        border: none;
+    }
+    #top_nav .z-tab{
+        display: inline-block;
+    }
+    #top_nav .z-tab button{
+        width: 150px;
+        margin-left: -4px;
+        color: black;
+    }
+    .arrow{
+        position: absolute;
+        top: 50%;
+        left: 285px;
+        margin-top: -15px;
+        display: block;
+        width: 18px;
+        height: 30px;
+        background: #009cd6;
+        z-index: 6666666;
+        text-align: center;
+    }
+    .arrow:hover{
+        background: #009688;
+    }
+    .arrow i{
+        display: inline-block;
+        line-height: 30px;
+        color: #fff;
+    }
+    #sys_update{
+        background-color: #40C1BA;
+        border-color: #40C1BA;
+        color:white;
+    }
+    #sys_add{
+        background-color: yellowgreen;
+        border-color: yellowgreen;
+        color:white;
+    }
+    #sys_del{
+        background-color: cadetblue;
+        border-color: cadetblue;
+        color:white;
+    }
+    .fixed-table-toolbar{
+        height: 87px;
+    }
+    .fixed-table-toolbar .search{
+        margin-top: 5px;
+    }
+    table{
+        table-layout: fixed;
+    }
+    .fixed-table-toolbar .search{
+        z-index: 999;
+    }
+    .keep-open {
+        margin-top: -5px;
+    }
+    .fixed-table-toolbar .columns label {
+        width: 140px!important;
+    }
+
+</style>
+<body>
+<div id="main">
+    <!--treearea start-->
+    <div id="treearea" style="">
+        <div class="content_wrap" style="overflow-x: hidden;min-height: 300px;">
+            <div class="zTreeDemoBackground left" style="float: left;">
+                <div>
+                    <p  style="font-size: 15px;height: 30px;line-height: 30px;margin-bottom: 0;margin-top: 10px;text-align: left;">&nbsp;&nbsp;会议清单</p>
+                    <hr style="height: 1px;border: none;border-top: 3px solid #18a594;margin-top: 0;margin-bottom: 0;margin-left: 10px;">
+                </div>
+
+                <div style="margin-top: 4px;*margin-top:4px;width: 100%;">
+                    <div style="display: inline-block;margin-left: 7px;">
+                        <select name="" id="mt_date" class="chosen-selected">
+                            <foreach name="year" item="val">
+                                <option value="{$val.dic_name}" <?php if($val['dic_name'] == $yearNow){echo 'selected';}?> >{$val.dic_name}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                    <input  id="mt_name" value=""  class="form-control" style="width: 100px;height: 33px;margin-left: 9px;display: inline-block"/>
+                    <input type="button" id="search" value="搜索" style=""/>
+                </div>
+                <ul id="treeDemo"  class="ztree" style="width: 290px;border:0;"></ul>
+            </div>
+        </div>
+    </div>
+    <!--treearea end-->
+
+    <!--arrow start-->
+    <span class="arrow">
+        <i class="fa fa-angle-double-left" ></i>
+    </span>
+    <!--arrow end-->
+
+    <!--atp_wrapper start-->
+    <div id="atp_wrapper">
+        <div style="margin-top: 0px;">
+            <div class="_box" style="padding-top: 6px;box-sizing: border-box;position: relative;z-index: 999" id="atpbiztoolbar">
+                <div  style="margin-top: -15px;">
+                    <label class="control-label" style=";width: 80px;font-size: 14px;">召开时间：</label>
+                    <input type="text" class="form-control" placeholder="" id="start" style="width:135px;display: inline-block;" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">--
+                    <input type="text" class="form-control" placeholder="" id="end" style="width:135px;display: inline-block;" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                </div>
+                <div style="margin-top: 6px;">
+                    <button class="btn btn-info" style=" background-color: forestgreen;border-color: forestgreen;margin-left: 10px;" type="button" id="sys_refresh">查询</button>
+                    <a class="btn btn-info " style="margin-left: 3px;" type="button" id="sys_add" >新增</a>
+                    <a class="btn btn-info " style="margin-left: 3px;" type="button" id="sys_update" >编辑</a>
+                    <button class="btn btn-info" style="margin-left: 3px;" type="button" id="sys_del">删除</button>
+                    <button class="btn btn-info" style="margin-left: 3px;background: #6C92C9;
+        border-color: #6C92C9;" type="button" id="sys_exp">导出</button>
+                    <button class="btn btn-warning" style="margin-left: 10px;" type="button" data-head="管理活动类别,管理活动子类别,管理活动名称,召开时间,主持人,联系人,主要参加人员,是否产生纪要,级别,是否已召开" data-extraparam="{$dept}" data-remark="支持从Excel批量拷贝粘贴" id="sys_batchadd" data-method="Demo/Meet/saveCopyTablesBen">批量增加</button>
+                </div>
+            </div>
+        </div>
+
+        <!--content start-->
+        <div class="content" >
+            <table id="atpbiztable"  style=""></table>
+        </div>
+        <!--content end-->
+    </div>
+</div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLICOLD__/img/loading/loading9.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" name="choosemenu" id="choosemenu" value=""/>
+<input type="hidden" id="sort" >
+<input type="hidden" id="sortOrder" >
+<input type="hidden" value="{$dept}" id="dept">
+<script type="text/javascript" src="__PUBLICOLD__/vendor/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="__PUBLICOLD__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script src="__PUBLICOLD__/js/tablecopy.js"></script>
+<script src="__PUBLICOLD__/js/table-hidecloumn.js"></script>
+<script type="text/javascript">
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '150px'});
+    $("#kybchargemanname").chosen({disable_search_threshold: 0,search_contains: true, width: '170px'});
+    $(".chosen-selected").chosen({disable_search_threshold: 0, search_contains: true, width: '100px'});
+    $('#kybchargemanname').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url:'__MODULE__/User/getDutyUser'
+    });
+    $('.arrow').click(function(){
+        if($('#treearea').is(':visible')){
+            $('#atp_wrapper').stop().animate({left:'5px'});
+            $('.arrow').stop().animate({left:'2px'});
+            $('#treearea').hide(300);
+            $('.arrow i').removeClass('fa fa-angle-double-left').addClass('fa fa-angle-double-right');
+        }else{
+            $('#atp_wrapper').stop().animate({left:'303px'});
+            $('.arrow').stop().animate({left:'285px'});
+            $('#treearea').show(300);
+            $('.arrow i').removeClass('fa fa-angle-double-right').addClass('fa fa-angle-double-left');
+        }
+    })
+
+    $('#org_name').bind('keypress', function (event) {
+        if(event.keyCode == "13"){
+            if($(this).val() != ''){
+                refreshZTree();
+            }
+        }
+    })
+    var setting = {
+        view: {
+            selectedMulti: false,
+            fontCss: getFont
+        },
+        data: {
+            simpleData: {
+                enable: true,
+                idKey: "mt_id",
+                pIdKey: "mt_type",
+                rootPId: '0'
+            }
+        },
+        callback: {
+            onClick:onClick
+        }
+    };
+    var zNodes = null;
+    function onClick(event, treeId, treeNode, clickFlag) {
+        var resultZtree = $.fn.zTree.getZTreeObj("treeDemo");
+        var node =  resultZtree.getSelectedNodes()[0];
+        $('#choosemenu').val(node.mt_id);
+//        if(node.mt_type == 0 || node.mt_type == '会议'){
+//            controlEditButton('hide');
+//        }else{
+//            controlEditButton('show');
+//        }
+        $('#sys_refresh').click();
+
+    }
+
+    //    function controlEditButton(action){
+    //        if(action == 'hide'){
+    //            $('#sys_batchadd').hide();
+    //            $('#sys_add').hide();
+    //            $('#sys_update').hide();
+    //            $('#sys_del').hide();
+    //        }else{
+    //            $('#sys_batchadd').show();
+    //            $('#sys_del').show();
+    //            $('#sys_add').show();
+    //            $('#sys_update').show();
+    //        }
+    //    }
+
+    function getFont(a,node){
+        return {color:node.color};
+    }
+    refreshZTree();
+    function refreshZTree() {
+        $.ajax({
+            url: "__CONTROLLER__/getOrgTree",
+            type: "post",
+            async: false,
+            data:{mt_name:$('#mt_name').val(),mt_date:$('#mt_date option:selected').val(),dept:$('#dept').val()},
+            dataType: "json",
+            success: function (data) {
+                zNodes = data;
+                var length = data.length;
+                $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+                if(length <= 0){
+                    return false;
+                }else{
+                    $('#treeDemo_1_a').click();
+                }
+            },
+            error: function () {
+                return false;
+//                layer.alert('获取数据失败');
+            }
+        });
+
+        $('#treeDemo_1_a').click();
+    }
+    $('#search').click(function(){
+        refreshZTree();
+    })
+
+    var columns = [
+        {checkbox: true,width: 40},
+        {
+            title: '序号', width: 60,
+            formatter: function (value, row, index) {
+                var option = $('#atpbiztable').bootstrapTable("getOptions");
+                return option.pageSize * (option.pageNumber - 1) + index + 1;
+            }
+        },
+        {field: 'mt_type', title: '管理活动类别', sortable: true, width: 110},
+        {field: 'mt_ztype', title: '管理活动子类别', sortable: true, width: 120},
+        {field: 'mt_name', title: '管理活动名称', sortable: true,width:220},
+        {field: 'mt_date', title: '召开时间', sortable: true, width: 100},
+        {field: 'mt_chargemanname', title: '主持人', sortable: true, width: 70},
+        {field: 'mt_resman', title: '联系人', sortable: true, width: 70},
+        {field: 'mt_joiners', title: '参会人员', sortable: true, width: 150},
+        {field: 'material', title: '会议<br/>材料', width: 60, sortable: true,
+            formatter: function (value, row, index) {
+                var inp = value;
+                var id="'"+row.mt_id+"'";
+                if(inp!=null){
+                    var a = '<a style="color: #1C7165;text-decoration:underline" onclick="fileUpCl(' + id + ')">'+inp+'</a><br>';
+                    return a;
+                }
+            }
+        },
+        {field: 'mt_isjy', title: '是否产生<br/>纪要', sortable: true, width: 80,
+            formatter: function (value, row, index) {
+                var inp = value;
+                var id="'"+row.mt_id+"'";
+                if(inp == '是'){
+                    var a = '<a style="color: #1C7165;text-decoration:underline" onclick="Dblist(' + id + ')">'+inp+'</a><br>';
+                    return a;
+                }else{
+                    return inp;
+                }
+            }
+
+        },
+        {field: 'mt_deptname', title: '责任处室', sortable: true, width: 100},
+        {field: 'mt_level', title: '级别', sortable: true, width: 60},
+        {field: 'mt_isdone', title: '是否<br>已召开', sortable: true, width: 70, visible: true}
+    ];
+    columns = $_hide.hideColumnsByCookie(columns);
+    var height = document.documentElement.clientHeight;
+    var searchDivHeight = parseInt($('#search_div').height());
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getData',         //请求后台的URL（*）
+                method: 'post',                      //请求方式（*）
+                toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName: "mt_date",
+                sortOrder: "desc",                   //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 15,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+                showColumns: true,                  //是否显示所有的列
+                search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "mt_id",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                columns: [
+                    columns
+                ],
+                onDblClickRow: function (row) {
+                    updateInRow(row['mt_id']);
+                },
+                onLoadSuccess:function(data){
+                    var tabheight = $('.fixed-table-container').height();
+                    tabheight = parseInt(tabheight);
+                    if(tabheight < (height-searchDivHeight)){
+                        $('.fixed-table-container').css('height', 'auto');
+                    }else{
+                        $('#atpbiztable').bootstrapTable("resetView",{height:height-searchDivHeight});
+                    }
+                }
+            });
+        }
+    }
+    TableObj.oTableInit();
+
+    function queryParams(params) {  //配置参数
+        $('#sort').val(params.sort);
+        $('#sortOrder').val(params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//搜索（desc，asc）
+            search: params.search,//排位命令（desc，asc）
+            mt_name:$('#mt_name').val(),
+            mt_id:$('#choosemenu').val(),
+            start:$('#start').val(),
+            end:$('#end').val(),
+            dept:$('#dept').val(),
+            mt_date:$('#mt_date option:selected').val()
+        };
+        return temp;
+    }
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+
+    $('#mt_date').change(function(){
+        $('#choosemenu').val('');
+        refreshZTree();
+        $('#sys_refresh').click();
+    })
+
+    $('#sys_add').on('click',function(){
+        updateInRow('');
+    });
+
+    function Dblist(id){
+        layer.open({
+            title:'会议待办事项',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            cancel:function(){$('#sys_refresh').click();},
+            content: '__MODULE__/Yuan/indexNoPower?id='+id,
+            area: ['1000px', '700px']
+        });
+    }
+
+    function updateInRow(id){
+        var dept = $('#dept').val();
+        layer.open({
+            title:'会议编辑',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            cancel:function(){$('#sys_refresh').click();},
+            content: '__CONTROLLER__/add?id='+id+'&dept='+dept,
+            area: ['1100px', '700px'],
+        });
+    }
+//
+//    function fileUp(id){
+//        layer.open({
+//            title:'会议纪要',
+//            closeBtn:1,
+//            type: 2,
+//            shadeClose:false,
+//            cancel:function(){$('#sys_refresh').click();},
+//            content: '__APP__/Admin/File/index?objId='+id+'&objType='+'会议文件',
+//            area: ['800px', '600px']
+//        });
+//    }
+
+    function fileUpCl(id){
+        layer.open({
+            title:'会议材料',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            cancel:function(){$('#sys_refresh').click();},
+            content: '__APP__/Admin/File/index?objId='+id+'&objType='+'会议材料',
+            area: ['800px', '600px']
+        });
+    }
+
+    $('#sys_update').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if(tablerow.length!=1) {
+            layer.alert("您已多选或者少选，仅能对一条数据进行操作");
+        } else {
+            updateInRow(tablerow[0]['mt_id']);
+        }
+    });
+
+    $('#sys_del').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            layer.alert("您尚未选择数据");
+        } else {
+            layer.confirm('确认删除' + tablerow.length + '条数据?',{btn:['确定','取消']},function(){
+                var ids = [];
+                $.each(tablerow, function () {
+                    ids.push(this['mt_id']);
+                });
+                $.ajax({
+                    type:'post',
+                    url:'__CONTROLLER__/del',
+                    data:{ids: ids.join(',')},
+                    dataType :'json',
+                    success:function(data){
+                        if(data.code > 0){
+                            layer.msg('操作成功');
+                        }else{
+                            layer.alert(data.message);
+                        }
+                        $('#atpbiztable').bootstrapTable('refresh')
+                    }
+                })
+            })
+        }
+    });
+
+    $('#sys_exp').on('click',function() {
+        $('#loading').modal('show');
+        var sort=$('#sort').val();
+        var sortOrder=$('#sortOrder').val();
+        var mt_id=$('#choosemenu').val();
+        var mt_date=$('#mt_date option:selected').val();
+        var dept=$('#dept').val();
+        var t = "__CONTROLLER__/getDataWithExport?mt_id="+mt_id+'&sort='+sort+'&sortOrder='+sortOrder+'&mt_date='+mt_date+'&dept='+dept;
+        t = encodeURI(t);
+        $.ajax({
+            type:'get',
+            url: t,
+            dataType:'json',
+            success:function(data){
+                $('#loading').modal('hide');
+                if(data.code > 0){
+                    location.href = data.message;
+                }else{
+                    layer.msg(data.message);
+                }
+            },error:function(){
+                $('#loading').modal('hide');
+                layer.alert('出错了！请联系管理员！');
+            }
+        })
+    });
+
+
+
+
+</script>
+</body>
+</html>

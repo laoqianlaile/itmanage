@@ -1,0 +1,255 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+
+<title>关联关系添加</title>
+<style>
+    .form-group{
+        margin-top: 26px;
+    }
+    .control-label{
+        width:150px  !important;
+    }
+    .must_filter{
+        color: red;
+    }
+    .form-control{
+        display:inline-block;
+    }
+    .col-sm-3{
+        width:60%  !important;
+    }
+    .chosen-container{
+        top: -1px;
+    }
+
+
+</style>
+<body style="margin: 0 auto;">
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content" >
+        <div class="panel-body">
+            <div class="form-group">
+                <div style="width: 30%;float: left">
+                    <label class='col-sm-2 control-label'>设备类型 </label>
+                    <div class="col-sm-3" >
+                        <select id="M_device_type" class="chosen-select" >
+                            <option value="">请选择设备类型</option>
+                            <option value="it_sev">物理服务器</option>
+                            <option value="it_sev">虚拟服务器</option>
+                            <option value="it_application">应用系统</option>
+                            <option value="it_netdevice">交换机</option>
+                            <option value="it_netdevice">光纤交换机</option>
+                        </select>
+                        <textarea id="M_info" cols="30" rows="10" style="margin-top: 14px;"></textarea>
+                        <input type="hidden" id="sys_Mlist" name="Mid" value="">
+                        <input type="hidden" id="sys_Mtable" name="Mtable" value="">
+                        <input type="hidden" id="sys_Mtype" name="Mtype" value="">
+                    </div>
+                </div>
+                <div style="width: 30%;float: left">
+                    &nbsp;
+                    <!--<label class='col-sm-2 control-label'>选择关系 </label>-->
+                    <!--<div class="col-sm-3" >-->
+                        <!--<select name="relation" id="relation" class="chosen-select" >-->
+                            <!--<option value="">&nbsp;</option>-->
+                            <!--<?php foreach($guanLianGuanXi as $key=>$value){ ?>-->
+                            <!--<option value="{$value.val}">{$value.dic_name}</option>-->
+                            <!--<?php } ?>-->
+                        <!--</select>-->
+                    <!--</div>-->
+                </div>
+                <div style="width: 30%;float: left">
+                    <label class='col-sm-2 control-label'>从设备类型 </label>
+                    <div class="col-sm-3" >
+                        <select id="S_device_type" class="chosen-select" >
+                            <option value="">请选择设备类型</option>
+                            <option value="it_sev">物理服务器</option>
+                            <option value="it_sev">虚拟服务器</option>
+                            <option value="it_application">应用系统</option>
+                            <option value="it_netdevice">交换机</option>
+                            <option value="it_netdevice">光纤交换机</option>
+                        </select>
+                        <textarea id="S_info" cols="30" rows="10" style="margin-top: 14px;"></textarea>
+                        <input type="hidden" id="sys_Slist" name="Sid" value="">
+                        <input type="hidden" id="sys_Stable" name="Stable" value="">
+                        <input type="hidden" id="sys_Stype" name="Stype" value="">
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" value="<?php if(!empty($data['rl_atpid'])) echo $data['rl_atpid']; ?>" name="rl_atpid">
+        </div>
+    </div>
+</form>
+<div class="modal-footer" style="margin-top: 15px;text-align: center;width: 100%;">
+    <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="display:inline-block">保存</button>
+</div>
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        $('#sys_dlg_submit').click(function(){
+            $('#sys_dlg_form1').submit();
+        })
+
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: '200px'});
+
+        $.validator.setDefaults({
+            highlight:function(element){
+                $(element).parent().remove('has-success').addClass('has-error');
+            },
+            success:function(element){
+                $(element).parent().remove('has-error').addClass('has-success');
+            },
+            errorPlacement:function(error,element){
+                if(element.is(":radio") || element.is(":checkbox")){
+                    error.appendTo(element.parent());
+                }else{
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass:"help-block m-b-none",
+            validClass:"help-block m-b-none"
+        });
+        $('#sys_dlg_form1').validate({
+            onclick:false,
+            onfocusout:false,
+            onkeyup:false,
+            // 如果是下拉菜单，这里的require是不生效的，需要自己在submitHandle方法中添加验证
+            rules:{
+
+            },
+            messages:{
+
+            },submitHandler:function(){
+                //验证下拉框
+                if(checkSelectForm(['M_device_type','S_device_type'],['主设备类型','从设备类型']) == false){
+                    return false;
+                }
+
+                var formBody = $('#sys_dlg_form1');
+                $.post('__CONTROLLER__/addData',formBody.serialize(), function (data) {
+                    if (data.code > 0) {
+//                        parent.$('#atpbiztable').bootstrapTable('refresh');
+                        parent.$('#sys_refresh').click();
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        layer.alert(data.message);
+                    }
+                },'JSON');
+            }
+        });
+    });
+
+    //    $('body').on('.active-result', 'click', function () {
+    //        var aa = $(this).parents('.chosen-container').prev();
+    //        console.log(aa);
+    //    });
+
+    $('#M_device_type').on('change',function() {
+        var table = $(this).val();
+        var name = $('#M_device_type option:selected').text();
+        var title = '主设备来源列表';
+        var flag = 'M';
+        var astrict;
+
+        if(table == $('#S_device_type').val() && name == $('#S_device_type option:selected').text()){
+            layer.alert("您不能选择重复的表");
+            return false;
+        }
+
+        astrict = 'false';
+
+        $('#sys_Mtable').val(table);
+        $('#sys_Mtype').val(name);
+
+        jump_url(table,name,title,flag,astrict);
+    });
+    //触发从列表事件
+    $('#S_device_type').on('change',function() {
+        var table = $(this).val();
+        var name = $("#S_device_type option:selected").text();
+        var title = '从设备来源列表';
+        var flag = 'S';
+        var astrict;
+
+        if(table == $('#M_device_type').val() && name == $('#M_device_type option:selected').text()){
+            layer.alert("您不能选择重复的表");
+            return false;
+        }
+
+        astrict = 'false';
+
+        $('#sys_Stable').val(table);
+        $('#sys_Stype').val(name);
+
+        jump_url(table,name,title,flag,astrict);
+    });
+
+    function jump_url(table,name,title,flag,astrict){
+        if(table == 'it_sev'){
+            //服务器管理
+            layer.open({
+                title:title,
+                closeBtn:1,
+                type: 2,
+                shadeClose:false,
+                content: '__CONTROLLER__/sevAssetsList?name='+name+'&flag='+flag+'&astrict='+astrict,
+                area: ['100%', '100%']
+            });
+        }else if(table == 'it_application'){
+            //应用系统
+            layer.open({
+                title:title,
+                closeBtn:1,
+                type: 2,
+                shadeClose:false,
+                content: '__CONTROLLER__/appAssetsList?name='+name+'&flag='+flag+'&astrict='+astrict,
+                area: ['100%', '100%']
+            });
+        }else if(table == 'it_netdevice'){
+            //交换机
+            layer.open({
+                title:title,
+                closeBtn:1,
+                type: 2,
+                shadeClose:false,
+                content: '__CONTROLLER__/netAssetsList?name='+name+'&flag='+flag+'&astrict='+astrict,
+                area: ['100%', '100%']
+            });
+        }else if(table != ''){
+            //公用方法
+            layer.open({
+                title: title,
+                closeBtn: 1,
+                type: 2,
+                shadeClose: false,
+                content: '__CONTROLLER__/ssetsList?name='+name+'&flag='+flag+'&astrict='+astrict+'&table='+table,
+                area: ['100%', '100%']
+            });
+        }else{
+            layer.alert("选择的表不正确");
+        }
+    }
+
+    //如果验证下拉框必填，请使用该方法
+    function checkSelectForm(objArr, messageArr){
+        var len = objArr.length;
+        for(var i=0;i<len;i++){
+            var obj = objArr[i];
+            var val = $('#'+obj).val();
+            if(!val){
+                layer.msg('请选择'+messageArr[i]);
+                $('#'+obj).trigger('chosen:open');
+                return false;
+            }
+        }
+        return true;
+    }
+</script>

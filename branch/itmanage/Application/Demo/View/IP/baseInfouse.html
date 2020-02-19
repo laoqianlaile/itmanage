@@ -1,0 +1,129 @@
+﻿ <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">已使用IP地址信息</h4>
+        </div>
+        <div class="modal-body">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="row row-lg">
+                        <div class="col-sm-12">
+                            <div id="baseinfotoolbar" >
+                                <input type="hidden" name="ipid" id="ipid" value="{$ipid}"/>
+                                <p style="float: left;">IP总数目:<b>{$sumnum}</b>&emsp;已分配IP数目:<b>{$usenum}</b>&emsp;未分配IP数目:<b>{$notusenum}</b></p>
+                                <div style="float:right;width:25%;margin-top: 10px;">
+                                    <!--<button class="btn btn-error" type="button" id="back" style="font-weight: bold;float:right;"><i class="fa fa-eraser"></i>&nbsp;返回</button>-->
+                                </div>
+                            </div>
+                            <table id="baseinfoTable" ></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <!--<button class="btn btn-warning" type="button" id="sys_tijiao">&nbsp;确定</button>-->
+            <button type="button" data-dismiss="modal" class="btn btn-default">&nbsp;关闭</button>
+        </div>
+    </div>
+ </div>
+ <div id="editinfo" role="dialog" class="modal fade "></div>
+ <style>
+     .modal-dialog{width: 94%;height: 70%;}
+     .modal-body{
+         padding:15px;
+     }
+     .pagination{
+         margin-bottom:5px;
+     }
+     .ibox{
+         margin-bottom:0px;
+     }
+     .bootstrap-table .table:not(.table-condensed) > tbody > tr > td{
+         padding:3px!important;
+     }
+ </style>
+<script>
+    $(function () {
+        $('#baseinfoTable').bootstrapTable({
+            url: '__CONTROLLER__/getuseBaseData',         //请求后台的URL（*）
+            method: 'post',                      //请求方式（*）
+            toolbar: '#baseinfotoolbar',                //工具按钮用哪个容器
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            iconSize: 'outline',
+            sortable: true,                     //是否启用排序
+            sortName:"ipb_atpid",
+            sortOrder: "asc",                   //排序方式
+            queryParams: queryParamuse,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber: 1,                       //初始化加载第一页，默认第一页
+            pageSize: 10,                       //每页的记录行数（*）
+            pageList: [5,10, 25, 50, 100],        //可供选择的每页的行数（*）
+            search: false,
+            showColumns: false,                  //是否显示所有的列
+            showRefresh: false,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+            clickToSelect: false,                //是否启用点击选中行
+            uniqueId: "rw_atpid",                     //每一行的唯一标识，一般为主键列
+            detailView: false,                   //是否显示父子表
+            detailFormatter: "detailFormatter",
+            columns: [
+                [
+//                    {checkbox: true},
+                    {title: '序号', width: 40,
+                        formatter: function (value, row, index){
+                            var option =  $('#baseinfoTable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'zd_name', title: '资产名称', sortable: true},
+                    {field: 'zd_type', title: '资产类别', sortable: true},
+                    {field: 'ipb_address', title: 'IP地址', sortable: true},
+                    {field: 'ip_mask', title: '子网掩码', sortable: false},
+                    {field: 'ip_gateway', title: '网关', sortable: false},
+                    {field: 'ip_vlan_no', title: 'Vlan号', sortable: false},
+                    {field: 'zd_atpid', title: '查看', sortable: false,width:60,
+                        formatter: function (value, row, index) {
+                            var inp = "'"+  value +"'";
+                            var a = '<a  class="btn btn-warning btn-xs" onclick="terminalInfo('+ inp +')">资产详情</a><br>';
+                            return a;
+                        }
+                    }
+                ]
+            ]
+        });
+
+        $('#back').click(function(){
+            history.go(-1);
+        })
+    });
+    function queryParamuse(params) {  //配置参数
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+//            search: params.search,
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            ipid:$("#ipid").val()
+        };
+        return temp;
+    }
+
+    function terminalInfo(id){
+        $("#editinfo").load('__MODULE__/Terminal/detailForm?id=' + id, function() {
+            $("#editinfo").modal('show');
+        });
+    }
+</script>
+</body>
+
+</html>
+
+
+
+

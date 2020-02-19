@@ -1,0 +1,102 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<title>U盘违规操作审计添加编辑</title>
+<style>
+    .form-group{
+        margin-top: 26px;
+    }
+    .control-label{
+        width:150px  !important;
+    }
+     .must_filter{
+        color: red;
+    }
+    .form-control{
+        display:inline-block;
+    }
+    .col-sm-3{
+        width:60%  !important;
+    }
+    .chosen-container{
+        top: -1px;
+    }
+
+</style>
+<body style="margin: 0 auto;">
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content" >
+        <div class="panel-body">           <div class="form-group">                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>账号 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="ul_ip" id="ul_ip" value="<?php if(!empty($data['ul_ip']))echo $data['ul_ip']; ?>">                   </div>                </div>                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>姓名 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="ul_hostname" id="ul_hostname" value="<?php if(!empty($data['ul_hostname']))echo $data['ul_hostname']; ?>">                   </div>                </div>           </div>           <div class="form-group">                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>报警来源 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="ul_contact" id="ul_contact" value="<?php if(!empty($data['ul_contact']))echo $data['ul_contact']; ?>">                   </div>                </div>                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>密级 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="ul_alertsource" id="ul_alertsource" value="<?php if(!empty($data['ul_alertsource']))echo $data['ul_alertsource']; ?>">                   </div>                </div>           </div>           <div class="form-group">                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>单位名 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="ul_usectionname" id="ul_usectionname" value="<?php if(!empty($data['ul_usectionname']))echo $data['ul_usectionname']; ?>">                   </div>                </div>                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>单位 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="ul_unitname" id="ul_unitname" value="<?php if(!empty($data['ul_unitname']))echo $data['ul_unitname']; ?>">                   </div>                </div>           </div>           <div class="form-group">                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>问题类型 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="ul_msg" id="ul_msg" value="<?php if(!empty($data['ul_msg']))echo $data['ul_msg']; ?>">                   </div>                </div>                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>事件名称 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="ul_event" id="ul_event" value="<?php if(!empty($data['ul_event']))echo $data['ul_event']; ?>">                   </div>                </div>           </div>           <div class="form-group">                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>是否已通知过审计员 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="ul_isnotify" id="ul_isnotify" value="<?php if(!empty($data['ul_isnotify']))echo $data['ul_isnotify']; ?>">                   </div>                </div>                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>company </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="ul_company" id="ul_company" value="<?php if(!empty($data['ul_company']))echo $data['ul_company']; ?>">                   </div>                </div>           </div>           <div class="form-group">                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>类型 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="ul_type" id="ul_type" value="<?php if(!empty($data['ul_type']))echo $data['ul_type']; ?>">                   </div>                </div>                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>序列号 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="ul_serialnumber" id="ul_serialnumber" value="<?php if(!empty($data['ul_serialnumber']))echo $data['ul_serialnumber']; ?>">                   </div>                </div>           </div>           <div class="form-group">                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>事件时间 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="ul_eventtime" id="ul_eventtime" value="<?php if(!empty($data['ul_eventtime']))echo $data['ul_eventtime']; ?>">                   </div>                </div>            </div>        <input type="hidden" value="<?php if(!empty($data['ul_id'])) echo $data['ul_id']; ?>" name="ul_id">
+       </div>
+    </form>
+<div class="modal-footer" style="margin-top: 15px;text-align: center;width: 100%;">
+    <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="display:inline-block">保存</button>
+</div>
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        $('#sys_dlg_submit').click(function(){
+            $('#sys_dlg_form1').submit();
+        })
+        
+
+        $.validator.setDefaults({
+            highlight:function(element){
+                $(element).parent().remove('has-success').addClass('has-error');
+            },
+            success:function(element){
+                $(element).parent().remove('has-error').addClass('has-success');
+            },
+            errorPlacement:function(error,element){
+                if(element.is(":radio") || element.is(":checkbox")){
+                    error.appendTo(element.parent());
+                }else{
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass:"help-block m-b-none",
+            validClass:"help-block m-b-none"
+        });
+        $('#sys_dlg_form1').validate({
+            onclick:false,
+            onfocusout:false,
+            onkeyup:false,
+            // 如果是下拉菜单，这里的require是不生效的，需要自己在submitHandle方法中添加验证
+            rules:{
+                
+            },
+            messages:{
+                
+            },submitHandler:function(){
+                var formBody = $('#sys_dlg_form1');
+                $.post('__CONTROLLER__/addData',formBody.serialize(), function (data) {
+                    if (data.code > 0) {
+                        parent.$('#atpbiztable').bootstrapTable('refresh');
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        layer.alert(data.message);
+                    }
+                },'JSON');
+            }
+        });
+    });
+    //如果验证下拉框必填，请使用该方法
+//    function checkSelectForm(objArr, messageArr){
+//        var len = objArr.length;
+//        for(var i=0;i<len;i++){
+//            var obj = objArr[i];
+//            var val = $('#'+obj).val();
+//            if(!val){
+//                layer.msg('请选择'+messageArr[i]);
+//                $('#'+obj).trigger('chosen:open');
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+</script>

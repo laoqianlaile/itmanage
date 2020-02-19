@@ -1,0 +1,311 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>IP段添加编辑</title>
+<style>
+    .form-group {
+        margin-top: 10px;
+        margin-bottom: 4px;
+    }
+
+    .control-label {
+        width: 150px !important;
+        font-size: 13px!important;
+    }
+    .must_filter{
+        color: red;
+    }
+    .form-control{
+        display:inline-block;
+    }
+   
+    .chosen-container{
+        top: -1px;
+    }
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .chosen-container{
+        height: 100%;
+        width:100%!important;
+    }
+    .modal-footer{
+        margin: 0px;
+        z-index: 999;
+        position: fixed;
+        bottom:0;
+        left:0;
+        font-family: cursive;
+        width: 100%;
+        height: 60px;
+        background-color: #fff;
+    }
+    .modal-footer .form-group{
+        position: absolute;
+        top: -3px;
+        left:50px;
+        width: 85%;
+    }
+    
+    .col-sm-3{
+        width:54%!important;
+        padding-left: 0!important;
+    }
+    .col-sm-3{
+        padding-left:0; 
+        padding-right:0; 
+    }
+     .remark{
+        float: left;
+        margin-top: 10px;
+        margin-right: 10px;
+        width:74px;
+        font-size: 13px;
+    }
+    #sys_dlg_submit {
+        margin-right: 30px;
+    }
+</style>
+<body style="margin: 0 auto;overflow-x:hidden;">
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content" style="padding-bottom: 50px;">
+        <div class="">
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>IP地址<span class="must_filter">*</span> </label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" style="width:99%;" name="ipb_address" id="ipb_address" value="<?php if(!empty($data['ipb_address']))echo $data['ipb_address']; ?>" <?php if(!empty($data['ipb_atpid'])){ echo readonly;}?>>
+                    </div>
+                </div>
+
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>状态<span class="must_filter">*</span> </label>
+                    <div class="col-sm-3" >
+                        <select id="ipb_status" name="ipb_status" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <option value="0" <?php if($data['ipb_status'] == 0){echo selected;} ?>>未使用</option>
+                            <option value="1"<?php if($data['ipb_status'] == 1){echo selected;} ?>>预分配</option>
+                            <option value="2"<?php if($data['ipb_status'] == 2){echo selected;} ?>>已使用</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" value="<?php if(!empty($data['ipb_atpid'])) echo $data['ipb_atpid']; ?>" name="ipb_atpid" id="ipb_atpid">
+        </div>
+    </div>
+    <if condition="$Objtype eq null">
+        <div class="modal-footer">
+            <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary"
+                    style="">保存</button>
+        </div>
+    </if>
+</form>
+
+
+
+
+
+
+
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        $('#sys_dlg_submit').click(function(){
+            $('#sys_dlg_form1').submit();
+        })
+
+        var input_width = parseInt($('.form-control').eq(0).css('width').replace('px', ''));
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: input_width+'px'});
+
+        //用户单位
+        $('#ip_depart').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assigndept'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+
+        $.validator.setDefaults({
+            highlight:function(element){
+                $(element).parent().remove('has-success').addClass('has-error');
+            },
+            success:function(element){
+                $(element).parent().remove('has-error').addClass('has-success');
+            },
+            errorPlacement:function(error,element){
+                if(element.is(":radio") || element.is(":checkbox")){
+                    error.appendTo(element.parent());
+                }else{
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass:"help-block m-b-none",
+            validClass:"help-block m-b-none"
+        });
+        $('#sys_dlg_form1').validate({
+            onclick:false,
+            onfocusout:false,
+            onkeyup:false,
+            // 如果是下拉菜单，这里的require是不生效的，需要自己在submitHandle方法中添加验证
+           submitHandler:function(){
+                var formBody = $('#sys_dlg_form1');
+                $.post('__CONTROLLER__/addStatusData',formBody.serialize(), function (data) {
+                    if (data.code > 0) {
+//                        parent.$('#sys_refresh').click();
+                        parent.$('#atpbiztable').bootstrapTable('refresh');
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        layer.alert(data.message);
+                    }
+                },'JSON');
+            }
+        });
+    });
+
+//    function checkSub(para){
+//        var reg  = /^(\d|1\d?\d?|2(\d|([0-4]\d|5[0-5]))|[1-9]\d)\.(\d|1\d?\d?|2(\d|([0-4]\d|5[0-5]))|[1-9]\d)\.(\d|1\d?\d?|2(\d|([0-4]\d|5[0-5]))|[1-9]\d)\.(\d|1\d?\d?|2(\d|([0-4]\d|5[0-5]))|[1-9]\d)$/;
+//        var reg1 = /^255\.255\.(\d|1\d?\d?|2(\d|([0-4]\d|5[0-5]))|[1-9]\d)\.(\d|1\d?\d?|2(\d|([0-4]\d|5[0-5]))|[1-9]\d)$/;
+//        var regs = '';
+//        var err  = 0;
+//        for(var i = 0;i<para.length;i++){
+//            if(para[i].val() == ''){
+//                para[i].parent().addClass('has-error');
+//                err = 1;
+//            }else{
+//                if(para[i].attr('name') == 'ip_mask'){
+//                    regs = reg1;
+//                }else{
+//                    regs = reg;
+//                }
+//                var re = regs.test(para[i].val());
+//                if(!re){
+//                    if(err != 1){
+//                        if(para[i].attr('name') == 'ip_mask'){
+//                            alert('子网掩码格式错误！');
+//                        }else{
+//                            alert('IP地址格式错误！');
+//                        }
+//                    }
+//                    para[i].parent().addClass('has-error');
+//                    err = 1;
+//                }else{
+//                    para[i].parent().removeClass('has-error');
+//                    para[i].parent().addClass('has-success');
+//                }
+//            }
+//        }
+//        if(err == 1){
+//            return false;
+//        }else{
+//            return true;
+//        }
+//    }
+
+
+
+    function compareIP(ip_start,ip_end){
+        var ip_startnum = formatIP(ip_start);
+        var ip_endnum   = formatIP(ip_end);
+        if(ip_startnum>ip_endnum) return 1;
+        ip_startnum = ip_start.split('.');
+        ip_endnum   = ip_end.split('.');
+        if((ip_startnum[0] != ip_endnum[0]) || (ip_startnum[1] != ip_endnum[1])) return 2;
+        if(ip_endnum[2]-ip_startnum[2]>=4) return 3;
+        return 0;
+    }
+
+    function formatIP(ip){
+        var ip_num = '';
+        var num    = ip.split('.');
+        ip_num      = parseInt(num[0]*256*256*256)+parseInt(num[1]*256*256)+parseInt(num[2]*256)+parseInt(num[3]);
+//        for(var i = 0;i<num.length;i++){
+//            var len = num[i].length;
+//            if(len == 1){
+//                ip_num += '00'+ num[i];
+//            }else if(len == 2){
+//                ip_num += '0'+ num[i];
+//            }else{
+//                ip_num += num[i];
+//            }
+//        }
+        return ip_num;
+    }
+
+    $('#app_dutyman').change(function(){
+        var username = $(this).val();
+        $.ajax({
+            type:'post',
+            url:'__MODULE__/ShiXiang/FindId',
+            data:{username:username},
+            dataType:'json',
+            success:function(res){
+                if(res.code > 0){
+                    var str = "<option value='" + res.message[0] + "'  " + 'selected' + ">" + res.message[1] + "</option>";
+                    $('#app_dutydept').append(str)
+                    $('#app_dutydept').trigger("chosen:updated")
+                }else{
+                    alert(res.message)
+                }
+            }
+        })
+    })
+    $('#ip_parea').change(function () {
+        var id = $(this).val();
+        var ids = $('#parea').val();
+        if(id != ids){
+            $('#ip_area option').remove();
+        }
+        dic_louyu(id);
+    });
+
+    //设置楼宇
+    var areaid = $("#ip_parea").val();
+    if (areaid != '') {
+        var next_name = "<?php echo $area;?>";
+        dic_louyu(areaid, next_name);
+    }
+
+    //楼宇
+    function dic_louyu(id, next_name) {
+        if (next_name == 'undefined') { next_name = '' }
+        if (!id) return false;
+        $.ajax({
+            type: 'post',
+            url: '__MODULE__/dic/getDicLouYu',
+            data: { pid: id },
+
+            dataType: 'json',
+            success: function (data) {
+                if (data.code > 0) {
+                    var str = '<option value=""> </option>';
+                    $.each(data.results, function (k, v) {
+                            var sele = '';
+                            if (next_name == v['dic_name']) { sele = 'selected' }
+                            str += "<option " + sele + " value='" + v['dic_id'] + "'>" + v['dic_name'] + "</option>";
+
+                    });
+                    $('#ip_area').append(str);
+                    $('#ip_area').trigger("chosen:updated");
+                } else {
+                    layer.alert(data.message);
+                }
+            },
+            error: function () {
+                layer.alert('出错啦！请联系管理员');
+            }
+        });
+    }
+</script>

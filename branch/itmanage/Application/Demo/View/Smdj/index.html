@@ -1,0 +1,398 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>涉密单机台账维护</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/jquery.form.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+     
+    <style>
+        #atpbiztoolbar{width:100%;}
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <div id="atpbiztoolbar" >
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">名称&nbsp;</label>
+                            <input  id="smdjname" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">厂家&nbsp;</label>
+                            <input  id="factory" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">型号&nbsp;</label>
+                            <input  id="xh" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">用途&nbsp;</label>
+                            <input  id="yt" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">密  级&nbsp;</label>
+                            <select name="secretlevel" id="secretlevel" class="form-control" style="margin-bottom: -5px;width:56%;">
+                                <option value=""></option>
+                                <foreach name="ds_miji" item="vo">
+                                    <option value="{$vo.d_dictname}" >{$vo.d_dictname}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">所属部门&nbsp;</label>
+                            <input  id="dept" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">放置地点&nbsp;</label>
+                            <input  id="didian" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">
+                        </div>
+                        <div style="float:left;width:100%;margin-top: 5px;">
+                            <button class="btn btn-success " type="button" id="sys_search"><i class="fa fa-search"></i>&nbsp;查询</button>
+                            <button class="btn btn-info " type="button" id="sys_add"><i class="fa fa-pencil"></i>&nbsp;添加</button>
+                            <button class="btn btn-warning " type="button" id="sys_update"><i class="fa fa-edit"></i>&nbsp;编辑</button>
+                            <button class="btn btn-danger " type="button" id="sys_del"><i class="fa fa-close"></i>&nbsp;删除</button>
+                            <!--<button class="btn btn-info " type="button" id="sys_detail"><i class="fa fa-list"></i>&nbsp;详情</button>-->
+                            <button class="btn btn-warning " type="button" id="sys_import"><i class="fa fa fa-sign-in"></i>&nbsp;导入</button>
+                            <button class="btn btn-success " type="button" id="sys_export" onclick="getExpURL();"><i class="fa fa-sign-out"></i>&nbsp;导出</button>
+                            <button class="btn btn-danger " type="button" id="sys_reset"><i class="fa fa-rotate-right"></i>&nbsp;重置</button>
+                        </div>
+                    </div>
+                    <table id="atpbiztable" ></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input id="sortfield" value="" type="hidden"/>
+<input id="sortorder" value="" type="hidden"/>
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLICOLD__/img/loading/loading8.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function getExpURL()
+    {
+        var smdjname=$('#smdjname').val();
+        var factory=$('#factory').val();
+        var xh=$('#xh').val();
+        var yt=$('#yt').val();
+        var secretlevel=$('#secretlevel').val();
+        var dutyman=$('#dutyman').val();
+        var dept=$('#dept').val();
+        var didian=$('#didian').val();
+        var sortOrder    = $("#sortorder").val();
+        var sortfield    = $("#sortfield").val();
+        var t="__MODULE__/Export/smdj_exp?smdjname="+smdjname+"&factory="+factory+"&xh="+xh+"&yt="+yt+"&secretlevel="+secretlevel+"&didian="+didian+"&dutyman="+dutyman+"&dept="+dept;
+        t = encodeURI(t);
+        $.ajax({
+            type:'get',
+            url: t,
+            dataType:'json',
+            success:function(data){
+                $('#loading').modal('hide');
+                if(data.code > 0){
+                    location.href = data.message;
+                }else{
+                    layer.msg(data.message);
+                }
+            }
+        })
+    }
+    $(function () {
+        $(".chosen-select_longajax").chosen({disable_search_threshold: 0, search_contains: true});//,width:'56%',hight:'80px'
+
+        var TableObj = {
+            oTableInit: function () {
+                $('#atpbiztable').bootstrapTable({
+                    url: '__CONTROLLER__/getData',         //请求后台的URL（*）
+                    method: 'post',                      //请求方式（*）
+                    toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                    striped: true,                      //是否显示行间隔色
+                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    pagination: true,                   //是否显示分页（*）
+                    iconSize: 'outline',
+                    sortable: true,                     //是否启用排序
+                    sortName: "smdj_name",
+                    sortOrder: "asc",                   //排序方式
+                    queryParams: queryParam,//传递参数（*）
+                    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1,                       //初始化加载第一页，默认第一页
+                    pageSize: 10,                       //每页的记录行数（*）
+                    pageList: [5, 10, 25, 50, 100],        //可供选择的每页的行数（*）
+                    search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+//            strictSearch: true,
+                    showColumns: false,                  //是否显示所有的列
+                    showRefresh: false,                  //是否显示刷新按钮
+                    minimumCountColumns: 2,             //最少允许的列数
+                    clickToSelect: false,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                    uniqueId: "smdj_atpid",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                    detailView: true,                   //是否显示父子表
+                    detailFormatter: "detailFormatter",
+                    columns: [
+                        [
+                            {checkbox: true},
+                            {
+                                title: '序号', width: 40,
+                                formatter: function (value, row, index) {
+                                    var option = $('#atpbiztable').bootstrapTable("getOptions");
+                                    return option.pageSize * (option.pageNumber - 1) + index + 1;
+                                }
+                            },
+                            {field: 'smdj_code', title: '编号', sortable: true},
+                            {field: 'smdj_name', title: '名称', sortable: true},
+                            {field: 'smdj_factory', title: '厂家', sortable: true},
+                            {field: 'smdj_model', title: '型号', sortable: true},
+                            {field: 'smdj_secret', title: '密级', sortable: true},
+                            {field: 'smdj_usage', title: '用途',sortable: true},
+                            {field: 'smdj_dept', title: '所属部门',sortable: true},
+                            {field: 'smdj_didian', title: '放置地点',sortable: true},
+                            {field: 'smdj_status', title: '使用情况',sortable: true},
+                            {field: 'smdj_ps', title: '其他说明',sortable: true}
+                        ]
+                    ],
+                    onSort: function (name, order) {
+                    }
+                });
+            }
+        };
+        TableObj.oTableInit();
+        $('#sys_search').on('click',function() {
+            $('#atpbiztable').bootstrapTable('destroy');
+            TableObj.oTableInit();
+        });
+    });
+    function queryParam(params) {  //配置参数
+        $("#sortfield").attr("value",params.sort);
+        $("#sortorder").attr("value",params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            search: params.search,
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            smdjname:$('#smdjname').val(),
+            factory:$('#factory').val(),
+            xh:$('#xh').val(),
+            yt:$('#yt').val(),
+            secretlevel:$('#secretlevel').val(),
+            didian:$('#didian').val(),
+            dept:$('#dept').val()
+
+        };
+        return temp;
+    }
+
+    function dataCellFormatter(value, row)
+    {
+        var color = '#'+Math.floor(Math.random() * 6777215).toString(16);
+        return '<div  style="color: ' + color + '">' + '<i class="glyphicon glyphicon-usd"></i>' + value + '</div>';
+    }
+    $('#sys_add').on('click',function(){
+
+        $("#sys_dlg").load('__CONTROLLER__/add', function() {
+//            $('#sys_dlg_submit').on('click', submitdata);
+            $("#sys_dlg").modal({backdrop: false});
+        });
+    });
+    $('#sys_update').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if(tablerow.length!=1){
+            alert("您已多选或者少选，仅能对一条数据进行操作");
+        }else {
+            $("#sys_dlg").load('__CONTROLLER__/edit?id=' + tablerow[0]['smdj_atpid'], function() {
+//                $('#sys_dlg_submit').on('click',submitdata);
+                $("#sys_dlg").modal({backdrop: false});
+
+            });
+        }
+    });
+    $('#sys_reset').on('click',function() {
+        $('#smdjname').val("");
+        $('#factory').val("");
+        $('#xh').val("");
+        $('#yt').val("");
+        $('#secretlevel').val("");
+        $('#area').val("");
+        $('#dutyman').val("");
+        $('#dept').val("");
+    });
+    $('#sys_del').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            alert("您尚未选择数据");
+        }else {
+            if (confirm('确认删除' + tablerow.length + '条数据?')) {
+                var ids = [];
+                $.each(tablerow, function () {
+                    ids.push(this['smdj_atpid']);
+                });
+                $.post('__CONTROLLER__/del', {ids: ids.join(',')}, function (rep, status) {
+                    if ('' == rep) {
+                        $('#atpbiztable').bootstrapTable('refresh');
+                    }else {
+                        alert('删除失败' + "可能是因为数据存在关联无法删除" );//\n错误详情：+ rep
+                    }
+                });
+            }
+        }
+    });
+
+    $('#sys_detail').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if(tablerow.length!=1){
+            alert("您已多选或者少选，仅能对一条数据进行操作");
+        }else {
+            $("#sys_dlg").load('__CONTROLLER__/view?id=' + tablerow[0]['smdj_atpid'], function() {
+//                $("#sys_dlg").modal({backdrop: false});
+                $("#sys_dlg").modal('show');
+            });
+        }
+    });
+    function submitdata() {
+        var formbody = $("#sys_dlg_form");
+        $.post('__CONTROLLER__/submit', formbody.serialize(),function (rep) {
+            if(rep == "success"){
+                $('#atpbiztable').bootstrapTable('refresh');
+            }else{
+                alert("保存失败！");
+                $('#atpbiztable').bootstrapTable('refresh');
+            }
+        });
+    }
+    $('#sys_import').on('click',function(){
+        $("#sys_dlg").load('__CONTROLLER__/import', function() {
+            $('#sys_dlg_submit').on('click', submitimpdata);
+            $("#sys_dlg").modal({backdrop: false});
+        });
+    });
+    function submitimpdata()
+    {
+        var formBody = $('#sys_dlg_form2');
+        formBody.ajaxSubmit({
+            type:'post',
+            url:'__CONTROLLER__/submitimp',
+            dataType:'json',
+            beforeSend:function(){
+                $("#loadingText").html("正在处理请稍后");
+                $('#loading').modal('show');
+            },
+            success:function(data){
+                if(data.code == 0){
+                    alert(data.message);
+                    $('#atpbiztable').bootstrapTable('refresh');
+                }else{
+                    alert(data.message);
+                }
+            },
+            complete:function(){
+                $('#loading').modal('hide');
+            }
+        });
+    }
+    function detailFormatter(index, row) {
+        var html = [];
+        html.push("<div class='ibox-content'>");
+        html.push("<table class='table'>");
+        html.push("<tbody>");
+        html.push("<tr><td><b>编号</b></td><td>" + row['smdj_code'] + "</td><td><b>名称</b></td><td>" + row['smdj_name'] + "</td><td><b>厂家</b></td><td>" + row['smdj_factory'] + "</td><td><b>型号</b></td><td>" + row['smdj_model'] + "</td></tr>");
+        html.push("<tr><td><b>密级</b></td><td>" + row['smdj_secret'] + "</td><td><b>用途</b></td><td>" + row['smdj_usage'] + "</td><td><b>所属部门</b></td><td>" + row['smdj_dept'] + "</td><td><b>放置地点</b></td><td>" + row['smdj_didian'] + "</td></tr>");
+        html.push("<tr><td><b>责任人</b></td><td>" + row['smdj_dutyman'] + "</td><td><b>使用情况</b></td><td>" + row['smdj_status'] + "</td><td><b>其他说明</b></td><td>" + row['smdj_ps'] + "</td><td><b>区域名</b></td><td>" + row['smdj_area'] + "</td></tr>");
+        html.push("<tr><td><b>设备序列号</b></td><td>" + row['smdj_sn'] + "</td><td><b>启用时间</b></td><td>" + row['smdj_qiyong'] + "</td><td><b>操作系统安装日期</b></td><td>" + row['smdj_osdate'] + "</td><td><b>硬盘序列号</b></td><td>" + row['smdj_disknum'] + "</td></tr>");
+        html.push("</tbody>");
+        html.push("</table>");
+        html.push("</div>");
+        return html.join('').replace(/null/g, "").replace(/undefined/g, "");
+    }
+
+    $('#factory').on('change',function() {
+        var factory = $("#factory option:selected").val();
+        $.post('__CONTROLLER__/getmodel', {factory: factory}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#xh").children().remove();
+                var item = "";
+                item += "<option value='' selected='selected'></option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'>" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#xh").append(item);
+            }else{
+                $("#xh").children().remove();
+            }
+        });
+    });
+    $('#area').on('change',function() {
+        var area = $("#area option:selected").val();
+        $.post('__CONTROLLER__/getbuilding', {area: area}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#building").children().remove();
+                var item = "";
+                item += "<option value='' selected='selected'></option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'>" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#building").append(item);
+            }else{
+                $("#building").children().remove();
+            }
+        });
+    });
+</script>
+</body>
+
+</html>
+
+
+
+

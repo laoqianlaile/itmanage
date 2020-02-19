@@ -1,0 +1,339 @@
+<include file="Universal@Public:header" />
+<title>{$config.SEC_HEADER}</title>
+<style>
+	*{
+		margin: 0;
+		padding: 0;
+	}
+	html,body,#box{
+		height: 100%;
+		overflow: hidden;
+	}
+	.admin-login-box {
+		width: 80px;
+		height: 65px;
+		cursor: pointer;
+	}
+	.small-title a{
+		font-size:12px;
+	}
+	.small-title{
+		margin-left: -10px;
+		margin-right: -10px;
+	}
+	.z-tab{
+		position: relative;
+	}
+	.z-tab button{
+		float: left;
+		height: 35px;
+		font-weight: bold;
+		border: 2px solid #2e63c2;
+		outline: none;
+	}
+	.clear{
+		clear: both;
+	}
+	#box{
+		width: 100%;
+		height: 100%;
+		position: relative;
+		/*overflow: hidden;*/
+	}
+	.header{
+		position: absolute;
+		top: 0;
+		width: 100%;
+		height: 60px;
+	}
+	.layui-nav{
+		background: url("__PUBLIC__/{$config.SEC_HEADER_BACK}") no-repeat;
+		background-size:100%;
+		filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src="__PUBLIC__/{$config.SEC_HEADER_BACK}",sizingMethod = 'scale');
+	}
+	.footer{
+		position:absolute;
+		bottom: 0;
+		width: 100%;
+		height: 35px;
+		line-height: 35px;
+		color: #fff;
+		background: url("__PUBLIC__/{$config.SEC_FOOTER_BACK}") no-repeat;
+		background-size:100%;
+		filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src="__PUBLIC__/{$config.SEC_FOOTER_BACK}",sizingMethod = 'scale');
+		text-align: center;
+	}
+	.content{
+		position: absolute;
+		top:60px;
+		bottom:35px;
+		width: 100%;
+		height: auto;
+	}
+	#if_container{
+		width: 100%;
+		height: 100%;
+		overflow: auto;
+	}
+	#frameBox{
+		width: 100%;
+		height: 99%;
+		overflow: hidden;
+	}
+	.logo {
+		padding-right:5px;
+		box-sizing: border-box;
+		float: left;
+		color: #fff;
+		font-size: 20px;
+		margin-bottom: 20px;
+	}
+	@media (min-width: 768px) and (max-width: 1200px) {
+		.layui-nav{
+			padding: 0 16px!important;
+			box-sizing: border-box;
+		}
+		.logo{
+			font-size: 17px!important;
+			margin-top: 22px;
+		}
+		.layui-nav .layui-nav-item a{
+			padding: 0 15px!important;
+		}
+	}
+	.layui-nav-item a:hover{
+		text-decoration: none;
+	}
+	#box{
+		background: url("__PUBLIC__/{$config.SYS_BGIMG}") no-repeat center center;
+		background-size: 100% 100%;
+		/*针对ie8的hack，目的是除掉之前的background*/
+		/*关键设置*/
+		filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src="__PUBLIC__/{$config.SYS_BGIMG}",sizingMethod = 'scale');
+	}
+	.logo img{
+		width: 70px;
+		height: 63px;
+		margin-top: -21px;
+	}
+	.layui-nav{
+		height: 60px;
+	}
+	.second_title{
+		font-size: 15px;
+		margin-top: 6px;
+	}
+
+</style>
+<body >
+
+<div id="box" >
+	<!--<img src="__PUBLIC__/{$config.SYS_BGIMG}" style="width: 100%;height: 100%;position: absolute;top: 0;left: 0;" id='bg' alt="">-->
+	<!--header start-->
+	<div class="header">
+		<!--layui-nav-->
+		<div class="layui-nav cb">
+			<div class="cb fl">
+				<!--logo start-->
+				<h1 class="fl logo">
+					<img src="__PUBLIC__/{$config.SYS_LOGO}" alt="" class="fl">
+					<span style="color: #DAD3D3;font-size: 20px;font-weight: bolder;">
+						{$config.SEC_HEADER}
+					</span>
+				</h1>
+				<!--logo end-->
+				<!--navLeft start-->
+				<div class="fl" id="title">
+					<?php foreach($data as $key=>$value) {?>
+					<li class="layui-nav-item ">
+						<a class="one_title" href="javascript:void(0);" thref="<?php  if($value['mi_url'] != '#') echo U($value['mi_url']); ?>"><?php echo $value['mi_name']; ?></a>
+						<?php if(!empty($value['children'])) {?>
+						<dl class="layui-nav-child">
+							<?php foreach($value['children'] as $k=>$v){ ?>
+							<dd>
+								<a class="second_title" href="javascript:void(0);" thref="<?php echo U($v['mi_url']); ?>"><?php echo $v['mi_name']; ?></a>
+							</dd>
+							<?php } ?>
+						</dl>
+						<?php } ?>
+					</li>
+					<?php } ?>
+				</div>
+				<!--navLeft start-->
+			</div>
+			<ul class="fr">
+				<!--<li class="layui-nav-item small-title " >-->
+				<!--<a class="one_title" href="javascript:void(0);" thref="__PUBLIC__/word/riskManual.docx">帮助</a>-->
+				<!--</li>-->
+				<li class="layui-nav-item small-title">
+					<a class="one_title" href="javascript:void(0);" openTitle="修改密码" openHeight="400px;" showClose="1"  topen="__MODULE__/Login/updatePassword.html">修改密码</a>
+				</li>
+				<li class="layui-nav-item small-title">
+					<a class="one_title" href="javascript:void(0);" id="relogin" openTitle="重新登陆" openHeight="400px;" showClose="0"  topen="{:U('Admin/Login/login')}">注销/登录</a>
+				</li>
+				<li class="layui-nav-item small-title">
+					<a class="one_title" href="javascript:void(0);">欢迎您：<?php echo session('realusername'); ?></a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!--header end-->
+
+	<!--content start-->
+	<div class="content">
+		<div id="if_container">
+			<iframe src="" id="frameBox" frameborder="0"></iframe>
+		</div>
+	</div>
+	<!--content end-->
+
+	<!--footer start-->
+	<div class="footer">
+		{$config.SEC_FOTTER}
+	</div>
+	<!--footer end-->
+</div>
+<script>
+	//	iframe自适应   onload="changeFrameHeight()"
+	function changeFrameHeight(){
+		var ifm = document.getElementById("frameBox");
+		ifm.height = document.documentElement.clientHeight;
+	}
+
+	layui.use('element', function() {
+		var element = layui.element(); //导航的hover效果、二级菜单等功能，需要依赖element模块
+	});
+	layui.use('layer', function() {
+		layer = layui.layer;
+		$('.layui-nav-child a').click(function () {
+			var _this = $(this);
+			$(this).parent().addClass('layui-this').siblings().removeClass('layui-this')
+			$(this).parents('li').addClass('layui-this').siblings().removeClass('layui-this');
+			jump(_this);
+			return false;
+		})
+		$('.one_title').click(function(){
+			var _this = $(this);
+
+			_this.parent().addClass('layui-this');
+			_this.parent().siblings().removeClass('layui-this');
+			jump(_this);
+		})
+
+		function jump(_this){
+			var link = _this.attr('thref');
+			if(link != '' && link != undefined){
+				$('#frameBox').attr('src',link);
+				return false;
+			}
+			var open = _this.attr('topen');
+			if(open != '' && open != undefined){
+				var height = _this.attr('openHeight');
+				var title = _this.attr('openTitle');
+				var showCloseBtn = parseInt(_this.attr('showClose'));
+				if(_this.attr('id') == 'relogin'){
+					window.location.href = '__MODULE__/Index/index?clearLoginInfo=1&noReopen=1&fromsign=1';
+				}else{
+					layer.open({
+						title:title,
+						closeBtn:showCloseBtn,
+						type: 2,
+						shadeClose:false,
+						content: open,
+						area: ['700px', height+'px']
+					});
+				}
+			}
+		}
+		var isLogin = false;
+		checkLogin();
+		//检测用户是否登录
+		function checkLogin(){
+			var Overtime = "<?php echo $Overtime;?>";
+			var title    = '请先登录';
+			if(Overtime){
+				title = '长时间未操作请重新登录';
+			}
+			//检测用户是否登录
+			$.ajax({
+				type:'post',
+				url:'__MODULE__/Login/checkLogin',
+				dataType:'json',
+				async:false,
+				success:function(data){
+					if(data.code < 0){
+						$('.content').html("");
+						var fromsign = '{$fromsign}';
+						layer.open({
+							title: title,
+							type: 2,
+							content: '__MODULE__/Login/login?fromsign='+fromsign,
+							closeBtn:0,
+							shadeClose:false,
+							area: ['700px', '363px']
+						});
+						thanTime=false;
+						return false;
+					}else{
+						isLogin = true;
+						$('#box').css('background','url("__PUBLIC__/img/loading/loading.gif") no-repeat center center');
+						var url = $('#title .one_title').eq(0).attr('thref');
+
+						if(url == '' || typeof (url) == 'undefined') {
+							url =  $('#title .second_title').eq(0).attr('thref')
+							$('#title .second_title').eq(0).parent().addClass('layui-this');
+							$('#title .second_title').eq(0).parents('li').addClass('layui-this');
+						}else{
+							$('.layui-nav-item').eq(0).addClass('layui-this');
+						}
+						if(url){
+							$('#frameBox').attr('src', url);
+						}else{
+							layer.msg('您没有该网站的任何权限！请联系管理员');
+							return false;
+						}
+					}
+				}
+			})
+		}
+		//是否间断检查登录状态
+		var isCheckLoginStatus = "<?php echo $config['SEC_LOGINTIMEOUTCHECK']; ?>";
+		if(isCheckLoginStatus && isLogin){
+			var thanTime=true;
+			var t = window.setInterval(function(){
+				if(thanTime){
+					//检测用户登录是否过期
+					$.ajax({
+						type:'post',
+						url:'__MODULE__/Login/checkLoginExpire',
+						dataType:'json',
+						async:true,
+						success:function(data){
+							if(data.code < 0){
+								thanTime=false;
+								$('#box').html("");
+								layer.open({
+									title:'长时间未操作请重新登录',
+									type: 2,
+									closeBtn:0,
+									shadeClose:false,
+									content: '__MODULE__/Login/login',
+									area: ['700px', '363px']
+								});
+							}
+						}
+					});
+				}
+			}, 1000 * 60);
+		}
+
+		$('#relogin').click(function(){
+			clearInterval(t);
+		})
+
+
+	});
+
+</script>
+</body>
+</html>

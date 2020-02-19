@@ -1,0 +1,328 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>AD账户密码设定</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+    <link rel="stylesheet" href="__PUBLICOLD__/vendor/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ztree/js/jquery.ztree.core.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+     
+    <style>
+        .table{max-width: none;}
+        .pull-left{width:100%;}
+        #atpbiztoolbar{width:100%;}
+        #dic_name{width: 20%;float: left;margin-right: 5px;}
+        .name{background-color:#f0f7f5; font-weight:bold; margin-top:30px; margin-bottom:20px; float:left;border-left:#18a689 8px solid; padding-left: 15px;line-height: 38px;height:38px;}
+        .tt{ size: 16px; font-weight:bold; padding-left:0px;color:#03513f;}
+        .chosen-choices{height:80px !important;}
+        #autofill{padding-top: 4px;height: 35px;margin-top: 4px;margin-left:3%}
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <form id="atpform" role="form"　class="form-inline">
+            <div class="ibox-content" style="padding:5%;padding-top:1%;">
+                <div style="margin-top:20px;width:100%;">
+                    <p class="name" style="text-align: left;font-size: 20px;width:100%;">用户信息</p>
+                </div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline" style="width:50%;">
+                            <label class="control-lable" style="width:15%;margin-right:2%">登录名：</label>
+                            <input  id="SAMAccountName" name="SAMAccountName" value="{$SAMAccountName}" type="text" class="form-control" readonly="true">
+                        </div>
+                        <div class="col-sm-6 form-inline" style="width:50%;">
+                            <label class="control-lable  " style="width:17%;margin-right:2%;">姓&emsp;名：</label>
+                            <input  id="truename" name="truename" value="{$DisplayName}" type="text" class="form-control" readonly="true">
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline" style="width:50%;">
+                            <label class="control-lable" style="width:15%;margin-right:2%">单&emsp;位：</label>
+                            <input  id="lastname" name="lastname" value="{$Company}" type="text" class="form-control" readonly="true">
+                        </div>
+                        <div class="col-sm-6 form-inline" style="width:50%;">
+                            <label class="control-lable  " style="width:17%;margin-right:2%">部&emsp;门：</label>
+                            <input  id="firstname" name="firstname" value="{$Department}" type="text" class="form-control" readonly="true">
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top:20px;width:100%;">
+                    <p class="name" style="text-align: left;font-size: 20px;width:100%;">USBkey状态</p>
+                </div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline" style="width:50%;">
+                            <input  id="requireCard" name="requireCard" type="checkbox"  <if condition="$UsbStatus">checked</if> class="form-control">
+                            <label class="control-lable" style="width:50%;margin-left:2%">交互式登录必须使用智能卡</label>
+                            <!--<font color="orangered">*</font>-->
+                        </div>
+                        <div class="col-sm-6 form-inline" style="width:50%;">
+                            <label class="control-lable" style="width:19%;">到期时间：</label>
+                            <input  id="duetime" name="duetime" type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" >
+                            <font color="orangered">*</font>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline" style="width:50%;">
+                            <label class="control-lable" style="width:50%;">修改USBKey使用状态的原因</label>
+
+                        </div>
+                        <div class="col-sm-6 form-inline" style="width:50%;">
+                            <label class="control-lable" style="width:18%;margin-right:1%"></label>
+                            <select id="levels" name="levels" class="form-control" style="width:42%;">
+                                <option value="">请选择</option>
+                                <option value="领导">领导</option>
+                                <option value="出差">出差</option>
+                                <option value="KEY不兼容">KEY不兼容</option>
+                                <option value="系统管理">系统管理</option>
+                                <option value="Key制作人员">Key制作人员</option>
+                                <option value="临时">临时</option>
+                                <option value="虚拟桌面用户">虚拟桌面用户</option>
+                            </select>
+                            <font color="orangered">*</font>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top: 20px;">
+                    <div class="col-sm-12 form-inline" style="width:100%;">
+                        <textarea class="form-control" rows="5" id="reason" name="reason" style="width:79%;"></textarea>
+                        <font color="orangered">*</font>
+                    </div>
+                </div>
+                <div style="margin-top:20px;width:100%;">
+                    <p class="name" style="text-align: left;font-size: 20px;width:100%;">重置密码</p>
+                </div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline" style="width:50%;">
+                            <label class="control-lable" style="width:15%;margin-right:2%">新密码：</label>
+                            <input  id="newpwd" name="newpwd" type="password" class="form-control" style="width:;" >
+                            <font color="orangered">*</font>
+                            <button class="btn btn-primary" type="button" id="autofill">自动填充</button>
+                        </div>
+                        <div class="col-sm-6 form-inline" style="width:50%;">
+                            <label class="control-lable  " style="width:19%;margin-right:2%;">确认密码：</label>
+                            <input  id="confirmpwd" name="confirmpwd" type="password" class="form-control" style="width:;" >
+                            <font color="orangered">*</font>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top:55px;">
+                    <div class="form-group" style="margin-bottom: 0px;">
+                        <input type="hidden" id="Description" name="Description" value="{$Description}" />
+                        <label class="control-lable  col-sm-4"></label>
+                        <button class="btn btn-primary" type="button" id="submit">提交</button>
+                        <label class="control-lable" style="width:10%">&nbsp;</label>
+                        <button class="btn btn-primary " type="button" id="cancel">取消</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="sys_dept" role="dialog" class="modal fade "></div>
+    <div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+        <div class="modal-dialog" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">处理中</h4>
+                </div>
+                <div class="modal-body">
+                    <img src="__PUBLICOLD__/img/loading/loading8.gif" style='display: block;margin: 0 auto'>
+                    <div id="loadingText" style="text-align: center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    CHOSEN_DEFAULT_TEXT ="";
+</script>
+<script>
+
+
+    $(function () {
+        $(".chosen-select_long").chosen({disable_search_threshold: 10, search_contains: false,width:'40%',height:'88px !imprtant'});
+
+        $(".chosen-select2").chosen({disable_search_threshold: 10, search_contains: true});
+
+        $('#cancel').click(function(){
+            history.go(-1);
+        })
+
+        $('#requireCard').click(function(){
+            var requireCard = $('#requireCard').is(':checked');
+            var levels      = $('#levels');
+            var duetime     = $('#duetime');
+            var reason      = $('#reason');
+            var newpwd      = $('#newpwd');
+            var confirmpwd  = $('#confirmpwd');
+            var autofill    = $('#autofill');
+            allowEdit(requireCard,[levels,duetime,reason,newpwd,confirmpwd,autofill]);
+        })
+
+        var requireCard = $('#requireCard').is(':checked');
+        var levels      = $('#levels');
+        var duetime     = $('#duetime');
+        var reason      = $('#reason');
+        var newpwd      = $('#newpwd');
+        var confirmpwd  = $('#confirmpwd');
+        var autofill    = $('#autofill');
+        allowEdit(requireCard,[levels,duetime,reason,newpwd,confirmpwd,autofill]);
+    });
+
+    $('#submit').on('click',function (){
+        var duetime     = $('#duetime');
+        var requireCard = $('#requireCard').is(':checked');
+        if(!requireCard){
+            var levels     = $('#levels');
+            var reason     = $('#reason');
+            var newpwd     = $('#newpwd');
+            var confirmpwd = $('#confirmpwd');
+            var res = checkSub([duetime,levels,reason,newpwd,confirmpwd]);
+            if(!res) return false;
+            var newpwdval     = $('#newpwd').val();
+            var confirmpwdval = $('#confirmpwd').val();
+            if(newpwdval != confirmpwdval){
+                newpwd.parent().addClass('has-error');
+                confirmpwd.parent().addClass('has-error');
+                alert('新密码与确认密码不一致，请重新填写');
+                return false;
+            }else{
+                newpwd.parent().removeClass('has-error');
+                newpwd.parent().addClass('has-success');
+                confirmpwd.parent().removeClass('has-error');
+                confirmpwd.parent().addClass('has-success');
+            }
+        }
+
+        $.ajax({
+            type:'post',
+            url:'__CONTROLLER__/SetAccountPass',
+            data:{
+                strSAMAccountName:$('#SAMAccountName').val(),
+                Description:$('#Description').val(),
+                DisKeylogin:$('#requireCard').is(':checked'),
+                newpwd:$('#newpwd').val(),
+                duetime:$('#duetime').val(),
+                levels:$('#levels').val(),
+                reason:$('#reason').val()
+            },
+            beforeSend:function(){
+                $("#loadingText").html("正在处理请稍后");
+                $('#loading').modal('show');
+            },
+            success:function(res){
+//                    alert(res);return false;
+                if(res.code != 0){
+                    alert(res.message);
+                    return false;
+                }else{
+                    alert('修改密码成功！');
+                    window.history.go(-1);
+                }
+            },
+            complete:function(){
+                $('#loading').modal('hide');
+            },
+            dataType:'json'
+        });
+    })
+
+    function checkSub(para){
+        var err  = 0;
+        for(var i = 0;i<para.length;i++){
+            if(para[i].val() == ''){
+                para[i].parent().addClass('has-error');
+                err = 1;
+            }else{
+                para[i].parent().removeClass('has-error');
+                para[i].parent().addClass('has-success');
+            }
+        }
+        if(err == 1){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    //自动填充密码
+    $('#autofill').on('click',function(){
+        var Mydate = new Date();
+        var year   = Mydate.getFullYear();
+        $('#newpwd').val('Guanli'+year);
+        $('#confirmpwd').val('Guanli'+year);
+    })
+
+    function allowEdit(sign,para){
+        if(sign){
+            for(var i = 0;i<para.length;i++){
+                if(para[i].attr('id') != 'autofill'){
+                    para[i].val('');
+                    para[i].next('font').html('');
+                    para[i].attr('disabled','disabled');
+                }else{
+                    para[i].attr('disabled','disabled');
+                }
+            }
+        }else{
+            for(var i = 0;i<para.length;i++){
+                if(para[i].attr('id') != 'autofill') {
+                    para[i].next('font').html('*');
+                    para[i].removeAttr('disabled');
+                }else{
+                    para[i].removeAttr('disabled');
+                }
+            }
+        }
+    }
+
+
+</script>
+</body>
+
+</html>
+
+
+
+

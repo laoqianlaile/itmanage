@@ -1,0 +1,198 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<style>
+    th{
+        text-align: center;
+    }
+    .form-control{
+        display: inline-block;
+        width: 250px;
+    }
+    .control-label{
+        font-size: 18px;
+    }
+    .ibox-content{
+        border:none;
+        padding-top:0;
+        padding-bottom: 0;
+    }
+    .wrapper .wrapper-content{
+        padding-top:0;
+    }
+    .fixed-table-toolbar{
+        display: none;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class=" float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <div >
+                        <p class="name" style="text-align: center;font-size: 30px;">系统配置管理</p>
+                    </div>
+
+                    <div class="_box" style="margin-top: -5px;">
+                        <label class="control-label" style="width: 130px">配置项类别：</label>
+                        <select id="classlist" class="chosen-select" onchange="classCallCheck()">
+                            <!--<option value="">&nbsp;</option>-->
+                            <?php foreach($classlist as $key=>$value){ ?>
+                            <option value="{$value.sc_itemclass}"
+                                    >{$value.sc_itemclass}</option>
+                            <?php } ?>
+                        </select>
+                        
+                        <label class="control-label" style=" width: 130px">配置项名称：</label>
+                        <input type="text" class="form-control" placeholder="" id="search_name" style=" width:260px;display: inline-block">
+                        <button class="btn btn-info" style="margin-left: 20px;" type="button" id="sys_refresh"><i class="fa fa-eraser"></i>查询</button>
+                        
+                    </div>
+                    <div>
+                        <table id="atpbiztable" ></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<input type="hidden" id="sort">
+<input type="hidden" id="sortOrder">
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLIC__/img/loading/loading9.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/chosen/chosen.order.jquery.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script>
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '260px'});
+    var TableObj = {
+        oTableInit: function () {
+                $('#atpbiztable').bootstrapTable({
+                    url: '__CONTROLLER__/getData',         //请求后台的URL（*）
+                    method: 'post',                      //请求方式（*）
+                    toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                    striped: true,                      //是否显示行间隔色
+                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    pagination: true,                   //是否显示分页（*）
+                    iconSize: 'outline',
+                    sortable: true,                     //是否启用排序
+                    sortName: "sc_itemname",
+                    sortOrder: "asc",                   //排序方式
+                    queryParams: queryParams,//传递参数（*）
+                    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1,                       //初始化加载第一页，默认第一页
+                    pageSize: 15,                       //每页的记录行数（*）
+                    pageList: [ 15, 25, 50, 100],        //可供选择的每页的行数（*）
+//            strictSearch: true,
+//            showColumns: true,                  //是否显示所有的列
+//            showRefresh: true,                  //是否显示刷新按钮
+                    minimumCountColumns: 2,             //最少允许的列数
+                    clickToSelect: true,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                    uniqueId: "sc_id",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                    detailView: false,                   //是否显示父子表
+                    columns: [[
+                        {
+                            title: '序号', width: 40,
+                            formatter: function (value, row, index) {
+                                var option = $('#atpbiztable').bootstrapTable("getOptions");
+                                return option.pageSize * (option.pageNumber - 1) + index + 1;
+                            }
+                        },
+                        {field: 'sc_itemname', title: '配置项名称', sortable: true, width: 150},
+                        {field: 'sc_itemvalue', title: '配置值', sortable: true, width: 150},
+                        {
+                            field: 'sc_id', title: '操作', sortable: false, width: 60,
+                            formatter: function (value, row, index) {
+                                var inp = "'" + value + "'";
+                                var a = '<a  class="btn btn-info btn-xs" onclick="updateInRow(' + inp + ')">编辑</a><br>';
+                                return a;
+                            }
+                        }
+                    ]
+                    ]
+                });
+            }
+        };
+    TableObj.oTableInit();
+    function updateInRow(id)
+    {
+        layer.open({
+            title:'配置项值修改',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content:'__CONTROLLER__/edit?id='+id,
+            area: ['700px',  '300px']
+        });
+    }
+    function queryParams(params) {  //配置参数
+        $('#sort').val(params.sort);
+        $('#sortOrder').val(params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            sc_itemclass:$('#classlist').val(),
+            sc_itemname:$('#search_name').val()
+        };
+        return temp;
+    }
+
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+    function classCallCheck()
+    {
+        $('#sys_refresh').click();
+    }
+    $('#sys_export').on('click',function() {
+        $('#loading').modal('show');
+        var sort=$('#sort').val();
+        var sortOrder=$('#sortOrder').val();
+        var sc_itemname=$('#search_name').val();
+        var t = "__CONTROLLER__/export?sort="+sort+"&sortOrder="+sortOrder+"&sc_itemname="+sc_itemname;
+        t = encodeURI(t);
+        $.ajax({
+            type:'get',
+            url: t,
+            dataType:'json',
+            success:function(data){
+                $('#loading').modal('hide');
+                if(data.code > 0){
+                    location.href = data.message;
+                }else{
+                    layer.msg(data.message);
+                }
+            }
+        })
+    });
+</script>
+</body>
+
+</html>
+
+
+
+

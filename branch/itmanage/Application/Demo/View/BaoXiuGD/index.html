@@ -1,0 +1,383 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>报修工单管理</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/css/public.css" rel="stylesheet">
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="__PUBLICOLD__/bgadmin/plugins/layui/layui.js"></script>
+
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+    <style>
+
+
+        #atpbiztoolbar {
+            width: 100%;
+        }
+
+
+        .buttons button{
+            float: left;
+            margin:-8px 0 12px 5px !important;
+        }
+
+        .form-control{
+            width: 160px;
+        }
+        #atpbiztoolbar div div label{
+            width: 80px;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <div id="atpbiztoolbar" >
+                        <div class="cb">
+                            <div style="width:28%;" class="fl">
+                                <label class="dib">姓&emsp;&emsp;名:</label>
+                                <input id="realname" type="text" class="form-control dib">
+                            </div>
+                            <div style="width:28%;" class="fl">
+                                <label class="dib">部&emsp;&emsp;门:</label>
+                                <input id="depart" type="text"  class="form-control dib">
+                            </div>
+                            <div style="width:44%;" class="fl">
+                                <label class="control-label dib" >开始时间:</label>
+                                <input id="search_starttime" type="text" class="form-control dib"  onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                                --
+                                <input id="search_endtime" type="text" class="form-control dib"  onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+                           </div>
+                        </div>
+                        <div style="width:100%;margin-top: 12px;margin-bottom:10px;" class="cb">
+
+                            <div style="width:28%;" class="fl">
+                                <label class="dib">报修单号:</label>
+                                <input id="taskid" type="text" class="form-control dib">
+                            </div>
+                            <div style="width:28%;" class="fl">
+                                <label class="dib">状&emsp;&emsp;态:</label>
+                                <select id="bxstatus"  class="form-control dib" >
+                                    <option></option>
+                                    <?php  foreach($zhuangtai as $tempval){ ?>
+                                    <option  value="{$tempval['t_bxstatus']}">{$tempval['t_bxstatus']}</option>
+                                    <?php } ?>
+                                </select>
+                                <!--<input id="bxstatus" type="text"  class="form-control dib">-->
+                            </div>
+                        </div>
+                        <div style="width:100%;margin-top: 12px;margin-bottom:10px;" class="cb">
+                            <div style='width:28%;' class="fl">
+                                <label class="control-label dib" >一线:</label>
+                                <select id="yixian"  class="form-control dib" >
+                                    <option></option>
+                                    <?php  foreach($yixian as $tempval){ ?>
+                                    <option  value="{$tempval['yw_account']}">{$tempval['yw_name']}（{$tempval['yw_account']}）</option>
+                                    <?php } ?>
+                                </select>
+                                <!--<input id="yixian" type="text" class="form-control dib">-->
+                            </div>
+                            <div style="width:28%;" class="fl">
+                                <label class="dib">二线:</label>
+                                <select id="erxian"  class="form-control dib" >
+                                    <option></option>
+                                    <?php  foreach($erxian as $tempval){ ?>
+                                    <option  value="{$tempval['yw_account']}">{$tempval['yw_name']}（{$tempval['yw_account']}）</option>
+                                    <?php } ?>
+                                </select>
+                                <!--<input id="erxian" type="text" class="form-control dib">-->
+                            </div>
+                            <div style="width:35%;" class="fl">
+                                <button class="btn btn-warning " type="button" id="sys_search"><i class="fa fa-search"></i>&nbsp;查询
+                                </button>
+                                <button class="btn btn-danger " type="button" id="sys_reset"><i
+                                        class="fa fa-rotate-right"></i>&nbsp;重置
+                                </button>
+                                <button class="btn btn-error"  type="button" id="sys_del"><i
+                                        class="fa fa-rotate-right"></i>&nbsp;删除</button>
+                            </div>
+                        </div>
+                    </div>
+                    <table id="atpbiztable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<script>
+    $(".chosen-select_longajax").chosen({disable_search_threshold: 0, search_contains: true});//,width:'56%',hight:'80px'
+    $('#t_name').ajaxChosen({
+        dataType: 'json',
+        type: 'POST',
+        url: '__CONTROLLER__/assignuser'
+    }, {
+        loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+    $('#t_person').ajaxChosen({
+        dataType: 'json',
+        type: 'POST',
+        url: '__CONTROLLER__/assignuser'
+    }, {
+        loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+    $('#t_createuserid').ajaxChosen({
+        dataType: 'json',
+        type: 'POST',
+        url: '__CONTROLLER__/assignuser'
+    }, {
+        loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        $("#erxianperson").hide();
+
+        var TableObj = {
+            oTableInit: function () {
+                $('#atpbiztable').bootstrapTable({
+                    url: '__CONTROLLER__/getData',         //请求后台的URL（*）
+                    method: 'post',                      //请求方式（*）
+                    // toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                    striped: true,                      //是否显示行间隔色
+                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    pagination: true,                   //是否显示分页（*）
+                    iconSize: 'outline',
+                    sortable: true,                     //是否启用排序
+                    sortName: "t_atpcreatedatetime",
+                    sortOrder: "desc",                   //排序方式
+                    queryParams: queryParam,//传递参数（*）
+                    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1,                       //初始化加载第一页，默认第一页
+                    pageSize: 10,                       //每页的记录行数（*）
+                    pageList: [5, 10, 25, 50, 100],        //可供选择的每页的行数（*）
+                    search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                    showColumns: false,                  //是否显示所有的列
+                    showRefresh: false,                  //是否显示刷新按钮
+                    minimumCountColumns: 2,             //最少允许的列数
+                    clickToSelect: false,                //是否启用点击选中行
+                    uniqueId: "t_atpid",                     //每一行的唯一标识，一般为主键列
+                    detailView: false,                   //是否显示父子表
+                    detailFormatter: "detailFormatter",
+                    columns: [
+                        [
+                    {checkbox: true},
+                            {
+                                title: '序号', width: 40,
+                                formatter: function (value, row, index) {
+                                    var option = $('#atpbiztable').bootstrapTable("getOptions");
+                                    return option.pageSize * (option.pageNumber - 1) + index + 1;
+                                }
+                            },
+                            {field: 't_taskid', title: '报修单号', sortable: true},
+                            {field: 't_name', title: '姓名', sortable: true},
+                            {field: 'fullname', title: '部门', sortable: true},
+                            {field: 't_atpcreatedatetime', title: '时间', sortable: true},
+                            {field: 'person', title: '一线', sortable: true},
+                            {field: 'person2', title: '二线', sortable: true},
+                            {field: 't_bxcount', title: '处理次数', sortable: true},
+                            {field: 't_bxstatus', title: '状态', sortable: false},
+                            {
+                                field: 't_atpid', title: '操作', sortable: false, width: 60,
+                                formatter: function (value, row, index) {
+                                    var inp = "'" + value + "'";
+                                    if (row['t_bxstatus'] == '等待受理') {
+                                        var a = '<a  class="btn btn-danger btn-xs" onclick="updateInRow(' + inp + ')">处理</a><br>';
+                                        a+='<a  class="btn btn-danger btn-xs" onclick="zhuanpaiInRow(' + inp + ')">转派</a><br>';
+                                    }
+                                    else if(row['t_bxstatus']=="已受理"&&row['shouli']==1){
+                                        var a = '<a  class="btn btn-danger btn-xs" onclick="updateInRow(' + inp + ')">处理</a><br>';
+                                        a+='<a  class="btn btn-danger btn-xs" onclick="zhuanpaiInRow(' + inp + ')">转派</a><br>';
+                                    }
+                                    else if(row['t_bxstatus']=="等待受理（转派）"&&row['zhuanjiao']==1){
+                                        var a = '<a  class="btn btn-danger btn-xs" onclick="updateInRow(' + inp + ')">处理</a><br>';
+                                    }
+                                    else if(row['t_bxstatus']=="已受理（转派）"&&row['zhuanjiao']==1){
+                                        var a = '<a  class="btn btn-danger btn-xs" onclick="updateInRow(' + inp + ')">处理</a><br>';
+                                         a += '<a  class="btn btn-danger btn-xs" onclick="tuihuiInRow(' + inp + ')">退回</a><br>';
+                                    }
+                                    else  {
+                                        var a = '<a  class="btn btn-info btn-xs" onclick="showInRow(' + inp + ')">详情</a><br>';
+                                    }
+                                    return a;
+                                }
+                            }
+                        ]
+                    ],
+                    onSort: function (name, order) {
+                    }
+                });
+            }
+        };
+        TableObj.oTableInit();
+        $('#sys_search').on('click', function () {
+            $('#atpbiztable').bootstrapTable('destroy');
+            TableObj.oTableInit();
+        });
+    });
+    function queryParam(params) {  //配置参数
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            search: params.search,
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            realname:$('#realname').val(),
+            depart:$('#depart').val(),
+            starttime:$('#search_starttime').val(),
+            endtime:$('#search_endtime').val(),
+            taskid:$('#taskid').val(),
+            bxstatus:$('#bxstatus').val(),
+            problemtype:$('#problemtype').val(),
+            yixian:$('#yixian').val(),
+            erxian:$('#erxian').val()
+        };
+        return temp;
+    }
+
+    function updateInRow(id) {
+        layer.open({
+            title:'信息中心技术支持中心',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content:'__CONTROLLER__/edit?id='+id,
+            area: ['800px', '520px']
+        });
+    }
+    function showInRow(id) {
+        layer.open({
+            title:'信息中心技术支持中心',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content:'__CONTROLLER__/detail?id='+id,
+            area: ['800px', '520px']
+        });
+    }
+
+    function tuihuiInRow(id) {
+        layer.open({
+            title:'信息中心技术支持中心',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content:'__CONTROLLER__/tuihui?id='+id,
+            area: ['800px', '520px']
+        });
+    }
+    function zhuanpaiInRow(id) {
+        layer.open({
+            title:'信息中心技术支持中心',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content:'__CONTROLLER__/zhuanpai?id='+id,
+            area: ['800px', '520px']
+        });
+    }
+    $('#sys_reset').on('click', function () {
+        $('#realname').val("");
+        $('#depart').val("");
+        $('#search_starttime').val("");
+        $('#search_endtime').val("");
+        $('#taskid').val("");
+        $('#bxstatus').val("");
+        $('#yixian').val("");
+        $('#erxian').val("");
+    });
+
+    function submitdata() {
+        var formbody = $("#sys_dlg_form");
+        $.post('__CONTROLLER__/submit', formbody.serialize(), function (rep) {
+            if (rep == "success") {
+                $('#atpbiztable').bootstrapTable('refresh');
+            } else {
+                alert("保存失败！");
+                $('#atpbiztable').bootstrapTable('refresh');
+            }
+
+        });
+    }
+    $('#sys_del').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            layer.alert("您尚未选择数据");
+        } else {
+            layer.confirm('确认删除' + tablerow.length + '条数据?',{btn:['确定','取消']},function(){
+                var ids = [];
+                var status = [];
+                $.each(tablerow, function () {
+                    ids.push(this['t_taskid']);
+                    status.push(this['t_bxstatus']);
+                });
+                if(status.indexOf('已受理')>=0||status.indexOf('等待受理（转派）')>=0||status.indexOf('已受理（转派）')>=0||status.indexOf('处理完毕')>=0||status.indexOf('已评价')>=0)
+                {
+                    layer.alert("只可删除状态为等待受理的数据");
+                    return;
+                }
+                $.ajax({
+                    type:'post',
+                    url:'__CONTROLLER__/deltasks',
+                    data:{ids: ids.join(',')},
+                    dataType :'json',
+                    success:function(data){
+                        if(data.code > 0){
+                            layer.alert('操作成功');
+                        }else{
+                            layer.alert(data.message);
+                        }
+                        $('#atpbiztable').bootstrapTable('refresh');
+                    }
+                })
+            })
+        }
+    });
+
+    setInterval(function refresh() {
+        $('#atpbiztable').bootstrapTable('refresh')
+    },60000)
+
+</script>
+</body>
+
+</html>
+
+
+
+

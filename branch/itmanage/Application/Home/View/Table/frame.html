@@ -1,0 +1,96 @@
+<include file="Universal@Public:header" />
+<style>
+    .layui-tab-content {
+        padding-bottom: 0 !important;
+        padding-top: 0;
+    }
+
+    input, textarea, select {
+        margin-bottom: 8px;
+    }
+    .layui-tab {
+        margin-bottom: 0 !important;
+        margin-top: 0;
+    }
+    #layui-title li {
+        width: 12%;
+    }
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    .layui-tab-item>iframe{
+        width: 100%;box-sizing:border-box;overflow:hidden;border: none;
+    }
+    .modal-body {
+        padding: 3px !important;
+    }
+</style>
+<body>
+<div style="overflow: hidden">
+    <div class="modal-body" style="overflow: hidden">
+        <div class="layui-tab layui-tab-brief" lay-filter="demo">
+            <ul class="layui-tab-title" id="layui-title" >
+
+                <li class="layui-this layui-tab-item tab" url="http://10.78.72.239:8075/WebReport/ReportServer?formlet=501%2Finformation%2FITRelation.frm">事项关联</li>
+                <li class=" layui-tab-item tab" url="http://10.78.72.239:8075/WebReport/ReportServer?reportlet=501%2Finformation%2Fappinfo.cpt">应用系统 </li>
+                <li class=" layui-tab-item tab" url="http://10.78.72.239:8075/WebReport/ReportServer?reportlet=501%2Finformation%2Fserver.cpt">物理服务器</li>
+                <li class=" layui-tab-item tab" url="http://10.78.72.239:8075/WebReport/ReportServer?reportlet=501%2Finformation%2Fvserver.cpt">虚拟服务器</li>
+               <!--  <li class=" layui-tab-item tab" url="http://10.78.72.239:8075/WebReport/ReportServer?reportlet=501%2Finformation%2Ftest3.cpt">IP地址</li> -->
+                <li class=" layui-tab-item tab" url="http://10.78.72.239:8075/WebReport/ReportServer?reportlet=501%2Finformation%2Fappinfo_nounion.cpt">应用系统(明细)</li>
+                <li class=" layui-tab-item tab" url="http://10.78.72.239:8075/WebReport/ReportServer?reportlet=501%2Finformation%2Fserver_nounion.cpt">物理服务器(明细)</li>
+                <li class=" layui-tab-item tab" url="http://10.78.72.239:8075/WebReport/ReportServer?reportlet=501%2Finformation%2Fvserver_nounion.cpt">虚拟服务器(明细)</li>
+
+            </ul>
+            <div class="layui-tab-content" id="layui-content">
+                <div lay-id="1" class="layui-tab-item">
+                    <iframe  id="framecontent" url="" style="" src="" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $(function () {
+        layui.use('layer', function () {
+            layer = layui.layer;
+            if($('.tab').length ==0) {
+                layer.alert('您在本页面中没有任何操作权限！');
+                return ;
+            }
+        })
+        layui.use('element', function () {
+            var element = layui.element();
+            element.on('tab(demo)', function (data) {
+            });
+        })
+
+        var ifm = $('iframe');
+//        var height = document.documentElement.clientHeight -60;
+        var height = $(window).height();
+//        alert(height);
+        var iframeHeigth = height-60;
+        ifm.css('height', iframeHeigth+'px');
+        //判断先展示那个div
+        var show_div = "<?php echo I('get.show_div',0,'intval'); ?>";
+        var content_obj = $('#layui-content').children();
+        var title_obj = $('#layui-title').children();
+        if (show_div != 0) {
+            var index = show_div -1;
+            ifm.eq(index).attr('src',$('.tab').eq(index).attr('url'));
+            content_obj.eq(index).addClass('layui-show').siblings().removeClass('layui-show');
+            title_obj.eq(index).addClass('layui-this').siblings().removeClass('layui-this');
+        } else {
+            content_obj.eq(0).addClass('layui-show');
+            ifm.eq(0).attr('src',$('.tab').eq(0).attr('url'));
+            title_obj.eq(0).addClass('layui-this');
+        }
+
+        $('.tab').click(function(){
+            var iframeLink = $(this).attr('url');
+            ifm.attr('src',iframeLink);
+        })
+    });
+
+</script>

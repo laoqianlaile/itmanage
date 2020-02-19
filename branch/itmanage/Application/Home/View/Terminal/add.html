@@ -1,0 +1,520 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">信息编辑</h4>
+        </div>
+        <form id="sys_dlg_form" role="form">
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-sm-6">
+
+                        <div class="panel-body">
+                            <div class="heng">
+                                <div class="form-group_l">
+                                    <label>设备名称(<span style="color: #f00;">*</span>)</label>
+                                    <input id="zd_name" name="zd_name" type="text" value="{$data.zd_name}" class="form-control">
+                                </div>
+                                <div class="form-group_r">
+                                    <label>设备编码(<span style="color: #f00;">*</span>)</label>
+                                    <input id="zd_devicecode" name="zd_devicecode" type="text" value="{$data.zd_devicecode}"class="form-control">
+                                </div>
+                                <div class="form-group_l">
+                                    <label>出厂编号</label>
+                                    <input id="zd_seqno" name="zd_seqno" type="text" value="{$data.zd_seqno}"class="form-control">
+                                </div>
+                                <div class="form-group_r">
+                                    <label>IP地址</label>
+                                    <input id="zd_ipaddress" name="zd_ipaddress" type="text" value="{$data.zd_ipaddress}"class="form-control">
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_l">
+                                    <label>MAC地址</label>
+                                    <input id="zd_macaddress" name="zd_macaddress" type="text" value="{$data.zd_macaddress}" class="form-control">
+                                </div>
+                                <div class="form-group_r">
+                                    <label>设备类型(<span style="color: #f00;">*</span>)</label>
+
+                                    <select name="zd_type"  class="form-control" id="zd_type" style="margin-bottom: -5px;width:65%;">
+                                        <option value="">--请选择--</option>
+                                        <foreach name="ds_sbtype" item="vo">
+                                            <option value="{$vo.dic_name}" <if condition="($data.zd_type eq $vo['dic_name'])">selected="selected"</if>>{$vo.dic_name}</option>
+                                        </foreach>
+                                    </select>
+                                </div>
+                                <div class="form-group_l">
+                                    <label>厂家</label>
+                                    <select name="zd_factoryname"  class="form-control" id="zd_factoryname" style="margin-bottom: -5px;width:65%;">
+                                        <option value="">--请选择--</option>
+                                    </select>
+                                </div>
+                                <div class="form-group_r">
+                                    <label>型号</label>
+                                    <select name="zd_modelnumber"  class="form-control" id="zd_modelnumber" style="margin-bottom: -5px;width:65%;">
+                                        <option value="">--请选择--</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_l">
+                                    <label>状态</label>
+                                    <select name="zd_status" id="zd_status" class="form-control" style="margin-bottom: -5px;width:65%;">
+                                        <option value="">--请选择--</option>
+                                        <!--<option value="在用"  <if condition="($data.zd_status eq '在用')">selected="selected"</if>>在用</option>-->
+                                        <!--<option value="备用"  <if condition="($data.zd_status eq '备用')">selected="selected"</if>>备用</option>-->
+                                        <!--<option value="返修"  <if condition="($data.zd_status eq '返修')">selected="selected"</if>>返修</option>-->
+                                        <!--<option value="特殊"  <if condition="($data.zd_status eq '特殊')">selected="selected"</if>>特殊</option>-->
+                                        <foreach name="status" item="v">
+                                            <option value="{$v.dic_name}" <if condition="($data.zd_status eq $v['dic_name'])">selected="selected"</if>>{$v.dic_name}</option>
+                                        </foreach>    
+                                    </select>
+                                </div>
+                                <div class="form-group_r">
+                                    <label>密级</label>
+                                    <select name="zd_secretlevel" id="zd_secretlevel" class="form-control" style="margin-bottom: -5px;width:65%;">
+                                        <option value="">--请选择--</option>
+                                        <foreach name="ds_miji" item="vo">
+                                            <option value="{$vo.dic_name}" <if condition="($data.zd_secretlevel eq $vo['dic_name'])">selected="selected"</if>>{$vo.dic_name}</option>
+                                        </foreach>
+                                    </select>
+                                </div>
+                                <div class="form-group_l">
+                                    <label>采购日期</label>
+                                    <input id="zd_purchasetime" name="zd_purchasetime" type="text" value="{$data.zd_purchasetime}" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="form-control">
+                                </div>
+                                <div class="form-group_r">
+                                    <label>到保日期</label>
+                                    <input id="zd_maintainendtime" name="zd_maintainendtime" type="text" value="{$data.zd_maintainendtime}" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="form-control">
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_l">
+                                    <label>地区</label>
+                                    <select name="zd_area"  class="form-control" id="zd_area" style="margin-bottom: -5px;width:65%;">
+                                        <option value="">--请选择--</option>
+                                        <foreach name="ds_area" item="vo">
+                                            <option value="{$vo.dic_id}" <if condition="($data.zd_area eq $vo['dic_name'])">selected</if>>{$vo.dic_name}</option>
+                                        </foreach>
+                                    </select>
+                                </div>
+                                <div class="form-group_r">
+                                    <label>楼宇</label>
+                                    <select name="zd_belongfloor"  class="form-control" id="zd_belongfloor" style="margin-bottom: -5px;width:65%;">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                                <div class="form-group_l">
+                                    <label>房间号</label>
+                                    <input id="zd_roomno" name="zd_roomno" type="text" value="{$data.zd_roomno}" class="form-control">
+                                </div>
+                                <div class="form-group_r">
+                                    <label>部标编码</label>
+                                    <input id="zd_anecode" name="zd_anecode" type="text" value="{$data.zd_anecode}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_l">
+                                    <label>表单编号</label>
+                                    <input id="zd_bdid" name="zd_bdid" type="text" value="{$data.zd_bdid}" class="form-control">
+                                </div>
+                                <div class="form-group_r">
+                                    <label>启用日期</label>
+                                    <input id="zd_startusetime" name="zd_startusetime" type="text" value="{$data.zd_startusetime}" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="form-control" >
+                                </div>
+                                <div class="form-group_l">
+                                    <label>保密台账</label>
+                                    <select name="zd_privacybook" id="zd_privacybook" class="form-control" style="margin-bottom: -5px;width:65%;">
+                                        <option value="">--请选择--</option>
+                                        <foreach name="ds_bmtz" item="vo">
+                                            <option value="{$vo.dic_name}" <if condition="($data.zd_privacybook eq $vo['dic_name'])">selected="selected"</if>>{$vo.dic_name}</option>
+                                        </foreach>
+                                    </select>
+                                </div>
+                                <div class="form-group_r">
+                                    <label>资产台账</label>
+                                    <select name="zd_devicebook" id="zd_devicebook" class="form-control" style="margin-bottom: -5px;width:65%;">
+                                        <option value="">--请选择--</option>
+                                        <foreach name="ds_zctz" item="vo">
+                                            <option value="{$vo.dic_name}" <if condition="($data.zd_devicebook eq $vo['dic_name'])">selected="selected"</if>>{$vo.dic_name}</option>
+                                        </foreach>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_l">
+                                    <label>硬盘序号</label>
+                                    <input id="zd_harddiskseq" name="zd_harddiskseq" type="text" value="{$data.zd_harddiskseq}" class="form-control">
+                                </div>
+                                <div class="form-group_r">
+                                    <label style="margin-top: 0;">OS安装日期</label>
+                                    <input id="zd_osinstalltime" name="zd_osinstalltime" type="text" value="{$data.zd_osinstalltime}" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="form-control" >
+                                </div>
+                                <div class="form-group_l">
+                                    <label>是否隔离</label>
+                                    <select name="zd_isisolate" id="zd_isisolate" class="form-control" style="margin-bottom: -5px;width:65%;">
+                                        <option value="">--请选择--</option>
+                                        <option value="是" <if condition="($data.zd_isisolate eq '是')">selected</if>>是</option>
+                                        <option value="否" <if condition="($data.zd_isisolate eq '否')">selected</if>>否</option>
+                                    </select>
+                                </div>
+                                <div class="form-group_r">
+                                    <label style="margin-top: 0;">是否安装干扰器</label>
+                                    <select name="zd_isinstalljammer" id="zd_isinstalljammer" class="form-control" style="margin-bottom: -5px;width:65%;">
+                                        <option value="">--请选择--</option>
+                                        <option value="是" <if condition="($data.zd_isinstalljammer eq '是')">selected</if>>是</option>
+                                        <option value="否" <if condition="($data.zd_isinstalljammer eq '否')">selected</if>>否</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_l">
+                                    <label>责任人</label>
+                                    <select name="zd_dutyman"  class="chosen-select_longajax" id="zd_dutyman" style="margin-bottom: -5px;width:56%;" >
+                                        <option value="<?php echo $data['zd_dutyman'];?>"><?php echo $dutyman;?></option>
+                                    </select>
+                                </div>
+                                <div class="form-group_r">
+                                    <label>责任部门</label>
+                                    <select name="zd_dutydeptid"  class="chosen-select_longajax" id="zd_dutydeptid" style="margin-bottom: -5px;width:65%;">
+                                        <option value="{$data.zd_dutydeptid}"><?php echo $dutydeptname;?></option>
+                                    </select>
+                                </div>
+                                <div class="form-group_l">
+                                    <label>使用人</label>
+                                    <select name="zd_useman"  class="chosen-select_longajax" id="zd_useman" style="margin-bottom: -5px;width:50%;">
+                                        <option value="<?php echo $data['zd_useman'];?>"><?php echo $useman;?></option>
+                                    </select>
+                                </div>
+                                <div class="form-group_r">
+                                    <label>维保日期</label>
+                                    <input id="zd_maintainbegintime" name="zd_maintainbegintime" type="text" value="{$data.zd_maintainbegintime}" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="form-control" >
+                                </div>
+                            </div>
+                            <div class="heng">
+                                <div class="form-group_heng">
+                                    <label style="float: left; width: 6.3%;">备注</label>
+                                    <textarea id="zd_memo" name="zd_memo" class="form-control" style="width: 91%;">{$data.zd_memo}</textarea>
+                                </div>
+                            </div>
+                            <input id="zd_atpid" name="zd_atpid" type="hidden" value="{$data.zd_atpid}" class="form-control">
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>
+                <input type="submit" id="sys_dlg_submit" value="保存" class="btn btn-primary" />
+                <!--<button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary">保存</button>-->
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--<link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLIC__/vendor/tabs/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">-->
+<!--<link href="__PUBLIC__/vendor/tabs/css/font-awesome.css?v=4.4.0" rel="stylesheet">-->
+<!--<link href="__PUBLIC__/vendor/tabs/css/animate.css" rel="stylesheet">-->
+<!--<link href="__PUBLIC__/vendor/tabs/css/style.css?v=4.0.0" rel="stylesheet"> -->
+<style type="text/css">
+    .modal-dialog{width: 94%;height: 80%;}
+    .col-sm-6{width:100%;}
+    .heng{width:100%;height: 50px;}
+    .form-group_heng{width:100%;height: 50px;}
+    .form-group_l{width:25%;float: left;}
+    .form-group_r{width:25%;float: left;}
+    .form-group_r label{width:25%;float: left;margin-top: 7px;}
+    .form-group_l label{width:25%;float: left;margin-top: 7px;}
+    /*.heng div label{width:20%;float: left;margin-top: 7px;}*/
+    .form-control{width:65%;}
+    .form-group_21{width:33.3%;float:left;}
+    .form-group_22{width:33.3%;float:left;}
+    .form-group_23{width:33.3%;float:left;}
+    .fengetitle{height: 40px;margin-bottom: 10px;font-size: 20px;font-family: 微软雅黑;text-align: center;line-height: 40px;width: 60%;margin-left: 20%;border-bottom: 1px solid #cdcdcd;}
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function(e){
+        $(".js-switch").each(function(){
+            new Switchery(this, {color: '#1AB394'});
+        });
+        /*here for edit 下拉框多级联动自动选中*/
+        var area = $("#zd_area option:selected").val();
+        $.post('__CONTROLLER__/getbuilding', {area: area}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#zd_belongfloor").children().remove();
+                var item = "";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['dic_id'] + "'";
+                    if(typearr[i]['dic_name'] == "{$data.zd_belongfloor}")
+                        item += " selected>" + typearr[i]['dic_name'] + "</option>";
+                    else
+                        item += ">" + typearr[i]['dic_name'] + "</option>";
+
+                }
+                $("#zd_belongfloor").append(item);
+            }
+            else
+            {
+                $("#zd_belongfloor").children().remove();
+            }
+
+        });
+        var sbtype = $("#zd_type option:selected").val();
+        $.post('__CONTROLLER__/getfactory', {sbtype: sbtype}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#zd_factoryname").children().remove();
+                var item = "<option value=''>--请选择--</option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['dic_id'] + "'";
+                    if(typearr[i]['dic_name'] == "{$data.zd_factoryname}")
+                        item += " selected>" + typearr[i]['dic_name'] + "</option>";
+                    else
+                        item += ">" + typearr[i]['dic_name'] + "</option>";
+                }
+                $("#zd_factoryname").append(item);
+            }
+            else
+                $("#zd_factoryname").children().remove();
+            var factory = $("#zd_factoryname option:selected").val();
+            $.post('__CONTROLLER__/getmodel', {factory: factory}, function (rep) {
+                var typearr = eval("(" + rep + ")");
+                if (typearr.length > 0) {
+//                    alert(typearr.length);
+                    $("#zd_modelnumber").children().remove();
+                    var item = "";
+                    for (var i = 0; i < typearr.length; i++) {
+                        item += "<option value='" + typearr[i]['dic_id'] + "'";
+                        if(typearr[i]['dic_name'] == "{$data.zd_modelnumber}")
+                            item += " selected>" + typearr[i]['dic_name'] + "</option>";
+                        else
+                            item += ">" + typearr[i]['dic_name'] + "</option>";
+                    }
+                    $("#zd_modelnumber").append(item);
+                }
+                else
+                    $("#zd_modelnumber").children().remove();
+
+
+            });
+        });
+
+        $(".chosen-select_longajax").chosen({disable_search_threshold: 0, search_contains: true,width:'65%'});
+
+        $('#zd_dutyman').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        $('#zd_dutydeptid').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assigndept'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+//        <foreach name="username" item="vo">
+//                $('#zd_useman').append('<option value="{$vo.username}" selected="selected">{$vo.realusername}</option>');
+//        </foreach>
+//        $('#zd_useman').trigger("chosen:updated");
+        $('#zd_useman').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        $.validator.setDefaults({
+            highlight:function(element){
+                $(element).closest('.form-group').remove('has-success').addClass('has-error');
+            },
+            success:function(element){
+                $(element).closest('.form-group').remove('has-error').addClass('has-success');
+            },
+            errorElement:'span',
+            errorPlacement:function(error,element){
+                if(element.is(":radio") || element.is(":checkbox")){
+                    error.appendTo(element.parent().parent().parent());
+                }else{
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass:"help-block m-b-none",
+            validClass:"help-block m-b-none"
+        });
+        $.validator.addMethod("checkip",function(value,element){
+            var ipaddr = $('#zd_ipaddress').val();
+            var flag = ip_verify(ipaddr);
+            return flag;
+        });
+        $.validator.addMethod("checkmac",function(value,element){
+            var macaddr = $('#zd_macaddress').val();
+            var flag = mac_verify(macaddr);
+            return flag;
+        });
+        $("#sys_dlg_form").validate({
+            rules :{
+                zd_name :"required",
+                zd_devicecode :"required",
+                zd_ipaddress :{
+                    required: "true",
+                    checkip: "true"
+                },
+                zd_macaddress :{
+                    required: "true",
+                    checkmac: "true"
+                },
+                zd_type :"required",
+                // zd_factoryname: "required",
+                // zd_modelnumber: "required",
+                zd_dutyman:"required",
+                zd_dutydeptid:"required"
+
+            },
+            messages:{
+                zd_name : "必填",
+                zd_devicecode : "必填",
+                zd_ipaddress :{
+                    required: "必填",
+                    checkip: "IP地址不合法"
+                },
+                zd_macaddress :{
+                    required: "必填",
+                    checkmac: "MAC地址不合法"
+                },
+                zd_type :"必填",
+                // zd_factoryname: "必填",
+                // zd_modelnumber: "必填",
+                zd_dutyman:"必填",
+                zd_dutydeptid:"必填"
+
+            },
+            submitHandler:function(){
+                var formBody = $('#sys_dlg_form');
+                $.post('__CONTROLLER__/submit',formBody.serialize(), function(data) {
+                    if("success" == data) {
+                        $("#sys_dlg").modal("hide");
+                        $('#atpbiztable').bootstrapTable("refresh");
+                    }else {
+                        alert('保存失败');
+                    }
+                });
+            }
+
+        });
+
+    })
+    $('#zd_type').on('change',function() {
+        var sbtype = $("#zd_type option:selected").val();
+        $.post('__CONTROLLER__/getfactory', {sbtype: sbtype}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#zd_factoryname").children().remove();
+                var item = "<option value=''>--请选择--</option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['dic_id'] + "'>" + typearr[i]['dic_name'] + "</option>";
+                }
+                $("#zd_factoryname").append(item);
+            }
+            else
+            {   var item = "<option value=''>--请选择--</option>";
+                $("#zd_factoryname").children().remove();
+                $("#zd_modelnumber").children().remove();
+                $("#zd_factoryname").append(item);
+                $("#zd_modelnumber").append(item);
+            }
+        });
+    });
+    $('#zd_factoryname').on('change',function() {
+        var factory = $("#zd_factoryname option:selected").val();
+        $.post('__CONTROLLER__/getmodel', {factory: factory}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#zd_modelnumber").children().remove();
+                var item = "<option value=''>--请选择--</option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['dic_id'] + "'";
+                    if(typearr[i]['dic_name'] == "{$data.zd_modelnumber}")
+                        item += " selected>" + typearr[i]['dic_name'] + "</option>";
+                    else
+                        item += ">" + typearr[i]['dic_name'] + "</option>";
+                }
+                $("#zd_modelnumber").append(item);
+            }
+            else
+                $("#zd_modelnumber").children().remove();
+
+        });
+    });
+    $('#zd_area').on('change',function() {
+        var area = $("#zd_area option:selected").val();
+        $.post('__CONTROLLER__/getbuilding', {area: area}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#zd_belongfloor").children().remove();
+                var item = "<option value=''>--请选择--</option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['dic_id'] + "'";
+                    if(typearr[i]['dic_name'] == "{$data.zd_belongfloor}")
+                        item += " selected>" + typearr[i]['dic_name'] + "</option>";
+                    else
+                        item += ">" + typearr[i]['dic_name'] + "</option>";
+                }
+                $("#zd_belongfloor").append(item);
+            }
+            else
+            {
+                $("#zd_belongfloor").children().remove();
+            }
+
+
+        });
+    });
+
+    $('#zd_dutyman').change(function(){
+        var username = $(this).val();
+        $.ajax({
+            type:'post',
+            url:'__MODULE__/ShiXiang/FindId',
+            data:{username:username},
+            dataType:'json',
+            success:function(res){
+                if(res.code > 0){
+                    var str = "<option value='" + res.message[0] + "'  " + 'selected' + ">" + res.message[1] + "</option>";
+                    $('#zd_dutydeptid').append(str)
+                    $('#zd_dutydeptid').trigger("chosen:updated")
+                }else{
+                    alert(res.message)
+                }
+            }
+        })
+    })
+    function ip_verify(addr){
+        var reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])){3}$/;
+        if(addr.match(reg)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    function mac_verify(addr){
+        var reg = /[A-Fa-f0-9]{4}.[A-Fa-f0-9]{4}.[A-Fa-f0-9]{4}/;
+        if(addr.match(reg)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+</script>

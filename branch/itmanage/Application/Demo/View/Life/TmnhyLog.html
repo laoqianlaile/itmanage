@@ -1,0 +1,324 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>公用计算机日志查询</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+     
+    <style>
+        #atpbiztoolbar{width:100%;}
+        .control-label{
+            float:left;
+            width:32%;
+        }
+        .control-div{
+            float:left;
+            width:24%;
+            margin-top: 15px;
+        }
+        .fixed-table-container{
+            width:98%;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <div id="atpbiztoolbar" >
+                        <div class="col-sm-12">
+                            <div class="control-div">
+                                <label class="control-label">设备名称&nbsp;</label>
+                                <input id="name" type="text" width="100px" class="form-control"  style="margin-bottom: -5px;width:57%;">
+                            </div>
+                            <div class="control-div">
+                                <label class="control-label">设备编码&nbsp;</label>
+                                <input id="devicecode" type="text" width="100px" class="form-control"  style="margin-bottom: -5px;width:57%;">
+                            </div>
+                            <div class="control-div">
+                                <label class="control-label">IP地址&nbsp;</label>
+                                <input id="ipaddress" type="text" width="100px" class="form-control"  style="margin-bottom: -5px;width:57%;">
+                            </div>
+                            <div class="control-div">
+                                <label class="control-label">MAC地址&nbsp;</label>
+                                <input id="macaddress" type="text" width="100px" class="form-control"  style="margin-bottom: -5px;width:57%;">
+                            </div>
+                            <div class="control-div">
+                                <label class="control-label">责任人&nbsp;</label>
+                                <select id="dutyman" class="chosen-select_longajax"  style="margin-bottom: -5px;width:57%;">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                            <div  class="control-div">
+                                <label class="control-label">状态&nbsp;</label>
+                                <select id="status" class="form-control"  style="margin-bottom: -5px;width:57%;">
+                                    <option value=""></option>
+                                    <option value="在用">在用</option>
+                                    <option value="备用">备用</option>
+                                    <option value="返修">返修</option>
+                                    <option value="特殊">特殊</option>
+                                </select>
+                            </div>
+                            <div  class="control-div">
+                                <label class="control-label">厂家&nbsp;</label>
+                                <select id="factoryname" class="form-control"  style="margin-bottom: -5px;width:57%;"></select>
+                            </div>
+                            <div  class="control-div">
+                                <label class="control-label">型号&nbsp;</label>
+                                <select id="modelname" class="form-control"  style="margin-bottom: -5px;width:57%;"></select>
+                            </div>
+                        </div>
+
+                        <div style="float:left;width:23.3%;margin-top: 15px;margin-left:15px;height: auto">
+                            <label style="float:left;width:32%;">操作人&nbsp;</label>
+                            <select id="opuserid" class="chosen-select_longajax"  style="margin-bottom: -5px;width:56%;">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div style="float:left;width:24%;margin-top: 15px;">
+                            <label style="float:left;width:32%;">操作内容&nbsp;</label>
+                            <input  id="detail" type="text" width="100px" class="form-control"  style="margin-bottom: -5px;width:56%;">
+                        </div>
+                        <div style="float:left;width:24%;margin-top: 15px;">
+                            <label style="float:left;width:32%;">操作类型&nbsp;</label>
+                            <select id="optype"  type="text" width="100px" class="form-control"  style="margin-bottom: -5px;width:56%;">
+                                <option value=""></option>
+                                <option value="add">新增</option>
+                                <option value="update">修改</option>
+                                <option value="delete">删除</option>
+                            </select>
+                        </div>
+                        <div style="float:left;width:24%;margin-top: 15px;">
+                        <button class="btn btn-success " type="button" id="sys_search"><i class="fa fa-search"></i>&nbsp;查询</button>
+                        <button class="btn btn-danger " type="button" id="sys_del"><i class="fa fa-rotate-right"></i>&nbsp;重置</button>
+                        <!--<button class="btn btn-info " type="button" id="sys_exp"><i class="fa fa-sign-out"></i>&nbsp;导出</button>-->
+                        </div>
+                    </div>
+                    <table id="atpbiztable" ></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input id="sortfield" value="" type="hidden"/>
+<input id="sortorder" value="" type="hidden"/>
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<script>
+    $(function () {
+        $(".chosen-select_longajax").chosen({disable_search_threshold: 0, search_contains: true});
+        $('#dutyman').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__CONTROLLER__/assignuser'
+        },{
+            loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        $('#opuserid').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__CONTROLLER__/assignuser'
+        },{
+            loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        var sbtype = '154110'; //设备类型实际为瘦客户机
+        $.post('__CONTROLLER__/getfactory', {sbtype: sbtype}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#factoryname").children().remove();
+                var item = "";
+                item += "<option value='' selected='selected'></option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'>" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#factoryname").append(item);
+            }else{
+                $("#factoryname").children().remove();
+                $("#modelname").children().remove();
+            }
+        });
+
+        var TableObj = {
+            oTableInit: function () {
+                $('#atpbiztable').bootstrapTable({
+                    url: '__CONTROLLER__/getloghydataforview',
+                    method: 'post',
+                    toolbar: '#atpbiztoolbar',
+                    striped: true,
+                    cache: false,
+                    pagination: true,
+                    iconSize: 'outline',
+                    sortable: true,
+                    sortName: "l_optime",
+                    sortOrder: "desc",
+                    queryParams: queryParams,
+                    sidePagination: "server",
+                    pageNumber: 1,
+                    pageSize: 10,
+                    pageList: [5, 10, 25, 50, 100],
+                    search: false,
+                    showColumns: false,
+                    showRefresh: false,
+                    minimumCountColumns: 2,
+                    clickToSelect: false,
+                    uniqueId: "l_atpid",
+                    detailView: true,
+                    detailFormatter: "detailFormatter",
+                    columns: [
+                        [
+                            {
+                                title: '序号', width: 40,
+                                formatter: function (value, row, index) {
+                                    var option = $('#atpbiztable').bootstrapTable("getOptions");
+                                    return option.pageSize * (option.pageNumber - 1) + index + 1;
+                                }
+                            },
+                            {field: 'l_opusername', title: '操作人', sortable: true},
+                            {field: 'l_optime', title: '操作时间', sortable: true},
+                            {field: 'optypename', title: '操作类型', sortable: true},
+                            {field: 'zd_ipaddress', title: 'IP地址', sortable: false},
+                            {field: 'zd_dutymanname', title: '责任人', sortable: false},
+                            {field: 'l_detailbrief', title: '操作内容', sortable: true,width:50}
+                        ]
+                    ]
+                });
+            }
+        };
+        $('#sys_search').on('click',function(){
+            $('#atpbiztable').bootstrapTable('destroy');
+            TableObj.oTableInit();
+        });
+        TableObj.oTableInit();
+    });
+    function queryParams(params) {  //配置参数
+        $("#sortfield").attr("value",params.sort);
+        $("#sortorder").attr("value",params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            search: params.search,
+            sortOrder: params.order,//排位命令（desc，asc）
+            dutyman:$('#dutyman').val(),
+            sort: params.sort,  //排序列名
+            name:$('#name').val(),
+            opuserid:$('#opuserid').val(),
+            ipaddress:$('#ipaddress').val(),
+            macaddress:$('#macaddress').val(),
+            devicecode:$('#devicecode').val(),
+            status:$('#status option:selected').val(),
+            factoryname:$('#factoryname option:selected').val(),
+            modelname:$('#modelname option:selected').val(),
+            optype:$('#optype option:selected').val(),
+            detail:$('#detail').val()
+        };
+        return temp;
+    }
+
+    $('#sys_del').on('click',function() {
+        $('#ipaddress').val("");
+        $('#optype').val("");
+        $('#name').val("");
+        $('#detail').val("");
+        $('#macaddress').val("");
+        $('#devicecode').val("");
+        $('#status').val("");
+        $('#factoryname').val("");
+        $('#modelname').val("");
+        $('#dutyman').val("");
+        $('#dutyman').trigger("chosen:updated");
+        $('#opuserid').val("");
+        $('#opuserid').trigger("chosen:updated");
+    });
+
+    $('#sys_exp').on('click',function(){
+        var dutyman       = $("#dutyman").val();
+        var opuserid      = $("#opuserid").val();
+        var ipaddress     = $("#ipaddress").val();
+        var macaddress    = $("#macaddress").val();
+        var name          = $("#name").val();
+        var devicecode    = $("#devicecode").val();
+        var status        = $("#status option:selected").val();
+        var detail        = $("#detail").val();
+        var optype        = $("#optype option:selected").val();
+        var factoryname   = $("#factoryname option:selected").val();
+        var modelname     = $("#modelname option:selected").val();
+        var sortOrder = $("#sortorder").val();
+        var sortfield = $("#sortfield").val();
+        window.location.href="__CONTROLLER__/tmnhylog_exp?opuserid="+opuserid+"&ipaddress="+ipaddress+"&macaddress="+macaddress+"&optype="+optype+"&name="+name+"&dutyman="+dutyman+"&detail="+detail+"&devicecode="+devicecode+"&status="+status+"&factoryname="+factoryname+"&modelname="+modelname+"&sortOrder="+sortOrder+"&sort="+sortfield;
+    });
+
+    $('#factoryname').on('change',function() {
+        var factory = $("#factoryname option:selected").val();
+        $.post('__CONTROLLER__/getmodel', {factory: factory}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#modelname").children().remove();
+                var item = "";
+                item += "<option value='' selected='selected'></option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'>" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#modelname").append(item);
+            }else{
+                $("#modelname").children().remove();
+            }
+        });
+    });
+    function detailFormatter(index, row) {
+        var html = [];
+        html.push("<div class='ibox-content'>");
+        html.push("<table class='table'>");
+        html.push("<tbody>");
+        html.push("<tr><td><b>操作内容详细</b></td><td colspan='3'>" + row['l_detail'] + "</td></tr>");
+        html.push("<tr><td><b>责任部门</b></td><td colspan='3'>" + row['zd_dutydeptname'] + "</td></tr>");
+        html.push("<tr><td><b>MAC地址</b></td><td>" + row['zd_macaddress'] + "</td><td><b>状态</b></td><td>" + row['zd_status'] + "</td></tr>");
+        html.push("<tr><td><b>设备名称</b></td><td>" + row['zd_name'] + "</td><td><b>设备编号</b></td><td>" + row['zd_devicecode'] + "</td></tr>");
+        html.push("<tr><td><b>厂家</b></td><td>" + row['zd_factory'] + "</td><td><b>型号</b></td><td>" + row['zd_model'] + "</td></tr>");
+        html.push("</tbody>");
+        html.push("</table>");
+        html.push("</div>");
+        return html.join('').replace(/null/g, "").replace(/undefined/g, "");
+    }
+</script>
+</body>
+
+</html>
+
+
+
+

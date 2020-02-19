@@ -1,0 +1,211 @@
+<include file="Universal@Public:header" />
+<title>安全中心登录</title>
+<style>
+    .form-group span{
+        float: left;
+        display: block;
+        margin: 0 10px 0 15px;
+    }
+    .form-group input{
+        float: left;
+        width:330px;
+        margin: auto;
+    }
+    .top-content{
+        background: url("__PUBLIC__/img/bgimg/0408_9.jpg") no-repeat center center;
+        background-size: 100% 100%;
+        /*针对ie8的hack，目的是除掉之前的background*/
+        /*关键设置*/
+        filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src="__PUBLIC__/img/bgimg/0408_9.jpg",sizingMethod = 'scale');
+    }
+    .form-group span{
+        font-weight: bold;
+        font-family: "微软雅黑";
+        font-size: 18px;
+    }
+    .btn-info{
+        border-color: #eeeeee!important;
+        opacity: .9;
+    }
+    input:-webkit-autofill{
+        background-color: #fff!important;
+        -webkit-box-shadow: 0 0 0 1000px white inset;
+        background-image: none;
+    }
+    .form-password{
+        position: relative;
+    }
+    .form-username{
+        position: relative;
+    }
+    .form-password + i{
+        position: absolute;
+        top: 112px;
+        right: 45px;
+    }
+    .form-group i{
+        color: #cccccc;
+        font-size: 15px;
+    }
+    .form-username + i{
+        position: absolute;
+        top: 51px;
+        right: 48px;
+    }
+    .btn-info{
+        width:100px;font-size:16px;font-weight:bold;margin-top:18px;background: #89b5da;margin-left: 40px;
+    }
+</style>
+<body style="overflow: hidden">
+<div class="top-content" style="text-align: center;height: 320px;border:1px solid lightgrey;overflow: hidden" >
+    <div class="container clearfix" style="width:500px;">
+        <div class="col-sm-6 pull-right mart70" style="width:500px;height:250px;border: 1px solid #cccccc;margin-top:30px;box-shadow:-2px 2px 10px #e0e9e3">
+            <div class="form-top">
+                <div class="form-top-left" style="text-align:center">
+                    <!--<h4>登录风险管理系统</h4>-->
+                </div>
+            </div>
+
+            <div class="form-bottom" style="padding-top: 16px;box-sizing: border-box;<?php if($fromsign != '1') echo 'display:none'; ?>" id="loginForAdmin">
+                <form role="form" action="" method="post" class="login-form"  id="form-body">
+                    <div class="form-group clearfix" style="margin-top: 25px;margin-left: 20px">
+                        <span style="margin-top: 5px;font-weight: bold">用户名：</span> <input type="text" value="{$username}" placeholder="用户名" class="form-username form-control" id="form-username">
+                        <i class="fa fa-user blue"></i>
+                    </div>
+                    <div class="form-group clearfix" style="margin-left: 20px;margin-top: 18px">
+                        <span style="margin-top:16px">密&emsp;码：</span><input style="margin-top: 10px;margin-left: -1px;" type="password" value="{$password}" placeholder="密码" class="form-password form-control" id="form-password">
+                        <i class="fa fa-key"></i>
+                    </div>
+                    <button id='sys_dlg_submit' style="" type="button" class="btn btn-info" >登&nbsp;&nbsp;&nbsp;&nbsp;录</button>
+                </form>
+            </div>
+            <div class="container" style="width:500px;" id="CALogin">
+                <div class="shadow col-sm-6 mart70">
+                    <div class="form-bottom" style="margin-top: 75px;box-sizing: border-box">
+                        <p id="tips">登录中，请稍后...</p>
+                        <img id="loadimg" src="__PUBLIC__/img/loading/loading4.gif" width="60px" width="60px"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="__PUBLIC__/vendor/jquery/jquery1.11.1.js"></script>
+<script type="text/javascript" src="__PUBLIC__/vendor/layui/layui.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/md5.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/banBackSpace.js"></script>
+<object classid="clsid:9703D810-ACC0-4C22-83C7-3FD9ED198B6E" id="usb_ocx" name="usb_ocx" style="VISIBILITY:hidden"
+     codebase="IB_USBKEY.ocx" width="100" height="50"></object>
+<script type="text/javascript">
+    layui.use('layer', function() {
+        layer = layui.layer;
+
+        function LoginCA() {
+            var CAServerIP = "10.64.1.100";
+            if (usb_ocx == null)
+                return "";
+            rtn = usb_ocx.VgetnameFirst(CAServerIP, "1");
+            if (rtn.match("#."))//包含＃
+            {
+                return rtn;
+            } else {
+                var domainusername = rtn.replace('cast\\','');
+                return domainusername;
+            }
+        }
+        try{
+            $('#CALogin').show();
+//        var domainusername = 'tbaijingqi';
+            var domainusername = LoginCA();
+            $.ajax({
+                type:'post',
+                url:'__MODULE__/Login/safeCenterLogin',
+                data:{username:domainusername,type:1},
+                dataType:'json',
+                success:function(data){
+                    $('#loadimg').hide();
+                    if(data.code==1000){
+                        layer.msg('登录成功');
+                        parent.window.location.href = '__MODULE__/Index/index?noReopen=1';
+                    }else{
+                        layer.msg(data.message);
+                        setTimeout(function(){
+                            $("#CALogin").slideUp(500);
+                            $("#loginForAdmin").slideDown(500);
+                        },1000);
+                    }
+                }
+            })
+
+        } catch(err){
+            layer.msg('获取域账户信息失败，请输入账号密码登录');
+            $('#CALogin').hide();
+            $('#loginForAdmin').show();
+        }
+
+        lastInputPassword = '';
+        $('#form-password,#form-username').bind('keypress', function (event) {
+            if(event.keyCode == "13"){
+                if(lastInputPassword == ''){
+                    lastInputPassword = $(this).val();
+                    $('#sys_dlg_submit').click();
+                }else{
+                    if(lastInputPassword != $(this).val()){
+                        lastInputPassword = $(this).val();
+                        $('#sys_dlg_submit').click();
+                    }
+                }
+            }
+        });
+        //检测登陆
+        $('#sys_dlg_submit').on('click',function(){
+            $(this).attr('disabled', 'disabled');
+            var username = $('#form-username').val();
+            var password = $('#form-password').val();
+            if(username == ''){
+                layer.msg('请输入账号');
+                $('#form-username').focus();
+                $('#sys_dlg_submit').attr('disabled', false);
+                return false;
+            }
+            if(password == ''){
+                $('#form-password').focus();
+                layer.msg('请输入密码');
+                $('#sys_dlg_submit').attr('disabled', false);
+                return false;
+            }
+            password = $.md5(password);
+            $.ajax({
+                type:'post',
+                url:'__MODULE__/Login/safeCenterLogin',
+                data:{username:username,password:password,type:2},
+                dataType:'json',
+                success:function(data){
+                    $('#sys_dlg_submit').attr('disabled', false);
+                    if(data.code>0){
+                        if(data.code == 1000){
+                            layer.msg('登录成功');
+                            parent.window.location.href = '__MODULE__/Index/index?noReopen=1';
+                        }else{
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            parent.layer.open({
+                                title: data.message,
+                                type: 2,
+                                content: '__MODULE__/Login/updatePassword',
+                                closeBtn:0,
+                                shadeClose:false,
+                                area: ['800px', '400px']
+                            });
+                        }
+                    }else{
+                        layer.msg(data.message);
+                    }
+                }
+            })
+        })
+    })
+
+</script>
+</body>
+</html>

@@ -1,0 +1,631 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<style>
+    th{
+        text-align: center;
+    }
+    .form-control{
+        display: inline-block;
+    }
+    .wrapper-content{
+        padding-bottom: 0;
+    }
+    .control-label{
+        width: 30%;
+        float: left;
+        text-align:center;
+        line-height: 30px;
+    }
+    .chosen-container{
+        top: -1px;
+    }
+    .form-group{
+        display: inline-block;
+        width: 24%;
+        margin-top: -7px;
+    }
+    .formEl-div{
+        float: left;
+    }
+    ._box {
+        height:28px;
+        margin: 15px 0px 0px !important;
+    }
+    .fixed-table-container{
+        padding-bottom: 0px !important;
+    }
+    table{
+        table-layout: fixed;
+        word-break: break-all;
+    }
+    .formEl-div{
+        width:70%
+    }
+    body{
+        overflow-y: hidden;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content ">
+    <div class="row">
+        <div class="col-sm-12" id='search_div'>
+            <div class="_box sel_show" style="margin-top: 5px;">
+                <div class="form-group" >
+                    <label class="control-label" >班组</label>
+                    <div class="formEl-div">
+                        <select id="app_group" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <foreach name="group" item="v">
+                                <option value="{$v.dic_name}">{$v.dic_name}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >系统名称</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="app_name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >管理员</label>
+                    <div class="formEl-div" >
+                        <select id="app_admin" class="chosen-select" >
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >归属单位</label>
+                    <div class="formEl-div" >
+                        <select id="app_dutycompany" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <?php foreach($company as $key=>$value){ ?>
+                            <option value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="_box  box-show" style="margin-top: 4px;">
+                <div class="form-group">
+                    <label class="control-label" >是否关联事项</label>
+                    <div class="formEl-div" >
+                        <select id="app_sx" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <option value="1">是</option>
+                            <option value="2">否</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >是否巡检</label>
+                    <div class="formEl-div" >
+                        <select id="app_ischeck" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <option value="是">是</option>
+                            <option value="否">否</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >责任部门</label>
+                    <div class="formEl-div" >
+                        <select id="app_dutydept" class="chosen-select" >
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >应用系统URL</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="app_url">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="_box  box-show" style="margin-top: 4px;">
+                <div class="form-group">
+                    <label class="control-label" >责任人</label>
+                    <div class="formEl-div" >
+                        <select id="app_dutyman" class="chosen-select" >
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >密级</label>
+                    <div class="formEl-div" >
+                        <select id="app_secret" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <?php foreach($miJi as $key=>$value){ ?>
+                            <option value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >使用状态</label>
+                    <div class="formEl-div" >
+                        <select id="app_status" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <?php foreach($status as $key=>$value){ ?>
+                            <option value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >是否院管</label>
+                    <div class="formEl-div" >
+                        <select id="app_isyuan" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <option value="是">是</option>
+                            <option value="否">否</option>
+                        </select>
+                    </div>
+                </div>
+
+             </div>
+            <div class="_box  box-show" style="margin-top: 4px;">
+                <div class="form-group">
+                    <label class="control-label" >是否中心管</label>
+                    <div class="formEl-div" >
+                        <select id="app_iszhongxin" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <option value="是">是</option>
+                            <option value="否">否</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >分类</label>
+                    <div class="formEl-div" >
+                        <select id="app_toptype" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <foreach name="type" item="val">
+                                <option value="{$val.dic_name}">{$val.dic_name}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="_box">
+                <button class="btn btn-info" style="background-color: #4EA3EC;border-color: #4EA3EC;" type="button" id="sys_refresh">查询</button>
+                <button class="btn btn-info" style="background-color: #1AB394;border-color:  #1AB394;" type="button" id="sys_reset">重置</button>
+                <a class="btn btn-info " style="margin-left: 10px;background-color: yellowgreen;border-color: yellowgreen;" type="button" id="sys_add" >新增</a>
+                <button class="btn btn-warning" style="margin-left: 10px;" type="button" data-head="系统名称,密级,应用系统URL,归属单位,责任人,管理员A岗,管理员B岗,子系统,简称,使用状态,立项级别,用户单位,技术平台,上线日期,系统接口,备注,信息资源,访问方式,功能简介,用户范围,存放方式,普通用户鉴别方式,访问权限,开发单位,管理员鉴别方式" data-extraparam="" data-remark="支持从Excel批量拷贝粘贴" id="sys_batchadd" data-method="Home/App/saveCopyTables">批量增加</button>
+                <button class="btn btn-info" style="margin-left: 10px;background-color: cadetblue;border-color: cadetblue;" type="button" id="sys_del">删除</button>
+                <button class="btn btn-info" style="margin-left: 10px;" type="button" id="sys_exp">导出</button>
+                <button class="btn btn-info" style="margin-left: 10px;" type="button" id="show">收起/展开</button>
+            </div>
+       </div>
+        <div class="col-sm-12">
+            <table id="atpbiztable" ></table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLIC__/img/loading/loading9.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="sort" >
+<input type="hidden" id="sortOrder" >
+<script src="__PUBLIC__/js/tablecopy.js"></script>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script>
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+
+    var formEl_div_width = parseInt($('.formEl-div').eq(0).width());
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: formEl_div_width+"px"});
+
+    $('#app_dutydept').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url:'__MODULE__/org/assigndept'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+    // function fixed(){
+    //     searchDivHeight = parseInt($('#search_div').height());
+    //     table_header = parseInt($('.fixed-table-header').height());
+    //     // data_body_h = $(window).height()-searchDivHeight-table_header;
+    //     data_body_h = $(window).height() - 132;
+    //     // alert(data_body_h);
+    //     $('table').attr('data-height',data_body_h); 
+    // }
+    fixed();
+    function fixed(){
+        searchDivHeight = parseInt($('#search_div').height());
+        boxShow_h = parseInt($('.box-show').height());
+        // data_body_h = $(window).height();
+        height = $(window).height()-(searchDivHeight-boxShow_h);
+        //data_body_h = $(window).height() - 132;
+        // 根据浏览器类型设置不同高度
+        
+        if(window.ActiveXObject||'ActiveXObject' in window){ 
+            $('table').attr('data-height',height); 
+        }else{
+            $('table').attr('data-height',height+13);  
+        }
+    }
+
+    // 点击收起/展开按钮表格高度自适应
+    // var height = document.documentElement.clientHeight - 46;
+    // var searchDivHeight = parseInt($('#search_div').height()); 
+    // var h  = $(window).height() - 132;
+    // $('#show').click(function(){
+    //     if(!$('.box-show').is(':visible')){   
+    //         $('#atpbiztable').bootstrapTable("resetView",{height:height-searchDivHeight});
+    //     }else{
+    //         $('#atpbiztable').bootstrapTable("resetView",{height:h}); 
+    //     }
+    // })
+    // 点击收起/展开按钮表格高度自适应
+    var searchDivHeight = parseInt($('#search_div').height());
+    var boxShow_h = parseInt($('.box-show').height());
+    var body_h = $(window).height();
+    var h = body_h-searchDivHeight; 
+    var h_new = body_h-(searchDivHeight - boxShow_h);
+    $('#show').click(function(){
+        if($('.box-show').is(':visible')){  
+            // 根据浏览器类型设置不同高度
+            if(window.ActiveXObject||'ActiveXObject' in window){ 
+                $('#atpbiztable').bootstrapTable("resetView",{height:h_new});
+            }else{
+                $('#atpbiztable').bootstrapTable("resetView",{height:h_new+13}); 
+            }
+        }else{
+            // 根据浏览器类型设置不同高度
+            if(window.ActiveXObject||'ActiveXObject' in window){
+                $('#atpbiztable').bootstrapTable("resetView",{height:h-boxShow_h-27}); 
+            }else{
+                $('#atpbiztable').bootstrapTable("resetView",{height:h-boxShow_h-16});
+            }
+        }   
+    })
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getData',      //请求后台的URL（*）
+                method: 'post',                     //请求方式（*）
+                toolbar: '#atpbiztoolbar',          //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName: "app_name",
+                sortOrder: "desc",                  //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页
+                pageSize: 15,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                uniqueId: "app_atpid",              //每一行的唯一标识，一般为主键列
+                detailView: true,                   //是否显示父子表
+                detailFormatter: "showDataView",
+                columns: [
+                   [
+                        {checkbox: true},
+                        {
+                           field: 'app_atpid',title: '操作', sortable: false,width: 100,
+                           formatter: function (value, row, index) {
+                               var inp = "'" + value + "'";
+                               return '<a  class="btn btn-info btn-xs"  style="margin:0" onclick="updateInRow(' + inp + ')">编辑</a>&nbsp;<a  class="btn btn-info btn-xs" onclick="deleteInRow(' + inp + ')" style="margin:0;background: #AB154D;border-color: #AB154D;">删除</a>';
+                           }
+                        },
+                        {
+                            title: '序号', width: 60,
+                            formatter: function (value, row, index) {
+                                var option = $('#atpbiztable').bootstrapTable('getOptions');
+                                return option.pageSize * (option.pageNumber - 1) + index + 1;
+                            }
+                        },
+                        {field: 'appCount', title: '关联事项', sortable: true, width: 85,
+                            formatter: function (value, row, index) {
+                            var inp = "'" + row.app_atpid + "'";
+                            var name = "'" + row.app_name + "'";
+                            return '<a  style="margin:0" onclick="shiXiang(' + inp + ','+ name +')">'+value+'</a>'
+                            }
+                        },
+                       {field: 'xjCount', title: '巡检项', sortable: true, width: 85,
+                           formatter: function (value, row, index) {
+                               var inp = "'" + row.app_atpid + "'";
+                               var name = "'" + row.app_name + "'";
+                               return '<a  style="margin:0" onclick="XunJian(' + inp + ','+ name +')">'+value+'</a>'
+                           }
+                       },
+                        {field: 'app_name', title: '系统名称', sortable: true, width: 120},
+//                        {field: 'app_host', title: '服务器IP地址', sortable: true, width: 110},
+                        {field: 'app_secret', title: '密级', sortable: true, width: 60},
+                        {field: 'app_dutycompany', title: '归属单位', sortable: true, width: 130},
+                        {field: 'app_dutyman', title: '责任人', sortable: true, width: 80},
+                        {field: 'app_group', title: '班组', sortable: true, width: 60},
+                        {field: 'app_admin', title: '管理员A岗', sortable: true, width: 90},
+                        {field: 'app_adminb', title: '管理员B岗', sortable: true, width: 90},
+                        {field: 'app_status', title: '使用状态', sortable: true, width: 90},
+                        {field: 'app_url', title: '应用系统URL', sortable: true, width: 140},
+                        {field: 'app_ischeck', title: '是否巡检', sortable: true, width: 100},
+                        {field: 'app_isyuan', title: '是否院管', sortable: true, width: 100},
+                        {field: 'app_iszhongxin', title: '是否中心管', sortable: true, width: 100},
+                        {field: 'app_toptype', title: '分类', sortable: true, width: 100}
+//                        {field: 'app_db', title: '数据库', sortable: true, width: 90},
+
+                   ]
+                ],
+                onDblClickRow: function (row) {
+                    updateInRow(row['app_atpid']);
+                }
+//                onLoadSuccess:function(data){
+//                     var tabheight = $('.fixed-table-container').height();
+//                    tabheight = parseInt(tabheight);
+//                    if(tabheight < (height-searchDivHeight)){
+//                        $('.fixed-table-container').css('height', 'auto');
+//                    }else{
+//                        $('#atpbiztable').bootstrapTable("resetView",{height:height-searchDivHeight});
+//                    }
+//                }
+            });
+        }
+    };
+    TableObj.oTableInit();
+    // fixedafter();
+    function queryParams(params) {  //配置参数
+        $('#sort').val(params.sort);
+        $('#sortOrder').val(params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            app_db:$('#app_db').val(),
+            app_url:$('#app_url').val(),
+            app_dutyman:$('#app_dutyman option:selected').val(),
+            app_dutydept:$('#app_dutydept option:selected').val(),
+            app_admin:$('#app_admin option:selected').val(),
+            app_name:$('#app_name').val(),
+            app_ischeck:$('#app_ischeck').val(),
+            app_secret:$('#app_secret option:selected').val(),
+            app_host:$('#app_host option:selected').val(),
+            app_group:$('#app_group option:selected').val(),
+            app_sx:$('#app_sx option:selected').val(),
+            app_dutycompany:$('#app_dutycompany option:selected').val(),
+            app_isyuan:$('#app_isyuan option:selected').val(),
+            app_iszhongxin:$('#app_iszhongxin option:selected').val(),
+            app_toptype:$('#app_toptype option:selected').val(),
+            app_status:$('#app_status option:selected').val()
+        };
+        return temp;
+    }
+
+    function showDataView(index, row){
+        //,app_childname,app_sname,app_status,app_lxjb,app_userdept,app_developplat,app_usedate,app_interface,app_zdxm,app_bz,app_info,app_mode,app_usage,app_userscope,app_usemode,app_loginmode,app_accessauthority,app_developer,app_aloginmode
+        //,'子系统','简称','状态','立项级别','用户单位','技术平台','上线日期','系统接口','重点项目','备注','信息资源','访问方式','主要功能','用户范围','存放方式','普通用户鉴别方式','访问权限','开发单位','管理员鉴别方式'
+        var html = [];
+        html.push("<div class='ibox-content'>");
+        html.push("<table class='table'>");
+        html.push("<tbody>");
+        html.push("<tr><td><b>技术平台</b></td><td>" + row['app_developplat'] + "</td><td><b>信息资源</b></td><td>" + row['app_info'] + "</td><td><b>普通用户鉴别方式</b></td><td>" + row['app_loginmode'] + "</td><td><b>管理员鉴别方式</b></td><td>" + row['app_aloginmode'] + "</td></tr>");
+        html.push("<tr><td><b>简称</b></td><td>" + row['app_sname'] + "</td><td><b>上线日期</b></td><td>" + row['app_usedate'] + "</td><td><b>访问方式</b></td><td>" + row['app_mode'] + "</td><td><b>访问权限</b></td><td>" + row['app_accessauthority'] + "</td></tr>");
+        html.push("<tr><td><b>状态</b></td><td>" + row['app_status'] + "</td><td><b>版本</b></td><td>" + row['app_version'] + "</td><td><b>功能简介</b></td><td>" + row['app_function'] + "</td><td><b>研制单位</b></td><td>" + row['app_develope'] + "</td></tr>");
+        html.push("<tr><td><b>立项级别</b></td><td>" + row['app_lxjb'] + "</td><td><b>用户范围</b></td><td>" + row['app_userscope'] + "</td><td><b>用户数</b></td><td>" + row['app_usernum'] + "</td><td><b>建设途径</b></td><td>" + row['app_jstj'] + "</td></tr>");
+        html.push("<tr><td><b>备注</b></td><td>" + row['app_bz'] + "</td><td><b>数据存放方式</b></td><td>" + row['app_usemode'] + "</td><td><b>关键字</b></td><td>" + row['app_keyword'] + "</td><td><b>开发平台</b></td><td>" + row['app_platform'] + "</td></tr>");
+        html.push("<tr><td><b>系统员</b></td><td>" + row['app_sysadmin'] + "</td><td><b>技术架构</b></td><td>" + row['app_structure'] + "</td><td><b>中间件（版本）</b></td><td>" + row['app_weblogic'] + "</td><td><b>责任部门</b></td><td>" + row['app_dutydept'] + "</td></tr>");
+        html.push("<tr><td><b>安全员</b></td><td>" + row['app_secadmin'] + "</td><td><b>审计员</b></td><td>" + row['app_audit'] + "</td></tr>");
+        html.push("</tbody>");
+        html.push("</table>");
+        html.push("</div>");
+        return html.join('').replace(/null/g, "").replace(/undefined/g, "");
+    }
+
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+
+    $('#sys_add').on('click',function() {
+        updateInRow('');
+    });
+    $('.box-show').hide();
+    $("#show").click(function(){
+        // $(this).parent().parent().find("ul").toggle();//无动画显示隐藏
+        $('.box-show').fadeToggle();// 透明度变化 淡入淡出
+        // $('.box-show').slideToggle(); //有个上下滑动动画的展开收起效果  推荐
+    });
+
+    $('#sys_del').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            layer.alert("您尚未选择数据");
+        } else {
+            var ids = [];
+            $.each(tablerow, function () {
+                ids.push(this['app_atpid']);
+            });
+            deleteInRow(ids.join(','));
+        }
+    });
+
+    //责任人
+    $('#app_dutyman').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url:'__MODULE__/org/assignuser'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+    //管理员A岗
+    $('#app_admin').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url:'__MODULE__/org/assignuser'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+    //数据编辑触发该方法
+    function updateInRow(id) {
+        layer.open({
+            title:'数据编辑',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/add?app_atpid='+id,
+            area: ['90%', '90%']
+        });
+    }
+    //数据删除触发该方法
+    function deleteInRow(id){
+        layer.confirm('确认删除选中数据?',
+        {btn:['确定','取消']},
+        function(){
+            $.ajax({
+                type:'post',
+                url:'__CONTROLLER__/isGldel',
+                data:{zy_id: id},
+                dataType :'json',
+                success:function(data){
+                    if(data.code > 0){
+                        layer.confirm('存在关联关系，是否继续删除?',
+                            {btn:['确定','取消']},
+                        function() {
+                            $.ajax({
+                                type: 'post',
+                                url: '__CONTROLLER__/delData',
+                                data: {app_atpid: id},
+                                dataType: 'json',
+                                success: function (data) {
+                                    if (data.code > 0) {
+                                        layer.msg('操作成功');
+                                        $('#sys_refresh').click();
+                                    } else {
+                                        layer.alert(data.message);
+                                    }
+                                }, error: function () {
+                                    layer.alert('出错啦！请稍后再试');
+                                }
+                            })
+                        })
+                    }else{
+                        $.ajax({
+                            type: 'post',
+                            url: '__CONTROLLER__/delData',
+                            data: {app_atpid: id},
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.code > 0) {
+                                    layer.msg('操作成功');
+                                    $('#sys_refresh').click();
+                                } else {
+                                    layer.alert(data.message);
+                                }
+                            }, error: function () {
+                                layer.alert('出错啦！请稍后再试');
+                            }
+                        })
+                    }
+                },error:function(){
+                    layer.alert('出错啦！请稍后再试');
+                }
+            })
+
+
+
+
+        })
+    }
+    $('#sys_exp').click(function(){
+        $('#loading').modal('show');
+        var sort=$('#sort').val();
+        var sortOrder=$('#sortOrder').val();
+        var t = "__CONTROLLER__/getDataWithExport";
+        t = encodeURI(t);
+        $.ajax({
+            type:'post',
+            url: t,
+            dataType:'json',
+            data:{
+                sort:sort,
+                sortOrder:sortOrder,
+                app_db:$('#app_db').val(),
+                app_url:$('#app_url').val(),
+                app_dutyman:$('#app_dutyman option:selected').val(),
+                app_dutydept:$('#app_dutydept option:selected').val(),
+                app_admin:$('#app_admin option:selected').val(),
+                app_name:$('#app_name').val(),
+                app_secret:$('#app_secret option:selected').val(),
+                app_host:$('#app_host option:selected').val(),
+                app_group:$('#app_group option:selected').val(),
+                app_sx:$('#app_sx option:selected').val(),
+                app_dutycompany:$('#app_dutycompany option:selected').val(),
+                app_isyuan:$('#app_isyuan option:selected').val(),
+                app_iszhongxin:$('#app_iszhongxin option:selected').val(),
+                app_toptype:$('#app_toptype option:selected').val(),
+                app_status:$('#app_status option:selected').val()
+            },
+            success:function(data){
+                $('#loading').modal('hide');
+                if(data.code > 0){
+                    location.href = data.message;
+                }else{
+                    layer.msg(data.message);
+                }
+            },error:function(){
+                $('#loading').modal('hide');
+                layer.alert('出错了！请联系管理员！');
+            }
+        })
+    })
+
+    function shiXiang(id,name){
+        layer.open({
+            title:'事项查看编辑'+'---'+name,
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            cancel:function(){$('#atpbiztable').bootstrapTable('refresh');},
+            content: '__MODULE__/ShiXiang/table?id='+id+'&objType='+'应用系统',
+            area: ['95%', '95%']
+        });
+    }
+
+    $('#sys_reset').click(function(){
+        $('.form-control').val('');
+        $('.chosen-select').val('');
+        $('.chosen-select').trigger("chosen:updated");
+        $('#sys_refresh').click()
+    })
+
+    function XunJian(id,name){
+        layer.open({
+            title:'巡检项查看编辑'+'---'+name,
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            cancel:function(){$('#atpbiztable').bootstrapTable('refresh');},
+            content: '__MODULE__/Checkup/addCheck?atpid='+id,
+            area: ['95%', '95%']
+        });
+    }
+</script>
+</body>
+</html>

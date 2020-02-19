@@ -1,0 +1,197 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>故障添加编辑</title>
+<style>
+    .form-group{
+        margin-top: 26px;
+    }
+    .control-label{
+        width:150px  !important;
+    }
+    .must_filter{
+        color: red;
+    }
+    .form-control{
+        display:inline-block;
+    }
+    .col-sm-3{
+        width:60%  !important;
+    }
+    .chosen-container{
+        top: -1px;
+    }
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .chosen-container{
+        height: 100%;
+    }
+    .star{
+        color:red;
+    }
+</style>
+<body style="margin: 0 auto;">
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content" style="padding-bottom: 50px;">
+        <div class="panel-body">
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>故障发生时间 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="fe_date" id="fe_date" value="<?php if(!empty($data['fe_date']))echo $data['fe_date']; ?>" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>故障解决时间  </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="fe_dealdate" id="fe_dealdate" value="<?php if(!empty($data['fe_dealdate']))echo $data['fe_dealdate']; ?>" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>解决时长</label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="fe_dealdatelength" id="fe_dealdatelength" value="<?php if(!empty($data['fe_dealdatelength']))echo $data['fe_dealdatelength']; ?>">
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>故障描述</label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="fe_description" id="fe_description" value="<?php if(!empty($data['fe_description']))echo $data['fe_description']; ?>">
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>影响系统名称</label>
+                    <div class="col-sm-3" >
+                        <select name="fe_effectapp" class="chosen-select" id="fe_effectapp">
+                            <option value="">请选择</option>
+                            <option value="{$data.fe_effectapp}" <?php if(!empty($data['fe_effectapp'])){echo selected;}?>>{$data.fe_effectapp}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>影响范围</label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="fe_effectrange" id="fe_effectrange" value="<?php if(!empty($data['fe_effectrange']))echo $data['fe_effectrange']; ?>">
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>外协方</label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="fe_outside" id="fe_outside" value="<?php if(!empty($data['fe_outside']))echo $data['fe_outside']; ?>">
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>附件</label>
+                    <div class="col-sm-3" >
+                        <input type="file" class="form-control" style="width:99%;" name="fe_file" id="fe_file" >
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>处理人</label>
+                    <div class="col-sm-3" >
+                        <select name="fe_dealperson" class="chosen-select" id="fe_dealperson">
+                            <option value="">请选择</option>
+                            <option value="{$data.fe_dealperson}" <?php if(!empty($data['fe_dealperson'])){echo selected;}?>>{$fe_dealperson}</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>备注</label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="fe_bz" id="fe_bz" value="<?php if(!empty($data['fe_bz']))echo $data['fe_bz']; ?>">
+                    </div>
+                </div>
+            </div>
+            </div>
+            <input type="hidden" value="<?php if(!empty($data['fe_atpid'])) echo $data['fe_atpid']; ?>" name="fe_atpid" id="fe_atpid">
+        </div>
+    </div>
+</form>
+    <if condition="$Objtype eq null">
+        <div class="modal-footer" style="margin: 0px;text-align:center;z-index: 999;position: fixed;bottom:0;left:0;font-family: cursive; width: 100%;height: 60px;background-color: #fff;">
+            <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="display:inline-block;text-align:center;">保存</button>
+            <if condition="$data['cl_atpid'] neq null">
+                <button type="button"  id="oplog" class="btn btn-warning" style="margin-left: 30px;">日志</button>
+            </if>
+        </div>
+    </if>
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        $('#sys_dlg_submit').click(function(){
+            $('#sys_dlg_form1').submit();
+        })
+
+        var input_width = parseInt($('.form-control').eq(0).css('width').replace('px', ''));
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: input_width+'px'});
+
+
+        //系统名称
+        $('#fe_effectapp').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignXtName'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        //处理人
+        $('#fe_dealperson').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        $('#sys_dlg_form1').validate({
+            onclick:false,
+            onfocusout:false,
+            onkeyup:false,
+            submitHandler:function(){
+                var formBody = $('#sys_dlg_form1');
+                formBody.ajaxSubmit({
+                    type:'post',
+                    url:'__CONTROLLER__/addData',
+                    data:formBody,
+                    dataType :'json',
+                    success:function(data){
+                        $('#file').val('');
+                        if(data.code > 0){
+                            $('#loading').modal('hide');
+                            parent.$('#atpbiztable').bootstrapTable('refresh');
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        }else{
+                            $('#loading').modal('hide');
+                            layer.alert(data.message);
+                        }
+                    }
+                })
+            }
+        });
+    });
+
+</script>

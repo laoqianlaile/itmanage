@@ -1,0 +1,561 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link rel="stylesheet" href="__PUBLICOLD__/vendor/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<link href="__PUBLICOLD__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+<title>院级待办事项</title>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    html,body{
+        width: 100%;
+        height: 100%;
+        *overflow: hidden;
+        font-family: 微软雅黑;
+    }
+    #main{
+        width:100%;
+        height:100%;
+        position:relative;
+        margin:0 auto;
+    }
+    .form-group >div{
+        margin-top: 3px;
+        margin-bottom: 3px;
+    }
+    .control-label:nth-of-type(even){
+        margin-left: 0 !important;
+    }
+    .z-tab button{
+        margin: 10px;
+        display: inline-block;
+    }
+    #search {
+        width: 50px;
+        border: 0;
+        height: 33px;
+        background-color: #009688;
+        line-height: 25px;
+        color: #fff;
+    }
+    #treearea{
+        position: absolute;
+        left:5px;
+        top:5px;
+        bottom:0;
+        width:280px;
+        height:auto;
+        overflow:auto;
+        border: 1px solid grey;
+    }
+    #atp_wrapper{
+        position: absolute;
+        top:5px;
+        left: 303px;
+        right: 5px;
+        bottom:0;
+        width: auto;
+        height:auto;
+        overflow: hidden;
+        border: 1px solid grey;
+    }
+    #atp_wrapper #top_nav{
+        position: absolute;
+        top:5px;
+        left:5px;
+        right:5px;
+        width:auto;
+        height:50px;
+    }
+    #atp_wrapper .content{
+        position: absolute;
+        top:55px;
+        left:5px;
+        right: 5px;
+        bottom: 5px;
+        height: auto;
+        width: auto;
+        overflow: auto;
+    }
+    .show_div{
+        display: none;
+        height:100%;
+        overflow-y: auto
+    }
+    #atpbiztable td{
+        vertical-align:middle;
+    }
+    iframe{
+        width: 100%;
+        height:100%;
+        overflow-y:hidden;
+        border: none;
+    }
+    #top_nav .z-tab{
+        display: inline-block;
+    }
+    #top_nav .z-tab button{
+        width: 150px;
+        margin-left: -4px;
+        color: black;
+    }
+    .arrow{
+        position: absolute;
+        top: 50%;
+        left: 285px;
+        margin-top: -15px;
+        display: block;
+        width: 18px;
+        height: 30px;
+        background: #009cd6;
+        z-index: 6666666;
+        text-align: center;
+    }
+    .arrow:hover{
+        background: #009688;
+    }
+    .arrow i{
+        display: inline-block;
+        line-height: 30px;
+        color: #fff;
+    }
+    table{
+        table-layout: fixed;
+    }
+    th{
+        text-align: center;
+        vertical-align: middle !important;
+    }
+    .th-inner{
+        line-height: 15px !important;
+    }
+    .tong tr td{
+        width: 150px;
+        height: 35px;
+        border: 1px solid lightgrey;
+    }
+    .fixed-table-toolbar .columns label {
+        width: 140px!important;
+    }
+</style>
+<body>
+<div id="main">
+    <!--treearea start-->
+    <div id="treearea" style="">
+        <div class="content_wrap" style="overflow-x: hidden;min-height: 300px;">
+            <div class="zTreeDemoBackground left" style="float: left;">
+                <div>
+                    <p  style="font-size: 15px;height: 30px;line-height: 30px;margin-bottom: 0;margin-top: 10px;text-align: left;">&nbsp;&nbsp;待办事项清单</p>
+                    <hr style="height: 1px;border: none;border-top: 3px solid #18a594;margin-top: 0;margin-bottom: 0;margin-left: 10px;">
+                </div>
+
+                <div style="margin-top: 4px;*margin-top:4px;width: 100%;">
+                    <div style="display: inline-block;margin-left: 7px;">
+                        <select name="" id="mt_date" class="chosen-selected">
+                            <foreach name="year" item="val">
+                                <option value="{$val.dic_name}" <?php if($val['dic_name'] == $yearNow){echo 'selected';}?> >{$val.dic_name}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                    <input  id="mt_name" value=""  class="form-control" style="width: 100px;height: 33px;margin-left: 9px;display: inline-block"/>
+                    <input type="button" id="search" value="搜索" style=""/>
+                </div>
+                <ul id="treeDemo"  class="ztree" style="width: 290px;border:0;"></ul>
+            </div>
+        </div>
+    </div>
+    <!--treearea end-->
+
+    <!--arrow start-->
+    <span class="arrow">
+        <i class="fa fa-angle-double-left" ></i>
+    </span>
+    <!--arrow end-->
+
+    <!--atp_wrapper start-->
+    <div id="atp_wrapper">
+        <div style="margin-top: 15px;">
+            <div class="_box">
+                <label class="control-label" style=";">待办事项：</label>
+                <input type="text" class="form-control" placeholder="" id="td_name" style="width:170px;display: inline-block;">
+                <label class="control-label" style="width: 110px;">责任部门/单位：</label>
+                <select id="unitname" name="unitname"  class="chosen-select" >
+                    <option value="">&nbsp;</option>
+                    <foreach name="deptDw" item="val">
+                        <option value="{$val.org_name}">{$val.org_name}</option>
+                    </foreach>
+                </select>
+                <label class="control-label" style=";width: 120px;">计划完成时间：</label>
+                <input type="text" class="form-control" placeholder="" id="start" style="width:105px;display: inline-block;" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">--
+                <input type="text" class="form-control" placeholder="" id="end" style="width:105px;display: inline-block;" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+
+            </div>
+            <div class="_box" style="margin-top: 10px;">
+                <label class="control-label" style="width: 90px;">&nbsp;&nbsp;&nbsp;责任人：</label>
+                <select id="kybchargemanname">
+                    <option value=""></option>
+                </select>
+                <label class="control-label" style=";width: 110px;">&nbsp;&nbsp;状态：</label>
+                <select id="td_status" name="td_status" class="chosen-select" >
+                    <option value="">&nbsp;</option>
+                    <foreach name="state" item="val">
+                        <option value="{$val.dic_name}">{$val.dic_name}</option>
+                    </foreach>
+                </select>
+                <label class="control-label" style="width: 120px;">科研部责任处室：</label>
+                <select id="dept" name="kydept" class="" >
+                    <option value="">&nbsp;</option>
+                    <foreach name="dept" item="val">
+                        <option value="{$val.org_name}">{$val.org_name}</option>
+                    </foreach>
+                </select>
+
+            </div>
+            <div class="_box" style="margin-left: 20px"   id="atpbiztoolbar">
+                <button class="btn btn-info" style=" background-color: forestgreen;border-color: forestgreen;margin-left: 10px;" type="button" id="sys_refresh">查询</button>
+                <button class="btn btn-danger" style="margin-left: 10px;" type="button" id="sys_export">导出</button>
+                <table class="tong" style="margin-left: 12px;margin-top: 5px;" border="1">
+                    <tr>
+                        <td style="font-weight: 800;">管理活动总数</td>
+                        <td style="font-weight: 800;">待办事项总数</td>
+                        <td style="font-weight: 800;">已完成</td>
+                        <td style="font-weight: 800;">调整</td>
+                        <td style="font-weight: 800;">未完成</td>
+                        <!--<td style="font-weight: 800;">完成率(%)</td>-->
+                    </tr>
+                    <tr>
+                        <td>{$hdCount}</td>
+                        <td>{$dbCount}</td>
+                        <td>{$finishCount}</td>
+                        <td>{$TzCount}</td>
+                        <td>{$wCount}</td>
+                        <!--<td>{$FinishLv}</td>-->
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!--content start-->
+        <div class="content" style="margin-top:33px;">
+            <table id="atpbiztable"  style=""></table>
+        </div>
+        <!--content end-->
+    </div>
+</div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLICOLD__/img/loading/loading9.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" name="choosemenu" id="choosemenu" value=""/>
+<input type="hidden" id="sort" >
+<input type="hidden" id="sortOrder" >
+</body>
+<script type="text/javascript" src="__PUBLICOLD__/vendor/zTree_v3/js/jquery.ztree.core.js"></script>
+<script src="__PUBLICOLD__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script src="__PUBLICOLD__/js/tablecopy.js"></script>
+<script src="__PUBLICOLD__/js/table-hidecloumn.js"></script>
+<script type="text/javascript">
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '150px'});
+    $(".chosen-selected").chosen({disable_search_threshold: 0, search_contains: true, width: '100px'});
+    $("#kybchargemanname").chosen({disable_search_threshold: 0,search_contains: true, width: '170px'});
+    $("#dept").chosen({disable_search_threshold: 0, search_contains: true, width: '226px'});
+
+    $('#kybchargemanname').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url:'__MODULE__/User/getDutyUser'
+    });
+    $('.arrow').click(function(){
+        if($('#treearea').is(':visible')){
+            $('#atp_wrapper').stop().animate({left:'5px'});
+            $('.arrow').stop().animate({left:'2px'});
+            $('#treearea').hide(300);
+            $('.arrow i').removeClass('fa fa-angle-double-left').addClass('fa fa-angle-double-right');
+        }else{
+            $('#atp_wrapper').stop().animate({left:'303px'});
+            $('.arrow').stop().animate({left:'285px'});
+            $('#treearea').show(300);
+            $('.arrow i').removeClass('fa fa-angle-double-right').addClass('fa fa-angle-double-left');
+        }
+    })
+
+    $('#org_name').bind('keypress', function (event) {
+        if(event.keyCode == "13"){
+            if($(this).val() != ''){
+                refreshZTree();
+            }
+        }
+    })
+    var setting = {
+        view: {
+            selectedMulti: false,
+            fontCss: getFont
+        },
+        data: {
+            simpleData: {
+                enable: true,
+                idKey: "mt_id",
+                pIdKey: "mt_type",
+                rootPId: '0'
+            }
+        },
+        callback: {
+            onClick:onClick
+        }
+    };
+    var zNodes = null;
+    function onClick(event, treeId, treeNode, clickFlag) {
+        var resultZtree = $.fn.zTree.getZTreeObj("treeDemo");
+        var node =  resultZtree.getSelectedNodes()[0];
+        $('#choosemenu').val(node.mt_id);
+        $('#sys_batchadd').attr('data-extraparam', node.mt_id);
+        if(node.mt_type == 0 || node.mt_type == '会议'){
+            controlEditButton('hide');
+        }else{
+            controlEditButton('show');
+        }
+        $('#sys_refresh').click();
+    }
+
+    function controlEditButton(action){
+        if(action == 'hide'){
+            $('#sys_batchadd').hide();
+            $('#sys_add').hide();
+            $('#sys_update').hide();
+            $('#sys_del').hide();
+        }else{
+            $('#sys_batchadd').show();
+            $('#sys_del').show();
+            $('#sys_add').show();
+            $('#sys_update').show();
+        }
+    }
+
+    function getFont(a,node){
+        return {color:node.color};
+    }
+    refreshZTree();
+    function refreshZTree() {
+        $.ajax({
+            url: "__CONTROLLER__/getOrgTreeFind",
+            type: "post",
+            async: false,
+            data:{mt_name:$('#mt_name').val(),mt_date:$('#mt_date option:selected').val()},
+            dataType: "json",
+            success: function (data) {
+                zNodes = data;
+                var length = data.length;
+                $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+                if(length <= 0){
+                    layer.msg('未获取到有效数据');
+                    return false;
+                }else{
+                    $('#treeDemo_1_a').click();
+                }
+            },
+            error: function () {
+                layer.alert('获取数据失败');
+            }
+        });
+
+        $('#treeDemo_1_a').click();
+    }
+    var columns = [
+        {
+            title: '序号', width: 60,
+            formatter: function (value, row, index) {
+                var option = $('#atpbiztable').bootstrapTable("getOptions");
+                return option.pageSize * (option.pageNumber - 1) + index + 1;
+            }
+        },
+        {field: 'meettype', title: '管理活动类别', sortable: true, width: 120},
+        {field: 'meetname', title: '管理活动名称', sortable: true, width: 250},
+        {field: 'meetdate', title: '召开时间', sortable: true, width: 100},
+        {field: 'td_name', title: '待办事项', sortable: true, width: 250},
+        {field: 'td_planfinishdate', title: '计划完成<br/>时间', sortable: true, width: 100},
+        {field: 'td_modifyfinishdate', title: '预计完成<br/>时间', sortable: true, width: 100},
+        {field: 'td_unit', title: '责任单位', sortable: true, width: 120},
+        {field: 'td_confirmtime', title: '实际完成时间', sortable: true, width: 120},
+        {field: 'material', title: '文件上传', width: 80, sortable: true,
+            formatter: function (value, row, index) {
+                var inp = value;
+                var id="'"+row.td_id+"'";
+                if(inp!=null){
+                    var a = '<a style="color: #1C7165;text-decoration:underline" onclick="fileUp(' + id + ')">'+inp+'</a><br>';
+                    return a;
+                }
+            }
+        },
+        {field: 'td_kybchargeman', title: '督办人', sortable: true, width: 75},
+        {field: 'td_kybunit', title: '责任处室', sortable: true, width: 100},
+        {field: 'td_kybleader', title: '责任领导', sortable: true, width: 85},
+        {field: 'status', title: '完成确认', sortable: true,width:80},
+    ];
+    columns = $_hide.hideColumnsByCookie(columns);
+    var height = document.documentElement.clientHeight;
+    var searchDivHeight = 120;
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getDatas',         //请求后台的URL（*）
+                method: 'post',                      //请求方式（*）
+                toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName: "decode(status,'进行中',1,'调整',2,'未完成',3,'已取消',4,'已完成',5),td_planfinishdate",
+                sortOrder: "asc",                   //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 15,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+//            strictSearch: true,
+            showColumns: true,                                  //是否显示所有的列
+//            showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "td_id",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                detailView: true,                   //是否显示父子表
+                detailFormatter: "detailFormatter",
+                columns: [
+                    columns
+                ],
+                onLoadSuccess:function(data){
+                    var tabheight = $('.fixed-table-container').height();
+                    tabheight = parseInt(tabheight);
+                    if(tabheight < (height-searchDivHeight)){
+                        $('.fixed-table-container').css('height', 'auto');
+                    }else{
+                        $('#atpbiztable').bootstrapTable("resetView",{height:height-searchDivHeight});
+                    }
+                }
+            })
+        }
+    };
+    TableObj.oTableInit();
+    function queryParams(params) {  //配置参数
+        $('#sort').val(params.sort);
+        $('#sortOrder').val(params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            td_name:$('#td_name').val(),
+            unitname:$('#unitname').val(),
+            start:$('#start').val(),
+            end:$('#end').val(),
+            kybchargemanname:$('#kybchargemanname').val(),
+            dept:$('#dept').val(),
+            td_status:$('#td_status').val(),
+            mt_id:$('#choosemenu').val(),
+            org:"{$roles}",
+            mt_date:$('#mt_date option:selected').val()
+        };
+        return temp;
+    }
+
+    function detailFormatter(index, row) {
+        var html = [];
+        var length = row['workflow'].length;
+        html.push("<div class='ibox-content'>");
+        html.push("<table class='table'  style='width:50%'>");
+        html.push("<tbody>");
+        for(var i =0; i < length ; i++ ){
+            html.push("<tr><td style='text-align: left'>"+row['workflow'][i]['work']+"</td></tr>");
+        }
+        html.push("</tbody>");
+        html.push("</table>");
+        html.push("</div>");
+        return html.join('').replace(/null/g, "").replace(/undefined/g, "");
+    }
+
+    $('#org_type').change(function(){
+        $('#choosemenu').val('');
+        refreshZTree();
+        $('#sys_refresh').click();
+    })
+
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+    $('#sys_export').on('click',function() {
+        $('#loading').modal('show');
+        var sort=$('#sort').val();
+        var sortOrder=$('#sortOrder').val();
+        var td_name=$('#td_name').val();
+        var unitname=$('#unitname').val();
+        var start=$('#start').val();
+        var end=$('#end').val();
+        var kybchargemanname=$('#kybchargemanname').val();
+        var dept=$('#dept').val();
+        var td_status=$('#td_status').val();
+        var mt_id=$('#choosemenu').val();
+        var mt_date=$('#mt_date option:selected').val();
+        var org="{$roles}";
+        var t = "__CONTROLLER__/getDatasWithExport?td_name="+td_name+'&unitname='+unitname+'&start='+start+'&end='+end+'&kybchargemanname='+kybchargemanname+'&dept='+dept+'&td_status='+td_status+'&mt_id='+mt_id+'&sort='+sort+'&sortOrder='+sortOrder+'&mt_date='+mt_date+'&org='+org;
+        t = encodeURI(t);
+        $.ajax({
+            type:'get',
+            url: t,
+            dataType:'json',
+            success:function(data){
+                $('#loading').modal('hide');
+                if(data.code > 0){
+                    location.href = data.message;
+                }else{
+                    layer.msg(data.message);
+                }
+            },error:function(){
+                $('#loading').modal('hide');
+                layer.alert('出错了！请联系管理员！');
+            }
+        })
+    });
+
+
+    $('#search_project_name').bind('keypress', function (event) {
+        if(event.keyCode == "13"){
+            refreshZTree();
+        }
+    })
+    $('#search').click(function(){
+        refreshZTree();
+    })
+
+    function fileUp(id){
+        layer.open({
+            title:'文件查看',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__APP__/Admin/File/indexWithNopower?objId='+id+'&objType='+'院级待办事项',
+            area: ['70%', '70%']
+        });
+    }
+
+
+</script>
+</html>

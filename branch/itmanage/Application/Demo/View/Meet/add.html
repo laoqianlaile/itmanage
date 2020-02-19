@@ -1,0 +1,314 @@
+﻿<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLICOLD__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+<title>会议编辑</title>
+<style>
+    .form-group{
+        margin-top: 10px;
+    }
+    .control-label{
+        width:150px;
+    }
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .layui-tab-content {
+        padding-bottom: 0 !important;
+        min-height: 450px;
+    }
+    .layui-tab-item>iframe{
+        width: 98%;box-sizing:border-box;overflow:hidden;border: none;
+    }
+    #layui-title li {
+        width: 12%;
+    }
+</style>
+<body style="margin: 0 auto;overflow: hidden">
+    <div class="layui-tab layui-tab-brief" lay-filter="demo" style="margin-top: -3px;">
+        <ul class="layui-tab-title" id="layui-title">
+            <li class=" layui-tab-item tab">基本信息</li>
+            <li class="layui-tab-item tab" style="display: none">待办事项</li>
+            <li class="layui-tab-item tab" style="display: none">会议材料</li>
+            <!--<li class="layui-tab-item tab" style="display: none">会议纪要</li>-->
+        </ul>
+        <div class="layui-tab-content" id="layui-content">
+            <div lay-id="1" class=" layui-tab-item layui-show">
+                <form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+                    <div class="tab-content" >
+                        <div class="panel-body">
+                            <div class="form-group" style="margin-top: 15px">
+                                <label class=" control-label">管理活动类别：</label>
+                                <select id="mt_type" name="mt_type" class="chosen-select" >
+                                    <option value="">&nbsp;</option>
+                                    <foreach name="type" item="val">
+                                        <option value="{$val.dic_name}" <?php if($val['dic_name']==$data['mt_type']){echo 'selected';}?>>{$val.dic_name}</option>
+                                    </foreach>
+                                </select>
+                                <label class="control-label">管理活动子类别：</label>
+                                <input id="mt_ztype" name="mt_ztype" type="text"  value="{$data.mt_ztype}" style="width:300px;display: inline-block" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label class=" control-label"><font color="red">*</font>会议名称：</label>
+                                <input id="mt_name" name="mt_name" type="text"  value="{$data.mt_name}" style="width:760px;display: inline-block" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">主持人：</label>
+                                <select id="jingbanren" name="mt_chargemanname">
+                                    <option value="{$data.mt_chargemanname}">{$data.mt_chargemanname}</option>
+                                </select>
+                                <label class="control-label">责任人：</label>
+                                <select id="response" name="mt_resman">
+                                    <option value="{$data.mt_resman}">{$data.mt_resman}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label"><font color="red">*</font>召开时间：</label>
+                                <input id="mt_date" name="mt_date" class="form-control" style="width:300px;display: inline-block"  value="{$data.mt_date}" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                                <label class="control-label">会议级别：</label>
+                                <select id="mt_level" name="mt_level" class="chosen-select" >
+                                    <option value="">&nbsp;</option>
+                                    <foreach name="jb" item="val">
+                                        <option value="{$val.dic_name}" <?php if($val['dic_name']==$data['mt_level']){echo 'selected';}?>>{$val.dic_name}</option>
+                                    </foreach>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">参会人员：</label>
+                                <input id="mt_joiners" name="mt_joiners" type="text"  value="{$data.mt_joiners}" style="width:760px;display: inline-block" class="form-control">
+
+                                <!--<select data-placeholder="请输入用户账号或姓名进行检索" id="jingbanren" name="mt_joiners" multiple >-->
+                                <!--<?php foreach($users as $key=>$value){ ?>-->
+                                <!--<option value="{$value}" selected>{$value}</option>-->
+                                <!--<?php } ?>-->
+                                <!--</select>-->
+                            </div>
+                            <div class="form-group">
+                               
+                                <label class="control-label">主管领导：</label>
+                                <select id="mt_ld" name="mt_leaderid" class="chosen-select" >
+                                    <option value="">&nbsp;</option>
+                                    <foreach name="ling" item="val">
+                                        <option value="{$val.user_id}" <?php if($val['user_id']==$data['mt_leaderid']){echo 'selected';}?>>{$val.user_realusername}({$val.user_name})</option>
+                                    </foreach>
+                                </select>
+                                <label class="control-label">责任处室：</label>
+                                <if condition="$mtDept eq null">
+                                    <select id="mt_dept" name="mt_deptid" class="chosen-select" >
+                                        <option value="">&nbsp;</option>
+                                        <foreach name="dept" item="val">
+                                            <option value="{$val.org_id}" <?php if($val['org_name']==$data['mt_deptname']){echo 'selected';}?>>{$val.org_name}</option>
+                                        </foreach>
+                                    </select>
+                                    <else />
+                                    <select id="mtDept" name="mt_deptid" class="chosen-select">
+                                        <option value="">&nbsp;</option>
+                                        <foreach name="dept" item="val">
+                                            <option value="{$val.org_id}" <?php if($val['org_name']==$mtDept){echo 'selected';}?>>{$val.org_name}</option>
+                                        </foreach>
+                                    </select>
+                                </if>
+                                
+                            </div>
+                            <div  class="form-group">
+                                <label class="control-label">是否形成会议纪要：</label>
+                                <select id="mt_jy"  name="mt_isjy" class="chosen-select" >
+                                    <option value="">&nbsp;</option>
+                                    <foreach name="is" item="val">
+                                        <option value="{$val.dic_name}" <?php if($val['dic_name']==$data['mt_isjy']){echo 'selected';}?>>{$val.dic_name}</option>
+                                    </foreach>
+                                </select>
+                                <label class="control-label">是否已召开：</label>
+                                <select id="mt_isdone" name="mt_isdone" class="chosen-select" >
+                                    <option value="">&nbsp;</option>
+                                    <foreach name="is" item="val">
+                                        <option value="{$val.dic_name}" <?php if($val['dic_name']==$data['mt_isdone']){echo 'selected';}?>>{$val.dic_name}</option>
+                                    </foreach>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="" style="margin-top: 20px;text-align: center">
+                            <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="margin-right: 20px;"><?php if(empty($data['mt_id'])){echo '下一步';}else{echo '保存';} ?></button>
+                            <button type="button" id="sys_refresh" style="display:none">刷新</button>
+                        </div>
+                        <input type="hidden" value="{$data.mt_id}" id="mt_id" name="mt_id">
+                    </div>
+                </form>
+            </div>
+            <div lay-id="2" style="display: none" class=" layui-tab-item">
+                <if condition="$data['mt_id'] eq null">
+                    <iframe  class="frame"   url="__MODULE__/Yuan/indexNoPower?id=" style src="" frameborder="0"></iframe>
+                <else />
+                    <iframe  class="frame"   url="__MODULE__/Yuan/indexNoPower?id={$data.mt_id}" style src="" frameborder="0"></iframe>
+                </if>
+            </div>
+            <div lay-id="3" style="display: none" class=" layui-tab-item">
+                <if condition="$data['mt_id'] eq null">
+                    <iframe  class="frame" url="__APP__/Admin/File/index?isstep=1" style="" src="" frameborder="0"></iframe>
+                <else />
+                    <iframe  class="frame" url="__APP__/Admin/File/index?isstep=1&objId={$data.mt_id}&objType=会议材料" style="" src="" frameborder="0"></iframe>
+                </if>
+            </div>
+            <!--<div lay-id="4" style="display: none" class=" layui-tab-item">-->
+                <!--<iframe  class="frame" url="__APP__/Admin/File/index?isstep=1<?php if(!empty($data['mt_id']))echo '&objId='.$data['mt_id'].'&objType=会议文件'; ?>" style="" src="" frameborder="0"></iframe>-->
+            <!--</div>-->
+        </div>
+    </div>
+
+</body>
+<script src="__PUBLICOLD__/vendor/chosen/chosen.jquery.js"></script>
+<script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script src="__PUBLICOLD__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+$(function () {
+    $('#mtDept').attr("disabled",true);
+    var mtId = "<?php echo $data['mt_id']; ?>";
+    var jy = "<?php echo $data['mt_isjy']; ?>";
+    var showIndex = "<?php echo intval(I('get.show_index')); ?>";
+    if(mtId !== '') {
+        if(jy == '是'){
+            $('.tab').css('display', '');
+        }else{
+            $('.tab').css('display', '');
+            $('.tab').eq(3).css('display', 'none');
+        }
+
+        $('#layui-content .layui-tab-item').css('display', '');
+    }
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+    layui.use('element', function () {
+        var element = layui.element();
+        element.on('tab(demo)', function (data) {
+        });
+    });
+//    $('#mt_jy').change(function () {
+//        var val = $(this).val();
+//        if(val == '是'){
+//            $('.tab').eq(1).css('display', '');
+//            $('#layui-content .layui-tab-item').eq(1).css('display', '');
+//        }else{
+//            $('.tab').eq(1).hide();
+//            $('#layui-content .layui-tab-item').eq(1).hide();
+//        }
+//    });
+    $('#sys_refresh').click(function () {
+        var currentUrl = window.location.href;
+        var mtId = $('#mt_id').val();
+        if(mtId =='') return false;
+        window.location.href = currentUrl+mtId+'&show_index=2';
+    });
+    var ifm = $('iframe');
+    var height = document.documentElement.clientHeight -100;
+    ifm.css('height', height+'px');
+
+    $('.tab').click(function(){
+        var index = $(this).index();
+        $('#layui-content .layui-tab-item').eq(index).addClass('layui-show').siblings().removeClass('layui-show');
+        if(index != 0){
+            var iframe  = $('iframe').eq(index-1);
+            var iframeLink = iframe.attr('src');
+            if(iframeLink == ''){
+                iframe.attr('src',encodeURI(iframe.attr('url')));
+            }
+        }
+    });
+    
+    $('.tab').eq(showIndex).click().addClass('layui-this');
+    $('#layui-content .layui-tab-item').eq(showIndex).addClass('layui-show');
+
+    $('#sys_dlg_submit').click(function(){
+        $('#sys_dlg_form1').submit();
+    })
+    $(".chosen-select").chosen({disable_search_threshold: 8, search_contains: true, width: '300px'});
+
+    $("#jingbanren").chosen({disable_search_threshold: 0, search_contains: true, width: '300px'});
+    $("#response").chosen({disable_search_threshold: 0, search_contains: true, width: '300px'});
+
+    $('#jingbanren').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url:'__APP__/Admin/User/getUsers'
+    });
+
+    $('#response').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url:'__MODULE__/User/getUsers'
+    });
+    $.validator.setDefaults({
+        highlight:function(element){
+            $(element).parent().remove('has-success').addClass('has-error');
+        },
+        success:function(element){
+            $(element).parent().remove('has-error').addClass('has-success');
+        },
+        errorPlacement:function(error,element){
+            if(element.is(":radio") || element.is(":checkbox")){
+                error.appendTo(element.parent());
+            }else{
+                error.appendTo(element.parent());
+            }
+        },
+        errorClass:"help-block m-b-none",
+        validClass:"help-block m-b-none"
+    });
+
+
+
+    $('#sys_dlg_form1').validate({
+        onclick:false,
+        onfocusout:false,
+        onkeyup:false,
+        rules:{
+            mt_date:'required'
+        },
+        messages:{
+            mt_date:'请输入召开时间'
+        },submitHandler:function(){
+            var name = $('#mt_name').val();
+            if(!name){
+                layer.msg('请输入会议名称');
+                return false;
+            }
+            $('#mtDept').attr("disabled",false)
+            var formBody = $('#sys_dlg_form1');
+            $.post('__CONTROLLER__/submit',formBody.serialize(), function (data) {
+                if (data.code > 0) {
+                    parent.refreshZTree();
+                    parent.$('#sys_refresh').click();
+                    $('#sys_dlg_submit').text('保存');
+                    if($('#mt_id').val() == '') $('#mt_id').val(data.message);
+                    $('.tab').eq(1).css('display', '');
+                    var url = $('.frame').eq(0).attr('url');
+                    url += data.message;
+                    $('.frame').eq(0).attr('url', url);
+
+                    $('.tab').eq(2).css('display', '');
+                    urlf = $('.frame').eq(1).attr('url');
+                    urlf += "&objId="+data.message+"&objType=会议材料";
+                    $('.frame').eq(1).attr('url', urlf);
+                    if($('#mt_jy').val() == '是'){
+                        $('.tab').css('display', '')
+                        $('#layui-content .layui-tab-item').css('display', '');
+                        $('.tab').eq(3).css('display', '').addClass('layui-this').siblings().removeClass('layui-this');
+                        url = $('.frame').eq(2).attr('url');
+                        url += "&objId="+data.message+"&objType=会议文件";
+                        $('.frame').eq(2).attr('url', url);
+                    }
+
+                    $('.tab').eq(1).click();
+                    $('#layui-content .layui-tab-item').eq(1).addClass('layui-show').siblings().removeClass('layui-show');
+//                    var index = parent.layer.getFrameIndex(window.name);
+//                    parent.layer.close(index);
+                    parent.refreshZTree();
+                } else {
+                    layer.alert(data.message);
+                }
+            },'JSON');
+        }
+    });
+});
+</script>

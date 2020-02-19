@@ -1,0 +1,136 @@
+﻿<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<title>编辑重大事项</title>
+<script type="text/javascript" charset="utf-8" src="__PUBLICOLD__/vendor/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLICOLD__/vendor/ueditor/ueditor.all.min.js"> </script>
+<style>
+    .name{ font-weight:bold; float:left;border-left:#215194 8px solid; padding-left: 15px;}
+
+    .an button{
+        width: 100px;
+        height: 30px;
+        font-weight: bold;
+        background-color: #fff;
+        border-radius: 5px;
+    }
+    .an{
+        margin-top: 10px;
+        text-align: center;
+    }
+    #editor{
+        float:left;
+        width:92%;
+    }
+    .col-sm-12{
+        width:100%;
+    }
+    .control-lable{
+        width:40px;margin-right:10px;vertical-align: top;float: left;
+    }
+</style>
+<body class="gray-bg" style="padding-left: 10px">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <form id="atpform" role="form">
+        <div class="ibox-content" style="padding:10px;">
+            <div style="width:100%;">
+                <p class="name" style="text-align: left;font-size: 20px;width:100%;">大文本编辑</p>
+            </div>
+            <div class="row row-lg" style="width:100%;">
+                <div class="form-group form-inline">
+                    <div class="col-sm-12 form-inline" style="width:100%;margin-bottom: 8px">
+                        <label class="control-lable" >标&nbsp;题</label>
+                        <input type="text" style="width: 500px;display: inline-block" class="form-control" value="{$data.bt_title}" name="bt_title" id="bt_title">
+                    </div>
+
+                    <div class="col-sm-12 form-inline" style="width:100%;">
+                        <label class="control-lable" >内&nbsp;容</label>
+                        <div id="editors" class="" style="margin: 0;width:100%;">
+                            <script id="editor" type="text/plain" style=""></script>
+                        </div>
+                        <textarea name="bt_content" id="bt_content"  class="form-control" style="width: 85%;height: 200px;display:none;float: left;">{$data.bt_content}</textarea>
+                        <font color="orangered" style="margin-left:5px;">*</font>
+                    </div>
+                </div>
+            </div>
+            <div class="an">
+                <input type="hidden" name="bt_id" id="bt_id" value="{$bt_id}"/>
+                <button type="button" style="background-color:#104aad;color:#fff" onclick="submitMatter();">提交</button>
+                <button type="button" id="cancel">取消</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLICOLD__/img/loading/loading8.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        });
+
+        var ue = UE.getEditor('editor',{
+            toolbars:[
+                ['fullscreen',
+                    'bold', 'italic', 'underline', 'autotypeset', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|',
+                    'rowspacingtop', 'rowspacingbottom', 'lineheight', '|', 'paragraph', 'fontfamily', 'fontsize', '|', 'indent',
+                    'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|',
+                    'simpleupload', 'scrawl', 'template', '|',
+                    'horizontal', 'snapscreen']
+            ]
+        });
+        ue.ready(function(){
+            var htmlStr = $('#bt_content').val();
+            ue.setContent(htmlStr);
+            var windowHeight = document.documentElement.clientHeight;
+            ue.setHeight(windowHeight-220);
+        });
+
+        $('#cancel').click(function(){
+            history.go(-1);
+        });
+    });
+    function submitMatter(){
+        var bt_content = UE.getEditor('editor').getContent();
+        var bt_id = $("#bt_id").val();
+        var bt_title = $("#bt_title").val();
+
+        $.ajax({
+            type:'post',
+            url:'__CONTROLLER__/saveData',
+            data:{bt_title : bt_title, bt_content:bt_content, bt_id:bt_id},
+            dataType:'json',
+            beforeSend:function(){
+                $('#loading').modal('show');
+            },
+            success:function(res){
+                $('#loading').modal('hide');
+
+                if(res.code >= 0){
+                    layer.msg(res.message);
+                    parent.$('#sys_refresh').click();
+                }else{
+                    layer.alert(res.message);
+                }
+            },
+            error: function () {
+                layer.alert('出错啦！请联系管理员');
+                $('#loading').modal('hide');
+            }
+        });
+    }
+
+
+</script>
+</body>
+</html>

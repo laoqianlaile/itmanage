@@ -1,0 +1,621 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>邮件漫游登录查询</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/bgadmin/plugins/layui/css/layui.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+     
+    <style>
+        .table{max-width: none;}
+        .pull-left{width:100%;}
+        #atpbiztoolbar{width:100%;}
+        #dic_name{width: 20%;float: left;margin-right: 5px;}
+        .control-div{
+            float:left;
+            width:24%;
+        }
+          .control-div_long{
+            float:left;
+            width:48%;
+        }
+        .control-label{
+            float:left;
+            width:32%;
+            height:34px;
+        }
+        #atpbiztable th{
+            text-align: center;
+            vertical-align: middle;
+        }
+        .bootstrap-table .table:not(.table-condensed) > tbody > tr > td{
+            padding:5px 2px;
+        }
+        .fixed-table-container thead th .th-inner{
+            padding:6px;
+        }
+        .fixed-table-container thead th .sortable {
+            padding-right: 20px;
+        }
+        .btn-roam{
+            background-color: darksalmon;
+            border-color: darksalmon;
+            color:white;
+        }
+        .btn-roam:hover{
+            color:white;
+        }
+        .btn-dhc{
+            background-color: indianred;
+            border-color: indianred;
+            color:white;
+        }
+        .btn-count{
+            background-color: #f4f4f4;
+            border-color: #E47B58;
+            color: #E47B58;
+        }
+        .btn-dhc:hover{
+            color:#F4E2E2;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <div id="atpbiztoolbar" >
+                        <div class="control-div">
+                            <label class="control-label">登录类型&nbsp;</label>
+                            <select name="result" id="result" class="form-control" style="margin-bottom: -5px;width:56%;height: 35px;">
+                                <option value="">请选择</option>
+                                <foreach name="results" item="val">
+                                    <option value="{$val.result}">{$val.result}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                        <div class="control-div">
+                            <label class="control-label">系统名称&nbsp;</label>
+                            <select name="systemname" id="systemname" class="form-control" style="margin-bottom: -5px;width:56%;height: 35px;">
+                                <option value="">请选择</option>
+                                <foreach name="systemnames" item="val">
+                                    <option value="{$val.systemname}">{$val.systemname}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                        <div class="control-div">
+                            <label class="control-label">开始时间&nbsp;</label>
+                            <input id="begintime" name="begintime" type="text" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="form-control" style="margin-bottom: -5px;width:56%;">
+                        </div>
+                        <div class="control-div">
+                            <label class="control-label">结束时间&nbsp;</label>
+                            <input id="endtime" name="endtime" type="text" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="form-control" style="margin-bottom: -5px;width:56%;">
+                        </div>
+                           <div class="control-div" style="margin-top: 5px;">
+                            <label class="control-label">被登录帐号&nbsp;</label>
+                            <input name="username" id="username" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;" >
+                        </div>
+                        <div class="control-div" style="margin-top: 5px;">
+                            <label class="control-label" style="line-height: 21px;">被登录人姓名&nbsp;</label>
+                            <input name="realusername" id="realusername" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;" >
+                        </div>
+                        <div class="control-div" style="float:left;width:48%;margin-top: 5px;">
+                            <label style="float:left;width:16%;line-height: 21px;height: 34px;">被登录人部门&nbsp;</label>
+                            <input name="orgfullname" id="orgfullname" type="text" class="form-control" style="margin-bottom: -5px;width:78%;height: 35px;" >
+                        </div>
+
+                          <div class="control-div" style="margin-top: 5px;">
+                            <label class="control-label">IP 地址&nbsp;</label>
+                            <input name="ipaddr" id="ipaddr" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;" >
+                        </div>
+
+                        <div class="control-div" style="margin-top: 5px;">
+                            <label class="control-label" style="line-height: 17px;">登录设备责任人帐号</label>
+                            <input name="mainuserid" id="mainuserid" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;" >
+                        </div>
+                        <div class="control-div" style="margin-top: 5px;width:48%;">
+                            <label class="control-label" style="width:16%;">设备类型&nbsp;</label>
+                            <select name="maindevicetype" id="maindevicetype" class="form-control chosen-select" style="margin-bottom: -5px;width:56%;height: 35px;">
+                                <option value="">请选择</option>
+                                <foreach name="maindevicetypes" item="val">
+                                    <option value="{$val.maindevicetype}">{$val.maindevicetype}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                        <div class="control-div" style="margin-top: 5px;">
+                            <label class="control-label">分&emsp;类&nbsp;</label>
+                            <select name="devicetype" id="devicetype" class="form-control" style="margin-bottom: -5px;width:56%;height: 35px;">
+                                <option value="">请选择</option>
+                                <foreach name="devicetypes" item="val">
+                                    <option value="{$val.devicetype}">{$val.devicetype}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                        <div class="control-div" style="margin-top: 5px;">
+                            <label class="control-label">核查状态&nbsp;</label>
+                            <select name="status" id="status" class="form-control" style="margin-bottom: -5px;width:56%;height: 35px;">
+                                <option value="">请选择</option>
+                                <option value="待核查">待核查</option>
+                                <option value="已确认（漫游）">已确认（漫游）</option>
+                                <option value="已确认（非漫游）">已确认（非漫游）</option>
+                            </select>
+                        </div>
+
+                        <div style="float:left;width:50%;margin-top: 10px;">
+                            <button class="btn btn-warning " type="button" id="sys_tijiao"><i class="fa fa-pencil-square"></i>&nbsp;确定</button>
+                            <button class="btn btn-danger " type="button" id="sys_del"><i class="fa fa-rotate-right"></i>&nbsp;重置</button>
+                            <button class="btn btn-warning " style="background-color: #f8d802;border:#f8d802 1px solid;" type="button" id="sys_exp"><i class="fa fa-sign-out"></i>&nbsp;导出</button>
+                            <form class="layui-form" action="" style="float:right;font-weight: bold;margin-right:-36px;">
+                                <label class="layui-form-label" style="padding-right: 0px;padding-top: 10px;width: 99px;">核查状态置为:</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" id="setstatus" name="setstatus" autocomplete="on" value="漫游" title="漫游">
+                                    <input type="radio" autocomplete="on" name="setstatus" value="非漫游" title="非漫游">
+                                    <!-- <input type="radio" name="sex" value="禁" title="禁用" disabled=""> -->
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <table id="atpbiztable" ></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input id="sortfield" value="" type="hidden"/>
+<input id="sortorder" value="" type="hidden"/>
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLICOLD__/img/loading/loading8.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="__PUBLICOLD__/bgadmin/plugins/layui/layui.js"></script>
+<script>
+    layui.use(['form'], function() {
+    });
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true,width:'78%'});//,hight:'80px'
+    $(function () {
+        $('#iparea').on('change',function() {
+            var area = $("#iparea option:selected").val();
+            $.post('__CONTROLLER__/getbuilding', {area: area}, function (rep) {
+                var typearr = eval("(" + rep + ")");
+                if (typearr.length > 0) {
+                    $("#ipbuilding").children().remove();
+                    var item = "";
+                    item += "<option value='' selected='selected'></option>";
+                    for (var i = 0; i < typearr.length; i++) {
+                        item += "<option value='" + typearr[i]['d_atpid'] + "'>" + typearr[i]['d_dictname'] + "</option>";
+                    }
+                    $("#ipbuilding").append(item);
+                }
+                else
+                    $("#ipbuilding").children().remove();
+            });
+        });
+        var TableObj = {
+            oTableInit: function () {
+                $('#atpbiztable').bootstrapTable({
+                    url: '__CONTROLLER__/getData',
+                    method: 'post',
+                    toolbar: '#atpbiztoolbar',
+                    striped: true,
+                    cache: false,
+                    pagination: true,
+                    iconSize: 'outline',
+                    sortable: true,
+                    sortName: "logintime",
+                    sortOrder: "desc",
+                    queryParams: queryParams,
+                    sidePagination: "server",
+                    pageNumber: 1,
+                    pageSize: 10,
+                    pageList: [5, 10, 25, 50, 100],
+                    search: false,
+                    showColumns: false,
+                    showRefresh: false,
+                    minimumCountColumns: 2,
+                    clickToSelect: false,
+                    detailView: false,
+                    detailFormatter: "detailFormatter",
+                    columns: [
+                        [
+                            {checkbox:true},
+                            {
+                                title: '序号', width: 40,align:"center",
+                                formatter: function (value, row, index) {
+                                    var option = $('#atpbiztable').bootstrapTable("getOptions");
+                                    return option.pageSize * (option.pageNumber - 1) + index + 1;
+                                }
+                            },
+                            {field: 'username', title: '被登录<br/>帐号', sortable: true,align:"center"},
+                            {field: 'realusername', title: '被登录人<br/>姓名', sortable: true,align:"center"},
+                            {field: 'orgfullname', title: '被登录人部门', sortable: true},
+                            {field: 'logintime', title: '登录时间', sortable: true,align:"center"},
+                            {field: 'ipaddr', title: '登录设备<br/>IP地址', sortable: true},
+                            {field: 'mainuserid', title: '登录设备<br/>责任人帐号', sortable: true,align:"center"},
+                            {field: 'mainusername', title: '登录设备<br/>责任人姓名', sortable: true,align:"center"},
+                            {field: 'mainuserorg', title: '登录设备<br/>责任人部门', sortable: true},
+                            {field: 'systemname', title: '系统名称', sortable: true,align:"center"},
+                            {field: 'result', title: '登录类型', sortable: true,width:"70px",align:"center"},
+                            {field: 'maindevicetype', title: '设备类型', sortable: true,width:"86px",align:"center"},
+                            {field: 'status', title: '核查状态', sortable: true,align:"center",width: '70px',
+                                formatter:function(value, row, index){
+                                    var a = '';
+                                    var rowid = row.rowid;
+                                    if(value == '' || value == null){
+                                        return a;
+                                    }else if(value == '待核查'){
+                                        var a = '<a class="btn btn-dhc btn-xs" onclick="changeStatus(\'' + rowid + '\')">'+value+'</a><br>';
+                                    }else if(value == '已确认（漫游）'){
+                                        var a = '<a class="btn btn-roam btn-xs" onclick="changeStatus(\'' + rowid + '\')">已确认<br/>（漫游）</a><br>';
+                                    }else if(value == '已确认（非漫游）'){
+                                        var a = '<a class="btn btn-roam btn-xs" onclick="changeStatus(\'' + rowid + '\')">已确认<br/>（非漫游）</a><br>';
+                                    }
+                                    return a;
+                                }},
+                            {field: 'zcbg_count', title: '资产变更<br/>记录', sortable: true,align:"center",
+                                formatter:function(value, row, index){
+                                    var a = '';
+                                    var ipaddr = row.ipaddr;
+                                    if(value == '' || value == null || value== 0){
+                                        return a;
+                                    }else{
+                                        var a = '<a class="btn btn-count btn-xs" onclick="zcbgDetail(\'' + ipaddr + '\')">'+value+'</a><br>';
+                                    }
+                                    return a;
+                                }},
+                            {field: 'bd_count', title: '相关表单', sortable: true,align:"center",
+                                formatter:function(value, row, index){
+                                    var a = '';
+                                    var ipaddr = row.ipaddr;
+                                    if(value == '' || value == null || value== 0){
+                                        return a;
+                                    }else{
+                                        var a = '<a class="btn btn-count btn-xs" onclick="bdDetail(\'' + ipaddr + '\')">'+value+'</a><br>';
+                                    }
+                                    return a;
+                                }}
+                        ]
+                    ]
+                });
+            }
+        };
+
+        TableObj.oTableInit();
+        $("#atpbiztable th").css("text-align","center");
+        $("#atpbiztable th").css("vertical-align","middle");
+        $('#sys_tijiao').on('click',function() {
+            $('#atpbiztable').bootstrapTable('destroy');
+            TableObj.oTableInit();
+        });
+
+        $('#sys_exp').on('click',function()
+        {
+            var result         = $('#result option:selected').val();
+            var systemname     = $('#systemname option:selected').val();
+            var begintime      = $("#begintime").val();
+            var endtime        = $("#endtime").val();
+            var mainuserid     = $("#mainuserid").val();
+            var mainusername     = $("#mainusername").val();
+            var mainuserorg     = $("#mainuserorg").val();
+            var ipaddr         = $("#ipaddr").val();
+            var maindevicetype = $("#maindevicetype option:selected").val();
+            var devicetype     = $("#devicetype option:selected").val();
+            var status         = $("#status option:selected").val();
+            var username       = $("#username").val();
+            var realusername   = $("#realusername").val();
+            var orgfullname    = $("#orgfullname").val();
+
+            var sortOrder = $("#sortorder").val();
+            var sortfield = $("#sortfield").val();
+            var check     = "__CONTROLLER__/checkIfBig?result="+result+"&systemname="+systemname+"&begintime="+begintime+"&endtime="+endtime+"&mainuserid="+mainuserid+"&mainusername="+mainusername+"&mainuserorg="+mainuserorg+"&ipaddr="+ipaddr+"&maindevicetype="+maindevicetype+"&devicetype="+devicetype+"&status="+status+"&username="+username+"&realusername="+realusername+"&orgfullname="+orgfullname+"&sortOrder="+sortOrder+"&sort="+sortfield;
+            var t ="__MODULE__/Export/roam_exp?result="+result+"&systemname="+systemname+"&begintime="+begintime+"&endtime="+endtime+"&mainuserid="+mainuserid+"&mainusername="+mainusername+"&mainuserorg="+mainuserorg+"&ipaddr="+ipaddr+"&maindevicetype="+maindevicetype+"&devicetype="+devicetype+"&status="+status+"&username="+username+"&realusername="+realusername+"&orgfullname="+orgfullname+"&sortOrder="+sortOrder+"&sort="+sortfield;
+            // var t = "__MODULE__/Managers/getManagersWithExport?sort="+sort+"&sortOrder="+sortOrder+"&xhdh="+xhdh+"&ly="+ly+"&fxt="+fxt+"&tyy="+tyy+"&jxzt="+jxzt+'&jgcp='+jgcp;
+            check = encodeURI(check);
+            $.ajax({
+                type:'get',
+                url: check,
+                dataType:'json',
+                success:function(data){
+                    if(data[0].c>5000){
+                        if(confirm("选中的导出数据较多，可能需要等待较长时间，是否继续？")){
+                            t = encodeURI(t);
+                            $.ajax({
+                                type:'get',
+                                url: t,
+                                dataType:'json',
+                                beforeSend:function(){
+                                    $("#loadingText").html("正在处理请稍后");
+                                    $('#loading').modal('show');
+                                },
+                                success:function(data){
+                                    location.href = data.message;
+                                },
+                                complete:function(){
+                                    $('#loading').modal('hide');
+                                },
+                            })
+                        }
+                    }else{
+                        t = encodeURI(t);
+                        $.ajax({
+                            type:'get',
+                            url: t,
+                            dataType:'json',
+                            beforeSend:function(){
+                                $("#loadingText").html("正在处理请稍后");
+                                $('#loading').modal('show');
+                            },
+                            success:function(data){
+                                location.href = data.message;
+                            },
+                            complete:function(){
+                                $('#loading').modal('hide');
+                            },
+                        })
+                    }
+                }
+            })
+            
+        });
+
+
+        $("body").on("click",".layui-form-radio",function(_this){
+            var setstatus = $(".layui-form-radio").filter('.layui-form-radioed').children('span');
+            var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+            if(tablerow.length<1){
+                alert("请至少选择一条数据进行操作！");
+                var i = $(".layui-form-radio").not(".layui-form-radioed").children('i').text();
+                $(".layui-form-radio").filter('.layui-form-radioed').children('i').text(i);
+                setstatus.parent('div').removeClass('layui-form-radioed');
+            }else {
+                var len = tablerow.length;
+                if(confirm("确定要将选中的"+len+"条数据状态置为"+setstatus.text()+"吗？")){
+                    var ids = [];
+                    $.each(tablerow, function () {
+                        ids.push(this['rowid']);
+                    });
+                    $.ajax({
+                        type:'post',
+                        url:'__CONTROLLER__/setRoamStatus',
+                        data:{
+                            status:setstatus.text().trim(),
+                            ids:ids.join(',')
+                        },
+                        beforeSend:function(){
+                            $("#loadingText").html("正在处理请稍后");
+                            $('#loading').modal('show');
+                        },
+                        success:function(res){
+                            if(res.error != 0){
+                                alert(res.message);
+                                return false;
+                            }else{
+                                alert('状态置为'+setstatus.text()+'成功！');
+                                $('#atpbiztable').bootstrapTable('destroy');
+                                TableObj.oTableInit();
+                            }
+                        },
+                        complete:function(){
+                            var i = $(".layui-form-radio").not(".layui-form-radioed").children('i').text();
+                            $(".layui-form-radio").filter('.layui-form-radioed').children('i').text(i);
+                            setstatus.parent('div').removeClass('layui-form-radioed');
+                            $('#loading').modal('hide');
+                        },
+                        dataType:'json'
+                    });
+                }
+            }
+
+        })
+    });
+    function queryParams(params) {  //配置参数
+        $("#sortfield").attr("value",params.sort);
+        $("#sortorder").attr("value",params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            result: $('#result option:selected').val(),
+            systemname: $('#systemname option:selected').val(),
+            begintime: $('#begintime').val(),
+            endtime: $('#endtime').val(),
+            mainuserid: $('#mainuserid').val(),
+            mainusername: $('#mainusername').val(),
+            mainuserorg: $('#mainuserorg').val(),
+            ipaddr: $('#ipaddr').val(),
+            maindevicetype: $('#maindevicetype option:selected').val(),
+            devicetype: $('#devicetype option:selected').val(),
+            status: $('#status option:selected').val(),
+            username: $('#username').val(),
+            realusername: $('#realusername').val(),
+            orgfullname: $('#orgfullname').val()
+        };
+        return temp;
+    }
+
+    function dataCellFormatter(value, row) {
+        var color = '#'+Math.floor(Math.random() * 6777215).toString(16);
+        return '<div  style="color: ' + color + '">' + '<i class="glyphicon glyphicon-usd"></i>' + value + '</div>';
+    }
+
+    $('#sys_del').on('click',function(){
+        $('#result').val("");
+        $('#systemname').val("");
+        $('#begintime').val("");
+        $('#endtime').val("");
+        $('#mainuserid').val("");
+        $('#mainusername').val("");
+        $('#mainuserorg').val("");
+        $('#ipaddr').val("");
+        $('#maindevicetype').val("");
+        $('#devicetype').val("");
+        $('#status').val("");
+        $('#username').val("");
+        $('#realusername').val("");
+        $('#orgfullname').val("");
+    });
+
+    $('#sys_add').on('click',function(){
+        location.href='__CONTROLLER__/add';
+    });
+
+    $('#batchDelete').on('click',function(){
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            alert("您尚未选择数据");
+        }
+        else {
+            if (confirm('确认删除' + tablerow.length + '条数据?')) {
+                var ids = [];
+                $.each(tablerow, function () {
+                    ids.push(this['ip_atpid']);
+                });
+//                $.post('', {}, function (rep) {
+//
+//                },'json');
+                $.ajax({
+                    type:'post',
+                    url:'__CONTROLLER__/deleteData',
+                    data:{
+                        ids: ids.join(',')
+                    },
+                    beforeSend:function(){
+                        $("#loadingText").html("正在处理请稍后");
+                        $('#loading').modal('show');
+                    },
+                    success:function(res){
+                        if (res.code == 0) {
+                            $('#atpbiztable').bootstrapTable('refresh');
+                        }else {
+                            alert('删除失败' + "可能是因为数据存在关联无法删除</n>错误详情：" + res.message);
+                        }
+                    },
+                    complete:function(){
+                        $('#loading').modal('hide');
+                    },
+                    dataType:'json'
+                });
+            }
+        }
+    });
+    $('#sys_edit').on('click',function(){
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            alert("您尚未选择数据");
+        }else if(tablerow.length == 1) {
+            var ids = '';
+            $.each(tablerow, function () {
+                ids = this['ip_atpid'];
+            });
+            if(ids == ''){
+                alert('请选择一行记录！');
+            }else{
+                location.href = '__CONTROLLER__/editData?ids='+ids;
+            }
+        }else{
+            alert('请选择一行记录！');
+        }
+    });
+
+    function loadTo(toUrl){
+        if(toUrl == ''){
+            return false;
+        }else{
+            location.href = '__CONTROLLER__/'+toUrl;
+        }
+    }
+
+    function detailFormatter(index, row) {
+        var html = [];
+        html.push("<div class='ibox-content'>");
+        html.push("<table class='table'>");
+        html.push("<tbody>");
+        html.push("<tr><td><b>子网掩码</b></td><td>" + row['ip_mask'] + "</td><td><b>网关</b></td><td>" + row['ip_gateway'] + "</td></tr>");
+        html.push("<tr><td><b>部门全称</b></td><td colspan='3'>" + row['ip_deptfullname'] + "</td></tr>");
+        html.push("</tbody>");
+        html.push("</table>");
+        html.push("</div>");
+        return html.join('').replace(/null/g, "").replace(/undefined/g, "");
+    }
+    function changeStatus(rowid){
+        $("#sys_dlg").load('__CONTROLLER__/changeStatus?id=' + rowid, function() {
+            $('#sys_dlg_submit').on('click',submitdata) ;
+            $("#sys_dlg").modal({backdrop: false});
+        });
+    }
+    function submitdata() {
+        var formbody = $("#sys_dlg_form");
+        $.post('__CONTROLLER__/changeStatus', formbody.serialize(),function (rep) {
+            if(rep.error == "0"){
+                alert(rep.message);
+                $('#atpbiztable').bootstrapTable('refresh');
+            }else{
+                alert(rep.message);
+                $('#atpbiztable').bootstrapTable('refresh');
+            }
+
+        },'json');
+    }
+    function zcbgDetail(ipaddress){
+        $("#sys_dlg").load('__CONTROLLER__/zcbgDetail?ipaddress=' + ipaddress, function() {
+            $("#sys_dlg").modal({backdrop: false});
+        });
+    }
+    function bdDetail(ipaddress){
+        $("#sys_dlg").load('__CONTROLLER__/bdDetail?ipaddress=' + ipaddress, function() {
+            $("#sys_dlg").modal({backdrop: false});
+        });
+    }
+</script>
+</body>
+
+</html>
+
+
+
+

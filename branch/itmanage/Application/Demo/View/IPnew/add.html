@@ -1,0 +1,389 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>IP地址新增</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+    <link rel="stylesheet" href="__PUBLICOLD__/vendor/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ztree/js/jquery.ztree.core.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+     
+    <style>
+        .name{background-color: ; font-weight:bold; margin-top:20px; margin-bottom:40px; float:left;border-left:#18a689 8px solid; padding-left: 15px;}
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <form id="atpform" role="form"　class="form-inline">
+            <div class="ibox-content" style="padding:5%;padding-top:1%;">
+                <div style="margin-top:20px;width:100%;">
+                    <p class="name" style="text-align: left;font-size: 20px;width:100%;">新增IP地址</p></div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline" style="width:50%;">
+                            <label class="control-lable" style="width:15%;margin-right:2%">起始 IP</label>
+                            <input  id="ip_start" name="ip_start" type="text" class="form-control" style="" required="true">
+                            <font color="orangered">*</font>
+                        </div>
+                        <div class="col-sm-6 form-inline" style="width:50%;">
+                            <label class="control-lable  " style="width:15%;margin-right:2%">结束 IP</label>
+                            <input  id="ip_end" name="ip_end" type="text" class="form-control" required="true">
+                            <font color="orangered">*</font>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline" style="width:50%;">
+                            <label class="control-lable" style="width:15%;margin-right:2%">子网掩码</label>
+                            <input  id="ip_mask" name="ip_mask" type="text" class="form-control" required="true">
+                            <font color="orangered">*</font>
+                        </div>
+                        <div class="col-sm-6 form-inline" style="width:50%;">
+                            <label class="control-lable  " style="width:15%;margin-right:2%;">网&emsp;关</label>
+                            <input  id="ip_gateway" name="ip_gateway" type="text" class="form-control" required="true">
+                            <font color="orangered">*</font>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline" style="width:50%;">
+                            <label class="control-lable" style="width:15%;margin-right:2%">Vlan号</label>
+                            <input  id="ip_vlan_no" name="ip_vlan_no" type="text" class="form-control" style="width:;" >
+                        </div>
+                        <div class="col-sm-6 form-inline" style="width:50%;">
+                            <label class="control-lable  " style="width:15%;margin-right:2%;">密&emsp;级</label>
+                            <select id="ip_secret_level" name="ip_secret_level" class="chosen-select2" style="width: 41%;" >
+                                <option value="">请选择</option>
+                                <foreach name="ipsecretlevel" item="val">
+                                    <option value="{$val.d_sortno}">{$val.d_dictname}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top:20px;width:100%;">
+                    <div class="form-group form-inline">
+                        <div class="col-sm-6 form-inline" style="width:50%;">
+                            <div class="col-sm-7 form-inline" style="width:61%;padding:0;">
+                                <div style="width:100%;padding:0;margin-bottom:20px;">
+                                    <label class="control-lable" style="width:27%;margin-right:2%">地&emsp;区</label>
+                                    <select name="ip_area" id="ip_area" class="form-control" style="width:66%;">
+                                        <option value="">请选择</option>
+                                        <foreach name="iparea" item="val">
+                                            <option value="{$val.d_atpid}">{$val.d_dictname}</option>
+                                        </foreach>
+                                    </select>
+                                </div>
+                                <div style="width:100%;padding:0;">
+                                    <label class="control-lable" style="width:27%;margin-right:2%">楼&emsp;宇</label>
+                                    <select name="ip_building" id="ip_building" class="form-control" style="width:66%;">
+                                        <option value="">请选择</option>
+                                        <foreach name="ds_chuliperson" item="vo">
+                                            <option value="{$vo.yw_account}">{$vo.yw_name}</option>
+                                        </foreach>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-5 form-inline" style="width:38%;padding:0;">
+                                <select id="select_region" name="select_region" data-placeholder=" " class="chosen-select_long" multiple >
+                                    <option value="" checked></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 form-inline" style="width:50%;">
+                            <label class="control-lable  " style="width:15%;margin-right:2%;">部&emsp;门</label>
+                            <select id="select_dept" name="select_dept" style="" class="chosen-select_longs" multiple >
+                                <option value="" checked></option>
+                            </select>
+                            <button class="btn btn-primary" type="button" id="choosedept" style="margin-left:2%;margin-bottom: 0px;">选择</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top: 25px;">
+                    <div class="col-sm-12 form-inline" style="width:100%;">
+                            <label class="control-lable" style="width:7%;margin-right:1%;">用&emsp;途</label>
+                            <textarea class="form-control" rows="5" id="ip_purpose" name="ip_purpose" style="width:70%;"></textarea>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top: 25px;">
+                    <div class="form-group">
+                        <label class="control-lable  col-sm-4"></label>
+                        <button class="btn btn-primary" type="button" id="submit">提交</button>
+                        <label class="control-lable" style="width:10%">&nbsp;</label>
+                        <button class="btn btn-primary " type="button" id="cancel">取消</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="sys_dept" role="dialog" class="modal fade "></div>
+    <div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+        <div class="modal-dialog" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">处理中</h4>
+                </div>
+                <div class="modal-body">
+                    <img src="__PUBLICOLD__/img/loading/loading8.gif" style='display: block;margin: 0 auto'>
+                    <div id="loadingText" style="text-align: center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    CHOSEN_DEFAULT_TEXT ="";
+</script>
+<script>
+
+
+    $(function () {
+        $(".chosen-select_long").chosen({disable_search_threshold: 10, search_contains: false,width:'100%',height:'88px !imprtant'});
+        $(".chosen-select_long").change(function(){
+            alert($('#ip_building').val());
+        });
+        $(".chosen-select_longs").chosen({disable_search_threshold: 10, search_contains: false,width:'60%',height:'88px !imprtant'});
+        //删除
+        $(".chosen-select_long option").remove();
+        $('#ip_building').on('change',function(){
+            var building = $("#ip_building option:selected").val();
+            var buildinghtml = $("#ip_building option:selected").html();
+            var tmp = $('.chosen-choices').html();
+            if(tmp.indexOf(buildinghtml)<0){
+                $('#select_region').append('<option value="'+building+'" selected  >'+buildinghtml+'</option>');
+                $('#select_region').trigger("chosen:updated");
+            }
+        });
+
+        $(".chosen-select2").chosen({disable_search_threshold: 10, search_contains: true});
+
+        $('#cancel').click(function(){
+            history.go(-1);
+        });
+
+        $('#choosedept').click(function(){
+            $("#sys_dept").load('__CONTROLLER__/getDeptTree', function() {
+                $("#sys_dept").modal({backdrop: false});
+            });
+        })
+    });
+
+    $('#ip_area').on('change',function() {
+        var area     = $("#ip_area option:selected").val();
+        var areaname = $("#ip_area option:selected").html();
+        $.post('__CONTROLLER__/getbuilding', {area: area}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#ip_building").children().remove();
+                var item = "";
+                item += "<option value='"+area+"' selected='selected'>"+areaname+"全部</option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'>" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#ip_building").append(item);
+            }
+            else
+                $("#ip_building").children().remove();
+            }
+        );
+    });
+
+    $('#submit').on('click',function (){
+        var ip_start   = $('#ip_start');
+        var ip_end     = $('#ip_end');
+        var ip_mask    = $('#ip_mask');
+        var ip_gateway = $('#ip_gateway');
+        var res = checkSub([ip_start,ip_end,ip_mask,ip_gateway]); //验证IP地址数据格式
+        if(!res) return false;
+        var res = compareIP(ip_start.val(),ip_end.val());         //验证IP地址最大值不小于最小值
+        if(res == 1){
+            alert('IP地址起始值不能大于终止值！');
+            return false;
+        }else if(res == 2){
+            alert('IP地址起始值与终止值前两个网段须相同！');
+            return false;
+        }else if(res == 3){
+            var con = confirm('新增的IP地址号码段过长，确认添加吗？');
+            if(!con) return false;
+        }
+        var ip_start        = ip_start.val();
+        var ip_end          = ip_end.val();
+        var ip_mask         = ip_mask.val();
+        var ip_gateway      = ip_gateway.val();
+        var ip_vlan_no      = $('#ip_vlan_no');
+        if(ip_vlan_no.val() != ''){
+            var reg = /^[1-9]\d*$/;
+            var res = reg.test(ip_vlan_no.val());
+            if(!res){
+                ip_vlan_no.parent().addClass('has-error');
+                return false;
+            }else{
+                ip_vlan_no.parent().removeClass('has-error');
+                ip_vlan_no.parent().addClass('has-success');
+            }
+        }
+        var ip_secret_level = $('#ip_secret_level').val();
+        var ip_secret_name  = $('#ip_secret_level option:checked').html();
+        var select_region   = $('#select_region').val();
+        var ip_areaname     = new Array();
+        $('#select_region_chosen').find('span').each(function(i){
+            ip_areaname.push(this.innerHTML);
+        });
+        var ip_departname   = new Array();
+        $('#select_dept_chosen').find('span').each(function(i){
+            ip_departname.push(this.innerHTML);
+        });
+
+        var select_dept     = $('#select_dept').val();
+        var ip_purpose      = $('#ip_purpose').val();
+        $.ajax({
+            type:'post',
+            url:'__CONTROLLER__/IPcheck',
+            data:{
+                ip_start:ip_start,
+                ip_end:ip_end,
+                ip_mask:ip_mask,
+                ip_gateway:ip_gateway,
+                ip_vlan_no:ip_vlan_no.val(),
+                ip_secret_level:ip_secret_level,
+                ip_secret_name:ip_secret_name,
+                ip_area:select_region,
+                ip_areaname:ip_areaname.join(','),
+                ip_departname:ip_departname.join(','),
+                ip_depart:select_dept,
+                ip_purpose:ip_purpose
+            },
+            beforeSend:function(){
+                $("#loadingText").html("正在处理请稍后");
+                $('#loading').modal('show');
+            },
+            success:function(res){
+//                    alert(res);return false;
+                if(res.code != 0){
+                    alert(res.message);
+                    return false;
+                }else{
+                    alert('新增数据成功！');
+                    location.href='__CONTROLLER__/index';
+                }
+            },
+            complete:function(){
+                $('#loading').modal('hide');
+            },
+            dataType:'json'
+        });
+    });
+
+    function checkSub(para){
+        var reg  = /^(\d|1\d?\d?|2(\d|([0-4]\d|5[0-5]))|[1-9]\d)\.(\d|1\d?\d?|2(\d|([0-4]\d|5[0-5]))|[1-9]\d)\.(\d|1\d?\d?|2(\d|([0-4]\d|5[0-5]))|[1-9]\d)\.(\d|1\d?\d?|2(\d|([0-4]\d|5[0-5]))|[1-9]\d)$/;
+        var reg1 = /^255\.255\.(\d|1\d?\d?|2(\d|([0-4]\d|5[0-5]))|[1-9]\d)\.(\d|1\d?\d?|2(\d|([0-4]\d|5[0-5]))|[1-9]\d)$/;
+        var regs = '';
+        var err  = 0;
+        for(var i = 0;i<para.length;i++){
+            if(para[i].val() == ''){
+                para[i].parent().addClass('has-error');
+                err = 1;
+            }else{
+                if(para[i].attr('name') == 'ip_mask'){
+                    regs = reg1;
+                }else{
+                    regs = reg;
+                }
+                var re = regs.test(para[i].val());
+                if(!re){
+                    if(err != 1){
+                        if(para[i].attr('name') == 'ip_mask'){
+                            alert('子网掩码格式错误！');
+                        }else{
+                            alert('IP地址格式错误！');
+                        }
+                    }
+                    para[i].parent().addClass('has-error');
+                    err = 1;
+                }else{
+                    para[i].parent().removeClass('has-error');
+                    para[i].parent().addClass('has-success');
+                }
+            }
+        }
+        if(err == 1){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    function compareIP(ip_start,ip_end){
+        var ip_startnum = formatIP(ip_start);
+        var ip_endnum   = formatIP(ip_end);
+        if(ip_startnum>ip_endnum) return 1;
+        ip_startnum = ip_start.split('.');
+        ip_endnum   = ip_end.split('.');
+        if((ip_startnum[0] != ip_endnum[0]) || (ip_startnum[1] != ip_endnum[1])) return 2;
+        if(ip_endnum[2]-ip_startnum[2]>=4) return 3;
+        return 0;
+    }
+
+    function formatIP(ip){
+        var ip_num = '';
+        var num    = ip.split('.');
+        ip_num      = num[0]*256*256*256+num[1]*256*256+num[2]*256+num[3];
+//        for(var i = 0;i<num.length;i++){
+//            var len = num[i].length;
+//            if(len == 1){
+//                ip_num += '00'+ num[i];
+//            }else if(len == 2){
+//                ip_num += '0'+ num[i];
+//            }else{
+//                ip_num += num[i];
+//            }
+//        }
+        return ip_num;
+    }
+
+
+
+</script>
+</body>
+
+</html>
+
+
+
+

@@ -1,0 +1,513 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">详细信息预览</h4>
+        </div>
+        <div class="modal-body">
+            <form id="sys_dlg_form" role="form">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true"> 基本信息</a>
+                                </li>
+                                <!--<li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">关联关系</a>-->
+                                <!--</li>-->
+                                <li class=""><a data-toggle="tab" href="#tab-3" aria-expanded="false">终端绑定信息</a>
+                                </li>
+                                <li class=""><a data-toggle="tab" href="#tab-4" aria-expanded="false">变更日志</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="tab-1" class="tab-pane active">
+                                    <div class="panel-body">
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>设备名称</label>
+                                                <input id="zd_name" name="zd_name" type="text" value="{$data.zd_name}" class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>设备编码</label>
+                                                <input id="zd_devicecode" name="zd_devicecode" type="text" value="{$data.zd_devicecode}"class="form-control" readonly >
+                                            </div>
+                                            <div class="form-group_l">
+                                                <label>出厂编号</label>
+                                                <input id="zd_seqno" name="zd_seqno" type="text" value="{$data.zd_seqno}"class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>IP地址</label>
+                                                <input id="zd_ipaddress" name="zd_ipaddress" type="text" value="{$data.zd_ipaddress}"class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>MAC地址</label>
+                                                <input id="zd_macaddress" name="zd_macaddress" type="text" value="{$data.zd_macaddress}" class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>设备类型</label>
+                                                <select name="zd_type"  class="form-control" id="zd_type" style="margin-bottom: -5px;width:65%;" readonly>
+                                                    <foreach name="ds_sbtype" item="vo">
+                                                        <option value="{$vo.dic_name}" <if condition="($data.zd_type eq $vo['dic_name'])">selected="selected"</if>>{$vo.dic_name}</option>
+                                                    </foreach>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_l">
+                                                <label>厂家</label>
+                                                <select name="zd_factoryname"  class="form-control" id="zd_factoryname" style="margin-bottom: -5px;width:65%;" readonly>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>型号</label>
+                                                <select name="zd_modelnumber"  class="form-control" id="zd_modelnumber" style="margin-bottom: -5px;width:65%;" readonly>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>状态</label>
+                                                <select name="zd_status" id="zd_status" class="form-control" style="margin-bottom: -5px;width:65%;" readonly>
+                                                    <option value="">--请选择--</option>
+                                                    <foreach name="status" item="v">
+                                                        <option value="{$v.dic_name}" <if condition="($data.zd_status eq $vo['dic_name'])">selected="selected"</if>>{$v.dic_name}</option>
+                                                    </foreach>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>密级</label>
+                                                <select name="zd_secretlevel" id="zd_secretlevel" class="form-control" style="margin-bottom: -5px;width:65%;" readonly>
+                                                    <option>-</option>
+                                                    <foreach name="ds_miji" item="vo">
+                                                        <option value="{$vo.dic_name}" <if condition="($data.zd_secretlevel eq $vo['dic_name'])">selected="selected"</if>>{$vo.dic_name}</option>
+                                                    </foreach>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_l">
+                                                <label>采购日期</label>
+                                                <input id="zd_purchasetime" name="zd_purchasetime" type="text" value="{$data.zd_purchasetime}" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>到保日期</label>
+                                                <input id="zd_maintainendtime" name="zd_maintainendtime" type="text" value="{$data.zd_maintainendtime}" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>地区</label>
+                                                <select name="zd_area"  class="form-control" id="zd_area" style="margin-bottom: -5px;width:65%;">
+                                                    <option>-</option>
+                                                    <foreach name="ds_area" item="vo">
+                                                        <option value="{$vo.dic_id}" <if condition="($data.zd_area eq $vo['dic_name'])">selected</if>>{$vo.dic_name}</option>
+                                                    </foreach>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>楼宇</label>
+                                                <select name="zd_belongfloor"  class="form-control" id="zd_belongfloor" style="margin-bottom: -5px;width:65%;">
+                                                    <!--<option value=""></option>-->
+                                                </select>
+                                            </div>
+                                            <div class="form-group_l">
+                                                <label>房间号</label>
+                                                <input id="zd_roomno" name="zd_roomno" type="text" value="{$data.zd_roomno}" class="form-control">
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>部标编码</label>
+                                                <input id="zd_anecode" name="zd_anecode" type="text" value="{$data.zd_anecode}" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>表单编号</label>
+                                                <input id="zd_bdid" name="zd_bdid" type="text" value="{$data.zd_bdid}" class="form-control">
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>启用日期</label>
+                                                <input id="zd_startusetime" name="zd_startusetime" type="text" value="{$data.zd_startusetime}" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="form-control" >
+                                            </div>
+                                            <div class="form-group_l">
+                                                <label>保密台账</label>
+                                                <select name="zd_privacybook" id="zd_privacybook" class="form-control" style="margin-bottom: -5px;width:65%;">
+                                                    <option>-</option>
+                                                    <foreach name="ds_bmtz" item="vo">
+                                                        <option value="{$vo.dic_name}" <if condition="($data.zd_privacybook eq $vo['dic_name'])">selected="selected"</if>>{$vo.dic_name}</option>
+                                                    </foreach>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>资产台账</label>
+                                                <select name="zd_devicebook" id="zd_devicebook" class="form-control" style="margin-bottom: -5px;width:65%;">
+                                                    <option>-</option>
+                                                    <foreach name="ds_zctz" item="vo">
+                                                        <option value="{$vo.dic_name}" <if condition="($data.zd_devicebook eq $vo['dic_name'])">selected="selected"</if>>{$vo.dic_name}</option>
+                                                    </foreach>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>硬盘序号</label>
+                                                <input id="zd_harddiskseq" name="zd_harddiskseq" type="text" value="{$data.zd_harddiskseq}" class="form-control">
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label style="margin-top: 0;">OS安装日期</label>
+                                                <input id="zd_bindcondition" name="zd_bindcondition" type="text" value="{$data.zd_osinstalltime}" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="form-control" >
+                                            </div>
+                                            <div class="form-group_l">
+                                                <label>是否隔离</label>
+                                                <select name="zd_isisolate" id="zd_isisolate" class="form-control" style="margin-bottom: -5px;width:65%;">
+                                                    <option value="">--请选择--</option>
+                                                    <option value="是" <if condition="($data.zd_isisolate eq '是')">selected</if>>是</option>
+                                                    <option value="否" <if condition="($data.zd_isisolate eq '否')">selected</if>>否</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label style="margin-top: 0;">是否安装干扰器</label>
+                                                <select name="zd_isinstalljammer" id="zd_isinstalljammer" class="form-control" style="margin-bottom: -5px;width:65%;">
+                                                    <option value="">--请选择--</option>
+                                                    <option value="是" <if condition="($data.zd_isinstalljammer eq '是')">selected</if>>是</option>
+                                                    <option value="否" <if condition="($data.zd_isinstalljammer eq '否')">selected</if>>否</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_l">
+                                                <label>责任人</label>
+                                                <input id="zd_dutyman" name="zd_dutyman" type="text" value="{$dutyman}" class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>责任部门</label>
+                                                <input id="zd_dutydeptid" name="zd_dutydeptid" type="text" value="{$dutydeptname}" class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_l">
+                                                <label>使用人</label>
+                                                <input id="zd_useman" name="zd_useman" type="text" value="{$useman})" class="form-control" readonly>
+                                            </div>
+                                            <div class="form-group_r">
+                                                <label>使用部门</label>
+                                                <input id="zd_usedeptid" name="zd_usedeptid" type="text" value="{$usedeptname}" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="form-group_heng">
+                                                <label style="float: left; width: 6.3%;">备注</label>
+                                                <textarea id="zd_memo" name="zd_memo" class="form-control" style="width: 91%;">{$data.zd_memo}</textarea>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!--<div id="tab-2" class="tab-pane">-->
+                                    <!--<div class="panel-body">-->
+                                        <!--<table id="relationtable" ></table>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <div id="tab-3" class="tab-pane">
+                                    <div class="panel-body">
+                                        <div class="heng">
+                                                <label>当前绑定信息</label>
+                                        </div>
+                                        <table id="bindtable" ></table>
+                                        <div class="heng">
+                                                <label>上次绑定信息</label>
+                                        </div>
+                                        <table id="bindoldtable" ></table>
+                                    </div>
+                                </div>
+                                <div id="tab-4" class="tab-pane">
+                                    <div class="panel-body">
+                                        <!--<table id="logtable" ></table>-->
+                                        <iframe src="__MODULE__/Oplog/index?id={$data.zd_atpid}" style="width: 1100px;height: 600px;" frameborder="0"></iframe>
+                                    </div>
+                                </div>
+                                <input id="zd_atpid" name="zd_atpid" type="hidden" value="{$data.zd_atpid}" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="closeModal" class="btn btn-default">关闭</button>
+        </div>
+    </div>
+</div>
+
+<!--<link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLIC__/vendor/tabs/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">-->
+<!--<link href="__PUBLIC__/vendor/tabs/css/font-awesome.css?v=4.4.0" rel="stylesheet">-->
+<!--<link href="__PUBLIC__/vendor/tabs/css/animate.css" rel="stylesheet">-->
+<!--<link href="__PUBLIC__/vendor/tabs/css/style.css?v=4.0.0" rel="stylesheet"> -->
+<style type="text/css">
+    .modal-dialog{width: 94%;height: 80%;}
+    .col-sm-6{width:100%;}
+    .heng{width:100%;height: 50px;}
+    .form-group_heng{width:100%;height: 50px;}
+    .form-group_l{width:25%;float: left;}
+    .form-group_r{width:25%;float: left;}
+    .form-group_r label{width:25%;float: left;margin-top: 7px;}
+    .form-group_l label{width:25%;float: left;margin-top: 7px;}
+    /*.heng div label{width:20%;float: left;margin-top: 7px;}*/
+    .form-control{width:65%;}
+    .form-group_21{width:33.3%;float:left;}
+    .form-group_22{width:33.3%;float:left;}
+    .form-group_23{width:33.3%;float:left;}
+    .fengetitle{height: 40px;margin-bottom: 10px;font-size: 20px;font-family: 微软雅黑;text-align: center;line-height: 40px;width: 60%;margin-left: 20%;border-bottom: 1px solid #cdcdcd;}
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function(e){
+        $(".js-switch").each(function(){
+            new Switchery(this, {color: '#1AB394'});
+
+        });
+        var area = $("#zd_area option:selected").val();
+        $.post('__CONTROLLER__/getbuilding', {area: area}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#zd_belongfloor").children().remove();
+                var item = "";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['dic_id'] + "'";
+                    if(typearr[i]['dic_name'] == "{$data.zd_belongfloor}")
+                        item += " selected>" + typearr[i]['dic_name'] + "</option>";
+                    else
+
+                        item += ">" + typearr[i]['dic_name'] + "</option>";
+
+                }
+                $("#zd_belongfloor").append(item);
+            }
+            else
+            {
+                $("#zd_belongfloor").children().remove();
+            }
+
+        });
+        var sbtype = $("#zd_type option:selected").val();
+        $.post('__CONTROLLER__/getfactory', {sbtype: sbtype}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#zd_factoryname").children().remove();
+                var item = "<option value=''>  </option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['dic_id'] + "'";
+                    if(typearr[i]['dic_name'] == "{$data.zd_factoryname}")
+                        item += " selected>" + typearr[i]['dic_name'] + "</option>";
+                    else
+                        item += ">" + typearr[i]['dic_name'] + "</option>";
+                }
+                $("#zd_factoryname").append(item);
+            }
+            else
+                $("#zd_factoryname").children().remove();
+            var factory = $("#zd_factoryname option:selected").val();
+            $.post('__CONTROLLER__/getmodel', {factory: factory}, function (rep) {
+                var typearr = eval("(" + rep + ")");
+                if (typearr.length > 0) {
+//                    alert(typearr.length);
+                    $("#zd_modelnumber").children().remove();
+                    var item = "";
+                    for (var i = 0; i < typearr.length; i++) {
+                        item += "<option value='" + typearr[i]['dic_id'] + "'";
+                        if(typearr[i]['dic_name'] == "{$data.zd_modelnumber}")
+                            item += " selected>" + typearr[i]['dic_name'] + "</option>";
+                        else
+                            item += ">" + typearr[i]['dic_name'] + "</option>";
+                    }
+                    $("#zd_modelnumber").append(item);
+                }
+                else
+                    $("#zd_modelnumber").children().remove();
+
+
+            });
+        });
+        $('.heng .form-control').attr('disabled','true');
+        $(".chosen-select_longajax").chosen({disable_search_threshold: 0, search_contains: true,width:'65%'});
+
+        $('#zd_useman').trigger("chosen:updated");
+        $('#relationtable').bootstrapTable({
+            url: '__CONTROLLER__/getRelationdata',
+            method: 'post',
+            striped: true,
+            cache: false,
+            pagination: true,
+            iconSize: 'outline',
+            sortable: true,
+            sortName:"rl_atpsort",
+            sortOrder: "asc",
+            queryParams: queryParams,
+            sidePagination: "server",
+            pageNumber: 1,
+            pageSize: 10,
+            pageList: [5,10, 25, 50, 100],
+            uniqueId: "rl_atpid",
+            columns: [
+                [
+                    {title: '序号', width: 40,
+                        formatter: function (value, row, index){
+                            var option =  $('#relationtable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'cipaddress', title: '当前资产名称', sortable: true},
+                    {field: 'relation', title: '关联关系', sortable: true},
+                    {field: 'ripaddress', title: '关联资产名称', sortable: true},
+                    {field: 'toripaddress', title: '资产IP地址', sortable: true},
+                    {field: 'type', title: '关联资产类型', sortable: true},
+                    {field: 'rl_rluser', title: '关联人', sortable: true},
+                    {field: 'rl_rltime', title: '关联时间', sortable: true}
+
+                ]
+            ]
+        });
+        $('#bindtable').bootstrapTable({
+            url: '__CONTROLLER__/getBinddata',
+            method: 'post',
+            striped: true,
+            cache: false,
+            pagination: true,
+            iconSize: 'outline',
+            sortable: false,
+            sortName:"mac_address",
+            sortOrder: "asc",
+            queryParams: queryParams,
+            sidePagination: "server",
+            pageNumber: 1,
+            pageSize: 10,
+            pageList: [5,10, 25, 50, 100],
+            uniqueId: "mac_address",
+            columns: [
+                [
+                    {title: '序号', width: 40,
+                        formatter: function (value, row, index){
+                            var option =  $('#bindtable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'sw_ipaddress', title: '交换机IP', sortable: true},
+                    {field: 'sw_interface', title: '端口号', sortable: true},
+                    {field: 'sw_vlan', title: 'VLAN号', sortable: true},
+                    {field: 'sw_mainarea', title: '地区'},
+                    {field: 'sw_mainbelongfloor', title: '楼宇'},
+                    {field: 'sw_mainroomno', title: '房间号'},
+                    {field: 'sw_status', title: '状态', sortable: true}
+
+                ]
+            ]
+        });
+        $('#bindoldtable').bootstrapTable({
+            url: '__CONTROLLER__/getBindolddata',
+            method: 'post',
+            striped: true,
+            cache: false,
+            pagination: true,
+            iconSize: 'outline',
+            sortable: false,
+            sortName:"mac_address",
+            sortOrder: "asc", 
+            queryParams: queryParams,
+            sidePagination: "server",
+            pageNumber: 1,
+            pageSize: 10,
+            pageList: [5,10, 25, 50, 100],
+            search: false,
+            showColumns: false,
+            showRefresh: false,
+            minimumCountColumns: 2,
+            clickToSelect: false,
+            uniqueId: "sw_atpid",
+            detailView: false,
+            detailFormatter: "detailFormatter",
+            columns: [
+                [
+                    {title: '序号', width: 40,
+                        formatter: function (value, row, index){
+                            var option =  $('#bindoldtable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'sw_ipaddress', title: '交换机IP', sortable: true},
+                    {field: 'sw_interface', title: '端口号', sortable: true},
+                    {field: 'sw_vlan', title: 'VLAN号', sortable: true},
+                    {field: 'sw_mainarea', title: '地区'},
+                    {field: 'sw_mainbelongfloor', title: '楼宇'},
+                    {field: 'sw_mainroomno', title: '房间号'},
+                    {field: 'sw_status', title: '状态', sortable: true}
+                ]
+            ]
+        });
+        $('#logtable').bootstrapTable({
+            url: '__CONTROLLER__/getLogdata',
+            method: 'post', 
+            striped: true,
+            cache: false, 
+            pagination: true,
+            iconSize: 'outline',
+            sortable: true, 
+            sortName:"bg_atpsort",
+            sortOrder: "asc",
+            queryParams: queryParams,
+            sidePagination: "server",
+            pageNumber: 1, 
+            pageSize: 10,
+            pageList: [5,10, 25, 50, 100],
+            search: false, 
+            showColumns: false,
+            showRefresh: false,
+            minimumCountColumns: 2,
+            clickToSelect: false,              
+            uniqueId: "bg_atpid",                
+            detailView: false,  
+            detailFormatter: "detailFormatter",
+            columns: [
+                [
+                    {title: '序号', width: 40,
+                        formatter: function (value, row, index){
+                            var option =  $('#logtable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'l_opusername', title: '操作人', sortable: true},
+                    {field: 'd_dictname', title: '资产类型', sortable: true},
+                    {field: 'zd_devicecode', title: '设备编码', sortable: true},
+                    {field: 'zd_ipaddress', title: 'IP地址', sortable: true},
+                    {field: 'zd_macaddress', title: 'MAC地址', sortable: true},
+                    {field: 'optypename', title: '操作类型', sortable: true},
+                    {field: 'l_optime', title: '操作时间', sortable: true},
+                    {field: 'l_bdid', title: '表单编号', sortable: true}, //
+                    {field: 'l_detail', title: '详细信息', sortable: true},
+                    {field: 'zd_dutymanname', title: '资产归属人', sortable: true}
+
+                ]
+            ]
+        });
+
+        $("#closeModal").on('click',function(){
+            var editinfo  = $("#editinfo");
+            if(editinfo.length >0){
+                $("#editinfo").modal('hide');
+                return true;
+            }
+            var sys_dlg = $("#sys_dlg");
+            if(sys_dlg.length >0){
+                $("#sys_dlg").modal('hide');
+                return true;
+            }
+        });
+    });
+    function queryParams(params) {  //配置参数
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            search: params.search,
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            id:$('#zd_atpid').val()
+        };
+        return temp;
+    }
+</script>

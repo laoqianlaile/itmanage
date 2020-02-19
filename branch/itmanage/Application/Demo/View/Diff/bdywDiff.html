@@ -1,0 +1,318 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>表单-运维资产差异数据表</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+    <link rel="stylesheet" href="__PUBLICOLD__/bgadmin/plugins/layui/css/layui.css" media="all"/>
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+     
+    <style>
+        .table{max-width: none;}
+        .pull-left{width:100%;}
+        #atpbiztoolbar{width:100%;}
+        #dic_name{width: 20%;float: left;margin-right: 5px;}
+        .tt{ font-size: 21px; font-weight:bold; padding-left:40px;color:;margin:0px;width:100%;padding-top:0px;}
+        .form-control{
+            margin-bottom: -5px;width:60%;
+            display:inline;
+        }
+        #tips{
+            width:98%;
+            float:left;
+            line-height: 22px;
+            padding: 0.5% 2%;
+            margin: -25px 1% 10px 1%;
+            color: #0C0C86;
+            background-color: #E6E3E3;
+        }
+         .bootstrap-table .table:not(.table-condensed) > tbody > tr > td{
+            padding:4px;
+         }
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight" style="padding-bottom:0px;padding-top:10px;">
+    <div class="ibox float-e-margins" style="margin-bottom:0px">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <p class="tt">表单-运维资产差异<span style="font-size:18px; font-weight:normal;">(表单系统数据与运维4.0系统数据比对差异)</span></p>
+                    <div id="atpbiztoolbar" style="padding-left:20px;margin-top:25px;">
+                         <div id="tips">
+                        &emsp;<b>使用说明：</b><br/>
+1、同一MAC地址，在表单系统中为新增或更新，运维系统中无记录或有多条记录对应，则差异表中以红色标识整条数据；<br/>
+2、同一MAC地址，在表单系统中为新增或更新，运维系统中有但部分信息存在差异，则差异表中以红色标识存在差异的信息；<br/>
+3、同一MAC地址，在表单系统中为撤销或删除旧MAC，运维系统中还存在相关信息，则差异表中以绿色标识整条数据。
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;line-height: 17px;">表单<br/>完成时间</label>
+                            <input id="starttime" type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="<?php echo date('Y-m-d',strtotime('-3 month'));?>"/>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;text-align: center">--&nbsp;</label>
+                            <input id="endtime" type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="<?php echo date('Y-m-d');?>"/>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">MAC地址&nbsp;</label>
+                            <input  id="macaddress" type="text" class="form-control" style="" />
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">IP地址&nbsp;</label>
+                            <input  id="ipaddress" type="text" class="form-control" style=""/>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">表单编号&nbsp;</label>
+                            <input  id="formno" type="text" class="form-control" style="" />
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">使用人&nbsp;</label>
+                            <input  id="userman" type="text" class="form-control" style="" />
+                        </div>
+                        <div style="float:right;width:25%;margin-right: 68px;text-align: right">
+                            <button class="btn btn-danger " type="button" id="sys_tijiao"><i class="fa fa-pencil-square"></i>&nbsp;查询</button>
+                            <button class="btn btn-info " type="button" id="sys_del"><i class="fa fa-rotate-right"></i>&nbsp;重置</button>
+                            <!--<button class="btn btn-info " style="background-color: #9bc63e;border:#9bc63e 1px solid;" type="button" id="sys_export"><i class="fa fa-sign-out"></i>&nbsp;导出</button>-->
+                        </div>
+                       
+                    </div>
+                    <table id="atpbiztable" ></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input id="sortfield" value="" type="hidden"/>
+<input id="sortorder" value="" type="hidden"/>
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<script type="text/javascript" src="__PUBLICOLD__/bgadmin/plugins/layui/layui.js"></script>
+<script>
+    layui.use('layer', function() {
+        layer = layui.layer;
+    });
+    $(function () {
+        $(".chosen-select_longajax").chosen({disable_search_threshold: 0, search_contains: true});//,width:'56%',hight:'80px'
+        var TableObj = {
+            oTableInit: function () {
+                $('#atpbiztable').bootstrapTable({
+                    url: '__CONTROLLER__/bdywData',        
+                    method: 'post',             
+                    toolbar: '#atpbiztoolbar',   
+                    striped: true, 
+                    cache: false, 
+                    pagination: false,
+                    iconSize: 'outline',
+                    sortable: true,
+                    sortName: "flowfinishtime",
+                    sortOrder: "desc", 
+                    queryParams: queryParams,
+                    sidePagination: "server",
+                    height:690,
+                    pageNumber: 1,
+                    pageSize: 10, 
+                    pageList: [5, 10, 25, 50, 100], 
+                    search: false,    
+                    showColumns: false, 
+                    showRefresh: false,
+                    minimumCountColumns: 2,
+                    clickToSelect: false, 
+                    uniqueId: "macaddress",
+                    detailView: true,
+                    detailFormatter: "detailFormatter",
+                    rowStyle: function (row, index) {
+                        var diffSign = row['diffSign'];
+                        var    style = '';
+                        if(diffSign != null && diffSign != '' && typeof(diffSign) != 'undefined'){
+                            style = diffSign;
+                        }
+                        return {classes:style};
+                    },
+                    columns: [
+                        [
+                            {
+                                title: '序号', width: 40,
+                                formatter: function (value, row, index) {
+                                    var option = $('#atpbiztable').bootstrapTable("getOptions");
+                                    return option.pageSize * (option.pageNumber - 1) + index + 1;
+                                }
+                            },
+                            {field: 'macaddress', title: 'MAC地址', sortable: true,width:40},
+                            {field: 'ipaddress', title: 'IP地址', sortable: true,width:60,cellStyle:function(value,row,index,field){
+                                var    style = '';
+                                var diffSign = row['diffSign'];
+                                if(diffSign == null || diffSign == '' || typeof(diffSign) == 'undefined'){
+                                    var diffSigns = row['diffSigns'];
+                                    if(jQuery.inArray(field,diffSigns) != '-1'){
+                                        style = 'danger';
+                                    }
+                                }
+                                return {classes:style};
+                            }},
+                            {field: 'formno', title: '表单编号', sortable: true,width:150,
+                                formatter:function(value){
+                                    var a = "<a onclick=openBdUrl('" + value + "') style='color:#4C99B8;'>" + value + "</a>";
+                                    return a;
+                                }
+                            },
+                            {field: 'formsign', title: '表单类型', sortable: true,width:140},
+                            {field: 'chargepersons', title: '使用人', sortable: true,width:80,cellStyle:function(value,row,index,field){
+                                var    style = '';
+                                var diffSign = row['diffSign'];
+                                if(diffSign == null || diffSign == '' || typeof(diffSign) == 'undefined'){
+                                    var diffSigns = row['diffSigns'];
+                                    if(jQuery.inArray(field,diffSigns) != '-1'){
+                                        style = 'danger';
+                                    }
+                                }
+                                return {classes:style};
+                            }},
+                            {field: 'zd_macaddress', title: '操作', sortable: true,width:60,formatter:function(value,row){
+                                var inp = "'" + value + "'";
+                                var a = '<a class="btn btn-info btn-xs" style="display:inline-block" onclick="tmnInRow(' + inp + ')">查看资产信息</a>';
+                                return a;
+                            }}
+                        ]
+                    ]
+                });
+            }
+        };
+        TableObj.oTableInit();
+
+        $('#sys_tijiao').on('click',function() {
+            $('#atpbiztable').bootstrapTable('destroy');
+            TableObj.oTableInit();
+        });
+    });
+    function queryParams(params) {  //配置参数
+        $("#sortfield").attr("value",params.sort);
+        $("#sortorder").attr("value",params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            macaddress: $('#macaddress').val(),
+            starttime: $('#starttime').val(),
+            endtime: $('#endtime').val(),
+            ipaddress: $('#ipaddress').val(),
+            formno: $('#formno').val(),
+            userman: $('#userman').val()
+        };
+        return temp;
+    }
+
+    function detailFormatter(value, row) {
+        var html = [];
+        html.push("<div class='ibox-content'>");
+        html.push("<table class='table'>");
+        html.push("<tbody>");
+        var diffSign = row['diffSign'];
+        if(diffSign == null || diffSign == '' || typeof(diffSign) == 'undefined'){
+            var diffSigns = row['diffSigns'];
+            html.push("<tr>");
+            if(jQuery.inArray('jharea',diffSigns) != '-1'){
+                html.push("<td><b>地区</b></td><td class='danger'>" + row['jharea'] + "</td>");
+            }else{
+                html.push("<td><b>地区</b></td><td>" + row['jharea'] + "</td>");
+            }
+            if(jQuery.inArray('buildingname',diffSigns) != '-1'){
+                html.push("<td><b>楼宇</b></td><td class='danger'>" + row['buildingname'] + "</td>");
+            }else{
+                html.push("<td><b>楼宇</b></td><td>" + row['buildingname'] + "</td>");
+            }
+            if(jQuery.inArray('roomno',diffSigns) != '-1'){
+                html.push("<td><b>房间号</b></td><td class='danger'>" + row['roomno'] + "</td>");
+            }else{
+                html.push("<td><b>房间号</b></td><td>" + row['roomno'] + "</td>");
+            }
+        }else{
+            html.push("<tr><td><b>地区</b></td><td>" + row['jharea'] + "</td><td><b>楼宇</b></td><td>" + row['buildingname'] + "</td><td><b>房间号</b></td><td>" + row['roomno'] + "</td></tr>");
+        }
+        html.push("</tbody>");
+        html.push("</table>");
+        html.push("</div>");
+        return html.join('').replace(/null/g, "").replace(/undefined/g, "");
+    }
+
+    $('#sys_del').on('click',function(){
+        $('#macaddress').val("");
+        $('#starttime').val("");
+        $('#endtime').val("");
+        $('#ipaddress').val("");
+        $('#formno').val("");
+        $('#userman').val("");
+    });
+
+    function tmnInRow(mac){
+        layer.open({
+            title: '查看资产信息',
+            type: 2,
+            content: '__MODULE__/Terminal/index?mac='+mac,
+            closeBtn:1,
+            shadeClose:true,
+            area: ['90%', '90%']
+        });
+    }
+     function openBdUrl(formno){
+        if(formno == '' || formno == null) return null;
+        $.post('__CONTROLLER__/getBDOpenInfo', {formno: formno}, function (rep) {
+            if(rep == null){
+                layer.alert("当前表单在运维系统中不存在，无法查看");
+                return false;
+            }else{
+                var status   = rep.status;
+                var bdurl    = rep.t_biaodanurl;
+                var status   = rep.t_status;
+                var applyid  = rep.t_nameid;
+                var formtype = rep.t_biaodanname;
+                if(status == '2'){
+                    var DataID = bdurl.substring(bdurl.indexOf('&DataID=')+8,bdurl.indexOf('&TaskID='));
+                    var url = "http://10.64.1.129/System/SSO_Login_5y.asp?username="+applyid+"@5y&templatename="+formtype+"&DataID="+DataID+"&Link=1&checkId=&taskId=";
+                    var window1 = window.open('http://10.64.1.129/System/Windows_Login1.asp');
+                    window1.location.href = url;
+                }else{
+                    var window1 = window.open('http://10.64.1.129/System/Windows_Login1.asp');
+                    window1.location.href = bdurl;
+                }
+           
+            }
+        },'json');
+    } 
+</script>
+</body>
+
+</html>
+
+
+
+

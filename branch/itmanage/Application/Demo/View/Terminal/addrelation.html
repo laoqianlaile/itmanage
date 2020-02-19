@@ -1,0 +1,271 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">关联关系编辑</h4>
+        </div>
+        <div class="modal-body">
+            <form id="sys_dlg_form" role="form">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true"> 关联资产</a>
+                                </li>
+                                <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">已关联资产</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="tab-1" class="tab-pane active">
+                                <div  class="panel-body">
+                                    <div id="atpbiztoolbar">
+                                        <div style="float:left;width:24%;">
+                                            <label style="float:left;width:32%;">设备类型&nbsp;</label>
+                                            <select name="rlsbtype"  id="rlsbtype" class="form-control"  style="margin-bottom: -5px;width:56%;">
+                                                <option value=""></option>
+                                                <foreach name="ds_sbtype" item="vo">
+                                                    <option value="{$vo.d_atpid}">{$vo.d_dictname}</option>
+                                                </foreach>
+                                            </select>
+                                        </div>
+                                        <div style="float:left;width:24%;">
+                                            <label style="float:left;width:32%;">设备编码&nbsp;</label>
+                                            <input  id="rlsbbm" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">
+                                        </div>
+                                        <div style="float:left;width:24%;">
+                                            <label style="float:left;width:32%;">IP地址&nbsp;</label>
+                                            <input  id="rlipaddess" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">
+                                        </div>
+                                        <div style="float:left;width:24%;">
+                                            <label style="float:left;width:32%;">MAC地址&nbsp;</label>
+                                            <input  id="rlmacaddess" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;">
+                                        </div>
+                                        <div style="float:left;width:24%;margin-top: 10px;">
+                                            <label style="float:left;width:32%;">关联关系&nbsp;</label>
+                                            <select name="rlrelation" id="rlrelation" class="form-control" style="margin-bottom: -5px;width:56%;">
+                                                <option value=""></option>
+                                                <foreach name="ds_relation" item="vo">
+                                                    <option value="{$vo.d_atpid}">{$vo.d_dictname}</option>
+                                                </foreach>
+                                            </select>
+                                        </div>
+                                        <div style="float:left;width:24%;">
+                                            <input  id="mainid" type="hidden" value="{$relationid}" class="form-control" style="margin-bottom: -5px;width:56%;">
+                                        </div>
+                                        <div style="float:left;width:100%;margin-top: 10px;margin-bottom: 5px;">
+                                            <button class="btn btn-warning " type="button" id="sys_rel"><i class="fa fa-search"></i>&nbsp;查询</button>
+                                            <button class="btn btn-warning " type="button" id="sys_addrel"><i class="fa fa-pencil-square"></i>&nbsp;关联</button>
+                                        </div>
+                                    </div>
+                                    <table id="terminaltable" ></table>
+                                </div>
+                                </div>
+                                <div id="tab-2" class="tab-pane">
+                                    <div class="panel-body">
+                                        <div style="width:100%;height:32px;line-height:32px;">
+                                                <label>当前关联关系</label>
+                                        </div>
+                                        <table id="relationtable" ></table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!--<div class="modal-footer">-->
+            <!--<button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>-->
+            <!--<input type="submit" id="sys_dlg_submit" value="保存" class="btn btn-primary" />-->
+            <!--&lt;!&ndash;<button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary">保存</button>&ndash;&gt;-->
+        <!--</div>-->
+    </div>
+</div>
+
+<style type="text/css">
+    .modal-dialog{width: 94%;height: 80%;}
+    .col-sm-6{width:100%;}
+    .heng{width:100%;height: 50px;}
+    .form-group_heng{width:100%;height: 50px;}
+    .form-group_l{width:25%;float: left;}
+    .form-group_r{width:25%;float: left;}
+    .form-group_r label{width:25%;float: left;margin-top: 7px;}
+    .form-group_l label{width:25%;float: left;margin-top: 7px;}
+    /*.heng div label{width:20%;float: left;margin-top: 7px;}*/
+    .form-control{width:65%;}
+    .fengetitle{height: 40px;margin-bottom: 10px;font-size: 20px;font-family: 微软雅黑;text-align: center;line-height: 40px;width: 60%;margin-left: 20%;border-bottom: 1px solid #cdcdcd;}
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function(e){
+        $(".js-switch").each(function(){
+            new Switchery(this, {color: '#1AB394'});
+        });
+        $('#terminaltable').bootstrapTable({
+            url: '__CONTROLLER__/getterminaldata',
+            method: 'post',
+            striped: true,
+            cache: false,
+            pagination: true,
+            iconSize: 'outline',
+            sortable: true,
+            sortName:"zd_atpsort",
+            sortOrder: "asc",
+            queryParams: queryParams,
+            sidePagination: "server",
+            pageNumber: 1,
+            pageSize: 5,
+            pageList: [5,10, 25, 50, 100],
+            uniqueId: "zd_atpid",
+            columns: [
+                [
+                    {checkbox: true},
+                    {title: '序号', width: 40,
+                        formatter: function (value, row, index){
+                            var option =  $('#terminaltable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'd_dictname', title: '设备类别', sortable: true},//zd_type
+                    {field: 'zd_name', title: '设备名称', sortable: true},
+                    {field: 'zd_devicecode', title: '资产编号', sortable: true},
+                    {field: 'zd_macaddress', title: 'MAC地址', sortable: true},
+                    {field: 'zd_ipaddress', title: 'IP地址', sortable: true},
+                    {field: 'zd_status', title: '状态', sortable: true}
+                ]
+            ]
+        });
+        $('#relationtable').bootstrapTable({
+            url: '__CONTROLLER__/getRelationdata',
+            method: 'post',
+            striped: true,
+            cache: false,
+            pagination: true,
+            iconSize: 'outline',
+            sortable: true,
+            sortName:"rl_atpsort",
+            sortOrder: "asc",
+            queryParams: queryParam,
+            sidePagination: "server",
+            pageNumber: 1,
+            pageSize: 10,
+            pageList: [5,10, 25, 50, 100],
+            uniqueId: "rl_atpid",
+            columns: [
+                [
+                    {title: '序号', width: 40,
+                        formatter: function (value, row, index){
+                            var option =  $('#relationtable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'cipaddress', title: '当前资产名称', sortable: true},
+                    {field: 'relation', title: '关联关系', sortable: true},
+                    {field: 'ripaddress', title: '关联资产名称', sortable: true},
+                    {field: 'toripaddress', title: '资产IP地址', sortable: true},
+                    {field: 'type', title: '关联资产类型', sortable: true},
+                    {field: 'rl_rluser', title: '关联人', sortable: true},
+                    {field: 'rl_rltime', title: '关联时间', sortable: true},
+                    {field: 'rl_atpid', title: '操作', sortable: false,align:'center',
+                        formatter:function(value){
+                            if(typeof(value) != null){
+                                var a='<a class="btn btn-info btn-xs" style="background:#C82323;border-color:#C82323;" onclick="removeRltInRow(\''+value+'\')">解除关联</a>';
+                                return a;
+                            }
+                        }
+                    }
+
+                ]
+            ]
+        });
+    });
+    function queryParams(params) {  //配置参数
+        var temp = {
+            limit: params.limit,
+            offset: params.offset,
+            search: params.search,
+            sort: params.sort,
+            sortOrder: params.order,
+            rlsbbm:$('#rlsbbm').val(),
+            rlipaddess:$('#rlipaddess').val(),
+            rlmacaddess:$('#rlmacaddess').val(),
+            rlsbtype:$('#rlsbtype').val()
+        };
+        return temp;
+    }
+    function queryParam(params) {  //配置参数(关联关系)
+        var temp = {
+            limit: params.limit,
+            offset: params.offset,
+            search: params.search,
+            sort: params.sort,
+            sortOrder: params.order,
+            id:"<?php echo I('get.id');?>"
+        };
+        return temp;
+    }
+    $('#sys_rel').on('click',function() {
+
+        $('#terminaltable').bootstrapTable('refresh')
+    });
+    $('#sys_addrel').on('click',function() {
+        var relationid = "";
+        var tablerow = $('#terminaltable').bootstrapTable('getSelections');
+        if(tablerow.length!=1){
+            alert("您已多选或者少选，仅能对一条数据进行操作");
+        }else {
+            relationid = tablerow[0]['zd_atpid'];
+        }
+        var mainid =$('#mainid').val();
+        var rlrelation =$('#rlrelation').val();
+        if(mainid !="" && rlrelation!=""){
+            $.post('__CONTROLLER__/submitrealtion', {relationid: relationid,mainid:mainid,rlrelation:rlrelation}, function (rep) {
+            if(rep =="")
+            {
+                alert("关联成功");
+                $("#sys_dlg").modal("hide");
+            }
+            else
+                alert("关联失败");
+        });
+        }
+        else{
+            alert("请选择关联关系及被关联数据！");
+        }
+    });
+    function ip_verify(addr){
+        var reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])){3}$/;
+        if(addr.match(reg)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    function mac_verify(addr){
+        var reg = /[A-Fa-f0-9]{4}.[A-Fa-f0-9]{4}.[A-Fa-f0-9]{4}/;
+        if(addr.match(reg)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    function removeRltInRow(rlid){
+        if (rlid == ''){
+            alert('参数缺失，请刷新重试！');
+            return false;
+        }
+        if (confirm('确认解除该关联关系?')) {
+            $.post('__CONTROLLER__/removeRelationByRLID', {rlid: rlid}, function (rep) {
+                if ('0' == rep.code) {
+                    $('#relationtable').bootstrapTable('refresh');
+                }else {
+                    alert(rep.message);
+                }
+            },'json');
+        }
+    }
+</script>

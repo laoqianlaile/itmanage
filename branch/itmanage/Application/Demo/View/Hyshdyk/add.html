@@ -1,0 +1,113 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">红钥匙和打印卡编辑</h4>
+        </div>
+        <form id="sys_dlg_form" role="form">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="panel-body">
+                        <div class="heng">
+                            <div class="form-group_l">
+                                <label>编号</label>
+                                <input id="hyshdyk_code" name="hyshdyk_code" type="text" class="form-control" value="{$hData.hyshdyk_code}">
+                            </div>
+                            <div class="form-group_r">
+                                <label>名称</label>
+                                <input id="hyshdyk_name" name="hyshdyk_name" type="text" class="form-control" value="{$hData.hyshdyk_name}">
+                            </div>
+                            <div class="form-group_l">
+                                <label>密级(涉密专用)</label>
+                                <input id="hyshdyk_secret" name="hyshdyk_secret" type="text" class="form-control" value="{$hData.hyshdyk_secret}">
+                            </div>
+                        </div>
+                        <div class="heng">
+                            <div class="form-group_r">
+                                <label>所属部门</label>
+                                <input id="hyshdyk_dept" name="hyshdyk_dept" type="text" class="form-control" value="{$hData.hyshdyk_dept}">
+                            </div>
+                            <div class="form-group_r">
+                                <label>使用情况</label>
+                                <input name="hyshdyk_status"  id="hyshdyk_status" class="form-control"  value="{$hData.hyshdyk_status}">
+                            </div>
+                            <div class="form-group_l">
+                                <label>责任人</label>
+                                <input name="hyshdyk_dutyman"  class="form-control" id="hyshdyk_dutyman" value="{$hData.hyshdyk_dutyman}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type=hidden name="hyshdyk_atpid" id="hyshdyk_atpid" value="{$hData.hyshdyk_atpid}"/>
+            <button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>
+            <input type="submit" id="sys_dlg_submit" value="保存" class="btn btn-primary" />
+        </div>
+    </form>
+    </div>
+</div>
+
+<style type="text/css">
+    .modal-dialog{width: 94%;height: 80%;}
+    .col-sm-6{width:100%;}
+    .heng{width:100%;height: 50px;}
+    .form-group_heng{width:100%;height: 50px;}
+    .form-group_l{width:33%;float: left;}
+    .form-group_r{width:33%;float: left;}
+    .form-group_r label{width:26%;float: left;margin-top: 7px;}
+    .form-group_l label{width:26%;float: left;margin-top: 7px;}
+    /*.heng div label{width:20%;float: left;margin-top: 7px;}*/
+    .form-control{width:64%;}
+    .form-group_21{width:33.3%;float:left;}
+    .form-group_22{width:33.3%;float:left;}
+    .form-group_23{width:33.3%;float:left;}
+    .fengetitle{height: 40px;margin-bottom: 10px;font-size: 20px;font-family: 微软雅黑;text-align: center;line-height: 40px;width: 60%;margin-left: 20%;border-bottom: 1px solid #cdcdcd;}
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function(e){
+        $.validator.setDefaults({
+            highlight:function(element){
+                $(element).closest('.form-group').remove('has-success').addClass('has-error');
+            },
+            success:function(element){
+                $(element).closest('.form-group').remove('has-error').addClass('has-success');
+            },
+            errorElement:'span',
+            errorPlacement:function(error,element){
+                if(element.is(":radio") || element.is(":checkbox")){
+                    error.appendTo(element.parent().parent().parent());
+                }else{
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass:"help-block m-b-none",
+            validClass:"help-block m-b-none"
+        });
+        $("#sys_dlg_form").validate({
+            rules :{
+                hyshdyk_name :"required"
+            },
+            messages:{
+                hyshdyk_name : "必填"
+            },
+            submitHandler:function(){
+                var formBody = $('#sys_dlg_form');
+                $.post('__CONTROLLER__/submit',formBody.serialize(), function(data) {
+                    if("success" == data) {
+                        $("#sys_dlg").modal("hide");
+                        $('#atpbiztable').bootstrapTable("refresh");
+                    }else {
+                        alert('保存失败');
+                    }
+                });
+            }
+
+        });
+    });
+</script>

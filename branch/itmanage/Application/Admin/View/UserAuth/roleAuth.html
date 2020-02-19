@@ -1,0 +1,94 @@
+﻿<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<title>给用户授权角色</title>
+<style>
+    .chosen-choices{
+        height: 300px !important;
+        overflow: auto !important;
+    }
+    .control-label{
+        width:120px!important;
+    }
+    .search-choice{
+        width:48%;
+    }
+</style>
+<body style="margin: 0 auto">
+        <div  class="form-group" style="height: 300px;margin-top: 20px">
+            <div style="width: 100%;float: left">
+                <label class=" col-sm-2 control-label">用户：</label>
+                <div class="col-sm-3" >
+                    <select data-placeholder="请输入用户账号或姓名进行检索" id="jingbanren" multiple >
+                        <?php foreach($users as $key=>$value){ ?>
+                            <option value="{$value.id}" selected>{$value.text}</option>
+                        <?php } ?>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" style="">
+            <div style="width: 100%;float: left">
+                <label class=" col-sm-2 control-label"></label>
+                <div class="col-sm-3"  style="text-align: center;margin-left: 100px">
+                    <input type="submit"  class="btn btn-info" style="margin-top: 10px;margin-left: 100px" value="保存"   id="sys_dlg_submit">
+                </div>
+            </div>
+        </div>
+        <input type="hidden" value="{$roleid}" id="roleid" >
+</body>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        });
+        $("#jingbanren").chosen({disable_search_threshold: 0, search_contains: true, width: '600px'});
+
+        $('#jingbanren').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__MODULE__/User/getUserLists'
+        });
+
+        $('.chosen-choices').css('height','300px');
+        $('#sys_dlg_submit').click(function () {
+            var roleid = $('#roleid').val();
+            var users = $('#jingbanren').val();
+//            if(!users){
+//                layer.alert('请选择用户');
+//                return false;
+//            }
+
+            if(users){
+                users = users.join(',');
+            }else{
+                users = '';
+            }
+            if(!roleid){
+                layer.alert('缺失参数');
+                return false;
+            }
+
+            $.ajax({
+                url:'__CONTROLLER__/addUserAuthByRole',
+                type:'post',
+                dataType:'json',
+                data:{roleid:roleid, userids:users},
+                success: function (data) {
+                    if (data.code > 0) {
+                        layer.msg('操作成功');
+                        parent.$('#atpbiztable').bootstrapTable('refresh');
+                        parent.$('#atpbiztable2').bootstrapTable('refresh');
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        layer.alert(data.message);
+                    }
+                }
+            })
+        })
+    });
+
+ </script>

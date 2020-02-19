@@ -1,0 +1,74 @@
+﻿<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<style>
+    .form-group > div {
+        margin-top: 3px;
+        margin-bottom: 3px;
+    }
+    body{
+        overflow-y: hidden!important;
+    }
+</style>
+<body style="margin: 0 auto;text-align: center">
+    <form id="sys_dlg_form" role="form" class="form-horizontal" enctype="multipart/form-data">
+        <div class="tab-content">
+            <div class="panel-body">
+                <div class="form-group" style="margin-top: 10px;">
+                    <label class=" control-label">角色名称：</label>
+                    <input id="role_name" type="text" value="{$data.role_name}" style="width:300px;display: inline-block" class="form-control">
+                </div>
+                <div class="form-group" style="margin-top: 10px;">
+                    <label class=" control-label">排序号：</label>
+                    <input id="role_sort" type="text" value="{$data.role_sort}" style="width:300px;display: inline-block" class="form-control">
+                </div>
+            </div>
+        </div>
+        <input id="id" type="hidden" value="{$data.role_id}" class="form-control">
+    </form>
+    <div class="modal-footer">
+        <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary">保存</button>
+    </div>
+</body>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function () {
+            layer = layui.layer;
+        })
+        $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '300px'});
+
+        $(".js-switch").each(function () {
+            new Switchery(this, {color: '#1AB394'});
+        });
+
+        $('#sys_dlg_submit').click(function () {
+            var id = $('#id').val();
+            var role_name = $('#role_name').val();
+            var role_sort = $('#role_sort').val();
+            if (!role_name) {
+                layer.alert('请输入角色名称');
+                return false;
+            }
+
+            $.ajax({
+                type: 'post',
+                url: '__CONTROLLER__/addSysRole',
+                data: {role_name: role_name, id: id,role_sort:role_sort},
+                dataType: 'json',
+                success: function (data) {
+                    if (data.code > 0) {
+                        layer.msg('操作成功');
+                    } else {
+                        layer.alert(data.message);
+                        return;
+                    }
+                    parent.$('#atpbiztable').bootstrapTable('refresh');
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                }
+            })
+        })
+
+    });
+</script>
+</html>

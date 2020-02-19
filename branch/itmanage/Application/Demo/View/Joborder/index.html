@@ -1,0 +1,243 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>运维任务填报</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+     
+    <style>
+        .table{max-width: none;}
+        .pull-left{width:100%;}
+        #atpbiztoolbar{width:100%;}
+        #dic_name{width: 20%;float: left;margin-right: 5px;}
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <form id="atpform">
+            <div class="ibox-content">
+                <div class="row row-lg" style="margin-top:20px;">
+                        <div class="form-group form-inline has-success">
+                            <label class="control-lable  col-sm-2">工单类型</label>
+                            <div class="col-sm-4 form-inline">
+                                <label class="control-label" style="width:17%;">&nbsp;</label>
+                                <select id="search_u_role" name="search_u_role" class="chosen-select2" style="width: 40%;" >
+                                    <option value="" selected="selected">--请选择--</option>
+                                    <option value="ZX">单步</option>
+                                    <option value="YW">业务</option>
+                                    <option value="BZ">现场保障</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6 form-inline">
+                                <label class="control-lable" style="width:11%;">工单号</label>
+                                <input  id="workid" name="workid" type="text" class="form-control" readonly>
+                            </div>
+                        </div>
+                    </div>
+                <div class="row row-lg" style="margin-top: 25px;">
+                            <div class="form-group">
+                                <div class="col-sm-2">
+                                    <button class="btn btn-info btn-sm" type="button" id="user_search"><i class="fa fa-search"></i>用户信息查询</button>
+                                </div>
+                                <div class="col-sm-4 form-inline">
+                                    <label class="control-label" style="width:17%;">申请人</label>
+                                    <input id="username" name="username" type="text" class="form-control">
+                                </div>
+                                <div class="col-sm-6 form-inline">
+                                    <label class=" control-label" style="width:11%;">电&emsp;话</label>
+                                    <input  id="phone" name="phone" type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                <div class="row row-lg" style="margin-top: 10px;">
+                    <div class="form-group">
+                            <div class="col-sm-2 form-inline">
+                                <label></label>
+                            </div>
+                            <div class="col-sm-8 form-inline">
+                                <label class=" control-label" style="width:8%;">部&emsp;门</label>
+                                <input  id="depart" name="depart" type="text" class="form-control" style="width: 80%;">
+                            </div>
+                    </div>
+                </div>
+                <div  class="row row-wt1" style="margin-top: 25px;">
+                    <div class="form-group">
+                        <label class="control-lable  col-sm-2">问题分类</label>
+                           <!--<lable class ="checkbox-inline ">-->
+                            <div class="col-sm-3"><input type="checkbox" name="checkbox[]"  value="网络">&emsp;网络</input></div>
+                           <!--</lable>-->
+                           <!--<lable class ="checkbox-inline ">-->
+                               <div class="col-sm-3"><input type="checkbox" name="checkbox[]" value="安全邮件">&emsp;安全邮件</input></div>
+                           <!--</lable>-->
+                           <!--<lable class ="checkbox-inline ">-->
+                               <div class="col-sm-3"><input type="checkbox" name="checkbox[]" value="打印审计系统" >&emsp;打印审计系统</input></div>
+                           <!--</lable>-->
+                       </div>
+                </div>
+                <div class="row row-wt1" style="margin-top: 10px;">
+                    <div class="form-group">
+                        <label class="control-lable  col-sm-2">&nbsp;&nbsp;&nbsp;</label>
+                        <!--<lable class ="checkbox-inline ">-->
+                            <div class="col-sm-3"><input type="checkbox" name="checkbox[]" value="AVIDM系统">&emsp;AVIDM系统</input></div>
+                        <!--</lable>-->
+                        <!--<lable class ="checkbox-inline ">-->
+                            <div class="col-sm-3"><input type="checkbox" name="checkbox[]" value="操作系统与办公软件">&emsp;操作系统与办公软件</input></div>
+                        <!--</lable>-->
+                        <!--<lable class ="checkbox-inline ">-->
+                            <div class="col-sm-3"><input type="checkbox" name="checkbox[]" value="其他在线应用该系统" >&emsp;其他在线应用该系统</input></div>
+                        <!--</lable>-->
+                    </div>
+                </div>
+                <div class="row row-wt1" style="margin-top: 10px;">
+                    <div class="form-group">
+                        <label class="control-lable  col-sm-2"></label>
+                        <!--<lable class ="checkbox-inline ">-->
+                            <div class="col-sm-3"><input type="checkbox" name="checkbox[]" value="OA系统">&emsp;OA系统</input></div>
+                        <!--</lable>-->
+                        <!--<lable class ="checkbox-inline ">-->
+                            <div class="col-sm-3"><input type="checkbox" name="checkbox[]" value="找人">&emsp;找人</input></div>
+                        <!--</lable>-->
+                        <!--<lable class/> ="checkbox-inline ">-->
+                            <div class="col-sm-3"><input type="checkbox" name="checkbox[]" value="域控/邮件/OCS/USBKEY" >&emsp;域控/邮件/OCS/USBKEY</input></div>
+                        <!--</lable>-->
+                    </div>
+                </div>
+                <div class="row row-wt2" style="margin-top: 25px;display:none;">
+                    <div class="form-group">
+                        <label class="control-lable  col-sm-2">问题分类</label>
+                        <!--<lable class ="checkbox-inline ">-->
+                            <div class="col-sm-2"><input type="checkbox" name="checkbox[]" value="视频会议">&emsp;视频会议</input></div>
+                        <!--</lable>-->
+                        <!--<lable class ="checkbox-inline ">-->
+                            <div class="col-sm-2"><input type="checkbox" name="checkbox[]" value="VIP上门">&emsp;VIP上门</input></div>
+                        <!--</lable>-->
+                        <!--<lable class ="checkbox-inline ">-->
+                            <div class="col-sm-2"><input type="checkbox" name="checkbox[]" value="协同中心保障" >&emsp;协同中心保障</input></div>
+                        <!--</lable>-->
+                        <!--<lable class ="checkbox-inline ">-->
+                            <div class="col-sm-2"><input type="checkbox" name="checkbox[]" value="机房配线间陪同" >&emsp;机房配线间陪同</input></div>
+                        <!--</lable>-->
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top: 25px;">
+                    <div class="form-group form-inline">
+                        <label class="control-lable  col-sm-2">任务描述</label>
+                        <textarea class="col-sm-8" rows="5" id="problems" name="problems"></textarea>
+                    </div>
+                </div>
+                <div class="row row-gc" style="margin-top: 25px;">
+                    <div class="form-group form-inline">
+                        <label class="control-lable  col-sm-2">解决过程</label>
+                        <textarea class="col-sm-8" rows="5" id="process" name="process"></textarea>
+                    </div>
+                </div>
+                <div class="row row-lg" style="margin-top: 25px;">
+                    <div class="form-group">
+                        <label class="control-lable  col-sm-4"></label>
+                        <button class="btn btn-primary" type="button" id="submit">提交</button>
+                        <label class="control-lable" style="width:10%">&nbsp;</label>
+                        <button class="btn btn-primary " type="button" id="cancel">取消</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+
+
+    $(function () {
+        $(".chosen-select2").chosen({disable_search_threshold: 10, search_contains: true});
+    });
+
+    $('#user_search').on('click',function() {
+        var username =$('#username').val();
+        $.post('__CONTROLLER__/GetUserDept', {username:username}, function (rep) {
+            $('#depart').val(rep);
+        })
+    });
+
+    $('#search_u_role').on('change',function() {
+        var role =$('#search_u_role').val();
+        $.post('__CONTROLLER__/GetWorkID',{role:role},function (rep) {
+            $('#workid').val(rep);
+        })
+        if (role=="ZX"){$('.row-wt1').show();$('.row-wt2').hide();$('.row-gc').show();}
+        else if (role=="YW"){$('.row-wt1').show();$('.row-wt2').hide();$('.row-gc').hide();}
+        else if (role=="BZ"){$('.row-wt1').hide();$('.row-wt2').show();$('.row-gc').hide();}
+        else {alert("请选择工单类型")}
+    });
+
+    $('#submit').on('click',function(){
+        var role = $('#search_u_role').val();
+        if(role==''){
+            alert("请选择工单类型");
+        }else {
+            submitdata();
+        }
+    })
+
+    function submitdata() {
+        var formbody = $("#atpform");
+//        alert(formbody.serialize());return false;
+        $.post('__CONTROLLER__/submit', formbody.serialize(),function (rep) {
+                    if(rep == "success"){
+                        alert("保存成功！");
+                        location.reload();
+                    }else{
+                        alert(rep);
+                        alert("保存失败！");
+                    }
+
+                }
+        );
+    }
+
+
+
+
+
+</script>
+</body>
+
+</html>
+
+
+
+

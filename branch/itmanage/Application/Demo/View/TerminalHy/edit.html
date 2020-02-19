@@ -1,0 +1,341 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">信息编辑</h4>
+        </div>
+        <form id="sys_dlg_form" role="form">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true"> 基本信息</a>
+                                </li>
+                                <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">变更日志</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="tab-1" class="tab-pane active">
+                                    <div class="panel-body">
+                                        <div class="heng">
+                                            <div class="form-group_l form-inline">
+                                                <label>设备名称</label>
+                                                <input id="zd_name" name="zd_name" type="text" value="{$data.zd_name}" class="form-control">
+                                            </div>
+                                            <div class="form-group_r form-inline">
+                                                <label>IP地址</label>
+                                                <input id="zd_ipaddress" name="zd_ipaddress" type="text" value="{$data.zd_ipaddress}" class="form-control">
+                                                <span style="color: #f00;">*</span>
+                                            </div>
+                                        </div>
+                                        <div class="heng">
+                                            <div class="heng">
+                                                <div class="form-group_r form-inline">
+                                                    <label>密级</label>
+                                                    <input id="zd_secretlevel" name="zd_secretlevel" type="text" value="{$data.zd_secretlevel}" class="form-control">
+                                                </div>
+                                                <div class="form-group_l form-inline">
+                                                    <label>地区</label>
+                                                    <input id="zd_area" name="zd_area" type="text" value="{$data.zd_area}" class="form-control">
+                                                    <!-- <span style="color: #f00;">*</span> -->
+                                                </div>
+                                                <div class="form-group_r form-inline">
+                                                    <label>楼宇</label>
+                                                    <input id="zd_belongfloor" name="zd_belongfloor" type="text" value="{$data.zd_belongfloor}" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="tab-2" class="tab-pane">
+                                    <div class="panel-body">
+                                        <table id="logtable" ></table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input id="zd_atpid" name="zd_atpid" type="hidden" value="{$data.zd_atpid}"  class="form-control">
+                <input id="zd_type" name="zd_type" type="hidden" value="guidDA36A81A-15B6-4D11-9857-B67391CF9C0A">
+                <button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>
+                <input type="submit" id="sys_dlg_submit" value="保存" class="btn btn-primary"/>
+                <!--<button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary">保存</button>-->
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--<link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLICOLD__/vendor/tabs/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/font-awesome.css?v=4.4.0" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/animate.css" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/style.css?v=4.0.0" rel="stylesheet"> -->
+<style type="text/css">
+    .modal-dialog {
+        width: 94%;
+        height: 80%;
+    }
+
+    .col-sm-6 {
+        width: 100%;
+    }
+
+    .heng {
+        width: 100%;
+        height: 58px;
+    }
+
+    .heng1 {
+        width: 100%;
+        height: 70px;
+    }
+
+    .form-group_heng {
+        width: 100%;
+        height: 50px;
+    }
+
+    .form-group_l {
+        width: 25%;
+        float: left;
+    }
+
+    .form-group_r {
+        width: 25%;
+        float: left;
+    }
+
+    .form-group_r label {
+        width: 28% !important;
+        float: left;
+        margin-top: 7px;
+    }
+    .form-group_dept {
+        width: 50%;
+        float: left;
+    }
+
+    .form-group_dept label {
+        width: 14%;
+        float: left;
+        margin-top: 7px;
+    }
+
+    .form-group_dept .form-control {
+        width: 83% !important;
+    }
+
+    .form-group_l label {
+        width: 28% !important;
+        float: left;
+        margin-top: 7px;
+    }
+
+    /*.heng div label{width:20%;float: left;margin-top: 7px;}*/
+    .form-control {
+        width: 65% !important;
+    }
+
+    .form-group_21 {
+        width: 33.3%;
+        float: left;
+    }
+
+    .form-group_22 {
+        width: 33.3%;
+        float: left;
+    }
+
+    .form-group_23 {
+        width: 33.3%;
+        float: left;
+    }
+
+    .fengetitle {
+        height: 40px;
+        margin-bottom: 10px;
+        font-size: 20px;
+        font-family: 微软雅黑;
+        text-align: center;
+        line-height: 40px;
+        width: 60%;
+        margin-left: 20%;
+        border-bottom: 1px solid #cdcdcd;
+    }
+    .chosen-select_longajax>.chosen-container, .chosen-container-multi{
+        max-height:60px;
+        height:100%
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        $(".js-switch").each(function () {
+            new Switchery(this, {color: '#1AB394'});
+        });
+        $('#logtable').bootstrapTable({
+            url: '__CONTROLLER__/getLogdata',         //请求后台的URL（*）
+            method: 'post',                      //请求方式（*）
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            iconSize: 'outline',
+            sortable: true,                     //是否启用排序
+            sortName:"bg_atpsort",
+            sortOrder: "asc",                   //排序方式
+            queryParams: queryParams,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber: 1,                       //初始化加载第一页，默认第一页
+            pageSize: 10,                       //每页的记录行数（*）
+            pageList: [5,10, 25, 50, 100],        //可供选择的每页的行数（*）
+            search: false,
+            showColumns: false,                  //是否显示所有的列
+            showRefresh: false,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+            clickToSelect: false,                //是否启用点击选中行
+            uniqueId: "bg_atpid",                     //每一行的唯一标识，一般为主键列
+            detailView: false,                   //是否显示父子表
+            detailFormatter: "detailFormatter",
+            columns: [
+                [
+                    {title: '序号', width: 40,
+                        formatter: function (value, row, index){
+                            var option =  $('#logtable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'l_opusername', title: '操作人', sortable: true},
+                    {field: 'd_dictname', title: '资产类型', sortable: true},
+                    {field: 'zd_name', title: '设备名称', sortable: true},
+                    {field: 'zd_ipaddress', title: 'IP地址', sortable: true},
+//                    {field: 'zd_macaddress', title: 'MAC地址', sortable: true},
+                    {field: 'optypename', title: '操作类型', sortable: true},
+                    {field: 'l_optime', title: '操作时间', sortable: true},
+//                    {field: 'l_bdid', title: '表单编号', sortable: true}, //
+                    {field: 'l_detail', title: '详细信息', sortable: true},
+                    {field: 'zd_dutymanname', title: '资产归属人', sortable: true}
+
+                ]
+            ],
+            onSort: function (name, order) {
+            }
+        });
+        /*here for edit 下拉框多级联动自动选中*/
+
+
+        $(".chosen-select_longajax").chosen({disable_search_threshold: 0, search_contains: true, width: '65%'});
+        $(".chosen-select_longajaxs").chosen({disable_search_threshold: 10, search_contains: true, width: '83%'});
+        // 写入责任人
+        var zd_dutymanname = "{$data.zd_dutymanname}";
+        var zd_dutyman     = "{$data.zd_dutyman}";
+        zd_dutyman         = zd_dutyman.split(',');
+        zd_dutymanname     = zd_dutymanname.split(',');
+        for(var i = 0;i<zd_dutyman.length;i++){
+            $('#zd_dutyman').append('<option value="'+zd_dutyman[i]+'" selected="selected">'+zd_dutymanname[i]+'</option>');
+        }
+
+        $.validator.setDefaults({
+            highlight: function (element) {
+                $(element).closest('.form-group').remove('has-success').addClass('has-error');
+            },
+            success: function (element) {
+                $(element).closest('.form-group').remove('has-error').addClass('has-success');
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                if (element.is(":radio") || element.is(":checkbox")) {
+                    error.appendTo(element.parent().parent().parent());
+                } else {
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass: "help-block m-b-none",
+            validClass: "help-block m-b-none"
+        });
+        $.validator.addMethod("checkip", function (value, element) {
+            var ipaddr = $('#zd_ipaddress').val();
+            var flag = ip_verify(ipaddr);
+            return flag;
+        });
+        $("#sys_dlg_form").validate({
+            rules: {
+                zd_name: "required",          // 设备名称
+                zd_ipaddress: {
+                    required: "true",
+                    checkip: "true"
+                },
+            },
+            messages: {
+                zd_name: "必填",
+                zd_ipaddress: {
+                    required: "必填",
+                    checkip: "IP地址不合法"
+                },
+            },
+            submitHandler: function () {
+                var zd_atpid        = $('#zd_atpid').val();
+                var zd_name         = $('#zd_name').val();
+                var zd_ipaddress    = $('#zd_ipaddress').val();
+                var zd_secretlevel  = $('#zd_secretlevel').val();
+                var zd_area         = $('#zd_area').val();
+                var zd_belongfloor  = $('#zd_belongfloor').val();
+                var zd_type         = $('#zd_type').val();
+                $.post(
+                        '__CONTROLLER__/HYsubmit',
+                        {
+                            zd_atpid:zd_atpid,
+                            zd_name:zd_name,
+                            zd_ipaddress:zd_ipaddress,
+                            zd_secretlevel:zd_secretlevel,
+                            zd_area:zd_area,
+                            zd_belongfloor:zd_belongfloor,
+                            zd_type:zd_type
+                        },
+                        function (data) {
+                            if ("success" == data) {
+                                $("#sys_dlg").modal("hide");
+                                $('#atpbiztable').bootstrapTable("refresh");
+                            } else {
+                                alert('保存失败');
+                            }
+                        });
+            }
+
+        });
+    });
+
+    function ip_verify(addr) {
+        var reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])(\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])){3}$/;
+        if (addr.match(reg)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    function mac_verify(addr) {
+        var reg = /[A-Fa-f0-9]{4}.[A-Fa-f0-9]{4}.[A-Fa-f0-9]{4}/;
+        if (addr.match(reg)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    function queryParams(params) {  //配置参数
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            search: params.search,
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            id:$('#zd_atpid').val()
+        };
+        return temp;
+    }
+</script>

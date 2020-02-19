@@ -1,0 +1,348 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<style>
+    th{
+        text-align: center;
+    }
+    .form-control{
+        display: inline-block;
+    }
+    .wrapper .wrapper-content{
+        padding-bottom: 0;
+    }
+    .control-label{
+        /*width: 30%;*/
+        float: left;
+        text-align:center;
+        line-height: 30px;
+    }
+    .chosen-container{
+        top: -1px;
+    }
+    .form-group{
+        display: inline-block;
+        /*width: 18%;*/
+        margin-top: -7px;
+    }
+    .formEl-div{
+        float: left;
+    }
+    ._box {
+        height:32px;
+        margin: 18px 0px 0px !important;
+    }
+    .fixed-table-container{
+        padding-bottom: 0px !important;
+    }
+    table{
+        table-layout: fixed;
+        word-break: break-all;
+    }
+    .formEl-div{
+        width:70%
+    }
+</style>
+<body class="gray-bg" style="overflow:hidden">
+<div class="wrapper wrapper-content ">
+    <div class="row">
+        <div class="col-sm-12" id='search_div'>
+            <div class="_box" style="margin-top: 5px;">
+
+                <div class="form-group" >
+                    <label class="control-label" style="width: 80px;">发件人</label>
+                    <div class="formEl-div" style="width: 100px;">
+                        <input type="text" class="form-control"  id="am_mfrom">
+                    </div>
+                </div>
+                <div class="form-group" >
+                    <label class="control-label" style="width: 80px;">发送时间</label>
+                    <div class="formEl-div"  style="width: 220px;">
+                        <input type="text" class="form-control" style="width: 100px;"  onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="am_mlogtimestr">-<input type="text" class="form-control" style="width: 100px;" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="am_mlogtimestr_end">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"  style="width: 80px;">邮件标题</label>
+                    <div class="formEl-div" style="width: 150px;" >
+                        <input type="text" class="form-control"  id="am_subj">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" style="width: 80px;">附件列表</label>
+                    <div class="formEl-div" style="width: 150px;">
+                        <input type="text" class="form-control"  id="am_attachlist">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"  style="width: 80px;">邮件密级</label>
+                    <div class="formEl-div" style="width: 80px;">
+                        <select id="am_mailmj" class="chosen-select" ></select>
+                    </div>
+                </div>
+            </div>
+            <div class="_box">
+                <button class="btn btn-info" style="background-color: forestgreen;border-color: forestgreen;" type="button" id="sys_refresh">查询</button>
+                <!-- <a class="btn btn-info " style="margin-left: 10px;background-color: yellowgreen;border-color: yellowgreen;" type="button" id="sys_add" >新增</a> -->
+                <!-- <button class="btn btn-info" style="margin-left: 10px;background-color: cadetblue;border-color: cadetblue;" type="button" id="sys_del">删除</button> -->
+                <button class="btn btn-info" style="margin-left: 10px;" type="button" id="sys_exp">导出</button>
+                <div style="float: right;margin-right: 20px;">
+                    <button class="btn btn-info" style="margin-left: 10px;background-color: #EAB46E;border-color: #EAB46E;" type="button" id="sys_scan">批量还原为疑似问题</button>
+                </div>
+            </div>
+       </div>
+        <div class="col-sm-12">
+            <table id="atpbiztable" ></table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLIC__/img/loading/loading9.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="sort" >
+<input type="hidden" id="sortOrder" >
+</body>
+<script src="__PUBLIC__/js/tablecopy.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script>
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+    var formEl_div_width = parseInt($('.formEl-div').eq(0).width());
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: formEl_div_width+"px"})        
+
+    var height = document.documentElement.clientHeight -70;
+    var searchDivHeight = parseInt($('#search_div').height());
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getData?am_isok=1',      //请求后台的URL（*）
+                method: 'post',                     //请求方式（*）
+                toolbar: '#atpbiztoolbar',          //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName: "am_mfrom",
+                sortOrder: "desc",                  //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页
+                pageSize: 15,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                uniqueId: "am_id",                   //每一行的唯一标识，一般为主键列
+                detailView: false,                  //是否显示父子表
+                columns: [
+                   [
+                        {checkbox: true},
+                        {
+                            title: '序号', width: 50,
+                            formatter: function (value, row, index) {
+                                var option = $('#atpbiztable').bootstrapTable('getOptions');
+                                return option.pageSize * (option.pageNumber - 1) + index + 1;
+                            }
+                        },
+                        {field: 'am_mfrom', title: '发件人', sortable: true, width: 80},
+                        {field: 'am_mto', title: '收件人', sortable: true, width: 80},
+                        {field: 'am_mlogtimestr', title: '发送时间', sortable: true, width: 120},
+                        // {field: 'am_size', title: '邮件大小', sortable: true, width: 120},
+                        {field: 'am_subj', title: '邮件标题', sortable: true, width: 150},
+                        {field: 'am_attachlist', title: '附件列表', sortable: true, width: 250,
+                            formatter: function (value, row, index) {
+                               return "<pre style='border:none;padding:0px;margin:0px;color:inherit;text-align:left;font-family:微软雅黑;'>"+value+"</pre>";
+                            }
+                        },
+                        {field: 'am_mailmj', title: '密级', sortable: true, width: 60},
+                        {field: 'am_msg', title: '问题类型', sortable: true, width: 100},
+                        {
+                           field: 'am_id',title: '操作', sortable: false,width: 80,
+                           formatter: function (value, row, index) {
+                               var inp = "'" + value + "'";
+                               return '<a  class="btn btn-info btn-xs"  style="margin:0" onclick="scanInRow(' + inp + ')">还原为疑似问题</a>';
+                            }
+                        }
+                   
+                   ]
+                ],
+                onDblClickRow: function (row) {
+                    updateInRow(row['am_id']);
+                },
+                onLoadSuccess:function(data){
+                     var tabheight = $('.fixed-table-container').height();
+                    tabheight = parseInt(tabheight);
+                    if(tabheight < (height-searchDivHeight)){
+                        $('.fixed-table-container').css('height', 'auto');
+                    }else{
+                        $('#atpbiztable').bootstrapTable("resetView",{height:height-searchDivHeight});
+                    }
+                }
+            });
+        }
+    };
+    TableObj.oTableInit();
+
+    function queryParams(params) {  //配置参数
+        $('#sort').val(params.sort);
+        $('#sortOrder').val(params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            am_mfrom:$('#am_mfrom').val(),
+            am_mlogtimestr:$('#am_mlogtimestr').val(),
+            am_mlogtimestr_end:$('#am_mlogtimestr_end').val(),
+            am_subj:$('#am_subj').val(),
+            am_attachlist:$('#am_attachlist').val(),
+            am_mailmj:$('#am_mailmj option:selected').val()
+        };
+        return temp;
+    }
+
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+
+    $('#sys_add').on('click',function() {
+        updateInRow('');
+    });
+
+    $('#sys_del').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            layer.alert("您尚未选择数据");
+        } else {
+            var ids = [];
+            $.each(tablerow, function () {
+                ids.push(this['am_id']);
+            });
+            deleteInRow(ids.join(','));
+        }
+    });
+
+    //数据编辑触发该方法
+    function updateInRow(id) {
+        layer.open({
+            title:'数据编辑',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/add?am_id='+id,
+            area: ['80%', '80%']
+        });
+    }
+    //数据删除触发该方法
+    function deleteInRow(id){
+        layer.confirm('确认删除选中数据?',
+        {btn:['确定','取消']},
+        function(){
+            $.ajax({
+                type:'post',
+                url:'__CONTROLLER__/delData',
+                data:{am_id: id},
+                dataType :'json',
+                success:function(data){
+                    if(data.code > 0){
+                        layer.msg('操作成功');
+                        $('#sys_refresh').click();
+                    }else{
+                        layer.alert(data.message);
+                    }
+                },error:function(){
+                    layer.alert('出错啦！请稍后再试');
+                }
+            })
+        })
+    }
+    //批量设置为误报
+    $('#sys_scan').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            layer.alert("您尚未选择数据");
+        } else {
+            var ids = [];
+            $.each(tablerow, function () {
+                ids.push(this['am_id']);
+            });
+            scanInRow(ids.join(','));
+        }
+    });
+    //设置为误报方法
+    function scanInRow(id){
+        layer.confirm('确认将选中数据还原为疑似问题?',
+        {btn:['确定','取消']},
+        function(){
+            ajaxScan(id,0);
+        })
+    }
+    //设置误报的Ajax方法
+    function ajaxScan(id,flag){
+        if(id){
+            $.ajax({
+                type:'post',
+                url:'__CONTROLLER__/updataInScan',
+                data:{am_id: id,flag:flag},
+                dataType :'json',
+                success:function(data){
+                    if(data.code > 0){
+                        layer.msg('操作成功');
+                        $('#sys_refresh').click();
+                    }else{
+                        layer.alert(data.message);
+                    }
+                },error:function(){
+                    layer.alert('出错啦！请稍后再试');
+                }
+            })
+        }
+    }
+    $('#sys_exp').click(function(){
+        $('#loading').modal('show');
+        var sort=$('#sort').val();
+        var sortOrder=$('#sortOrder').val();
+        var t = "__CONTROLLER__/getDataWithExport";
+        t = encodeURI(t);
+        $.ajax({
+            type:'post',
+            url: t,
+            dataType:'json',
+            data:{
+                sort:sort,
+                sortOrder:sortOrder,
+                am_mfrom:$('#am_mfrom').val(),
+                am_mlogtimestr:$('#am_mlogtimestr').val(),
+                am_mlogtimestr_end:$('#am_mlogtimestr_end').val(),
+                am_subj:$('#am_subj').val(),
+                am_attachlist:$('#am_attachlist').val(),
+                am_mailmj:$('#am_mailmj option:selected').val(),
+                am_isok:'1'
+            },
+            success:function(data){
+                $('#loading').modal('hide');
+                if(data.code > 0){
+                    location.href = data.message;
+                }else{
+                    layer.msg(data.message);
+                }
+            },error:function(){
+                $('#loading').modal('hide');
+                layer.alert('出错了！请联系管理员！');
+            }
+        })
+    })
+</script>
+</html>

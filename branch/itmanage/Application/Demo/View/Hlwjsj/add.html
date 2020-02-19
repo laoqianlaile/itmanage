@@ -1,0 +1,157 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">互联网计算机台账编辑</h4>
+        </div>
+        <form id="sys_dlg_form" role="form">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="panel-body">
+                        <div class="heng">
+                            <div class="form-group_l">
+                                <label>编号</label>
+                                <input id="hlwjsj_code" name="hlwjsj_code" type="text" class="form-control" value="{$hData.hlwjsj_code}">
+                            </div>
+                            <div class="form-group_r">
+                                <label>名称</label>
+                                <input id="hlwjsj_name" name="hlwjsj_name" type="text" class="form-control" value="{$hData.hlwjsj_name}">
+                            </div>
+                            <div class="form-group_l">
+                                <label>IP地址</label>
+                                <input id="hlwjsj_ip" name="hlwjsj_ip" type="text" class="form-control" value="{$hData.hlwjsj_ip}">
+                            </div>
+                             <div class="form-group_r">
+                                <label>MAC地址</label>
+                                <input id="hlwjsj_mac" name="hlwjsj_mac" type="text" class="form-control" value="{$hData.hlwjsj_mac}">
+                            </div>
+                        </div>
+                        <div class="heng">
+                            <div class="form-group_r">
+                                <label>用途</label>
+                                <input name="hlwjsj_usage"  id="hlwjsj_usage" class="form-control"  value="{$hData.hlwjsj_usage}">
+                            </div>
+                            <div class="form-group_l">
+                                <label>所属部门</label>
+                                <input name="hlwjsj_dept"  class="form-control" id="hlwjsj_dept" value="{$hData.hlwjsj_dept}">
+                            </div> 
+                            <div class="form-group_r">
+                                <label>放置地点</label>
+                                <input name="hlwjsj_didian"  id="hlwjsj_didian" class="form-control"  value="{$hData.hlwjsj_didian}">
+                            </div>
+                            <div class="form-group_l">
+                                <label>集团许可证编号</label>
+                                <input name="hlwjsj_jtxkz"  class="form-control" id="hlwjsj_jtxkz" value="{$hData.hlwjsj_jtxkz}">
+                            </div>
+                        </div>
+                        <div class="heng">
+                            <div class="form-group_r">
+                                <label>使用情况</label>
+                                <input name="hlwjsj_status"  id="hlwjsj_status" class="form-control"  value="{$hData.hlwjsj_status}">
+                            </div>
+                            <div class="form-group_l">
+                                <label>厂家</label>
+                                <input name="hlwjsj_factory"  class="form-control" id="hlwjsj_factory" value="{$hData.hlwjsj_factory}">
+                            </div> 
+                            <div class="form-group_r">
+                                <label>型号</label>
+                                <input name="hlwjsj_model"  id="hlwjsj_model" class="form-control"  value="{$hData.hlwjsj_model}">
+                            </div>
+                            <div class="form-group_l">
+                                <label>操作系统及版本</label>
+                                <input name="hlwjsj_os"  class="form-control" id="hlwjsj_os" value="{$hData.hlwjsj_os}">
+                            </div>
+                        </div>
+                        <div class="heng">
+                            <div class="form-group_r">
+                                <label>启用时间</label>
+                                <input name="hlwjsj_qiyong"  id="hlwjsj_qiyong" class="form-control"  value="{$hData.hlwjsj_qiyong}">
+                            </div>
+                            <div class="form-group_l">
+                                <label>操作系统安装日期</label>
+                                <input name="hlwjsj_osdate"  class="form-control" id="hlwjsj_osdate" value="{$hData.hlwjsj_osdate}">
+                            </div> 
+                            <div class="form-group_r">
+                                <label>硬盘序列号</label>
+                                <input name="hlwjsj_disknum"  id="hlwjsj_disknum" class="form-control"  value="{$hData.hlwjsj_disknum}">
+                            </div>
+                            <div class="form-group_l">
+                                <label>责任人</label>
+                                <input name="hlwjsj_dutyman"  class="form-control" id="hlwjsj_dutyman" value="{$hData.hlwjsj_dutyman}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type=hidden name="hlwjsj_atpid" id="hlwjsj_atpid" value="{$hData.hlwjsj_atpid}"/>
+            <button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>
+            <input type="submit" id="sys_dlg_submit" value="保存" class="btn btn-primary" />
+        </div>
+    </form>
+    </div>
+</div>
+
+<style type="text/css">
+    .modal-dialog{width: 94%;height: 80%;}
+    .col-sm-6{width:100%;}
+    .heng{width:100%;height: 50px;}
+    .form-group_heng{width:100%;height: 50px;}
+    .form-group_l{width:25%;float: left;}
+    .form-group_r{width:25%;float: left;}
+    .form-group_r label{width:25%;float: left;margin-top: 7px;}
+    .form-group_l label{width:25%;float: left;margin-top: 7px;}
+    /*.heng div label{width:20%;float: left;margin-top: 7px;}*/
+    .form-control{width:65%;}
+    .form-group_21{width:33.3%;float:left;}
+    .form-group_22{width:33.3%;float:left;}
+    .form-group_23{width:33.3%;float:left;}
+    .fengetitle{height: 40px;margin-bottom: 10px;font-size: 20px;font-family: 微软雅黑;text-align: center;line-height: 40px;width: 60%;margin-left: 20%;border-bottom: 1px solid #cdcdcd;}
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function(e){
+        $.validator.setDefaults({
+            highlight:function(element){
+                $(element).closest('.form-group').remove('has-success').addClass('has-error');
+            },
+            success:function(element){
+                $(element).closest('.form-group').remove('has-error').addClass('has-success');
+            },
+            errorElement:'span',
+            errorPlacement:function(error,element){
+                if(element.is(":radio") || element.is(":checkbox")){
+                    error.appendTo(element.parent().parent().parent());
+                }else{
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass:"help-block m-b-none",
+            validClass:"help-block m-b-none"
+        });
+        $("#sys_dlg_form").validate({
+            rules :{
+                hlwjsj_name :"required"
+            },
+            messages:{
+                hlwjsj_name : "必填"
+            },
+            submitHandler:function(){
+                var formBody = $('#sys_dlg_form');
+                $.post('__CONTROLLER__/submit',formBody.serialize(), function(data) {
+                    if("success" == data) {
+                        $("#sys_dlg").modal("hide");
+                        $('#atpbiztable').bootstrapTable("refresh");
+                    }else {
+                        alert('保存失败');
+                    }
+                });
+            }
+
+        });
+    });
+</script>

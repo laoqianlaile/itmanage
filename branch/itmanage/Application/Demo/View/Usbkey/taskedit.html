@@ -1,0 +1,116 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">信息编辑</h4>
+        </div>
+        <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div  class="panel-body">
+                            <form id="sys_dlg_form" role="form" >
+                                <div class="heng">
+                                    <div class="form-group_l">
+                                        <label>key编号</label>
+                                        <input id="u_code"  name="u_code" type="text" value="{$data.u_code}" class="form-control" readonly>
+                                    </div>
+                                    <div class="form-group_r">
+                                        <label>域账户</label>
+                                        <input id="u_account" name="u_account" type="text" value="{$data.u_account}"class="form-control" readonly>
+                                    </div>
+                                    <div class="form-group_l">
+                                        <label>状态</label>
+                                        <select id="u_status" name="u_status" class="form-control" >
+                                            <option value=""></option>
+                                            <option value="0" <if condition="($data.u_status eq '0')">selected="selected"</if>>库存</option>
+                                            <option value="1" <if condition="($data.u_status eq '1')">selected="selected"</if>>发放在用</option>
+                                            <option value="2" <if condition="($data.u_status eq '2')">selected="selected"</if>>丢失</option>
+                                            <option value="3" <if condition="($data.u_status eq '3')">selected="selected"</if>>损坏</option>
+                                            <option value="4" <if condition="($data.u_status eq '4')">selected="selected"</if>>未发</option>
+                                            <option value="5" <if condition="($data.u_status eq '5')">selected="selected"</if>>发放未用</option>
+                                            <option value="6" <if condition="($data.u_status eq '6')">selected="selected"</if>>冻结</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group_r">
+                                        <label>是否强制</label>
+                                        <select id="u_isforce" name="u_isforce" class="form-control" >
+                                            <option value=""></option>
+                                            <option value="0" <if condition="($data.u_isforce eq '0')">selected="selected"</if>>是</option>
+                                            <option value="1" <if condition="($data.u_isforce eq '1')">selected="selected"</if>>否</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="heng">
+                                    <div class="form-group_l">
+                                        <label>姓名</label>
+                                        <input id="u_name" name="u_name"  value="{$data.u_name}" class="form-control">
+                                    </div>
+                                    <div class="form-group_r">
+                                        <label>姓</label>
+                                        <input id="u_firstname" name="u_firstname" type="text" value="{$data.u_firstname}" class="form-control">
+                                    </div>
+                                    <div class="form-group_l">
+                                        <label>名</label>
+                                        <input id="u_secondname" name="u_secondname" type="text" value="{$data.u_secondname}" class="form-control">
+                                    </div>
+                                    <div class="form-group_r">
+                                        <label>身份证</label>
+                                        <input id="u_idcard" name="u_idcard" type="text" value="{$data.u_idcard}" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="heng">
+                                    <div class="form-group_l">
+                                        <label>性别</label>
+                                        <select id="u_gender" name="u_gender" class="form-control">
+                                            <option value="">--请选择--</option>
+                                            <option value="0" <if condition="($data.u_gender eq '0')">selected="selected"</if>>男</option>
+                                            <option value="1" <if condition="($data.u_gender eq '1')">selected="selected"</if>>女</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group_r">
+                                        <label>电话</label>
+                                        <input id="u_phone" name="u_phone" type="text" value="{$data.u_phone}" class="form-control">
+                                    </div>
+                                </div>
+                                <input id="u_atpid" name="u_atpid" type="hidden" value="{$data.u_atpid}" class="form-control">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>
+            <!--<input type="submit" id="sys_dlg_submit" value="保存" class="btn btn-primary" />-->
+            <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary">保存</button>
+        </div>
+    </div>
+</div>
+
+<!--<link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLICOLD__/vendor/tabs/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/font-awesome.css?v=4.4.0" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/animate.css" rel="stylesheet">-->
+<!--<link href="__PUBLICOLD__/vendor/tabs/css/style.css?v=4.0.0" rel="stylesheet"> -->
+<style type="text/css">
+    .modal-dialog{width: 94%;height: 80%;}
+    .col-sm-6{width:100%;}
+    .heng{width:100%;height: 50px;}
+    .form-group_heng{width:100%;height: 50px;}
+    .form-group_l{width:25%;float: left;}
+    .form-group_r{width:25%;float: left;}
+    .form-group_r label{width:25%;float: left;margin-top: 7px;}
+    .form-group_l label{width:25%;float: left;margin-top: 7px;}
+    .form-control{width:65%;}
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function(e) {
+        $('#u_isforce').attr('disabled',true);
+//        $(".js-switch").each(function () {
+//            new Switchery(this, {color: '#1AB394'});
+//        });
+    });
+</script>

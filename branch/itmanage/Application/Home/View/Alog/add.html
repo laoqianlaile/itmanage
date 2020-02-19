@@ -1,0 +1,102 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<title>违规操作审计添加编辑</title>
+<style>
+    .form-group{
+        margin-top: 26px;
+    }
+    .control-label{
+        width:150px  !important;
+    }
+     .must_filter{
+        color: red;
+    }
+    .form-control{
+        display:inline-block;
+    }
+    .col-sm-3{
+        width:60%  !important;
+    }
+    .chosen-container{
+        top: -1px;
+    }
+
+</style>
+<body style="margin: 0 auto;">
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content" >
+        <div class="panel-body">           <div class="form-group">                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>账号 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="al_ip" id="al_ip" value="<?php if(!empty($data['al_ip']))echo $data['al_ip']; ?>">                   </div>                </div>                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>名称 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="al_hostname" id="al_hostname" value="<?php if(!empty($data['al_hostname']))echo $data['al_hostname']; ?>">                   </div>                </div>           </div>           <div class="form-group">                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>contact </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="al_contact" id="al_contact" value="<?php if(!empty($data['al_contact']))echo $data['al_contact']; ?>">                   </div>                </div>                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>报警来源 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="al_alertsource" id="al_alertsource" value="<?php if(!empty($data['al_alertsource']))echo $data['al_alertsource']; ?>">                   </div>                </div>           </div>           <div class="form-group">                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>单位名 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="al_sectionname" id="al_sectionname" value="<?php if(!empty($data['al_sectionname']))echo $data['al_sectionname']; ?>">                   </div>                </div>                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>问题类型 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="al_msg" id="al_msg" value="<?php if(!empty($data['al_msg']))echo $data['al_msg']; ?>">                   </div>                </div>           </div>           <div class="form-group">                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>是否已通知过审计员 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="al_isnotify" id="al_isnotify" value="<?php if(!empty($data['al_isnotify']))echo $data['al_isnotify']; ?>">                   </div>                </div>                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>事件名称 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="al_event" id="al_event" value="<?php if(!empty($data['al_event']))echo $data['al_event']; ?>">                   </div>                </div>           </div>           <div class="form-group">                <div style="width: 50%;float: left">                 <label class=' col-sm-2 control-label'>事件时间 </label>                    <div class="col-sm-3" >                    <input type="text" class="form-control" style="width:99%;" name="al_eventtime" id="al_eventtime" value="<?php if(!empty($data['al_eventtime']))echo $data['al_eventtime']; ?>">                   </div>                </div>            </div>        <input type="hidden" value="<?php if(!empty($data['al_id'])) echo $data['al_id']; ?>" name="al_id">
+       </div>
+    </form>
+<div class="modal-footer" style="margin-top: 15px;text-align: center;width: 100%;">
+    <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="display:inline-block">保存</button>
+</div>
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        $('#sys_dlg_submit').click(function(){
+            $('#sys_dlg_form1').submit();
+        })
+        
+
+        $.validator.setDefaults({
+            highlight:function(element){
+                $(element).parent().remove('has-success').addClass('has-error');
+            },
+            success:function(element){
+                $(element).parent().remove('has-error').addClass('has-success');
+            },
+            errorPlacement:function(error,element){
+                if(element.is(":radio") || element.is(":checkbox")){
+                    error.appendTo(element.parent());
+                }else{
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass:"help-block m-b-none",
+            validClass:"help-block m-b-none"
+        });
+        $('#sys_dlg_form1').validate({
+            onclick:false,
+            onfocusout:false,
+            onkeyup:false,
+            // 如果是下拉菜单，这里的require是不生效的，需要自己在submitHandle方法中添加验证
+            rules:{
+                
+            },
+            messages:{
+                
+            },submitHandler:function(){
+                var formBody = $('#sys_dlg_form1');
+                $.post('__CONTROLLER__/addData',formBody.serialize(), function (data) {
+                    if (data.code > 0) {
+                        parent.$('#atpbiztable').bootstrapTable('refresh');
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        layer.alert(data.message);
+                    }
+                },'JSON');
+            }
+        });
+    });
+    //如果验证下拉框必填，请使用该方法
+//    function checkSelectForm(objArr, messageArr){
+//        var len = objArr.length;
+//        for(var i=0;i<len;i++){
+//            var obj = objArr[i];
+//            var val = $('#'+obj).val();
+//            if(!val){
+//                layer.msg('请选择'+messageArr[i]);
+//                $('#'+obj).trigger('chosen:open');
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+</script>

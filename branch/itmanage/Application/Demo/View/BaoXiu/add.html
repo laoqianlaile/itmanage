@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+    <link rel="stylesheet" href="__PUBLICOLD__/vendor/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/jquery.form.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ztree/js/jquery.ztree.core.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="__PUBLICOLD__/bgadmin/plugins/layui/layui.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+    <title>在线报修</title>
+    <style>
+        *{
+            font-family: "Microsoft";
+        }
+        .box{
+            margin: 0 auto;
+            text-align: center;
+        }
+        .tab-content{
+            position: relative;
+        }
+        .form-group > div {
+            margin-top: 3px;
+            margin-bottom: 5px;
+        }
+        .form-group input{
+            margin-left: 12px;
+            border-radius: 2px;
+        }
+        #sys_dlg_submit{
+            /*margin-right: 53px!important;*/
+            margin: auto;
+        }
+        .panel-body{
+            margin: 10px 0 12px;
+        }
+
+        .chosen-single span{
+            text-align: left;
+        }
+        html{
+            overflow: hidden;
+        }
+        .department .chosen-drop{
+            height: 200px!important;
+        }
+        .department .chosen-results{
+            height: 160px!important;
+        }
+        td{
+            /*text-align: center;*/
+        }
+        input{
+            width:100%;
+        }
+        .table tbody tr td{
+            vertical-align: middle;
+        }
+        .fujianword{
+            margin: 0;
+            text-align: left;
+            /*margin-top: 6px;*/
+            box-sizing:border-box;
+            font-weight: bold;
+            color: red;
+        }
+         .fujianword2{
+            margin: 0;
+            text-align: left;
+            /*margin-top: 6px;*/
+            box-sizing:border-box;
+            font-weight: bold;
+            color: rgb(37,204,37);
+        }
+    </style>
+</head>
+<body>
+<div class="box" style="overflow-y: auto;overflow-x: hidden;">
+    <form id="sys_dlg_form" role="form" class="form-horizontal" method="post"  enctype="multipart/form-data" >
+        <div class="tab-content" style="height:558x;width: 840px">
+            <div class="panel-body" style='margin-top:0;margin-bottom:0;padding-top: 5px;padding-bottom: 0;;'>
+                <table class="table table-bordered" id="table" style='margin-top: 5px;'>
+                    <tr><span style='font-size: 30px;font-family:"Microsoft";'>在线报修</span></tr>
+                    <tr>
+                        <td style='width:100px!important'><label style="color: red">*</label>姓名</td>
+                        <td class="bitian" style='width:350px;!important'>
+                            <select  name="t_user" class="chosen-select_longajax" id="t_user"
+                                    style="margin-bottom: -5px;width:99%;">
+                                <option value="{$data['username']}">{$data['fullname']}</option>
+                            </select>
+                            <!--<input type="text" class="input"  value="{$data['realusername']}({$data['username']})" readonly>-->
+                            <!--<input type="text" class="input"  name="t_name" value="{$data['realusername']}" hidden>-->
+                            <input type="text" class="input"  name="t_bxnameid" value="{$data['username']}" hidden>
+                            <!--<input type="text" class="input"  name="t_depart" value="{$data['orgid']}" hidden>-->
+                        </td>
+                        <td style='width:100px!important'><label style="color: red">*</label>联系方式</td>
+                        <td class="bitian" style='width: 300px;'>
+                            <input type="text" class="input" id="t_phone" name="t_phone"  value="" maxlength="30" style='height: 30px;width:100%;line-height: 30px;'>
+                        </td>
+                    </tr>
+                    <!--<tr>-->
+                        <!--<td>问题分类</td>-->
+                        <!--<td >-->
+                            <!--<select name="" id="t_problemtype" class="select bitian" name="t_problemtype">-->
+                                <!--<option value="1" >是</option>-->
+                                <!--<option value="0" >否</option>-->
+                            <!--</select>-->
+
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <tr>
+                        <td>问题<br>描述</td>
+                        <td colspan="3">
+                            <textarea name="t_description" id="t_description"  cols="50" rows="5" style="width:712px;" maxlength="500"></textarea>
+                        </td>
+                    </tr>
+
+                    <tr id="fujian">
+                        <!--<td class="xuhao">序号</td>-->
+                        <td>附件<br>说明</td>
+                        <td colspan="3">
+                            <p class="fujianword" >1、禁止上传涉密文件</p><p class='fujianword2' >2、可将报错信息以附件方式上传<br>3、上传文件仅支持（'xls','xlsx','jpg','bmp',png','rar','txt','doc','docx'）类型文件,附件最大限制为10M</p>
+                        </td>
+                    </tr>
+                    <tr id="szyd_zjpsid">
+                        <td>
+                            <label>附件</label>
+                        </td>
+                        <td colspan="3">
+                            <input type="text" name="bxsort[]" value="1" hidden>
+                            <label name="bxname[]" style="float: left;margin-top: 10px"></label>
+                            <input type="file"  name="bxfiles[]" style="width: 70px;float: left;margin-top: 10px;" onchange="changename(this)">
+                            <button class="btn btn-danger sys_delete" style="margin-top: 10px;
+                            float:right" id="add" >新增</button>
+                        </td>
+                    </tr>
+                    <tr id="fujianbottom"></tr>
+                    <input id="domainusername" name="domainusername" value="" hidden>
+                </table>
+                <!--<input id="id" name='szyd_id' type="hidden" value="{$data.0.szyd_id}" class="form-control">-->
+            </div>
+            <div class="modal-footer" style="border: none;padding-top:0;text-align:center;">
+                <button type="button" id="sys_dlg_submit" class="btn btn-primary" style="display:inline-block;">提交</button>
+                <!-- <button type="button"  id="sys_close" class="btn btn-danger" style="margin-top: 11px">关闭</button> -->
+            </div>
+        </div>
+
+    </form>
+    <!--<div id="xian" style="margin-top: 30px"></div>-->
+
+</div>
+</body>
+
+
+
+<!--<script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>-->
+<!--<script type="text/javascript" src="__PUBLICOLD__/js/banBackSpace.js"></script>-->
+<!--[if lte IE 8]>
+<script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+<![endif]-->
+<script>
+    $(".chosen-select_longajax").chosen({disable_search_threshold: 0, search_contains: true});//,width:'56%',hight:'80px'
+    $('#t_user').ajaxChosen({
+        dataType: 'json',
+        type: 'POST',
+        url: '__CONTROLLER__/assignuser'
+    }, {
+        loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+    function changename($this) {
+//      var a=  $("input[name='bxname[]']").val();
+        var i= $($this).val().lastIndexOf('\\');
+
+//        alert($($this).val());
+        var td=$($this).parent();
+        var label=$(td[0]).find("label[name='bxname[]']");
+        $(label).text($($this).val().slice(i+1));
+
+    }
+    $(function () {
+
+        layui.use('layer', function() {
+            layer = layui.layer;
+        });
+        $(".chosen-select_long").chosen({disable_search_threshold: 10, search_contains: false,width:'100%',height:'100% !imprtant'});
+        var data = '{$data}';
+
+
+        layui.use('layer', function () {
+            layer = layui.layer;
+        });
+        $(".js-switch").each(function () {
+            new Switchery(this, {color: '#1AB394'});
+        });
+        $('#add').on("click",function(){
+            var xuhao =  $("input[name='bxsort[]']:last").val();
+            if(xuhao==undefined){
+                xuhao=0;
+            }
+            if(parseInt(xuhao)>=5)
+            {
+                layer.msg("最多添加5个附件");
+                return false;
+            }
+            xuhao = parseInt(xuhao)+1;
+            var html = '<tr>'+
+                    '<td>'+
+                    '<label>附件</label>'+
+                    '</td>'+
+                    '<td colspan="3">'+
+                    '<input type="text" name="bxsort[]" value="'+xuhao+'" hidden>'+
+                    '<label name="bxname[]" style="float: left;margin-top: 10px"></label>'+
+                    '<input type="file" name="bxfiles[]" style="width: 70px;float: left;margin-top: 10px;" onchange="changename(this)">'+
+
+                    '<button type="button"  class="btn btn-danger sys_delete" style="margin-top: 10px;float:right;" >删除</button>'+
+                    '</td>'+
+                    '</tr>';
+            $("#fujianbottom").before(html);
+            $("#rowspan1").attr("rowspan",parseInt($("#rowspan1").attr('rowspan'))+1);
+            $("#rowspan2").attr("rowspan",parseInt($("#rowspan2").attr('rowspan'))+1);
+//            $('.sys_delete').on('click',deleteTr);
+            return false;
+        });
+        $("#sys_dlg_form").validate({
+
+        });
+        $('#sys_dlg_submit').on('click',function () {
+            var user=$('#t_user').val();
+            var phone=$('#t_phone').val();
+            if(user=='')
+            {
+                alert('请选择联系人');
+                return;
+            }
+            if(phone=='')
+            {
+                alert('请填写联系方式');
+                return;
+            }
+            var formBody = $('#sys_dlg_form');
+            formBody.ajaxSubmit({
+                type:'post',
+                url:'__CONTROLLER__/submitData',
+                dataType:'json',
+                beforeSend:function(){
+
+                },
+                success:function(data){
+                    if(data.code == 0){
+                        var msg = $.parseJSON(data.message);
+                        msg = msg.join("<br/>");
+                        alert('提交成功');
+                        window.close();
+                        // layer.alert('提交成功',{
+                        //     icon:1,
+                        //     title:'提示',
+                        //     yes:function(){                   
+                        //         var index = parent.layer.getFrameIndex(window.name);
+                        //         parent.layer.close(index); 
+                        //         // alert("11");
+                        //         // parent.close();
+                        //     }
+                        // });
+                        // setTimeout(function(){
+                        // },2000);
+                    }else{
+                        var msg = $.parseJSON(data.message);
+                        msg = msg.join("<br/>");
+                        layer.alert(msg);
+                    }
+                }
+            });
+            // $('#sys_dlg_form').submit();
+        });
+        
+        $('#sys_close').on('click',function(){
+            window.close();
+        });
+
+        function deleteTr(){
+            $(this).parents('tr').remove();
+            var rowspan1 = $("#rowspan1").attr('rowspan');
+            var rowspan2 = $("#rowspan2").attr('rowspan');
+            $("#rowspan1").attr("rowspan",parseInt(rowspan1)-1);
+            $("#rowspan2").attr("rowspan",parseInt(rowspan2)-1);
+        }
+        $('body').on('click','.sys_delete',deleteTr);
+    });
+
+</script>
+
+<!-- Matomo -->
+    <script type="text/javascript">
+      var _paq = _paq || [];
+      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+      _paq.push(['trackPageView']);
+      _paq.push(['enableLinkTracking']);
+      (function() {
+        var objUser = new ActiveXObject("WScript.Network");
+        var loginname=objUser.UserName;
+        var domain=objUser.UserDomain;
+        _paq.push(['setUserId',loginname+'@'+domain]);    
+        var u="//10.78.72.211:8002/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', '9']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+ </script>
+    <!-- End Matomo Code -->

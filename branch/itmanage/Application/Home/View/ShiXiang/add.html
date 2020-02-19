@@ -1,0 +1,254 @@
+﻿<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<style>
+    .an button{
+        width: 100px;
+        height: 30px;
+        border-radius: 0px;
+        font-weight: bold;
+        background-color: #fff;
+        border-radius: 5px;
+    }
+    .an{
+        margin-top: 50px;
+    }
+    #editor{
+        float:left;
+        width:85%;
+    }
+    .col-sm-12{
+        width:100%;
+    }
+    .control-label{
+        font-size: 14px!important;
+        margin-top: 7px;
+    }
+    .form-control{
+        display: inline-block;
+        width: 300px;
+    }
+    font{
+        font-weight: bold;
+        color: red;
+        font-size: 14px;
+    }
+
+</style>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <form id="atpform" role="form"　class="form-inline">
+            <div class="" style="padding:5%;padding-top:1%;">
+                <div class="row row-lg" style="width:100%;">
+                    <div class="form-group form-inline" style="display: block">
+                        <label class=' col-sm-2 control-label' style="width:16%">事项名称（<font>*</font>）</label>
+                        <input type="text" class="form-control" name="sx_name" id="sx_name" style="width: 82.5%;" value="{$data.sx_name}">
+                    </div>
+                </div>
+                <div class="row row-lg" style="width:100%;">
+                    <div class="form-group form-inline" style="display: block;width: 50%;float: left;">
+                        <label class=' col-sm-2 control-label' style="width: 32%;">责任人</label>
+                        <select name="sx_dutymanid" class="chosen-select" id="sx_dutymanid">
+                            <option value="">请选择</option>
+                            <option value="{$data.sx_dutymanid}" <?php if(!empty($data['sx_dutymanid'])){echo selected;}?>>{$data.sx_dutyman}</option>
+                        </select>
+                    </div>
+                    <div class="form-group form-inline" style="float: left;display: none;width: 50%;">
+                        <label class='col-sm-2 control-label' style="width: 32%;">责任部门</label>
+                        <select  name="sx_dutymandeptid" class="chosen-selected"  id="sx_dutymandeptid">
+                            <option value="">请选择</option>
+                            <option value="{$data.sx_dutymandeptid}" <?php if(!empty($data['sx_dutymandeptid'])){echo selected;}?>>{$data.sx_dutymandept}</option>
+                        </select>
+                    </div>
+                    <div class="form-group form-inline" style="float: left;display: block;width: 50%;">
+                        <label class='col-sm-2 control-label' style="width: 32%;">班组</label>
+                        <select  name="sx_group" class="chosen-selected"  id="sx_group">
+                            <option value="">请选择</option>
+                            <foreach name="group" item="v">
+                                <option value="{$v.dic_name}" <?php if($data['sx_group'] == $v['dic_name']){echo selected;}?>>{$v.dic_name}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                </div>
+                <div class="row row-lg" style="width:100%;">
+                    <div class="form-group form-inline" style="display: block;width: 50%;float: left;">
+                        <label class=' col-sm-2 control-label' style="width: 32%;">提出人</label>
+                        <select name="sx_demanderid" class="chosen-select" id="sx_demanderid">
+                            <option value="">请选择</option>
+                            <option value="{$data.sx_demanderid}" <?php if(!empty($data['sx_demanderid'])){echo selected;}?>>{$data.sx_demander}</option>
+                        </select>
+                    </div>
+                    <div class="form-group form-inline" style="float: left;display: block;width: 50%;">
+                        <label class='col-sm-2 control-label' style="width: 32%;">提出单位</label>
+                        <select  name="sx_demanddeptid" class="chosen-selected" id="sx_demanddeptid">
+                            <option value="">请选择</option>
+                            <option value="{$data.sx_demanddeptid}" <?php if(!empty($data['sx_demanddeptid'])){echo selected;}?>>{$data.sx_demanddept}</option>
+                        </select>
+                    </div>
+                </div>
+                <!--<div class="row row-lg" style="width:100%;">-->
+                    <!--<div class="form-group form-inline" style="display: block">-->
+                        <!--<label class=' col-sm-2 control-label' style="width: 16%">事项内容</label>-->
+                        <!--<textarea  class="form-control" id="sx_detail" name="sx_detail" style="width: 82.5%" >{$data.sx_detail}</textarea>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="an" style="text-align: center">
+                    <input type="hidden" name="sx_atpid" id="sx_atpid" value="{$data.sx_atpid}"/>
+                    <button type="button" style="background-color:#104aad;color:#fff" onclick="submitMatter();">提交</button>
+                    <!--<button type="button" id="cancel">取消</button>-->
+                </div>
+                </div>
+            </form>
+
+    </div>
+    <div id="sys_dept" role="dialog" class="modal fade "></div>
+    <div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+        <div class="modal-dialog" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">处理中</h4>
+                </div>
+                <div class="modal-body">
+                    <img src="__PUBLIC__/img/loading/loading8.gif" style='display: block;margin: 0 auto'>
+                    <div id="loadingText" style="text-align: center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script>
+
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '62%'});
+    $(".chosen-selected").chosen({disable_search_threshold: 0, search_contains: true, width: '65%'});
+
+    $('#sx_dutymanid').ajaxChosen({
+        dataType: 'json',
+        type: 'POST',
+        url:'__MODULE__/org/assignuser'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+    $('#sx_demanderid').ajaxChosen({
+        dataType: 'json',
+        type: 'POST',
+        url:'__MODULE__/org/assignuser'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+    $('#sx_dutymandeptid').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url: '__MODULE__/org/assigndept'
+    }, {
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+    $('#sx_demanddeptid').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url: '__MODULE__/org/assigndept'
+    }, {
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+
+
+    function submitMatter(){
+        var formbody   = $("#atpform");
+        var sx_name = $('#sx_name').val();
+        if(sx_name == ''){
+            alert("事项名称不可为空！");
+            return false;
+        }
+        $.ajax({
+            type:'post',
+            url:'__CONTROLLER__/addData',
+            data:formbody.serialize(),
+            success:function(res){
+                if(res == 'error'){
+                    alert('添加失败！');
+                }else{
+                    parent.$('#atpbiztable').bootstrapTable('refresh');
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                }
+            }
+        });
+    }
+
+    $('#sx_dutymanid').change(function(){
+        var username = $(this).val();
+        $.ajax({
+            type:'post',
+            url:'__CONTROLLER__/FindId',
+            data:{username:username},
+            dataType:'json',
+            success:function(res){
+                if(res.code > 0){
+                    var str = "<option value='" + res.message[0] + "'  " + 'selected' + ">" + res.message[1] + "</option>";
+                    $('#sx_dutymandeptid').append(str)
+                    $('#sx_dutymandeptid').trigger("chosen:updated")
+                    var group = "<option value='" + res.message[2] + "'  " + 'selected' + ">" + res.message[2] + "</option>";
+                    $('#sx_group').append(group)
+                    $('#sx_group').trigger("chosen:updated")
+
+                }else{
+                    alert(res.message)
+                }
+            }
+        })
+    })
+
+    $('#sx_demanderid').change(function(){
+        var username = $(this).val();
+        $.ajax({
+            type:'post',
+            url:'__CONTROLLER__/FindId',
+            data:{username:username},
+            dataType:'json',
+            success:function(res){
+                if(res.code > 0){
+                    var str = "<option value='" + res.message[0] + "'  " + 'selected' + ">" + res.message[1] + "</option>";
+                    $('#sx_demanddeptid').append(str)
+                    $('#sx_demanddeptid').trigger("chosen:updated")
+                }else{
+                    alert(res.message)
+                }
+            }
+        })
+    })
+
+    function checkSub(para){
+        var err  = 0;
+        for(var i = 0;i<para.length;i++){
+            if(para[i].val() == ''){
+                para[i].parent().addClass('has-error');
+                err = 1;
+            }else{
+                para[i].parent().removeClass('has-error');
+                para[i].parent().addClass('has-success');
+            }
+        }
+        if(err == 1){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+
+
+</script>
+</body>
+
+</html>
+
+
+
+

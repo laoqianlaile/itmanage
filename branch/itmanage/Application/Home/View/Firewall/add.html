@@ -1,0 +1,575 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>防火墙和防毒墙管理添加编辑</title>
+<style>
+   .form-group {
+      margin-top: 26px;
+   }
+
+   .control-label {
+      width: 150px !important;
+   }
+
+   .must_filter {
+      color: red;
+   }
+
+   .form-control {
+      display: inline-block;
+   }
+
+   .col-sm-3 {
+      width: 60% !important;
+   }
+
+   .chosen-container {
+      top: -1px;
+   }
+
+   .chosen-container .chosen-results {
+      max-height: 180px;
+   }
+
+   .chosen-container {
+      height: 100%;
+   }
+</style>
+
+<body style="margin: 0 auto;">
+   <form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+      <div class="tab-content" style="padding-bottom: 50px;">
+         <div class="panel-body">
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>设备编码 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="fw_devicecode" id="fw_devicecode"
+                        value="<?php if(!empty($data['fw_devicecode']))echo $data['fw_devicecode']; ?>">
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>部标编码 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="fw_anecode" id="fw_anecode"
+                        value="<?php if(!empty($data['fw_anecode']))echo $data['fw_anecode']; ?>">
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>IP地址 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="fw_ip" id="fw_ip"
+                        value="<?php if(!empty($data['fw_ip']))echo $data['fw_ip']; ?>">
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>子网掩码 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="fw_mask" id="fw_mask"
+                        value="<?php if(!empty($data['fw_mask']))echo $data['fw_mask']; ?>">
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>默认网关 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="fw_gateway" id="fw_gateway"
+                        value="<?php if(!empty($data['fw_gateway']))echo $data['fw_gateway']; ?>">
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>MAC地址 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="fw_mac" id="fw_mac"
+                        value="<?php if(!empty($data['fw_mac']))echo $data['fw_mac']; ?>">
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>名称 <span class="must_filter">*</span></label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="fw_name" id="fw_name"
+                        value="<?php if(!empty($data['fw_name']))echo $data['fw_name']; ?>">
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>主要用途 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="fw_usage" id="fw_usage"
+                        value="<?php if(!empty($data['fw_usage']))echo $data['fw_usage']; ?>">
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>厂家 </label>
+                  <div class="col-sm-3">
+                     <select name="fw_factory" id="fw_factory" class="chosen-select">
+                        <option value=""> </option>
+                        <?php foreach($changJia as $key=>$value){ ?>
+                        <option <?php if($data['fw_factory'] == $value['dic_name']) echo 'selected'; ?>
+                           value="{$value.dic_id}">{$value.dic_name}</option>
+                        <?php } ?>
+                     </select>
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>型号 </label>
+                  <div class="col-sm-3">
+                     <select name="fw_modelnumber" id="fw_modelnumber" class="chosen-select">
+                        <option value=""> </option>
+                     </select>
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>出厂编号 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="fw_sn" id="fw_sn"
+                        value="<?php if(!empty($data['fw_sn']))echo $data['fw_sn']; ?>">
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>使用状态 </label>
+                  <div class="col-sm-3">
+                     <select name="fw_status" id="fw_status" class="chosen-select">
+                        <option value=""> 请选择</option>
+                        <?php foreach($zhuangTai as $key=>$value){ ?>
+                        <option <?php if($data['fw_status'] == $value['dic_name']) echo 'selected'; ?>
+                           value="{$value.dic_name}">{$value.dic_name}</option>
+                        <?php } ?>
+                     </select>
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>密级 </label>
+                  <div class="col-sm-3">
+                     <select name="fw_secretlevel" id="fw_secretlevel" class="chosen-select">
+                        <option value=""> 请选择</option>
+                        <?php foreach($miJi as $key=>$value){ ?>
+                        <option <?php if($data['fw_secretlevel'] == $value['dic_name']) echo 'selected'; ?>
+                           value="{$value.dic_name}">{$value.dic_name}</option>
+                        <?php } ?>
+                     </select>
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>资产来源 </label>
+                  <div class="col-sm-3">
+                     <select name="fw_assetsource" id="fw_assetsource" class="chosen-select">
+                        <option value="">请选择 </option>
+                        <?php foreach($ziYuanLaiYuan as $key=>$value){ ?>
+                        <option <?php if($data['fw_assetsource'] == $value['dic_name']) echo 'selected'; ?>
+                           value="{$value.dic_name}">{$value.dic_name}</option>
+                        <?php } ?>
+                     </select>
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>资产责任单位 </label>
+                  <div class="col-sm-3">
+                     <select name="fw_assetdutydept" id="fw_assetdutydept" class="chosen-select">
+                        <option value=""> 请选择</option>
+                        <?php foreach($zcDept as $key=>$value){ ?>
+                        <option <?php if($data['fw_assetdutydept'] == $value['dic_name']) echo 'selected'; ?>
+                        value="{$value.dic_name}">{$value.dic_name}</option>
+                        <?php } ?>
+                     </select>
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>使用责任单位 </label>
+                  <div class="col-sm-3">
+                     <select name="fw_assetusedept" id="fw_assetusedept" class="chosen-select">
+                        <option value="">请选择 </option>
+                        <?php foreach($syDept as $key=>$value){ ?>
+                        <option <?php if($data['fw_assetusedept'] == $value['dic_name']) echo 'selected'; ?>
+                        value="{$value.dic_name}">{$value.dic_name}</option>
+                        <?php } ?>
+                     </select>
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>采购日期 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="fw_purchasetime"
+                        id="fw_purchasetime"
+                        value="<?php if(!empty($data['fw_purchasetime']))echo $data['fw_purchasetime']; ?>"
+                        onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>启用日期 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="fw_startusetime"
+                        id="fw_startusetime"
+                        value="<?php if(!empty($data['fw_startusetime']))echo $data['fw_startusetime']; ?>"
+                        onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>地区 </label>
+                  <div class="col-sm-3">
+                     <select name="fw_area" id="fw_area" class="chosen-select">
+                        <option value="">请选择 </option>
+                        <?php foreach($diQu as $key=>$value){ ?>
+                        <option <?php if($data['fw_area'] == $value['dic_name']) echo 'selected'; ?>
+                           value="{$value.dic_id}">{$value.dic_name}</option>
+                        <?php } ?>
+                     </select>
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>楼宇 </label>
+                  <div class="col-sm-3">
+                     <select name="fw_belongfloor" id="fw_belongfloor" class="chosen-select">
+                        <option value=""> </option>
+                     </select>
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>责任人 </label>
+                  <div class="col-sm-3">
+                     <select name="fw_dutyman" id="fw_dutyman" class="chosen-select">
+                        <option value="<?php echo $dutuser['username'];?>"><?php echo $dutuser['name'];?></option>
+                     </select>
+                  </div>
+               </div>
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>使用人 </label>
+                  <div class="col-sm-3">
+                     <select name="fw_useman" id="fw_useman" class="chosen-select">
+                        <option value="<?php echo $userman['username'];?>"><?php echo $userman['name'];?></option>
+                     </select>
+                  </div>
+               </div>
+            </div>
+            <!-- <div class="form-group">
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>责任部门 </label>
+                    <div class="col-sm-3" >
+                    <select  name="fw_dutydept" id="fw_dutydept" class="chosen-select" ></select>
+                   </div>
+                </div>
+                <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>使用部门 </label>
+                     <div class="col-sm-3" >
+                     <select  name="fw_usedept" id="fw_usedept" class="chosen-select" ></select>
+                    </div>
+                 </div>
+                
+
+           </div> -->
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>房间号 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="fw_roomno" id="fw_roomno"
+                        value="<?php if(!empty($data['fw_roomno']))echo $data['fw_roomno']; ?>">
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>所属网络 </label>
+                  <div class="col-sm-3">
+                     <select name="fw_net" id="fw_net" class="chosen-select">
+                        <option value=""> 请选择</option>
+                        <?php foreach($suoShuWangLuo as $key=>$value){ ?>
+                        <option <?php if($data['fw_net'] == $value['dic_name']) echo 'selected'; ?>
+                           value="{$value.dic_name}">{$value.dic_name}</option>
+                        <?php } ?>
+                     </select>
+                  </div>
+               </div>
+
+            </div>
+            <div class="form-group">
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>备注 </label>
+                  <div class="col-sm-3">
+                     <textarea name="fw_remark" id="fw_remark" style="height:40px"
+                        class="form-control"><?php if(!empty($data['fw_remark']))echo $data['fw_remark']; ?></textarea>
+                  </div>
+               </div>
+
+               <div style="width: 50%;float: left">
+                  <label class=' col-sm-2 control-label'>有效期 </label>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control" style="width:99%;" name="fw_yxq" id="fw_yxq"
+                        value="<?php if(!empty($data['fw_yxq']))echo $data['fw_yxq']; ?>"
+                        onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                  </div>
+               </div>
+
+            </div>
+         </div>
+         <input type="hidden" value="<?php if(!empty($data['fw_atpid'])) echo $data['fw_atpid']; ?>" name="fw_atpid" id="fw_atpid">
+      </div>
+   </form>
+   <div class="modal-footer" style="margin: 0px;text-align:center;z-index: 999;position: fixed;bottom:0;left:0;font-family: cursive; width: 100%;height: 60px;background-color: #fff;">
+      <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="display:inline-block;text-align:center;">保存</button>
+      <if condition="$data['fw_atpid'] neq null">
+         <button type="button"  id="oplog" class="btn btn-warning" style="margin-left: 30px;">日志</button>
+      </if>
+  </div>
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+   $(function () {
+      layui.use('layer', function () {
+         layer = layui.layer;
+      })
+      $('#sys_dlg_submit').click(function () {
+         $('#sys_dlg_form1').submit();
+      })
+      var input_width = parseInt($('.form-control').eq(0).css('width').replace('px', ''));
+      $('.chosen-select').chosen({ disable_search_threshold: 0, search_contains: true, width: input_width + 'px' });
+      //使用人
+      $('#fw_useman').ajaxChosen({
+         dataType: 'json',
+         type: 'post',
+         url: '__MODULE__/org/assignuser'
+      }, {
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+         });
+      //责任人
+      $('#fw_dutyman').ajaxChosen({
+         dataType: 'json',
+         type: 'post',
+         url: '__MODULE__/org/assignuser'
+      }, {
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+         });
+//         //使用责任单位
+//        $('#fw_assetusedept').ajaxChosen({
+//            dataType: 'json',
+//            type: 'post',
+//            url:'__MODULE__/org/assigndept'
+//        },{
+//            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+//        });
+//        //资产责任单位
+//        $('#fw_assetdutydept').ajaxChosen({
+//            dataType: 'json',
+//            type: 'post',
+//            url:'__MODULE__/org/assigndept'
+//        },{
+//            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+//        });
+      //选择地区触发楼宇
+      $('#fw_area').change(function () {
+         var id = $(this).val();
+         dic_louyu(id);
+      });
+
+      //设置楼宇
+      var areaid = $("#fw_area").val();
+      if (areaid != '') {
+         var next_id = "<?php echo $data['fw_belongfloor'];?>";
+         dic_louyu(areaid, next_id);
+      }
+
+      //楼宇
+      function dic_louyu(id, next_id) {
+         if (next_id == 'undefined') { next_id = '' }
+         if (!id) return false;
+         $.ajax({
+            type: 'post',
+            url: '__MODULE__/dic/getDicLouYu',
+            data: { pid: id },
+
+            dataType: 'json',
+            success: function (data) {
+               if (data.code > 0) {
+                  var str = '<option value=""> </option>';
+                  $.each(data.results, function (k, v) {
+                     var sele = '';
+                     if (next_id == v['dic_name']) { sele = 'selected' }
+                     str += "<option " + sele + " value='" + v['dic_id'] + "'>" + v['dic_name'] + "</option>";
+                  });
+                  $('#fw_belongfloor option').remove();
+                  $('#fw_belongfloor').append(str);
+                  $('#fw_belongfloor').trigger("chosen:updated");
+               } else {
+                  layer.alert(data.message);
+               }
+            },
+            error: function () {
+               layer.alert('出错啦！请联系管理员');
+            }
+         });
+      }
+
+      //选择厂家触发型号
+      $('#fw_factory').change(function () {
+         var id = $(this).val();
+         dic_xinghao(id);
+      });
+      //设置型号
+      var factoryid = $("#fw_factory").val();
+      if (factoryid != '') {
+         var next_id = "<?php echo $data['fw_modelnumber'];?>";
+         dic_xinghao(factoryid, next_id);
+      }
+      //型号
+      function dic_xinghao(id, next_id) {
+         if (next_id == 'undefined') { next_id = '' }
+         if (!id) return false;
+         $.ajax({
+            type: 'post',
+            url: '__MODULE__/dic/getDicXingHao',
+            data: { pid: id, pid2: '防火墙和防毒墙' },
+            dataType: 'json',
+            success: function (data) {
+               if (data.code > 0) {
+                  var str = '<option value=""> </option>';
+                  $.each(data.results, function (k, v) {
+                     var sele = '';
+                     if (next_id == v['dic_name']) { sele = 'selected' }
+                     str += "<option " + sele + " value='" + v['dic_id'] + "'>" + v['dic_name'] + "</option>";
+                  });
+                  $('#fw_modelnumber option').remove();
+                  $('#fw_modelnumber').append(str);
+                  $('#fw_modelnumber').trigger("chosen:updated");
+               } else {
+                  layer.alert(data.message);
+               }
+            },
+            error: function () {
+               layer.alert('出错啦！请联系管理员');
+            }
+         });
+      }
+      $.validator.setDefaults({
+         highlight: function (element) {
+            $(element).parent().remove('has-success').addClass('has-error');
+         },
+         success: function (element) {
+            $(element).parent().remove('has-error').addClass('has-success');
+         },
+         errorPlacement: function (error, element) {
+            if (element.is(":radio") || element.is(":checkbox")) {
+               error.appendTo(element.parent());
+            } else {
+               error.appendTo(element.parent());
+            }
+         },
+         errorClass: "help-block m-b-none",
+         validClass: "help-block m-b-none"
+      });
+      $('#sys_dlg_form1').validate({
+         onclick: false,
+         onfocusout: false,
+         onkeyup: false,
+         // 如果是下拉菜单，这里的require是不生效的，需要自己在submitHandle方法中添加验证
+         rules: {
+            fw_name: 'required'
+         },
+         messages: {
+            fw_name: '请输入名称'
+         }, submitHandler: function () {
+            var fw_status = $('#fw_status').val();
+            if(fw_status == null){
+               layer.alert("使用状态不可为空！");
+               return false;
+            }
+            var formBody = $('#sys_dlg_form1');
+            $.post('__CONTROLLER__/addData', formBody.serialize(), function (data) {
+               if (data.code > 0) {
+                  parent.$('#atpbiztable').bootstrapTable('refresh');
+                  var index = parent.layer.getFrameIndex(window.name);
+                  parent.layer.close(index);
+               } else {
+                  layer.alert(data.message);
+               }
+            }, 'JSON');
+         }
+      });
+   });
+    //如果验证下拉框必填，请使用该方法
+//    function checkSelectForm(objArr, messageArr){
+//        var len = objArr.length;
+//        for(var i=0;i<len;i++){
+//            var obj = objArr[i];
+//            var val = $('#'+obj).val();
+//            if(!val){
+//                layer.msg('请选择'+messageArr[i]);
+//                $('#'+obj).trigger('chosen:open');
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+
+   //ip查重
+   $("#fw_ip").on('blur', function () {
+      var ip = $(this).val();
+      $.ajax({
+         type: 'post',
+         url: '__MODULE__/Sev/getSonip',
+         data: {'sev_ip': ip},
+         dataType: 'json',
+         success:function(rep){
+            if(rep.code > 0){
+               $('#fw_mask').val(rep.message);
+               $('#fw_gateway').val('255.255.255.0');
+            }
+         }
+      })
+
+   });
+
+   $('#oplog').click(function(){
+      var fw_atpid = $('#fw_atpid').val();
+      var fw_ip = $('#fw_ip').val();
+      layer.open({
+         title:'日志查询'+'---'+fw_ip,
+         closeBtn:1,
+         type: 2,
+         shadeClose:false,
+         content: '__MODULE__/Oplog/index?id='+fw_atpid,
+         area: ['95%', '95%']
+      });
+   })
+
+</script>

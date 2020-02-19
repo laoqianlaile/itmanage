@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>修改密码</title>
+    <meta name="keywords" content="修改密码">
+    <meta name="description" content="修改密码">
+
+    <link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLICOLD__/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="__PUBLICOLD__/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/css/style.css?v=4.0.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>修改密码</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t" id="signupForm">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">原密码：</label>
+                            <div class="col-sm-8">
+                                <input id="oldpassword" name="oldpassword" class="form-control" type="password" aria-required="true" aria-invalid="true" class="error">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">新密码：</label>
+                            <div class="col-sm-8">
+                                <input id="password" name="password" class="form-control" type="password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">确认密码：</label>
+                            <div class="col-sm-8">
+                                <input id="confirm_password" name="confirm_password" class="form-control" type="password">
+                                <!--<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请再次输入您的密码</span>-->
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-3">
+                                <!--<button class="btn btn-primary">提交</button>-->
+                                <input  type="submit" class="btn btn-primary" value="提交"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- 全局js -->
+<script src="__PUBLICOLD__/js/jquery1.11.1.js"></script>
+<script src="__PUBLICOLD__/js/bootstrap.min.js?v=3.3.5"></script>
+
+<!-- 自定义js -->
+<!--<script src="__PUBLICOLD__/js/content.js?v=1.0.0"></script>-->
+
+<!-- jQuery Validation plugin javascript-->
+<script src="__PUBLICOLD__/js/plugins/validate/jquery.validate.min.js"></script>
+<script src="__PUBLICOLD__/js/plugins/validate/messages_zh.min.js"></script>
+
+<script>
+    //以下为修改jQuery Validation插件兼容Bootstrap的方法，没有直接写在插件中是为了便于插件升级
+    $.validator.setDefaults({
+        highlight: function (element) {
+            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+        },
+        success: function (element) {
+            element.closest('.form-group').removeClass('has-error').addClass('has-success');
+        },
+        errorElement: "span",
+        errorPlacement: function (error, element) {
+            if (element.is(":radio") || element.is(":checkbox")) {
+                error.appendTo(element.parent().parent().parent());
+            } else {
+                error.appendTo(element.parent());
+            }
+        },
+        errorClass: "help-block m-b-none",
+        validClass: "help-block m-b-none"
+    });
+
+    //以下为官方示例
+    $().ready(function () {
+//        var domain = '{$domain}';
+        var username = '{$username}';
+        var domainusername = 'hq' + '\\' +'{$username}';
+//        var domainusername = '{$domainusername}';
+
+//         validate signup form on keyup and submit
+        var icon = "<i class='fa fa-times-circle'></i> ";
+        $("#signupForm").validate({
+            rules: {
+                oldpassword: {
+                    required: true
+                },
+                password: {
+                    required: true,
+                    minlength: 5
+                },
+                confirm_password: {
+                    required: true,
+                    minlength: 5,
+                    equalTo: "#password"
+                }
+            },
+            messages: {
+                oldpassword: {
+                    required: icon + "请输入您的原密码"
+                },
+                password: {
+                    required: icon + "请输入您的新密码",
+                    minlength: icon + "密码必须5个字符以上"
+                },
+                confirm_password: {
+                    required: icon + "请再次输入密码",
+                    minlength: icon + "密码必须5个字符以上",
+                    equalTo: icon + "两次输入的密码不一致"
+                }
+            },
+
+            submitHandler: function(){
+                $.post('__CONTROLLER__/changepassword', {domainusername: domainusername, oldpwd: $('#oldpassword').val(), newpwd: $('#password').val()}, function(result){
+                    if(result == '0'){
+                        $('#oldpassword').val('');
+                        $('#password').val('');
+                        $('#confirm_password').val('');
+                        alert('密码修改成功');
+                    } else if(result == '-1'){
+                        alert('原密码错误');
+                    } else {
+                        alert('密码修改失败');
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

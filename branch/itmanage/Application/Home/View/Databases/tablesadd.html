@@ -1,0 +1,265 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>数据库表空间添加编辑</title>
+<style>
+    .form-group{
+        margin-top: 26px;
+    }
+    .control-label{
+        width:150px  !important;
+    }
+    .must_filter{
+        color: red;
+    }
+    .form-control{
+        display:inline-block;
+    }
+    .col-sm-3{
+        width:60%  !important;
+    }
+    .chosen-container{
+        top: -1px;
+    }
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .chosen-container{
+        height: 100%;
+    }
+</style>
+<body style="margin: 0 auto;">
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content" style="padding-bottom: 50px;">
+        <div class="panel-body">
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>平台IP  <span class="must_filter">*</span></label>
+                    <div class="col-sm-3">
+                        <select name="ts_inid" id="ts_inid" class="chosen-select" >
+                            <option value=""> </option>
+                            <?php foreach($dbInInfo as $key=>$value){ ?>
+                            <option <?php if($data['ts_inid'] == $value['in_atpid']) echo 'selected'; ?> value="{$value.in_atpid}">{$value.text}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>用户名 <span class="must_filter">*</span></label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" style="width:99%;" name="ts_username" id="ts_username" value="<?php if(!empty($data['ts_username']))echo $data['ts_username']; ?>">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>责任人</label>
+                    <div class="col-sm-3">
+                        <select name="ts_dutyman" id="ts_dutyman" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <option value="{$dutyman.username}" <?php if(!empty($dutyman['username']))echo selected;?>>{$dutyman.name}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>责任班组</label>
+                    <div class="col-sm-3">
+                        <select name="ts_group" id="ts_group" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <foreach name="group" item="v">
+                                <option value="{$v.dic_name}" <?php if($data['ts_group'] == $v['dic_name']){echo selected;}?>>{$v.dic_name}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>使用状态</label>
+                    <div class="col-sm-3">
+                        <select name="ts_status" id="ts_status" class="chosen-select" >
+                            <option value=""></option>
+                            <foreach name="status" item="v">
+                                <option value="{$v.dic_name}" <?php if($data['ts_status'] == $v['dic_name']){echo selected;}?>>{$v.dic_name}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>创建时间</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" style="width:99%;" name="ts_createtime" id="ts_createtime" value="<?php if(!empty($data['ts_createtime']))echo $data['ts_createtime']; ?>" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>停用时间</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" style="width:99%;" name="ts_stoptime" id="ts_stoptime" value="<?php if(!empty($data['ts_stoptime']))echo $data['ts_stoptime']; ?>" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                    </div>
+                </div>
+
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>删除时间</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" style="width:99%;" name="ts_deletetime" id="ts_deletetime" value="<?php if(!empty($data['ts_deletetime']))echo $data['ts_deletetime']; ?>" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>表空间 </label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" style="width:285%;" name="ts_tablespace" id="ts_tablespace" value="<?php if(!empty($data['ts_tablespace']))echo $data['ts_tablespace']; ?>">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>备注 </label>
+                    <div class="col-sm-3">
+                        <textarea name="ts_bz" id="ts_bz" style="height:120px;width: 285%;" class="form-control"><?php if(!empty($data['ts_bz']))echo $data['ts_bz']; ?></textarea>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <input type="hidden" value="<?php if(!empty($data['ts_atpid'])) echo $data['ts_atpid']; ?>" name="ts_atpid">
+        <!--<input type="hidden" value="<?php if(!empty($net_type)) echo $net_type; ?>" name="net_type">-->
+    </div>
+</form>
+<if condition="$Objtype eq null">
+    <div class="modal-footer" style="margin: 0px;text-align:center;z-index: 999;position: fixed;bottom:0;left:0;font-family: cursive; width: 100%;height: 60px;background-color: #fff;">
+        <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="display:inline-block;text-align:center;">保存</button>
+    </div>
+</if>
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function () {
+            layer = layui.layer;
+        })
+        $('#sys_dlg_submit').click(function () {
+            $('#sys_dlg_form1').submit();
+        })
+        var long_select_width = parseInt($('.form-control').eq(0).css('width').replace('px', '')) * 2.75;
+        $('.long-chosen-select').chosen({
+            disable_search_threshold: 0,
+            search_contains: true,
+            width: long_select_width + 'px'
+        });
+
+        var input_width = parseInt($('.form-control').eq(0).css('width').replace('px', ''));
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: input_width + 'px'});
+
+        $('#sys_dlg_form1').validate({
+            onclick: false,
+            onfocusout: false,
+            onkeyup: false,
+            // 如果是下拉菜单，这里的require是不生效的，需要自己在submitHandle方法中添加验证
+            rules: {
+                ts_username: 'required'
+            },
+            messages: {
+                ts_username: '请输入用户名'
+            }, submitHandler: function () {
+                var ts_status = $('#ts_status').val();
+                if(ts_status == ''){
+                    layer.alert("使用状态不可为空！！");
+                    return false;
+                }
+                var formBody = $('#sys_dlg_form1');
+                $.post('__CONTROLLER__/tablesAddData', formBody.serialize(), function (data) {
+                    if (data.code > 0) {
+                        parent.$('#atpbiztable').bootstrapTable('refresh');
+//                        parent.$('#sys_refresh').click();
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        layer.alert(data.message);
+                    }
+                }, 'JSON');
+            }
+        });
+
+        $.validator.setDefaults({
+            highlight: function (element) {
+                $(element).parent().remove('has-success').addClass('has-error');
+            },
+            success: function (element) {
+                $(element).parent().remove('has-error').addClass('has-success');
+            },
+            errorPlacement: function (error, element) {
+                if (element.is(":radio") || element.is(":checkbox")) {
+                    error.appendTo(element.parent());
+                } else {
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass: "help-block m-b-none",
+            validClass: "help-block m-b-none"
+        });
+        //责任人
+        $('#ts_dutyman').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        $('#ts_dutyman').change(function(){
+            var username = $(this).val();
+            $.ajax({
+                type:'post',
+                url:'__MODULE__/ShiXiang/FindId',
+                data:{username:username},
+                dataType:'json',
+                success:function(res){
+                    if(res.code > 0){
+                        var group = "<option value='" + res.message[2] + "'  " + 'selected' + ">" + res.message[2] + "</option>";
+                        $('#ts_group').append(group)
+                        $('#ts_group').trigger("chosen:updated")
+
+                    }else{
+                        alert(res.message)
+                    }
+                }
+            })
+        })
+
+        //如果验证下拉框必填，请使用该方法
+        function checkSelectForm(objArr, messageArr) {
+            var len = objArr.length;
+            for (var i = 0; i < len; i++) {
+                var obj = objArr[i];
+                var val = $('#' + obj).val();
+                if (!val) {
+                    layer.msg('请选择' + messageArr[i]);
+                    $('#' + obj).trigger('chosen:open');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
+    })
+</script>

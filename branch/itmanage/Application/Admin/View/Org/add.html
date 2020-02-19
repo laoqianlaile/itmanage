@@ -1,0 +1,141 @@
+﻿<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<title>部门编辑</title>
+<style>
+    .box{
+        margin: 0 auto;
+        text-align: center;
+    }
+    .panel-body{
+        margin-top: 16px;
+    }
+    .chosen-drop{
+        text-align: left;
+    }
+    .chosen-single span{
+        text-align: left;
+    }
+    .form-group{
+        margin-top: 20px;;
+    }
+
+</style>
+<body>
+<div class="box" style="">
+    <form id="sys_dlg_form" role="form" class="form-horizontal" enctype="multipart/form-data">
+        <div class="tab-content">
+            <div class="panel-body">
+                <div class="form-group" style="margin-top: 3px">
+                    <label class=" control-label">部门类型：</label>
+                    <select id="org_type" class="chosen-select">
+                        <option value="">&nbsp;</option>
+                        <?php foreach($type as $key=>$value){ ?>
+                            <option value="{$value}" <?php if(!empty($data['org_type']) && $data['org_type'] == $value){ echo "selected";}else if($orgType == $value){ echo "selected";}?>>{$value}</option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class=" control-label">父级部门：</label>
+                    <select id="org_pid" class="chosen-select">
+                        <option value="">&nbsp;</option>
+                        <?php foreach($orglist as $key=>$value){ ?>
+                        <option value="{$value.id}" <?php if($data['org_pid'] == $value['id'] || $value['id'] == $deptId){ echo "selected";} ?>>{$value.org_name}</option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class=" control-label">部门简称：</label>
+                    <input id="org_name" type="text" value="{$data.org_name}" style="width:300px;display: inline-block" class="form-control">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 30px">
+                    <label class=" control-label">部门全称：</label>
+                    <input id="org_fullname" type="text" value="{$data.org_fullname}" style="width:300px;display: inline-block" class="form-control">
+                </div>
+                <div class="form-group" style="margin-bottom: 30px">
+                    <label class=" control-label">排序号：</label>
+                    <input id="org_fullnum" type="text" value="{$data.org_fullnum}" style="width:300px;display: inline-block" class="form-control">
+                </div>
+            </div>
+        </div>
+        <input id="id" type="hidden" value="{$data.org_id}" class="form-control">
+    </form>
+    <div class="modal-footer" style="box-sizing: border-box" >
+        <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary">保存</button>
+    </div>
+</div>
+</body>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function () {
+            layer = layui.layer;
+        })
+        $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '300px'});
+        $(".js-switch").each(function () {
+            new Switchery(this, {color: '#1AB394'});
+        });
+        $('#sys_dlg_submit').click(function () {
+            var id = $('#id').val();
+            var org_name = $('#org_name').val();
+            var org_fullname = $('#org_fullname').val();
+            var org_pid = $('#org_pid').val();
+            var org_type = $('#org_type').val();
+            var org_fullnum = $('#org_fullnum').val();
+            if (!org_name) {
+                layer.alert('请输入部门名称');
+                return false;
+            }
+            if (!org_type) {
+                layer.alert('请选择部门类型');
+                return false;
+            }
+            $.ajax({
+                type: 'post',
+                url: '__CONTROLLER__/addOrg',
+                data: {
+                    org_name: org_name,
+                    id: id,
+                    org_fullname: org_fullname,
+                    org_pid: org_pid,
+                    org_type:org_type,
+                    org_fullnum:org_fullnum
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.code > 0) {
+                        layer.alert('操作成功');
+                    } else {
+                        layer.alert(data.message);
+                        return;
+                    }
+                    parent.$('#atpbiztable').bootstrapTable('refresh');
+                    parent.$('#search').click();
+
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                }
+            })
+        });
+
+        $("#org_type").on('change',function(){
+            var org_type = $("#org_type option:selected").val();
+            $.post('__CONTROLLER__/getDeptByOrgType', {org_type: org_type}, function (rep) {
+                var typearr = eval("(" + rep + ")");
+                if (typearr.length > 0) {
+                    $("#org_pid option").remove();
+                    var item = "";
+                    item += "<option value='' selected='selected'></option>";
+                    for (var i = 0; i < typearr.length; i++) {
+                        item += "<option value='" + typearr[i]['id'] + "'>" + typearr[i]['org_name'] + "</option>";
+                    }
+                    $("#org_pid").append(item);
+                }else{
+                    $("#org_pid").children().remove();
+                }
+                $("#org_pid").trigger('chosen:updated');
+            });
+        });
+    });
+</script>

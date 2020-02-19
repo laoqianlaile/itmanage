@@ -1,0 +1,87 @@
+﻿<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<title>字典编辑</title>
+<style>
+    .form-group{
+        margin-top: 26px;
+    }
+</style>
+<body style="margin: 0 auto;text-align: center">
+<form id="sys_dlg_form" role="form" class="form-horizontal" enctype="multipart/form-data">
+        <div class="tab-content" >
+            <div class="panel-body">
+                    <div class="form-group" style="margin-top: 6px">
+                        <label class=" control-label">地区：</label>
+                        <select id="dic_type" class="chosen-select" >
+                            <option value="">&nbsp;</option>
+                            <?php foreach($diQu as $key=>$value){ ?>
+                            <option value="{$value.dic_id}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class=" control-label">楼宇名称：</label>
+                        <input id="dic_name" type="text"  value="{$data.dic_name}" style="width:300px;display: inline-block" class="form-control">
+                    </div>
+                    <!-- <div class="form-group">
+                        <label class="control-label">字典值：</label>
+                        <input id="dic_value" class="form-control" style="width:300px;display: inline-block"  value="{$data.dic_value}">
+                    </div> -->
+                    <div class="form-group">
+                        <label class="control-label">排序号：</label>
+                        <input id="dic_order" class="form-control" style="width:300px;display: inline-block"  value="{$data.dic_order}">
+                    </div>
+                 </div>
+        </div>
+        <input id="id" type="hidden" value="{$data.dic_id}" class="form-control">
+    </form>
+<div class="modal-footer" style="margin-top: 30px">
+    <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="margin-right: 20px;">保存</button>
+</div>
+</body>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script>
+$(function () {
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '300px'});
+    $('#sys_dlg_submit').click(function(){
+        var id = $('#id').val();
+        var dic_name = $('#dic_name').val();
+        var pid = $('#dic_type').val();
+        var dic_value = $('#dic_value').val();
+        var dic_order = $('#dic_order').val();
+        if(!dic_name){
+            layer.alert('请输入字典项名称');
+            return false;
+        }
+        if(!pid){
+            layer.alert('请输入字典类型');
+            return false;
+        }
+        if(isNaN(dic_order)){
+            layer.alert('排序号必须为数字');
+            return false;
+        }
+
+        $.ajax({
+            type:'post',
+            url:'__CONTROLLER__/addDictionaryLouYu',
+            data:{dic_name:dic_name,pid:pid,dic_value:dic_value,id:id,dic_order:dic_order},
+            dataType :'json',
+            success:function(data){
+                if(data.code > 0){
+                    layer.alert('操作成功');
+                    parent.$('#atpbiztable').bootstrapTable('refresh');
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                }else{
+                    layer.alert(data.message);
+                }
+            }
+        })
+    })
+});
+</script>

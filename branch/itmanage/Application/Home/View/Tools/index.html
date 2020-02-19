@@ -1,0 +1,533 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<style>
+    th{
+        text-align: center;
+    }
+    .form-control{
+        display: inline-block;
+    }
+    .wrapper-content{
+        padding-bottom: 0;
+        padding-top: 0;
+    }
+
+    .control-label{
+        width: 30%;
+        float: left;
+        text-align:center;
+        line-height: 30px;
+    }
+    .chosen-container{
+        top: -1px;
+    }
+    .form-group{
+        display: inline-block;
+        width: 23%;
+        margin-top: -7px;
+    }
+    .formEl-div{
+        float: left;
+    }
+    ._box {
+        height:25px;
+        margin: 15px 0px 0px !important;
+    }
+    .fixed-table-container{
+        padding-bottom: 0px !important;
+    }
+    table{
+        table-layout: fixed;
+        word-break: break-all;
+    }
+    .formEl-div{
+        width:70%
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content ">
+    <div class="row">
+        <div class="col-sm-12" id='search_div'>
+            <div class="_box">
+                <div class="form-group">
+                    <label class="control-label" >工具名称</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="tl_name" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >所属班组</label>
+                    <div class="formEl-div" >
+                        <select id="tl_group" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <foreach name="group" item="v">
+                                <option value="{$v.dic_name}">{$v.dic_name}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >管理员A岗</label>
+                    <div class="formEl-div" >
+                        <select id="tl_admina" class="chosen-select" >
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >管理员B岗</label>
+                    <div class="formEl-div" >
+                        <select id="tl_adminb" class="chosen-select" >
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <div class="_box  box-show" style="margin-top: 4px;">
+
+                <div class="form-group">
+                    <label class="control-label" >许可责任人</label>
+                    <div class="formEl-div" >
+                        <select id="tl_dutyman" class="chosen-select" >
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >责任部门</label>
+                    <div class="formEl-div" >
+                        <select id="tl_dutydept" class="chosen-select" >
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" >搜索关键词</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="tl_keyword" >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" >简称</label>
+                    <div class="formEl-div" >
+                        <input type="text" class="form-control" style="width:99%;"  id="tl_shortname" >
+                    </div>
+                </div>
+            </div>
+                <div class="_box  box-show" style="margin-top: 4px;">
+
+                <div class="form-group">
+                    <label class="control-label" >关联事项</label>
+                    <div class="formEl-div" >
+                        <select id="tl_sx" class="chosen-select" >
+                            <option value="">请选择</option>
+                            <option value="1">是</option>
+                            <option value="2">否</option>
+                        </select>
+                    </div>
+                </div>
+                    <div class="form-group">
+                        <label class="control-label" >是否巡检</label>
+                        <div class="formEl-div" >
+
+                            <select id="tl_ischeck" class="chosen-select" >
+                                <option value="">请选择</option>
+                                <option value="是">是</option>
+                                <option value="否">否</option>
+                            </select>
+                        </div>
+                    </div>
+            </div>
+            <div class="_box">
+                <button class="btn btn-info" style="background-color: #4EA3EC;border-color: #4EA3EC;" type="button" id="sys_refresh">查询</button>
+                <button class="btn btn-info" style="background-color: #1AB394;border-color:  #1AB394;" type="button" id="sys_reset">重置</button>
+                <a class="btn btn-info " style="margin-left: 10px;background-color: yellowgreen;border-color: yellowgreen;" type="button" id="sys_add" >新增</a>
+                <button class="btn btn-warning" style="margin-left: 10px;" type="button" data-head="工具名称,简称,版本,搜索关键词,建设途径,立项级别,下载地址,上线时间,用户范围,使用状态,管理员A岗,管理员B岗,所属班组,责任人,责任部门,开发单位,运行环境,功能简介,备注,技术平台,开发平台,开发语言,备注" data-extraparam="" data-remark="支持从Excel批量拷贝粘贴" id="sys_batchadd" data-method="Home/Tools/saveCopyTables">批量增加</button>
+                <button class="btn btn-info" style="margin-left: 10px;background-color: cadetblue;border-color: cadetblue;" type="button" id="sys_del">删除</button>
+                <button class="btn btn-info" style="margin-left: 10px;" type="button" id="sys_exp">导出</button>
+                <button class="btn btn-info" style="margin-left: 10px;" type="button" id="show">收起/展开</button>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <table id="atpbiztable" ></table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="loading" role="dialog" data-backdrop='static'>
+    <div class="modal-dialog" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">处理中</h4>
+            </div>
+            <div class="modal-body">
+                <img src="__PUBLIC__/img/loading/loading9.gif" style='display: block;margin: 0 auto'>
+                <div id="loadingText" style="text-align: center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="sort" >
+<input type="hidden" id="sortOrder" >
+<script src="__PUBLIC__/js/tablecopy.js"></script>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script>
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+
+    var formEl_div_width = parseInt($('.formEl-div').eq(0).width());
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: formEl_div_width+"px"});
+
+    //管理员A岗
+    $('#tl_admina').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url:'__MODULE__/org/assignuser'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+    //管理员B岗
+    $('#tl_adminb').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url:'__MODULE__/org/assignuser'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+    //责任人
+    $('#tl_dutyman').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url:'__MODULE__/org/assignuser'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+
+    //责任部门
+    $('#tl_dutydept').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url: '__MODULE__/org/assigndept'
+    }, {
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+    fixed();
+    function fixed(){
+        var h  = $(window).height() - 145;
+        $('table').attr('data-height',h);
+    }
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getData',      //请求后台的URL（*）
+                method: 'post',                     //请求方式（*）
+                toolbar: '#atpbiztoolbar',          //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName: "tl_atpid",
+                sortOrder: "desc",                  //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页
+                pageSize: 15,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                uniqueId: "tl_atpid",              //每一行的唯一标识，一般为主键列
+                detailView: true,                   //是否显示父子表
+                detailFormatter: "showDataView",
+                    columns: [
+                [
+                    {checkbox: true},
+                    {
+                        field: 'tl_atpid',title: '操作', sortable: false,width: 100,
+                        formatter: function (value, row, index) {
+                            var inp = "'" + value + "'";
+                            return '<a  class="btn btn-info btn-xs"  style="margin:0" onclick="updateInRow(' + inp + ')">编辑</a>&nbsp;<a  class="btn btn-info btn-xs" onclick="deleteInRow(' + inp + ')" style="margin:0;background: #AB154D;border-color: #AB154D;">删除</a>';
+                        }
+                    },
+                    {
+                        title: '序号', width: 60,
+                        formatter: function (value, row, index) {
+                            var option = $('#atpbiztable').bootstrapTable('getOptions');
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+
+                    },
+                    {field: 'tlCount', title: '关联事项', sortable: true, width: 85,
+                        formatter: function (value, row, index) {
+                            var inp = "'" + row.tl_atpid + "'";
+                            var name = "'" + row.tl_name + "'";
+                            return '<a  style="margin:0" onclick="shiXiang(' + inp + ','+ name +')">'+value+'</a>'
+                        }
+                    },
+                    {field: 'xjCount', title: '巡检项', sortable: true, width: 85,
+                        formatter: function (value, row, index) {
+                            var inp = "'" + row.tl_atpid + "'";
+                            var name = "'" + row.tl_name + "'";
+                            return '<a  style="margin:0" onclick="XunJian(' + inp + ','+ name +')">'+value+'</a>'
+                        }
+                    },
+                    {field: 'tl_name', title: '工具软件', sortable: true, width: 90},
+                    {field: 'tl_shortname', title: '简称', sortable: true, width: 90},
+                    {field: 'tl_keyword', title: '搜索关键词', sortable: true, width: 90},
+                    {field: 'tl_admina', title: '管理员A岗', sortable: true, width: 90},
+                    {field: 'tl_adminb', title: '管理员B岗' ,sortable: true, width: 90},
+                    {field: 'tl_group', title: '所属班组', sortable: true, width: 90},
+                    {field: 'tl_ischeck', title: '是否巡检', sortable: true, width: 90},
+                    {field: 'tl_dutyman', title: '责任人' ,sortable: true, width: 90},
+                    {field: 'tl_dutydept', title: '责任部门', sortable: true, width: 90},
+                    ]
+                ],
+                onDblClickRow: function (row) {
+                    updateInRow(row['tl_atpid']);
+                }
+            });
+        }
+    };
+    TableObj.oTableInit()
+    function queryParams(params) {  //配置参数
+        $('#sort').val(params.sort);
+        $('#sortOrder').val(params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            tl_name:$('#tl_name').val(),
+            tl_shortname:$('#tl_shortname').val(),
+            tl_version:$('#tl_version').val(),
+            tl_keyword:$('#tl_keyword').val(),
+            tl_purchase:$('#tl_purchase').val(),
+            tl_projectlevel:$('#tl_projectlevel').val(),
+            tl_url:$('#tl_url').val(),
+            tl_onlinetime:$('#tl_onlinetime ').val(),
+            tl_userrange:$('#tl_userrange').val(),
+            tl_status:$('#tl_status option:selected').val(),
+            tl_admina:$('#tl_admina option:selected').val(),
+            tl_adminb:$('#tl_adminb option:selected').val(),
+            tl_sx:$('#tl_sx').val(),
+            tl_group:$('#tl_group').val(),
+            tl_dutyman:$('#tl_dutyman option:selected').val(),
+            tl_dutydept:$('#tl_dutydept ').val(),
+            tl_develop:$('#tl_develop').val(),
+            tl_environment:$('#tl_environment').val(),
+            tl_function:$('#tl_function').val(),
+            tl_remark:$('#tl_remark').val(),
+            tl_plats:$('#tl_plats ').val(),
+            tl_platd:$('#tl_platd').val(),
+            tl_language:$('#tl_language').val(),
+            tl_ischeck:$('#tl_ischeck').val()
+        };
+        return temp;
+    }
+
+    function showDataView(index, row){
+        //tl_name,tl_shortname,tl_version,tl_keyword,tl_purchase,tl_projectlevel,tl_url,tl_onlinetime,tl_userrange,tl_status,tl_admina,tl_adminb,tl_group,tl_dutyman,tl_dutydept,tl_develop,tl_environment,tl_function,tl_remark,tl_plats,tl_platd,tl_language';
+        //工具名称','简称','版本','搜索关键词','建设途径','立项级别','下载地址','上线时间','用户范围','使用状态','管理员A岗','管理员B岗','所属班组','责任人','责任部门','开发单位','运行环境','功能简介','备注','技术平台','开发平台','开发语言
+        var html = [];
+        html.push("<div class='ibox-content'>");
+        html.push("<table class='table'>");
+        html.push("<tbody>");
+        html.push("<tr><td><b>版本</b></td><td>" + row['tl_version'] + "</td><td><b>建设途径</b></td><td>" + row['tl_purchase'] + "</td><td><b>立项级别</b></td><td>" + row['tl_projectlevel'] + "</td><td><b>下载地址</b></td><td>" + row['tl_url'] + "</td></tr>");
+        html.push("<tr><td><b>上线时间</b></td><td>" + row['tl_onlinetime'] + "</td><td><b>用户范围</b></td><td>" + row['tl_userrange'] + "</td><td><b>使用状态</b></td><td>" + row['tl_status'] + "</td><td><b>开发单位</b></td><td>" + row['tl_develop'] + "</td></tr>");
+        html.push("<tr><td><b>备注</b></td><td>" + row['tl_remark'] + "</td><td><b>技术平台</b></td><td>" + row['tl_plats'] + "</td><td><b>运行环境</b></td><td>" + row['tl_environment'] + "</td><td><b>功能简介</b></td><td>" + row['tl_function'] + "</td></tr>");
+        html.push("<tr><td><b>开发平台</b></td><td>" + row['tl_platd'] + "</td><td><b>开发语言</b></td><td>" + row['tl_language'] + "</td></tr>");
+        html.push("</tbody>");
+        html.push("</table>");
+        html.push("</div>");
+        return html.join('').replace(/null/g, "").replace(/undefined/g, "");
+    }
+
+    //查询按钮
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+
+    //添加按钮
+    $('#sys_add').on('click',function() {
+        updateInRow('');
+    });
+    //查询行隐藏
+    $('.box-show').hide();
+    $("#show").click(function(){
+        $('.box-show').fadeToggle();// 透明度变化 淡入淡出
+    });
+
+    $('#sys_del').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            layer.alert("您尚未选择数据");
+        } else {
+            var ids = [];
+            $.each(tablerow, function () {
+                ids.push(this['tl_atpid']);
+            });
+            deleteInRow(ids.join(','));
+        }
+    });
+    //数据编辑触发该方法
+    function updateInRow(id) {
+        layer.open({
+            title:'数据编辑',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/add?tl_atpid='+id,
+            area: ['80%', '90%']
+        });
+    }
+    //数据删除触发该方法
+    function deleteInRow(id){
+        layer.confirm('确认删除选中数据?',
+                {btn:['确定','取消']},
+                function(){
+                    $.ajax({
+                        type:'post',
+                        url:'__CONTROLLER__/isGldel',
+                        data:{zy_id: id},
+                        dataType :'json',
+                        success:function(data){
+                            if(data.code > 0){
+                                layer.confirm('存在关联关系，是否继续删除?',
+                                        {btn:['确定','取消']},
+                                        function() {
+                                            $.ajax({
+                                                type: 'post',
+                                                url: '__CONTROLLER__/delData',
+                                                data: {tl_atpid: id},
+                                                dataType: 'json',
+                                                success: function (data) {
+                                                    if (data.code > 0) {
+                                                        layer.msg('操作成功');
+                                                        $('#sys_refresh').click();
+                                                    } else {
+                                                        layer.alert(data.message);
+                                                    }
+                                                }, error: function () {
+                                                    layer.alert('出错啦！请稍后再试');
+                                                }
+                                            })
+                                        })
+                            }else{
+                                $.ajax({
+                                    type: 'post',
+                                    url: '__CONTROLLER__/delData',
+                                    data: {tl_atpid: id},
+                                    dataType: 'json',
+                                    success: function (data) {
+                                        if (data.code > 0) {
+                                            layer.msg('操作成功');
+                                            $('#sys_refresh').click();
+                                        } else {
+                                            layer.alert(data.message);
+                                        }
+                                    }, error: function () {
+                                        layer.alert('出错啦！请稍后再试');
+                                    }
+                                })
+                            }
+                        },error:function(){
+                            layer.alert('出错啦！请稍后再试');
+                        }
+                    })
+                })
+    }
+   //重置
+    $('#sys_reset').click(function(){
+        $('.form-control').val('');
+        $('.chosen-select').val('');
+        $('.chosen-select').trigger("chosen:updated");
+        $('#sys_refresh').click()
+    })
+    //导出
+    $('#sys_exp').click(function(){
+        $('#loading').modal('show');
+        var sort=$('#sort').val();
+        var sortOrder=$('#sortOrder').val();
+        var t = "__CONTROLLER__/getDataWithExport";
+        t = encodeURI(t);
+        $.ajax({
+            type:'post',
+            url: t,
+            dataType:'json',
+            data:{
+                sort:sort,
+                sortOrder:sortOrder,
+                tl_name:$('#tl_name').val(),
+                tl_shortname:$('#tl_shortname').val(),
+                tl_version:$('#tl_version').val(),
+                tl_keyword:$('#tl_keyword').val(),
+                tl_purchase:$('#tl_purchase').val(),
+                tl_projectlevel:$('#tl_projectlevel').val(),
+                tl_url:$('#tl_url').val(),
+                tl_onlinetime:$('#tl_onlinetime ').val(),
+                tl_userrange:$('#tl_userrange').val(),
+                tl_status:$('#tl_status').val(),
+                tl_admina:$('#tl_admina').val(),
+                tl_adminb:$('#tl_adminb').val(),
+                tl_group:$('#tl_group').val(),
+                tl_dutyman:$('#tl_dutyman').val(),
+                tl_dutydept:$('#tl_dutydept').val(),
+                tl_develop:$('#tl_develop').val(),
+                tl_environment:$('#tl_environment').val(),
+                tl_function:$('#tl_function').val(),
+                tl_remark:$('#tl_remark').val(),
+                tl_plats:$('#tl_plats').val(),
+                tl_platd:$('#tl_platd').val(),
+                tl_language:$('#tl_language').val()
+            },
+            success:function(data){
+                $('#loading').modal('hide');
+                if(data.code > 0){
+                    location.href = data.message;
+                }else{
+                    layer.msg(data.message);
+                }
+            },error:function(){
+                $('#loading').modal('hide');
+                layer.alert('出错了！请联系管理员！');
+            }
+        })
+    })
+
+    function shiXiang(id,name){
+        layer.open({
+            title:'事项查看编辑'+'---'+name,
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            cancel:function(){$('#atpbiztable').bootstrapTable('refresh');},
+            content: '__MODULE__/ShiXiang/table?id='+id+'&objType='+'工具软件',
+            area: ['95%', '95%']
+        });
+    }
+    function XunJian(id,name){
+        layer.open({
+            title:'巡检项查看编辑'+'---'+name,
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            cancel:function(){$('#atpbiztable').bootstrapTable('refresh');},
+            content: '__MODULE__/Checkup/addCheck?atpid='+id,
+            area: ['95%', '95%']
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+﻿<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<title>文件信息修改</title>
+<style>
+    .form-group{
+        margin-top: 26px;
+    }
+</style>
+<body style="margin: 0 auto;text-align: center;overflow: hidden">
+<?php $isdomainType= false; ?>
+<form id="sys_dlg_form" role="form" class="form-horizontal" enctype="multipart/form-data">
+        <div class="tab-content" >
+            <div class="panel-body">
+                    <div class="form-group">
+                        <label class=" control-label">文件名称：</label>
+                        <input id="f_name" type="text"  value="{$data.f_name}" style="width:350px;display: inline-block" class="form-control">
+                    </div>
+
+                 </div>
+        </div>
+        <input id="f_id" type="hidden" value="{$id}" class="form-control">
+    </form>
+<div class="modal-footer" style="margin-top: 30px">
+    <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="margin-right: 20px;">保存</button>
+</div>
+</body>
+<script>
+$(function () {
+    layui.use('layer', function() {
+        layer = layui.layer;
+    });
+    $('#sys_dlg_submit').click(function(){
+        var f_id = $('#f_id').val();
+        var f_name = $('#f_name').val();
+
+        if(!f_name){
+            layer.alert('请输入文件名称');
+            return false;
+        }
+
+        $.ajax({
+            type:'post',
+            url:'__CONTROLLER__/editFile',
+            data:{f_name:f_name,f_id:f_id},
+            dataType :'json',
+            success:function(data){
+                if(data.code > 0){
+                    layer.alert('操作成功');
+                    parent.$('#atpbiztable').bootstrapTable('refresh');
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                }else{
+                    layer.alert(data.message);
+                }
+            }
+        })
+    })
+});
+</script>

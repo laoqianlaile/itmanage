@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>交换机扫描结果-运维资产差异数据表</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+    <link rel="stylesheet" href="__PUBLICOLD__/bgadmin/plugins/layui/css/layui.css" media="all"/>
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+     
+    <style>
+        .table{max-width: none;}
+        .pull-left{width:100%;}
+        #atpbiztoolbar{width:100%;}
+        #dic_name{width: 20%;float: left;margin-right: 5px;}
+        .tt{ font-size: 21px; font-weight:bold; padding-left:40px;color:;margin:0px;width:100%;padding-top:0px;}
+        .form-control{
+            margin-bottom: -5px;width:60%;
+            display:inline;
+        }
+        #tips{
+            width:98%;
+            float:left;
+            line-height: 22px;
+            padding: 0.5% 2%;
+            margin: -25px 1% 10px 1%;
+            color: #0C0C86;
+            background-color: #E6E3E3;
+        }
+         .bootstrap-table .table:not(.table-condensed) > tbody > tr > td{
+            padding:4px;
+         }
+        label{
+            float:left;width:32%;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight" style="padding-bottom:0px;padding-top:10px;">
+    <div class="ibox float-e-margins" style="margin-bottom:0px">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <p class="tt">交换机扫描结果-运维资产差异数据表<span style="font-size:18px; font-weight:normal;">(运维4.0系统数据与交换机扫描数据比对差异)</span></p>
+                    <div id="atpbiztoolbar" style="padding-left:20px;margin-top:25px;">
+                         <div id="tips">
+                        &emsp;<b>使用说明：</b><br/>
+ 1、同一MAC地址，在交换机扫描结果中唯一存在，在运维系统中无记录或IP信息不匹配，则差异表中以红色标识整条数据或对应数据字段；<br/>
+ 2、同一MAC地址，在交换机扫描结果中不唯一，则差异表中以蓝色标识所有重复数据；<br/>
+ 3、同一MAC地址，交换机扫描结果中不存在，在运维系统中存在，则差异表中以绿色标识整条数据。<br/>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label>交换机IP&nbsp;</label>
+                            <input id="switchip" type="text" class="form-control" />
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label>终端IP&nbsp;</label>
+                            <input id="ipaddress" type="text" class="form-control" />
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label >终端MAC&nbsp;</label>
+                            <input  id="macaddress" type="text" class="form-control" style="" />
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label >VLAN号&nbsp;</label>
+                            <input  id="vlanno" type="text" class="form-control" style=""/>
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label >结果类型&nbsp;</label>
+                            <input  id="age" type="text" class="form-control" style="" />
+                        </div>
+                        <div style="float:right;width:25%;margin-right: 68px;text-align: right">
+                            <button class="btn btn-danger " type="button" id="sys_tijiao"><i class="fa fa-pencil-square"></i>&nbsp;查询</button>
+                            <button class="btn btn-info " type="button" id="sys_del"><i class="fa fa-rotate-right"></i>&nbsp;重置</button>
+                            <!--<button class="btn btn-info " style="background-color: #9bc63e;border:#9bc63e 1px solid;" type="button" id="sys_export"><i class="fa fa-sign-out"></i>&nbsp;导出</button>-->
+                        </div>
+                       
+                    </div>
+                    <table id="atpbiztable" ></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input id="sortfield" value="" type="hidden"/>
+<input id="sortorder" value="" type="hidden"/>
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<script type="text/javascript" src="__PUBLICOLD__/bgadmin/plugins/layui/layui.js"></script>
+<script>
+    layui.use('layer', function() {
+        layer = layui.layer;
+    });
+    $(function () {
+        $(".chosen-select_longajax").chosen({disable_search_threshold: 0, search_contains: true});//,width:'56%',hight:'80px'
+        var TableObj = {
+            oTableInit: function () {
+                $('#atpbiztable').bootstrapTable({
+                    url: '__CONTROLLER__/ywscanData',
+                    method: 'post',             
+                    toolbar: '#atpbiztoolbar',   
+                    striped: true, 
+                    cache: false, 
+                    pagination: false,
+                    iconSize: 'outline',
+                    sortable: true,
+                    sortName: "st_macaddress",
+                    sortOrder: "asc",
+                    queryParams: queryParams,
+                    sidePagination: "server",
+                    height:690,
+                    pageNumber: 1,
+                    pageSize: 10, 
+                    pageList: [5, 10, 25, 50, 100], 
+                    search: false,    
+                    showColumns: false, 
+                    showRefresh: false,
+                    minimumCountColumns: 2,
+                    clickToSelect: false, 
+                    uniqueId: "macaddress",
+                    detailView: false,
+                    detailFormatter: "detailFormatter",
+                    rowStyle: function (row, index) {
+                        var diffSign = row['diffSign'];
+                        var    style = '';
+                        if(diffSign != null && diffSign != '' && typeof(diffSign) != 'undefined'){
+                            style = diffSign;
+                        }
+                        return {classes:style};
+                    },
+                    columns: [
+                        [
+                            {
+                                title: '序号', width: 40,
+                                formatter: function (value, row, index) {
+                                    var option = $('#atpbiztable').bootstrapTable("getOptions");
+                                    return option.pageSize * (option.pageNumber - 1) + index + 1;
+                                }
+                            },
+                            {field: 'st_switchip', title: '交换机IP', sortable: true,width:40},
+                            {field: 'st_ipaddress', title: '终端IP', sortable: true,width:60,cellStyle:function(value,row,index,field){
+                                var    style = '';
+                                var diffSign = row['diffSign'];
+                                if(diffSign == null || diffSign == '' || typeof(diffSign) == 'undefined'){
+                                    var diffSigns = row['diffSigns'];
+                                    if(jQuery.inArray(field,diffSigns) != '-1'){
+                                        style = 'danger';
+                                    }
+                                }
+                                return {classes:style};
+                            }},
+                            {field: 'st_macaddress', title: '终端MAC', sortable: true,width:40},
+                            {field: 'st_vlan', title: 'VLAN号', sortable: true,width:150},
+                            {field: 'st_atpcreatetime', title: '时间', sortable: true,width:140},
+                            {field: 'st_switchtype', title: '厂家', sortable: true,width:80,cellStyle:function(value,row,index,field){
+                                var    style = '';
+                                var diffSign = row['diffSign'];
+                                if(diffSign == null || diffSign == '' || typeof(diffSign) == 'undefined'){
+                                    var diffSigns = row['diffSigns'];
+                                    if(jQuery.inArray(field,diffSigns) != '-1'){
+                                        style = 'danger';
+                                    }
+                                }
+                                return {classes:style};
+                            }},
+                            {field: 'st_macaddress', title: '操作', sortable: true,width:60,formatter:function(value,row){
+                                var inp = "'" + value + "'";
+                                var diffSign = row['diffSign'];
+                                if(diffSign == 'danger') return '';
+                                var a = '<a class="btn btn-info btn-xs" style="display:inline-block" onclick="tmnInRow(' + inp + ')">查看资产信息</a>';
+                                return a;
+                            }},
+                            {field: 'st_age', title: '结果类型', sortable: true,width:140},
+                        ]
+                    ],
+                    onLoadSuccess: function (data) {
+                        var total = data.total;
+                        if(total == -1){
+                            $('.no-records-found').html('<td colspan="10">暂无扫描数据，请核查扫描结果</td>');
+                        }
+                        return false;
+                    }
+                });
+            }
+        };
+        TableObj.oTableInit();
+
+        $('#sys_tijiao').on('click',function() {
+            $('#atpbiztable').bootstrapTable('destroy');
+            TableObj.oTableInit();
+        });
+    });
+    function queryParams(params) {  //配置参数
+        $("#sortfield").attr("value",params.sort);
+        $("#sortorder").attr("value",params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            macaddress: $('#macaddress').val(),
+            switchip: $('#switchip').val(),
+            vlanno: $('#vlanno').val(),
+            ipaddress: $('#ipaddress').val(),
+            age: $('#age').val()
+        };
+        return temp;
+    }
+
+    function detailFormatter(value, row) {
+        var html = [];
+        html.push("<div class='ibox-content'>");
+        html.push("<table class='table'>");
+        html.push("<tbody>");
+        var diffSign = row['diffSign'];
+        if(diffSign == null || diffSign == '' || typeof(diffSign) == 'undefined'){
+            var diffSigns = row['diffSigns'];
+            html.push("<tr>");
+            if(jQuery.inArray('jharea',diffSigns) != '-1'){
+                html.push("<td><b>地区</b></td><td class='danger'>" + row['jharea'] + "</td>");
+            }else{
+                html.push("<td><b>地区</b></td><td>" + row['jharea'] + "</td>");
+            }
+            if(jQuery.inArray('buildingname',diffSigns) != '-1'){
+                html.push("<td><b>楼宇</b></td><td class='danger'>" + row['buildingname'] + "</td>");
+            }else{
+                html.push("<td><b>楼宇</b></td><td>" + row['buildingname'] + "</td>");
+            }
+            if(jQuery.inArray('roomno',diffSigns) != '-1'){
+                html.push("<td><b>房间号</b></td><td class='danger'>" + row['roomno'] + "</td>");
+            }else{
+                html.push("<td><b>房间号</b></td><td>" + row['roomno'] + "</td>");
+            }
+        }else{
+            html.push("<tr><td><b>地区</b></td><td>" + row['jharea'] + "</td><td><b>楼宇</b></td><td>" + row['buildingname'] + "</td><td><b>房间号</b></td><td>" + row['roomno'] + "</td></tr>");
+        }
+        html.push("</tbody>");
+        html.push("</table>");
+        html.push("</div>");
+        return html.join('').replace(/null/g, "").replace(/undefined/g, "");
+    }
+
+    $('#sys_del').on('click',function(){
+        $('#switchip').val("");
+        $('#ipaddress').val("");
+        $('#macaddress').val("");
+        $('#vlanno').val("");
+        $('#age').val("");
+    });
+
+    function tmnInRow(mac){
+        layer.open({
+            title: '查看资产信息',
+            type: 2,
+            content: '__MODULE__/Terminal/index?mac='+mac,
+            closeBtn:1,
+            shadeClose:true,
+            area: ['90%', '90%']
+        });
+    }
+</script>
+</body>
+
+</html>
+
+
+
+

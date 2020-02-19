@@ -1,0 +1,458 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+    <link rel="stylesheet" href="__PUBLICOLD__/vendor/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+
+     
+    <style>
+
+        .table
+        {
+            max-width: none;;
+        }
+
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-2">
+                    <ul id="treeDemo" class="ztree"></ul>
+                </div>
+                <div class="col-sm-10">
+                    <div id="atpbiztoolbar">
+                        <a class="btn btn-success " type="button" href="__PUBLICOLD__/vendor/zTree_v3/demo/cn" target="_blank"><i class="fa fa-eraser"></i>&nbsp;点击查询树操作&nbsp;DEMO</a>
+                        <button class="btn btn-success " type="button" id="sys_search"><i class="fa fa-search"></i>&nbsp;高级搜索</button>
+                        <button class="btn btn-info " type="button" id="sys_add"><i class="fa fa-pencil"></i>&nbsp;添加</button>
+                        <button class="btn btn-warning " type="button" id="sys_update"><i class="fa fa-pencil-square"></i>&nbsp;编辑</button>
+                        <button class="btn btn-danger " type="button" id="sys_del"><i class="fa fa-eraser"></i>&nbsp;删除</button>
+                    </div>
+                    <table id="atpbiztable" ></table>
+                    <!--<table id="atpbiztable" style="width: 1200px;"></table>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+
+<div id="sys_dlg_search" role="dialog" class="modal fade ">
+    <div class="modal-dialog" style="width: 1000px;z-index: 10;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" class="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">数据搜索</h4>
+            </div>
+            <div class="modal-body">
+                <form id="sys_dlg_search_form" role="form" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">账号：</label><div class="col-sm-4"><input id="search_u_account" type="text" class="form-control"></div>
+                        <label class="col-sm-2 control-label">姓名：</label><div class="col-sm-4"><input id="search_u_name" type="text" class="form-control"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">生日开始：</label>
+                        <div class="col-sm-4">
+                            <input id="search_u_birthday_begin" type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                        </div>
+                        <label class="col-sm-2 control-label">生日结束：</label>
+                        <div class="col-sm-4">
+                            <input id="search_u_birthday_end" type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">角色：</label>
+                        <div class="col-sm-4">
+                            <select id="search_u_role" class="chosen-select2" style="width: 294px;" >
+                                <option value="">&nbsp;</option>
+                                <option value="管理员" >管理员</option>
+                                <option value="安全员" >安全员</option>
+                                <option value="审计员1">审计员1</option>
+                                <option value="审计员2">审计员2</option>
+                                <option value="审计员3">审计员3</option>
+                                <option value="审计员4">审计员4</option>
+                                <option value="审计员5">审计员5</option>
+                                <option value="审计员6">审计员6</option>
+                                <option value="审计员7">审计员7</option>
+                                <option value="审计员8">审计员8</option>
+                                <option value="审计员9">审计员9</option>
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label"></label><div class="col-sm-4"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-default">关闭</button>
+                <button type="button" data-dismiss="modal" id="sys_dlg_search_submit" class="btn btn-primary">搜索</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade in" style="z-index: -101;"></div>
+</div>
+
+
+
+
+<script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+<script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+<script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+<script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+<script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+<script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+<script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+<script type="text/javascript" src="__PUBLICOLD__/vendor/zTree_v3/js/jquery.ztree.core.js"></script>
+
+<script>
+    var setting = {	};
+    var zNodes =[
+        { name:"父节点1 - 展开", open:true,
+            children: [
+                { name:"父节点11 - 折叠",
+                    children: [
+                        { name:"叶子节点111"},
+                        { name:"叶子节点112"},
+                        { name:"叶子节点113"},
+                        { name:"叶子节点114"}
+                    ]},
+                { name:"父节点12 - 折叠",
+                    children: [
+                        { name:"叶子节点121"},
+                        { name:"叶子节点122"},
+                        { name:"叶子节点123"},
+                        { name:"叶子节点124"}
+                    ]},
+                { name:"父节点13 - 没有子节点", isParent:true}
+            ]},
+        { name:"父节点2 - 折叠",
+            children: [
+                { name:"父节点21 - 展开", open:true,
+                    children: [
+                        { name:"叶子节点211"},
+                        { name:"叶子节点212"},
+                        { name:"叶子节点213"},
+                        { name:"叶子节点214"}
+                    ]},
+                { name:"父节点22 - 折叠",
+                    children: [
+                        { name:"叶子节点221"},
+                        { name:"叶子节点222"},
+                        { name:"叶子节点223"},
+                        { name:"叶子节点224"}
+                    ]},
+                { name:"父节点23 - 折叠",
+                    children: [
+                        { name:"叶子节点231"},
+                        { name:"叶子节点232"},
+                        { name:"叶子节点233"},
+                        { name:"叶子节点234"}
+                    ]}
+            ]},
+        { name:"父节点3 - 没有子节点", isParent:true}
+
+    ];
+    $(document).ready(function(){
+        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        zTree.expandAll(true);
+    });
+
+
+
+
+
+
+    $(function () {
+        $('#atpbiztable').bootstrapTable({
+            url: '__CONTROLLER__/getData',         //请求后台的URL（*）
+            method: 'post',                      //请求方式（*）
+            toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            iconSize: 'outline',
+            sortable: true,                     //是否启用排序
+            sortName:"u_account",
+            sortOrder: "asc",                   //排序方式
+            queryParams: queryParams,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber: 1,                       //初始化加载第一页，默认第一页
+            pageSize: 10,                       //每页的记录行数（*）
+            pageList: [5,10, 25, 50, 100],        //可供选择的每页的行数（*）
+            search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+//            strictSearch: true,
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+            clickToSelect: true,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            uniqueId: "u_atpid",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+            detailView: true,                   //是否显示父子表
+            detailFormatter: "detailFormatter",
+            columns: [
+                [
+                    {"title": "多行表头：第一行", "halign": "center", "align": "center", "colspan": 22, rowspan: 1}
+                ],
+                [
+                    {"title": "多行表头：第二行，第一段", "halign": "center", "align": "center", "colspan": 4, rowspan: 1,},
+                    {"title": "多行表头：第二行，第二段", "halign": "center", "align": "center", "colspan": 18, rowspan: 1}
+                ],
+                [
+                    {checkbox: true},
+                    {title: '序号', width: 40,
+                        formatter: function (value, row, index)
+                        {
+                            var option =  $('#atpbiztable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'u_account', title: '账号', sortable: true,width:150,formatter: "dataCellFormatter"},
+                    {field: 'u_password', title: '密码', sortable: true,width:850},
+                    {field: 'u_name', title: '姓名', sortable: true,width:150},
+                    {field: 'u_birthday', title: '生日', sortable: true,width:150, visible:true},
+                    {field: 'u_regdatetime', title: '注册时间', sortable: true,width:150, visible:false},
+                    {field: 'u_resttime', title: '休息时间', sortable: true,width:150, visible:false},
+                    {field: 'u_age', title: '年龄', sortable: true,width:150, visible:false},
+                    {field: 'u_money', title: '收入', sortable: true,width:150, visible:false},
+                    {field: 'u_rax', title: '税', sortable: true,width:150, visible:false},
+                    {field: 'u_role', title: '角色', sortable: true,width:150},
+                    {field: 'u_issuper', title: '特长生', sortable: true,width:150},
+                    {field: 'u_refereeid', title: '推荐人', sortable: false, width: 150,
+                        formatter: function (value, row, index) {
+                            var a = row['refereename'] + '(' + row['refereeaccount'] + ')';
+                            if (null == value) {
+                                return '';
+                            }
+                            else {
+                                return a;
+                            }
+                        }
+                    },
+                    {field: 'u_filename', title: '照片', sortable: false, width: 100,
+                        formatter: function (value, row, index) {
+                            var a = '<img src="__PUBLICOLD__/uploads/' + value + '" width="100px" /><br/>';
+                            if (null == value || '' == value) {
+                                return '';
+                            }
+                            else {
+                                return a;
+                            }
+                        }
+                    },
+                    {field: 'u_atpid', title: '操作', sortable: false,width:60,
+                        formatter: function (value, row, index) {
+                            var inp = "'"+  value +"'";
+                            var a = '<a  class="btn btn-info btn-xs" onclick="updateInRow('+ inp +')">编辑</a>&nbsp;<br>';
+                                a += '<a  class="btn btn-danger btn-xs" onclick="delInRow('+ inp +')">删除</a>&nbsp;<br>';
+                            return a;
+                        }
+                    },
+                    {field: 'u_atpid', title: '主键', sortable: true, visible:false},
+                    {field: 'u_atpcreatedatetime', title: '创建时间', sortable: true, visible:false},
+                    {field: 'u_atpcreateuser', title: '创建人', sortable: true, visible:false},
+                    {field: 'u_atplastmodifydatetime', title: '最后修改时间', sortable: true, visible:false},
+                    {field: 'u_atplastmodifyuser', title: '最后修改人', sortable: true, visible:false},
+                    {field: 'u_atpstatus', title: '状态', sortable: true, visible:false},
+                ]
+            ],
+            onDblClickRow: function (row) {
+                $("#sys_dlg").load('__CONTROLLER__/edit?id=' + row['u_atpid'], function() {
+                    $('#sys_dlg_submit').on('click',submitdata);
+                    $("#sys_dlg").modal({backdrop: false});
+                });
+            },
+            onSort: function (name, order) {
+//                console.log(name+order);
+            }
+        });
+    });
+
+    function queryParams(params) {  //配置参数
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            search: params.search,
+            u_account: $("#search_u_account").val(),
+            u_name: $("#search_u_name").val(),
+            u_birthday_begin: $("#search_u_birthday_begin").val(),
+            u_birthday_end: $("#search_u_birthday_end").val(),
+            u_role: $("#search_u_role").val(),
+            sort: params.sort,  //排序列名
+            sortOrder: params.order//排位命令（desc，asc）
+        };
+        return temp;
+    }
+
+    function dataCellFormatter(value, row) {
+        var color = '#'+Math.floor(Math.random() * 6777215).toString(16);
+        return '<div  style="color: ' + color + '">' + '<i class="glyphicon glyphicon-usd"></i>' + value + '</div>';
+    }
+
+    function detailFormatter(index, row) {
+//        var html = [];
+//        $.each(row, function (key, value) {
+//            html.push('<p><b>' + key + ':</b> ' + value + '</p>');
+//        });
+//        return html.join('');
+        var html = [];
+        html.push("<div class='ibox-content'>");
+        html.push("<table class='table'>");
+        html.push("<tbody>");
+        if (null == row['u_filename'] || '' == row['u_filename']) {
+            html.push("<tr><td><b>账号</b></td><td>" + row['u_account'] + "</td><td><b>姓名</b></td><td>" + row['u_name'] + "</td><td rowspan='2'><b>图片</b></td><td rowspan='2'></td></tr>");
+        }
+        else {
+            html.push("<tr><td><b>账号</b></td><td>" + row['u_account'] + "</td><td><b>姓名</b></td><td>" + row['u_name'] + "</td><td rowspan='2'><b>图片</b></td><td rowspan='2'>" + "<img src='__PUBLICOLD__/uploads/" + row['u_filename'] + "' width='100px' />" + "</td></tr>");
+        }
+        html.push("<tr><td><b>密码</b></td><td>" + row['u_password'] + "</td><td><b>生日</b></td><td>" + row['u_birthday'] + "</td></tr>");
+        html.push("<tr><td><b>年龄</b></td><td>" + row['u_age'] + "</td><td><b>收入</b></td><td>" + row['u_money'] + "</td><td><b>税</b></td><td>" + row['u_rax'] + "</td></tr>");
+        html.push("<tr><td><b>角色</b></td><td>" + row['u_role'] + "</td><td><b>特长生</b></td><td>" + row['u_issuper'] + "</td><td><b>推荐人</b></td><td>" + row['refereename'] + '(' + row['refereeaccount'] + ')' + "</td></tr>");
+        html.push("<tr><td><b>注册时间</b></td><td>" + row['u_regdatetime'] + "</td><td><b>休息时间</b></td><td>" + row['u_resttime'] + "</td><td><b></b></td><td></td></tr>");
+        html.push("<tr><td><b>最后修改时间</b></td><td>" + row['u_atplastmodifydatetime'] + "</td><td><b>最后修改人</b></td><td>" + row['u_atplastmodifyuser'] + "</td><td><b></b></td><td></td></tr>");
+        html.push("<tr><td><b>创建时间</b></td><td>" + row['u_atpcreatedatetime'] + "</td><td><b>创建人</b></td><td>" + row['u_atpcreateuser'] + "</td><td><b></b></td><td></td></tr>");
+        html.push("</tbody>");
+        html.push("</table>");
+        html.push("</div>");
+        return html.join('');
+    }
+
+    $('#sys_search').on('click',function() {
+        $("#sys_dlg_search").modal({backdrop: false});
+        $('#sys_dlg_search').on('shown.bs.modal', function () {
+            $(".chosen-select2").chosen({disable_search_threshold: 10, search_contains: true});
+        });
+        $('#sys_dlg_search_submit').on('click', function () {
+            $('#atpbiztable').bootstrapTable('refresh')
+        });
+    });
+
+    $('#sys_add').on('click',function(){
+        $("#sys_dlg").load('__CONTROLLER__/add', function() {
+            $('#sys_dlg_submit').on('click', submitdata);
+            $("#sys_dlg").modal({backdrop: false});
+        });
+    });
+
+    function submitdata()
+    {
+        $("#sys_dlg_form").submit(function(e)
+        {
+            var formObj = $(this);
+            var formURL = formObj.attr("action");
+            var formData = new FormData(this);
+            $.ajax({
+                url: '__CONTROLLER__/submit',
+                type: 'POST',
+                data:  formData,
+                mimeType:"multipart/form-data",
+                contentType: false,
+                cache: false,
+                processData:false,
+                success: function(data, textStatus, jqXHR)
+                {
+                    $('#atpbiztable').bootstrapTable('refresh')
+                },
+                error: function(jqXHR, textStatus, errorThrown)
+                {
+                    $('#atpbiztable').bootstrapTable('refresh')
+                }
+            });
+            e.preventDefault();
+        });
+        $("#sys_dlg_form").submit();
+    }
+
+    $('#sys_update').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if(tablerow.length!=1)
+        {
+            alert("您已多选或者少选，仅能对一条数据进行操作");
+        }
+        else {
+            $("#sys_dlg").load('__CONTROLLER__/edit?id=' + tablerow[0]['u_atpid'], function() {
+                $('#sys_dlg_submit').on('click',submitdata);
+                $("#sys_dlg").modal({backdrop: false});
+            });
+        }
+    });
+
+    function updateInRow(id)
+    {
+        $("#sys_dlg").load('__CONTROLLER__/edit?id=' + id, function() {
+            $('#sys_dlg_submit').on('click',submitdata);
+            $("#sys_dlg").modal({backdrop: false});
+        });
+    }
+
+    function delInRow(id)
+    {
+        if (confirm('确认删除数据?')) {
+            var ids = [];
+            ids.push(id);
+            $.post('__CONTROLLER__/del', {ids: ids.join(',')}, function (rep, status) {
+                if ('' == rep) {
+                    $('#atpbiztable').bootstrapTable('refresh')
+                }
+                else {
+                    alert('删除失败' + "可能是因为数据存在关联无法删除<br>错误详情：" + rep);
+                }
+            });
+        }
+    }
+
+    $('#sys_del').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            alert("您尚未选择数据");
+        }
+        else {
+            if (confirm('确认删除' + tablerow.length + '条数据?')) {
+                var ids = [];
+                $.each(tablerow, function () {
+                    ids.push(this['u_atpid']);
+                });
+                $.post('__CONTROLLER__/del', {ids: ids.join(',')}, function (rep, status) {
+                    if ('' == rep) {
+                        $('#atpbiztable').bootstrapTable('refresh')
+                    }
+                    else {
+                        alert('删除失败' + "可能是因为数据存在关联无法删除<br>错误详情：" + rep);
+                    }
+                });
+            }
+        }
+    });
+
+</script>
+</body>
+
+</html>
+
+
+
+

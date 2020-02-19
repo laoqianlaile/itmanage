@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+    <link rel="stylesheet" href="__PUBLICOLD__/vendor/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/jquery.form.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ztree/js/jquery.ztree.core.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="__PUBLICOLD__/bgadmin/plugins/layui/layui.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+    <title>在线报修</title>
+    <style>
+        *{
+            font-family: "微软雅黑";
+        }
+        .box{
+            margin: 0 auto;
+            text-align: center;
+        }
+        .tab-content{
+            position: relative;
+        }
+        .form-group > div {
+            margin-top: 3px;
+            margin-bottom: 5px;
+        }
+        .form-group input{
+            margin-left: 12px;
+            border-radius: 2px;
+        }
+        #sys_dlg_submit{
+            margin-right: 53px!important;
+        }
+        .panel-body{
+            margin: 10px 0 12px;
+        }
+
+        .chosen-single span{
+            text-align: left;
+        }
+        html{
+            overflow: hidden;
+        }
+        .department .chosen-drop{
+            height: 200px!important;
+        }
+        .department .chosen-results{
+            height: 160px!important;
+        }
+        td{
+            text-align: center;
+        }
+        input{
+            width:100%;
+        }
+        .table tbody tr td{
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+<div class="box" style="overflow: auto;">
+    <form id="sys_dlg_form" role="form" class="form-horizontal" method="post" action="__CONTROLLER__/add" enctype="multipart/form-data">
+    <input id="domainusername" name="domainusername" hidden>
+    </form>
+</div>
+</body>
+
+
+
+
+
+<!--<script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>-->
+<!--<script type="text/javascript" src="__PUBLICOLD__/js/banBackSpace.js"></script>-->
+<!--[if lte IE 8]>
+<script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+<![endif]-->
+<object classid="clsid:9703D810-ACC0-4C22-83C7-3FD9ED198B6E" id="usb_ocx" name="usb_ocx" style="VISIBILITY:hidden"
+        codebase="IB_USBKEY.ocx" width="100" height="50"></object>
+<script>
+    $(document).ready(function () {
+        function LoginCA() {
+            var CAServerIP = "10.64.1.100";
+            var domainusername = "hq\\mapei";
+            return domainusername;
+            if (usb_ocx == null)
+                return "";
+            rtn = usb_ocx.VgetnameFirst(CAServerIP, "1");
+            if (rtn.match("#."))//包含＃
+            {
+                return rtn;
+            }
+            else {
+                var domainusername = rtn.replace('cast\\', '');
+                var domainusername = "hq\\jiwei";
+                return domainusername;
+            }
+        }
+        var domainusername=LoginCA();
+        $('#domainusername').val(domainusername);
+        $('#sys_dlg_form').submit();
+
+
+       // window.location.href = "__CONTROLLER__/add.html?username="+domainusername;
+    });
+
+</script>

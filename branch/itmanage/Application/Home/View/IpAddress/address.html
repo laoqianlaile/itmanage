@@ -1,0 +1,416 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<style>
+    th{
+        text-align: center;
+    }
+    .form-control{
+        display: inline-block;
+        width: 250px;
+    }
+    .wrapper .wrapper-content{
+        padding-bottom: 0;
+    }
+    .control-label{
+        font-size: 14px!important;
+    }
+    .fixed-table-toolbar{
+        display: none;
+    }
+    table{
+        table-layout: fixed;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content " style="">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="_box" style="margin-top: 25px;">
+                <label class="control-label" style="margin-left:15px;">起始IP：</label>
+                <input type="text" class="form-control" style="width:180px;"  id="IpStart">
+                <label class="control-label" >地区</label>
+                <select id="ip_parea" class="chosen-select" >
+                    <option value="">请选择</option>
+                    <?php foreach($diQu as $key=>$value){ ?>
+                    <option value="{$value.dic_id}">{$value.dic_name}</option>
+                    <?php } ?>
+                </select>
+                <label class="control-label" >楼宇</label>
+                <select id="ip_area" class="chosen-select" ></select>
+            </div>
+            <div class="_box">
+                <label class="control-label" style="margin-left:15px;">密级</label>
+                <select id="miji" class="chosen-select" >
+                    <option value="">请选择</option>
+                    <?php foreach($miJi as $key=>$value){ ?>
+                    <option value="{$value.dic_name}">{$value.dic_name}</option>
+                    <?php } ?>
+                </select>
+                <label class="control-label">Vlan号：</label>
+                <input type="text" class="form-control" style="width:180px;"  id="vlan">
+                <label class="control-label" >责任部门</label>
+                <select id="ip_depart" class="chosen-select" >
+                    <option value="">请选择</option>
+                </select>
+            </div>
+            <div class="_box">
+                <button class="btn btn-info" style="margin-left: 10px;" type="button" id="sys_refresh">查询</button>
+                <button class="btn btn-info" style="background-color: #1AB394;border-color:  #1AB394;" type="button" id="sys_reset">重置</button>
+                <a class="btn btn-info " style="margin-left: 10px;background-color: yellowgreen;border-color: yellowgreen;" type="button" id="sys_add" >新增</a>
+                <a class="btn btn-info " style="margin-left: 10px;background-color: yellowgreen;border-color: yellowgreen;" type="button" id="sys_update" >编辑</a>
+                <button class="btn btn-info" style="margin-left: 10px;background-color: cadetblue;border-color: cadetblue;" type="button" id="sys_del">删除</button>
+                <button class="btn btn-info" style="margin-left: 10px;" type="button" id="sys_exp">导出</button>
+            </div>
+            <table id="atpbiztable" ></table>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="sort" >
+<input type="hidden" id="sortOrder" >
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+<script>
+
+    layui.use('layer', function() {
+        layer = layui.layer;
+    })
+
+    $(".chosen-select").chosen({disable_search_threshold: 0, search_contains: true, width: '180px'});
+    //责任部门
+    $('#ip_depart').ajaxChosen({
+        dataType: 'json',
+        type: 'post',
+        url: '__MODULE__/org/assigndept'
+    }, {
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+    fixed();
+    function fixed(){
+        var h  = $(window).height() - 80;
+        $('table').attr('data-height',h);
+    }
+    $('#user').ajaxChosen({
+        dataType: 'json',
+        type: 'POST',
+        url:'__CONTROLLER__/assignusered'
+    },{
+        loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+    });
+    var TableObj = {
+        oTableInit: function () {
+            $('#atpbiztable').bootstrapTable({
+                url: '__CONTROLLER__/getAddressData',         //请求后台的URL（*）
+                method: 'post',                      //请求方式（*）
+                toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                iconSize: 'outline',
+                sortable: true,                     //是否启用排序
+                sortName: "ip_atpid",
+                sortOrder: "asc",                   //排序方式
+                queryParams: queryParams,//传递参数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                pageSize: 20,                       //每页的记录行数（*）
+                pageList: [15, 25, 50, 100],        //可供选择的每页的行数（*）
+//            strictSearch: true,
+//            showColumns: true,                  //是否显示所有的列
+//            showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "ip_atpid",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                detailView: true,                   //是否显示父子表
+                detailFormatter: "showDataView",
+                columns: [[
+                    {checkbox: true, width: 50},
+                    {
+                        title: '序号', width: 50,
+                        formatter: function (value, row, index) {
+                            var option = $('#atpbiztable').bootstrapTable("getOptions");
+                            return option.pageSize * (option.pageNumber - 1) + index + 1;
+                        }
+                    },
+                    {field: 'ip_start', title: '起始IP', sortable: true, width: 100},
+                    {field: 'ip_end', title: '结束IP', sortable: true, width: 100, visible: true},
+                    {field: 'ip_vlan_no', title: 'Vlan号', sortable: true, width: 100, visible: true},
+                    {field: 'ip_secret_level', title: '密级', sortable: true, width: 100, visible: true},
+                    {field: 'areaName', title: '地区-楼宇', sortable: true, width: 100, visible: true},
+                    {field: 'ip_depart', title: '部门', sortable: true, width: 100, visible: true},
+                    {field: 'ip_purpose', title: '用途', sortable: true, width: 100, visible: true},
+                    {field: 'num', title: '总数', sortable: true, width: 100, visible: true},
+                    {field: 'numUp', title: '已使用', sortable: true, width: 100, visible: true,
+                        formatter: function (value, row, index) {
+                            var count =value;
+                            var inp = "'" + row.ip_atpid + "'";
+                            var a = '<a  class="" onclick="Updata(' + inp + ')">'+count+'</a><br>';
+                            return a;
+                        }
+                    },
+                    {field: 'numDown', title: '未使用', sortable: true, width: 100, visible: true,
+                        formatter: function (value, row, index) {
+                            var count =value;
+                            var inp = "'" + row.ip_atpid + "'";
+                            var a = '<a  class="" onclick="Downdata(' + inp + ')">'+count+'</a><br>';
+                            return a;
+                        }
+                    }
+                ]
+                ]
+            });
+        }
+    }
+    TableObj.oTableInit();
+
+    function queryParams(params) {  //配置参数
+        $('#sort').val(params.sort);
+        $('#sortOrder').val(params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            IpStart:$('#IpStart').val(),
+            miji:$('#miji').val(),
+            vlan:$('#vlan').val(),
+            ip_depart:$('#ip_depart').val(),
+            ip_parea:$('#ip_parea').val(),
+            ip_area:$('#ip_area').val()
+        };
+        return temp;
+    }
+    $('#sys_refresh').on('click',function() {
+        $('#atpbiztable').bootstrapTable('destroy');
+        TableObj.oTableInit();
+    });
+
+    function showDataView(index, row){
+        //,app_childname,app_sname,app_status,app_lxjb,app_userdept,app_developplat,app_usedate,app_interface,app_zdxm,app_bz,app_info,app_mode,app_usage,app_userscope,app_usemode,app_loginmode,app_accessauthority,app_developer,app_aloginmode
+        //,'子系统','简称','状态','立项级别','用户单位','技术平台','上线日期','系统接口','重点项目','备注','信息资源','访问方式','主要功能','用户范围','存放方式','普通用户鉴别方式','访问权限','开发单位','管理员鉴别方式'
+        var html = [];
+        html.push("<div class='ibox-content'>");
+        html.push("<table class='table'>");
+        html.push("<tbody>");
+        html.push("<tr><td><b>子网掩码</b></td><td>" + row['ip_mask'] + "</td><td><b>网关</b></td><td>" + row['ip_gateway'] + "</td></tr>");
+        html.push("</tbody>");
+        html.push("</table>");
+        html.push("</div>");
+        return html.join('').replace(/null/g, "").replace(/undefined/g, "");
+    }
+
+    function updateInRow(id)
+    {
+        layer.open({
+            title:'管理员手册更新页面',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/word?id='+id,
+            area: ['95%', '95%']
+        });
+    }
+
+    function guanLi(id)
+    {
+        layer.open({
+            title:'运维知识项管理页面',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            cancel:function(){$('#sys_refresh').click();},
+            content: '__CONTROLLER__/knowledge?id='+id+'&version='+'管理员',
+            area: ['95%', '92%']
+        });
+    }
+
+    function yongHu(id)
+    {
+        layer.open({
+            title:'运维知识项管理页面',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            cancel:function(){$('#sys_refresh').click();},
+            content: '__CONTROLLER__/knowledge?id='+id+'&version='+'用户',
+            area: ['95%', '92%']
+        });
+    }
+
+    //选择地区触发楼宇
+    $('#ip_parea').change(function () {
+        var id = $(this).val();
+        dic_louyu(id);
+    });
+
+    function dic_louyu(id){
+        if(!id)  return false;
+        $.ajax({
+            type:'post',
+            url:'__MODULE__/dic/getDicLouYu',
+            data:{pid: id},
+            dataType :'json',
+            success:function(data){
+                if (data.code > 0) {
+                    var str=  '<option value=""> </option>';
+                    $.each(data.results,function(k,v){
+                        str += "<option value='"+v['dic_id']+"'>"+v['dic_name']+"</option>";
+                    });
+                    $('#ip_area option').remove();
+                    $('#ip_area').append(str);
+                    $('#ip_area').trigger("chosen:updated");
+                } else {
+                    layer.alert(data.message);
+                }
+            },
+            error:function(){
+                layer.alert('出错啦！请联系管理员');
+            }
+        });
+    }
+
+    function Updata(id){
+        layer.open({
+            title:'ip查看',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/indexNopower?id='+id+'&status='+'已使用',
+            area: ['95%', '92%']
+        });
+    }
+
+    function Downdata(id){
+        layer.open({
+            title:'ip查看',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/indexNopower?id='+id+'&status='+'',
+            area: ['95%', '92%']
+        });
+    }
+
+    $('#sys_reset').click(function(){
+        $('.form-control').val('');
+        $('.chosen-select').val('');
+        $('.chosen-select').trigger("chosen:updated");
+        $('#sys_refresh').click()
+    })
+
+    $('#sys_add').click(function(){
+        updateData();
+    })
+
+    $('#sys_update').click(function(){
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            alert("您尚未选择数据");
+        }else if(tablerow.length == 1) {
+            var ids = '';
+            $.each(tablerow, function () {
+                ids = this['ip_atpid'];
+            });
+            updateData(ids);
+        }else{
+            alert('请选择一行记录！');
+        }
+    })
+
+    function updateData(id){
+        layer.open({
+            title:'ip查看',
+            closeBtn:1,
+            type: 2,
+            shadeClose:false,
+            content: '__CONTROLLER__/add?id='+id,
+            area: ['95%', '92%']
+        });
+    }
+
+    $('#sys_del').on('click',function() {
+        var tablerow = $('#atpbiztable').bootstrapTable('getSelections');
+        if (tablerow.length == 0) {
+            layer.alert("您尚未选择数据");
+        } else {
+            var ids = [];
+            $.each(tablerow, function () {
+                ids.push(this['ip_atpid']);
+            });
+            deleteInRow(ids.join(','));
+        }
+    });
+
+    //数据删除触发该方法
+    function deleteInRow(id){
+        layer.confirm('确认删除选中数据?',
+                {btn:['确定','取消']},
+                function(){
+                    $.ajax({
+                        type:'post',
+                        url:'__CONTROLLER__/delData',
+                        data:{ip_atpid: id},
+                        dataType :'json',
+                        success:function(data){
+                            if(data.code > 0){
+                                layer.msg('操作成功');
+                                $('#sys_refresh').click();
+                            }else{
+                                layer.alert(data.message);
+                            }
+                        },error:function(){
+                            layer.alert('出错啦！请稍后再试');
+                        }
+                    })
+                })
+    }
+
+    $('#sys_exp').click(function(){
+        $('#loading').modal('show');
+        var sort=$('#sort').val();
+        var sortOrder=$('#sortOrder').val();
+        var t = "__CONTROLLER__/getAddressDataWithExport";
+        t = encodeURI(t);
+        $.ajax({
+            type:'post',
+            url: t,
+            dataType:'json',
+            data:{
+                sort:sort,
+                sortOrder:sortOrder,
+                IpStart:$('#IpStart').val(),
+                miji:$('#miji').val(),
+                vlan:$('#vlan').val(),
+                ip_depart:$('#ip_depart').val(),
+                ip_parea:$('#ip_parea').val(),
+                ip_area:$('#ip_area').val()
+            },
+            success:function(data){
+                $('#loading').modal('hide');
+                if(data.code > 0){
+                    location.href = data.message;
+                }else{
+                    layer.msg(data.message);
+                }
+            },error:function(){
+                $('#loading').modal('hide');
+                layer.alert('出错了！请联系管理员！');
+            }
+        })
+    })
+
+
+
+
+</script>
+</body>
+
+</html>
+
+
+
+

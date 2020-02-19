@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>交换机差异数据表</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+     
+    <style>
+        .table{max-width: none;}
+        .pull-left{width:100%;}
+        #atpbiztoolbar{width:100%;}
+        #dic_name{width: 20%;float: left;margin-right: 5px;}
+        .tt{ font-size: 21px; font-weight:bold; padding-left:40px;color:;margin:0px;width:100%;padding-top:15px;}
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <p class="tt">交换机差异数据表<span style="font-size:18px; font-weight:normal;">(交换机端口上绑定了MAC地址，而该地址在资产库中不存在)</span></p>
+                    <div id="atpbiztoolbar" style="padding-left:20px;margin-top:25px;">
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">MAC地址&nbsp;</label>
+                            <input  id="macaddress" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:60%;" >
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">IP地址&nbsp;</label>
+                            <input  id="ipaddress" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:60%;" >
+                        </div>
+                        <div style="float:left;width:24%;">
+                            <label style="float:left;width:32%;">端口信息&nbsp;</label>
+                            <input  id="port" type="text" width="100px"  class="form-control" style="margin-bottom: -5px;width:60%;" >
+                        </div>
+                        <input  id="rw_atpid" type="hidden" width="100px"  class="form-control" style="margin-bottom: -5px;width:56%;" >
+                        <div style="float:left;width:25%;margin-top: 0px;">
+                            <button class="btn btn-danger " type="button" id="sys_tijiao"><i class="fa fa-pencil-square"></i>&nbsp;查询</button>
+                            <button class="btn btn-info " type="button" id="sys_del"><i class="fa fa-rotate-right"></i>&nbsp;重置</button>
+                            <button class="btn btn-info " style="background-color: #9bc63e;border:#9bc63e 1px solid;" type="button" id="sys_export"><i class="fa fa-sign-out"></i>&nbsp;导出</button>
+                        </div>
+                    </div>
+                    <table id="atpbiztable" ></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input id="sortfield" value="" type="hidden"/>
+<input id="sortorder" value="" type="hidden"/>
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<script>
+
+    $(function () {
+        $(".chosen-select_longajax").chosen({disable_search_threshold: 0, search_contains: true});//,width:'56%',hight:'80px'
+        var TableObj = {
+            oTableInit: function () {
+                $('#atpbiztable').bootstrapTable({
+                    url: '__CONTROLLER__/switchesData',         //请求后台的URL（*）
+                    method: 'post',                      //请求方式（*）
+                    toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                    striped: true,                      //是否显示行间隔色
+                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    pagination: true,                   //是否显示分页（*）
+                    iconSize: 'outline',
+                    sortable: true,                     //是否启用排序
+                    sortName: "sw_atpid",
+                    sortOrder: "desc",                   //排序方式
+                    queryParams: queryParams,//传递参数（*）
+                    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1,                       //初始化加载第一页，默认第一页
+                    pageSize: 10,                       //每页的记录行数（*）
+                    pageList: [5, 10, 25, 50, 100],        //可供选择的每页的行数（*）
+                    search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+//            strictSearch: true,
+                    showColumns: false,                  //是否显示所有的列
+                    showRefresh: false,                  //是否显示刷新按钮
+                    minimumCountColumns: 2,             //最少允许的列数
+                    clickToSelect: false,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                    uniqueId: "rw_atpid",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                    detailView: false,                   //是否显示父子表
+                    detailFormatter: "detailFormatter",
+                    columns: [
+                        [
+//                    {checkbox: true},
+                            {
+                                title: '序号', width: 40,
+                                formatter: function (value, row, index) {
+                                    var option = $('#atpbiztable').bootstrapTable("getOptions");
+                                    return option.pageSize * (option.pageNumber - 1) + index + 1;
+                                }
+                            },
+                            {field: 'sw_macaddress', title: 'MAC地址', sortable: true},
+                            {field: 'sw_ipaddress', title: 'IP地址', sortable: true},
+                            {field: 'sw_interface', title: '端口信息', sortable: true},
+                        ]
+                    ],
+                    onSort: function (name, order) {
+                    },
+                });
+            }
+        };
+        TableObj.oTableInit();
+
+        $('#sys_tijiao').on('click',function() {
+            $('#atpbiztable').bootstrapTable('destroy');
+            TableObj.oTableInit();
+        });
+    });
+    function queryParams(params) {  //配置参数
+        $("#sortfield").attr("value",params.sort);
+        $("#sortorder").attr("value",params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+//            search: params.search,
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            macaddress: $('#macaddress').val(),
+            ipaddress: $('#ipaddress').val(),
+            port: $('#port').val()
+        };
+        return temp;
+    }
+
+    function dataCellFormatter(value, row) {
+        var color = '#'+Math.floor(Math.random() * 6777215).toString(16);
+        return '<div  style="color: ' + color + '">' + '<i class="glyphicon glyphicon-usd"></i>' + value + '</div>';
+    }
+
+    $('#sys_del').on('click',function(){
+        $('#macaddress').val("");
+        $('#ipaddress').val("");
+        $('#port').val("");
+    });
+
+    $("#sys_export").on("click",function(){
+        var macaddress = $("#macaddress").val();
+        var ipaddress = $("#ipaddress").val();
+        var port = $("#port").val();
+
+        var sortOrder = $("#sortorder").val();
+        var sortfield = $("#sortfield").val();
+        window.location.href="__MODULE__/Export/sw_exp?macaddress="+macaddress+"&ipaddress="+ipaddress+"&port="+port+"&sortOrder="+sortOrder+"&sort="+sortfield;
+    })
+</script>
+</body>
+
+</html>
+
+
+
+

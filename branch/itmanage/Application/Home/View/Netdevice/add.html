@@ -1,0 +1,548 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>交换机管理添加编辑</title>
+<style>
+    .form-group{
+        margin-top: 26px;
+    }
+    .control-label{
+        width:150px  !important;
+    }
+     .must_filter{
+        color: red;
+    }
+    .form-control{
+        display:inline-block;
+    }
+    .col-sm-3{
+        width:60%  !important;
+    }
+    .chosen-container{
+        top: -1px;
+    }
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+     .chosen-container{
+        height: 100%;
+    }
+</style>
+<body style="margin: 0 auto;">
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div class="tab-content" style="padding-bottom: 50px;">
+        <div class="panel-body">
+           <div class="form-group">
+               <div style="width: 50%;float: left">
+                   <label class=' col-sm-2 control-label'>设备名称 </label>
+                   <div class="col-sm-3" >
+                       <input type="text" class="form-control" style="width:99%;" name="net_name" id="net_name" value="<?php if(!empty($data['net_name']))echo $data['net_name']; ?>">
+                   </div>
+               </div>
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>设备编码 </label>
+                    <div class="col-sm-3" >
+                    <input type="text" class="form-control" style="width:99%;" name="net_anecode" id="net_anecode" value="<?php if(!empty($data['net_anecode']))echo $data['net_anecode']; ?>">
+                   </div>
+                </div>
+           </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>出厂编号 </label>
+                    <div class="col-sm-3" >
+                    <input type="text" class="form-control" style="width:99%;" name="net_sn" id="net_sn" value="<?php if(!empty($data['net_sn']))echo $data['net_sn']; ?>">
+                   </div>
+                </div>
+
+
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>IP地址 </label>
+                    <div class="col-sm-3" >
+                    <input type="text" class="form-control" style="width:99%;" name="net_ipaddress" id="net_ipaddress" value="<?php if(!empty($data['net_ipaddress']))echo $data['net_ipaddress']; ?>">
+                   </div>
+                </div>
+            </div>
+            <div class="form-group">
+
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>是否扫描 </label>
+                    <div class="col-sm-3" >
+                    <select  name="net_isscan" id="net_isscan" class="chosen-select" >
+                        <option value=""> </option>
+                        <option <?php if($data['net_isscan'] == '1') echo 'selected'; ?> value="1">扫描</option>
+                        <option <?php if($data['net_isscan'] == '0') echo 'selected'; ?> value="0">不扫描</option>
+                    </select>
+                   </div>
+                </div>
+
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>使用状态 </label>
+                    <div class="col-sm-3" >
+                    <select  name="net_status" id="net_status" class="chosen-select" >
+                        <option value=""> </option>
+                        <?php foreach($zhuangTai as $key=>$value){ ?>
+                        <option <?php if($data['net_status'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                        <?php } ?>
+                    </select>
+                   </div>
+                </div>
+            </div>
+            <div class="form-group">
+
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>厂家 </label>
+                    <div class="col-sm-3" >
+                    <select  name="net_factory" id="net_factory" class="chosen-select" >
+                        <option value=""> </option>
+                        <?php foreach($changJia as $key=>$value){ ?>
+                        <option <?php if($data['net_factory'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_id}">{$value.dic_name}</option>
+                        <?php } ?>
+                    </select>
+                   </div>
+                </div>
+
+
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>型号 </label>
+                    <div class="col-sm-3" >
+                    <select  name="net_model" id="net_model" class="chosen-select" >
+                        <option value=""> </option>
+                        <?php foreach($xingHao as $key=>$value){ ?>
+                        <option value="{$value.val}">{$value.dic_name}</option>
+                        <?php } ?>
+                    </select>
+                   </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>密级 </label>
+                    <div class="col-sm-3" >
+                    <select  name="net_secretlevel" id="net_secretlevel" class="chosen-select" >
+                        <option value=""> </option>
+                        <?php foreach($miJi as $key=>$value){ ?>
+                        <option <?php if($data['net_secretlevel'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                        <?php } ?>
+                    </select>
+                   </div>
+                </div>
+
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>地区 </label>
+                    <div class="col-sm-3" >
+                    <select  name="net_area" id="net_area" class="chosen-select" >
+                        <option value=""> </option>
+                        <?php foreach($diQu as $key=>$value){ ?>
+                        <option <?php if($data['net_area'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_id}">{$value.dic_name}</option>
+                        <?php } ?>
+                    </select>
+                   </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>楼宇 </label>
+                    <div class="col-sm-3" >
+                    <select  name="net_building" id="net_building" class="chosen-select" >
+                        <option value=""> </option>
+                        <?php foreach($louYu as $key=>$value){ ?>
+                        <option value="{$value.val}">{$value.dic_name}</option>
+                        <?php } ?>
+                    </select>
+                   </div>
+                </div>
+
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>房间号 </label>
+                    <div class="col-sm-3" >
+                    <input type="text" class="form-control" style="width:99%;" name="net_room" id="net_room" value="<?php if(!empty($data['net_room']))echo $data['net_room']; ?>">
+                   </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>上联端口 </label>
+                    <div class="col-sm-3" >
+                    <input type="text" class="form-control" style="width:99%;" name="net_upport" id="net_upport" value="<?php if(!empty($data['net_upport']))echo $data['net_upport']; ?>">
+                   </div>
+                </div>
+
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>所属网络 </label>
+                    <div class="col-sm-3" >
+                    <select  name="net_net" id="net_net" class="chosen-select" >
+                        <option value=""> </option>
+                        <?php foreach($suoShuWangLuo as $key=>$value){ ?>
+                        <option <?php if($data['net_net'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                        <?php } ?>
+                    </select>
+                   </div>
+                </div>
+            </div>
+            <div class="form-group">
+
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>版本 </label>
+                    <div class="col-sm-3" >
+                    <input type="text" class="form-control" style="width:99%;" name="net_iso" id="net_iso" value="<?php if(!empty($data['net_iso']))echo $data['net_iso']; ?>">
+                   </div>
+                </div>
+
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>用途 </label>
+                    <div class="col-sm-3" >
+                    <input type="text" class="form-control" style="width:99%;" name="net_usage" id="net_usage" value="<?php if(!empty($data['net_usage']))echo $data['net_usage']; ?>">
+                   </div>
+                </div>
+            </div>
+            <div class="form-group">
+
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>是否核心 </label>
+                    <div class="col-sm-3" >
+                    <select  name="net_iscore" id="net_iscore" class="chosen-select" >
+                        <option value=""> </option>
+                        <option <?php if($data['net_iscore'] == '1') echo 'selected'; ?> value="1">是</option>
+                        <option <?php if($data['net_iscore'] == '0') echo 'selected'; ?> value="0">否</option>
+                    </select>
+                   </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>维修状态 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="net_repairtype" id="net_repairtype" value="<?php if(!empty($data['net_repairtype']))echo $data['net_repairtype']; ?>">
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>登录方式 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="net_protocol" id="net_protocol" value="<?php if(!empty($data['net_protocol']))echo $data['net_protocol']; ?>">
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>管理方式 </label>
+                    <div class="col-sm-3" >
+                    <input type="text" class="form-control" style="width:99%;" name="net_manage" id="net_manage" value="<?php if(!empty($data['net_manage']))echo $data['net_manage']; ?>">
+                   </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>采购日期 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="net_caigoudate" id="net_caigoudate" value="<?php if(!empty($data['net_caigoudate']))echo $data['net_caigoudate']; ?>" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>到保日期 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="net_daobaodate" id="net_daobaodate" value="<?php if(!empty($data['net_daobaodate']))echo $data['net_daobaodate']; ?>" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>维保日期 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="net_weibaodate" id="net_weibaodate" value="<?php if(!empty($data['net_weibaodate']))echo $data['net_weibaodate']; ?>" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>启用日期 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="net_enabledate" id="net_enabledate" value="<?php if(!empty($data['net_enabledate']))echo $data['net_enabledate']; ?>" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>仪设台账 </label>
+                    <div class="col-sm-3" >
+                        <select  name="net_devicebook" id="net_devicebook" class="chosen-select" >
+                            <option value=""> </option>
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>保密台账 </label>
+                    <div class="col-sm-3" >
+                    <select  name="net_privacybook" id="net_privacybook" class="chosen-select" >
+                        <option value=""> </option>
+                    </select>
+                   </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>资产来源 </label>
+                    <div class="col-sm-3" >
+                        <select  name="net_source" id="net_source" class="chosen-select" >
+                            <option value=""> </option>
+                            <?php foreach($ziYuanLaiYuan as $key=>$value){ ?>
+                            <option <?php if($data['net_source'] == $value['dic_name']) echo 'selected'; ?> value="{$value.dic_name}">{$value.dic_name}</option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>登录端口 </label>
+                    <div class="col-sm-3" >
+                    <input type="text" class="form-control" style="width:99%;" name="net_loginport" id="net_loginport" value="<?php if(!empty($data['net_loginport']))echo $data['net_loginport']; ?>">
+                   </div>
+                </div>
+            </div>
+            <div class="form-group">
+
+                <div style="width: 50%;float: left">
+                 <label class=' col-sm-2 control-label'>登录用户 </label>
+                    <div class="col-sm-3" >
+                    <input type="text" class="form-control" style="width:99%;" name="net_loginuser" id="net_loginuser" value="<?php if(!empty($data['net_loginuser']))echo $data['net_loginuser']; ?>">
+                   </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>登录密码 </label>
+                    <div class="col-sm-3" >
+                        <input type="password" class="form-control" style="width:99%;" name="net_loginpass" id="net_loginpass" value="<?php if(!empty($data['net_loginpass']))echo $data['net_loginpass']; ?>">
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>责任人 </label>
+                    <div class="col-sm-3" >
+                        <select  name="net_dutyman" id="net_dutyman" class="chosen-select" >
+                            <option value="<?php echo $dutuser['username'];?>"><?php echo $dutuser['name'];?></option>
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>部标编码 </label>
+                    <div class="col-sm-3" >
+                        <input type="text" class="form-control" style="width:99%;" name="net_code" id="net_code" value="<?php if(!empty($data['net_code']))echo $data['net_code']; ?>">
+                    </div>
+                </div>
+           </div>
+            <!-- <div class="form-group">
+                <div style="width: 50%;float: left">
+                    <label class=' col-sm-2 control-label'>责任部门 </label>
+                    <div class="col-sm-3" >
+                        <span><?php echo $userDept;?></span>
+                    </div>
+                </div>
+            </div> -->
+           <div class="form-group">
+               <div style="width: 99%;float: left">
+                   <label class=' col-sm-2 control-label'>配件信息 </label>
+                   <div class="col-sm-3" >
+                       <textarea name="net_configinfo" id="net_configinfo"   style="height:40px" class="form-control"><?php if(!empty($data['net_configinfo']))echo $data['net_configinfo']; ?></textarea>
+                   </div>
+               </div>
+           </div>
+            <div class="form-group">
+                <div style="width: 99%;float: left">
+                    <label class=' col-sm-2 control-label'>备注 </label>
+                    <div class="col-sm-3" >
+                        <textarea name="net_memo" id="net_memo"   style="height:40px" class="form-control"><?php if(!empty($data['net_memo']))echo $data['net_memo']; ?></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" value="<?php if(!empty($data['net_atpid'])) echo $data['net_atpid']; ?>" name="net_atpid">
+        <input type="hidden" value="<?php if(!empty($net_type)) echo $net_type; ?>" name="net_type">
+       </div>
+    </form>
+    <div class="modal-footer" style="margin: 0px;text-align:center;z-index: 999;position: fixed;bottom:0;left:0;font-family: cursive; width: 100%;height: 60px;background-color: #fff;">
+        <button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn btn-primary" style="display:inline-block;text-align:center;">保存</button>
+    </div>
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        $('#sys_dlg_submit').click(function(){
+            $('#sys_dlg_form1').submit();
+        })
+        var long_select_width = parseInt($('.form-control').eq(0).css('width').replace('px', '')) * 2.75;
+        $('.long-chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: long_select_width+'px'});
+        // $('.long-chosen-select').ajaxChosen({
+        //     dataType: 'json',
+        //     type: 'post',
+        //     url:'__CONTROLLER__/XXXXXXXXXXXXXXX'
+        // });
+        var input_width = parseInt($('.form-control').eq(0).css('width').replace('px', ''));
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: input_width+'px'});
+
+        $.validator.setDefaults({
+            highlight:function(element){
+                $(element).parent().remove('has-success').addClass('has-error');
+            },
+            success:function(element){
+                $(element).parent().remove('has-error').addClass('has-success');
+            },
+            errorPlacement:function(error,element){
+                if(element.is(":radio") || element.is(":checkbox")){
+                    error.appendTo(element.parent());
+                }else{
+                    error.appendTo(element.parent());
+                }
+            },
+            errorClass:"help-block m-b-none",
+            validClass:"help-block m-b-none"
+        });
+
+        //使用人
+        $('#net_useman').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        //责任人
+        $('#net_dutyman').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        //选择地区触发楼宇
+        $('#net_area').change(function () {
+            var id = $(this).val();
+            dic_louyu(id);
+        });
+
+        //设置楼宇
+        var areaid = $("#net_area").val();
+        if(areaid != ''){
+            var next_id = "<?php echo $data['net_building'];?>";
+            dic_louyu(areaid,next_id);
+        }
+
+        //楼宇
+        function dic_louyu(id,next_id){
+            if(next_id == 'undefined'){next_id = ''}
+            if(!id)  return false;
+            $.ajax({
+                type:'post',
+                url:'__MODULE__/dic/getDicLouYu',
+                data:{pid: id},
+
+                dataType :'json',
+                success:function(data){
+                    if (data.code > 0) {
+                        var str=  '<option value=""> </option>';
+                        $.each(data.results,function(k,v){
+                            var sele = '';
+                            if(next_id == v['dic_name']){sele = 'selected'}
+                            str += "<option "+sele+" value='"+v['dic_id']+"'>"+v['dic_name']+"</option>";
+                        });
+                        $('#net_building option').remove();
+                        $('#net_building').append(str);
+                        $('#net_building').trigger("chosen:updated");
+                    } else {
+                        layer.alert(data.message);
+                    }
+                },
+                error:function(){
+                    layer.alert('出错啦！请联系管理员');
+                }
+            });
+        }
+
+        //选择厂家触发型号
+        $('#net_factory').change(function () {
+            var id = $(this).val();
+            dic_xinghao(id);
+        });
+        //设置型号
+        var factoryid = $("#net_factory").val();
+        if(factoryid != ''){
+            var next_id = "<?php echo $data['net_model'];?>";
+            dic_xinghao(factoryid,next_id);
+        }
+        //型号
+        function dic_xinghao(id,next_id){
+            if(next_id == 'undefined'){next_id = ''}
+            if(!id)  return false;
+            $.ajax({
+                type:'post',
+                url:'__MODULE__/dic/getDicXingHao',
+                data:{pid: id,pid2:'交换机'},
+                dataType :'json',
+                success:function(data){
+                    if (data.code > 0) {
+                        var str=  '<option value=""> </option>';
+                        $.each(data.results,function(k,v){
+                            var sele = '';
+                            if(next_id == v['dic_name']){sele = 'selected'}
+                            str += "<option "+sele+" value='"+v['dic_id']+"'>"+v['dic_name']+"</option>";
+                        });
+                        $('#net_model option').remove();
+                        $('#net_model').append(str);
+                        $('#net_model').trigger("chosen:updated");
+                    } else {
+                        layer.alert(data.message);
+                    }
+                },
+                error:function(){
+                    layer.alert('出错啦！请联系管理员');
+                }
+            });
+        }
+
+        $('#sys_dlg_form1').validate({
+            onclick:false,
+            onfocusout:false,
+            onkeyup:false,
+            // 如果是下拉菜单，这里的require是不生效的，需要自己在submitHandle方法中添加验证
+            rules:{
+                
+            },
+            messages:{
+                
+            },submitHandler:function(){
+                var formBody = $('#sys_dlg_form1');
+                $.post('__CONTROLLER__/addData',formBody.serialize(), function (data) {
+                    if (data.code > 0) {
+                        parent.$('#atpbiztable').bootstrapTable('refresh');
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    } else {
+                        layer.alert(data.message);
+                    }
+                },'JSON');
+            }
+        });
+    });
+    //如果验证下拉框必填，请使用该方法
+//    function checkSelectForm(objArr, messageArr){
+//        var len = objArr.length;
+//        for(var i=0;i<len;i++){
+//            var obj = objArr[i];
+//            var val = $('#'+obj).val();
+//            if(!val){
+//                layer.msg('请选择'+messageArr[i]);
+//                $('#'+obj).trigger('chosen:open');
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+</script>

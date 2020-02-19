@@ -1,0 +1,382 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>交换机端口接入数量为0表</title>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="__PUBLICOLD__/vendor/ie8/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/chosen/chosen.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/plugins/switchery/switchery.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" >
+    <link href="__PUBLICOLD__/adminframework/css/animate.css" rel="stylesheet">
+    <link href="__PUBLICOLD__/adminframework/css/style.css?v=4.0.0" rel="stylesheet">
+
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/jquery.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__PUBLICOLD__/vendor/My97DatePicker/WdatePicker.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.jquery.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/chosen/chosen.order.jquery.js"></script>
+    <script src="__PUBLICOLD__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+    <script src="__PUBLICOLD__/adminframework/js/plugins/prettyfile/bootstrap-prettyfile.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/switchery/switchery.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/bootstrap-table.js"></script>
+    <script src="__PUBLICOLD__/vendor/bootstrap-table/bootstrap-table/src/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="__PUBLICOLD__/adminframework/js/plugins/validate/jquery.validate.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="__PUBLICOLD__/vendor/ie8/html5shiv.js"></script>
+    <script src="__PUBLICOLD__/vendor/ie8/respond.min.js"></script>
+    <![endif]-->
+
+     
+    <style>
+        .table{max-width: none;}
+        .pull-left{width:100%;}
+        #atpbiztoolbar{width:100%;}
+        #dic_name{width: 20%;float: left;margin-right: 5px;}
+        .tt{ font-size: 21px; font-weight:bold; padding-left:40px;color:;margin:0px;width:100%;padding-top:15px;}
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <p class="tt">交换机端口接入数量为0表<span style="font-size:18px; font-weight:normal;">(资产库中的某一MAC地址在交换机端口上无绑定信息)</span></p>
+                    <div id="atpbiztoolbar"  style="margin-top:20px;">
+                        <div style="float:left;width:24%;margin-top: 5px;">
+                            <label style="float:left;width:32%;">设备类型&nbsp;</label>
+                            <select id="sbtype"  type="text" width="100px" class="form-control"  style="margin-bottom: -5px;width:56%;">
+                                <option value=""></option>
+                                <foreach name="ds_sbtype" item="vo">
+                                    <option value="{$vo.d_atpid}">{$vo.d_dictname}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                        <div style="float:left;width:24%;margin-top: 5px;">
+                            <label style="float:left;width:32%;">厂家&nbsp;</label>
+                            <select id="factory"  type="text" width="100px" class="form-control"  style="margin-bottom: -5px;width:56%;">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div style="float:left;width:24%;margin-top: 5px;">
+                            <label style="float:left;width:32%;">型号&nbsp;</label>
+                            <select id="model"  type="text" width="100px" class="form-control"  style="margin-bottom: -5px;width:56%;">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div style="float:left;width:24%;margin-top: 5px;">
+                            <label style="float:left;width:32%;">设备名称&nbsp;</label>
+                            <input  id="terminalname" type="text" width="100px" class="form-control"  style="margin-bottom: -5px;width:56%;">
+                        </div>
+                        <div style="float:left;width:24%;margin-top: 15px;">
+                            <label style="float:left;width:32%;">IP地址&nbsp;</label>
+                            <input id="ipaddress" type="text" width="100px" class="form-control"  style="margin-bottom: -5px;width:56%;">
+
+                        </div>
+                        <div style="float:left;width:24%;margin-top: 15px;">
+                            <label style="float:left;width:32%;">MAC地址&nbsp;</label>
+                            <input id="macaddress" type="text" width="100px" class="form-control"  style="margin-bottom: -5px;width:56%;">
+                        </div>
+                        <!--<div style="float:left;width:24%;">-->
+                            <!--<label style="float:left;width:32%;">使用人&nbsp;</label>-->
+                            <!--<select name="userman"  class="chosen-select_longajax" id="userman" style="margin-bottom: -5px;width:56%;">-->
+                                <!--<option value=""></option>-->
+                            <!--</select>-->
+                        <!--</div>-->
+                        <!--<div style="float:left;width:74%;">-->
+                            <!--<label style="float:left;width:10.5%;">责任部门&nbsp;</label>-->
+                            <!--<select name="dutydept"  class="chosen-select_longajax" id="dutydept" style="margin-bottom: -5px;width:83%;">-->
+                                <!--<option value=""></option>-->
+                            <!--</select>-->
+                        <!--</div>-->
+                        <div style="float:left;width:24%;margin-top: 15px;">
+                            <label style="float:left;width:32%;">地 区&nbsp;</label>
+                            <select id="area"  type="text" width="100px" class="form-control"  style="margin-bottom: -5px;width:56%;">
+                                <option value=""></option>
+                                <foreach name="ds_area" item="vo">
+                                    <option value="{$vo.d_atpid}">{$vo.d_dictname}</option>
+                                </foreach>
+                            </select>
+                        </div>
+                        <div style="float:left;width:24%;margin-top: 15px;">
+                            <label style="float:left;width:32%;">楼 宇&nbsp;</label>
+                            <select id="building"  type="text" width="100px" class="form-control"  style="margin-bottom: -5px;width:56%;">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div style="float:left;width:24%;margin-top: 15px;">
+                            <label style="float:left;width:32%;">状 态&nbsp;</label>
+                            <select id="isavailable"  type="text" width="100px" class="form-control"  style="margin-bottom: -5px;width:56%;">
+                                <option value=""></option>
+                                <option value="在用">在用</option>
+                                <option value="备用">备用</option>
+                                <option value="返修">返修</option>
+                                <option value="特殊">特殊</option>
+                            </select>
+                        </div>
+                        <div style="float:left;width:24%;margin-top: 15px;height: auto">
+                            <label style="float:left;width:32%;">使用人&nbsp;</label>
+                            <select id="userman" class="chosen-select_longajax"  style="margin-bottom: -5px;width:56%;">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div style="float:left;width:74%;margin-top: 15px;">
+                            <label style="float:left;width:10.5%;">责任部门&nbsp;</label>
+                            <select name="dutydept"  class="chosen-select_longajax" id="dutydept" style="margin-bottom: -5px;width:83%;">
+                                <option value=""></option>
+                            </select>
+                        </div>
+
+                        <div style="float:left;width:24%;margin-top: 15px;">
+                        <button class="btn btn-success " type="button" id="sys_search"><i class="fa fa-search"></i>&nbsp;查询</button>
+                        <button class="btn btn-danger " type="button" id="sys_del"><i class="fa fa-rotate-right"></i>&nbsp;重置</button>
+                        <button class="btn btn-info " type="button" id="swzero_exp"><i class="fa fa-sign-out"></i>&nbsp;导出</button>
+
+                        </div>
+                    </div>
+                    <table id="atpbiztable" ></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input id="sortfield" value="" type="hidden"/>
+<input id="sortorder" value="" type="hidden"/>
+<div id="sys_dlg" role="dialog" class="modal fade "></div>
+<script>
+    $(function () {
+        $(".chosen-select_longajax").chosen({disable_search_threshold: 0, search_contains: true});//,width:'56%',hight:'80px'
+        $('#userman').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__CONTROLLER__/assignuser'
+        },{
+            loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        $('#dutydept').ajaxChosen({
+            dataType: 'json',
+            type: 'POST',
+            url:'__CONTROLLER__/assigndept'
+        },{
+            loadingImg: '__PUBLICOLD__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+        var TableObj = {
+            oTableInit: function () {
+                $('#atpbiztable').bootstrapTable({
+                    url: '__CONTROLLER__/portInZeroData',         //请求后台的URL（*）
+                    method: 'post',                      //请求方式（*）
+                    toolbar: '#atpbiztoolbar',                //工具按钮用哪个容器
+                    striped: true,                      //是否显示行间隔色
+                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                    pagination: true,                   //是否显示分页（*）
+                    iconSize: 'outline',
+                    sortable: true,                     //是否启用排序
+                    sortName: "zd_atpid",
+                    sortOrder: "desc",                   //排序方式
+                    queryParams: queryParams,//传递参数（*）
+                    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1,                       //初始化加载第一页，默认第一页
+                    pageSize: 10,                       //每页的记录行数（*）
+                    pageList: [5, 10, 25, 50, 100],        //可供选择的每页的行数（*）
+                    search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+//            strictSearch: true,
+                    showColumns: false,                  //是否显示所有的列
+                    showRefresh: false,                  //是否显示刷新按钮
+                    minimumCountColumns: 2,             //最少允许的列数
+                    clickToSelect: false,                //是否启用点击选中行
+//            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                    uniqueId: "l_atpid",                     //每一行的唯一标识，一般为主键列
+//            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+//            cardView: true,                    //是否显示详细视图
+                    detailView: false,                   //是否显示父子表
+                    detailFormatter: "detailFormatter",
+                    columns: [
+                        [
+                            {
+                                title: '序号', width: 40,
+                                formatter: function (value, row, index) {
+                                    var option = $('#atpbiztable').bootstrapTable("getOptions");
+                                    return option.pageSize * (option.pageNumber - 1) + index + 1;
+                                }
+                            },
+                            {field: 'zd_typename', title: '设备类别', sortable: true},
+                            {field: 'zd_name', title: '设备名称', sortable: true},
+                            {field: 'zd_macaddress', title: 'MAC地址', sortable: true},
+                            {field: 'zd_areaname', title: '所在地区', sortable: false},
+                            {field: 'zd_belongfloorname', title: '所在楼宇', sortable: false},
+                            {field: 'zd_roomno', title: '房间号', sortable: true},
+                            {field: 'zd_username', title: '使用人', sortable: true},
+                            {field: 'zd_dutydeptname', title: '责任部门', sortable: true},
+                            {field: 'zd_memo', title: '备注', sortable: true},
+                            {field: 'zd_status', title: '设备状态', sortable: true},
+                            {field: 'zd_macaddress', title: '绑定详情', sortable: false, width: 60,
+                                formatter: function (value, row, index) {
+                                    var inp = "'" + value + "'";
+                                    var a = '<a  class="btn btn-info btn-xs" onclick="macDetail(' + inp + ')">查看</a><br>';
+
+                                    return a;
+                                }}
+                        ]
+                    ],
+                    onSort: function (name, order) {
+                    }
+                });
+            }
+        }
+
+        TableObj.oTableInit();
+        $('#sys_search').on('click',function(){
+            $('#atpbiztable').bootstrapTable('destroy');
+            TableObj.oTableInit();
+        });
+    });
+    function queryParams(params) {  //配置参数
+        $("#sortfield").attr("value",params.sort);
+        $("#sortorder").attr("value",params.order);
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            search: params.search,
+            sort: params.sort,  //排序列名
+            sortOrder: params.order,//排位命令（desc，asc）
+            sbtype:$('#sbtype').val(),
+            factory:$('#factory').val(),
+            model:$('#model').val(),
+            terminalname:$('#terminalname').val(),
+            ipaddress:$('#ipaddress').val(),
+            macaddress:$('#macaddress').val(),
+            area:$('#area').val(),
+            building:$('#building').val(),
+            userman:$('#userman').val(),
+            dutydept:$('#dutydept').val(),
+            isavailable:$('#isavailable').val()
+        };
+        return temp;
+    }
+
+    function dataCellFormatter(value, row) {
+        var color = '#'+Math.floor(Math.random() * 6777215).toString(16);
+        return '<div  style="color: ' + color + '">' + '<i class="glyphicon glyphicon-usd"></i>' + value + '</div>';
+    }
+
+    $('#sys_del').on('click',function() {
+        $('#sbtype').val("");
+        $('#factory').val("");
+        $('#model').val("");
+        $('#terminalname').val("");
+        $('#ipaddress').val("");
+        $('#macaddress').val("");
+        $('#area').val("");
+        $('#building').val("");
+        $('#isavailable').val("");
+        $('#userman').val("");
+        $('#userman').trigger("chosen:updated");
+        $('#dutydept').val("");
+        $('#dutydept').trigger("chosen:updated");
+    });
+
+    $('#swzero_exp').on('click',function(){
+        var sbtype        = $('#sbtype').val();
+        var factory       = $('#factory option:selected').val();
+        var model         = $('#model option:selected').val();
+        var terminalname  = $("#terminalname").val();
+        var ipaddress     = $("#ipaddress").val();
+        var macaddress    = $("#macaddress").val();
+        var area          = $("#area").val();
+        var building      = $("#building").val();
+        var isavailable   = $("#isavailable").val();
+        var userman       = $("#userman").val();
+        var dutydept      = $("#dutydept").val();
+//        alert(sbtype);
+//        alert(factory);
+//        return false;
+
+        var sortOrder = $("#sortorder").val();
+        var sortfield = $("#sortfield").val();
+        window.location.href="__MODULE__/Export/swzero_exp?sbtype="+sbtype+"&factory="+factory+"&model="+model+"&terminalname="+terminalname+"&ipaddress="+ipaddress+"&macaddress="+macaddress+"&area="+area+"&building="+building+"&isavailable="+isavailable+"&userman="+userman+"&dutydept="+dutydept+"&sortOrder="+sortOrder+"&sort="+sortfield;
+    });
+
+    $('#area').on('change',function() {
+        var area = $("#area option:selected").val();
+        $.post('__CONTROLLER__/getbuilding', {area: area}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#building").children().remove();
+                var item = "";
+                item += "<option value='' selected='selected'></option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'>" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#building").append(item);
+            }
+            else
+                $("#building").children().remove();
+        });
+    });
+
+    $('#sbtype').on('change',function() {
+        var sbtype = $("#sbtype option:selected").val();
+//        alert(sbtype);
+        $.post('__CONTROLLER__/getfactory', {sbtype: sbtype}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#factory").children().remove();
+                var item = "";
+                item += "<option value='' selected='selected'></option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'>" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#factory").append(item);
+            }
+            else
+            {
+                $("#factory").children().remove();
+                $("#model").children().remove();
+            }
+        });
+    });
+
+    $('#factory').on('change',function() {
+        var factory = $("#factory option:selected").val();
+        $.post('__CONTROLLER__/getmodel', {factory: factory}, function (rep) {
+            var typearr = eval("(" + rep + ")");
+            if (typearr.length > 0) {
+                $("#model").children().remove();
+                var item = "";
+                item += "<option value='' selected='selected'></option>";
+                for (var i = 0; i < typearr.length; i++) {
+                    item += "<option value='" + typearr[i]['d_atpid'] + "'>" + typearr[i]['d_dictname'] + "</option>";
+                }
+                $("#model").append(item);
+            }
+            else
+                $("#model").children().remove();
+
+        });
+    });
+
+    function macDetail(macaddress){
+//        alert(macaddress);
+        $("#sys_dlg").load('__APP__/Demo/Diff/oldMacInfo?macaddress='+macaddress, function() {
+            $("#sys_dlg").modal({backdrop: false});
+        });
+    }
+</script>
+</body>
+
+</html>
+
+
+
+
