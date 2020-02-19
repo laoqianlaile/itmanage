@@ -1,0 +1,189 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>用户填写计算机信息</title>
+<style>
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .test1 td{
+        height: 50px;
+    }
+    .test2 td{
+        width: 170px;
+        height: 130px;
+    }
+    .test3 td{
+        width: 160px;
+        height: 130px;
+    }
+    .test4 td{
+        height: 50px;
+    }
+    .test5 td{
+        height: 50px;
+    }
+    .test6 td{
+        height: 50px;
+    }
+    .write{
+        font-weight: bold;
+    }
+</style>
+<body style="margin: 0 auto;">
+<!--<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">-->
+    <div>
+        <center>
+        <table border="1" style="width: 1000px;;">
+            <tr class="test1">
+                <td colspan="6" class="write">用户填写计算机信息</td>
+            </tr>
+            <tr class="test2">
+                <td class="write">地区</td>
+                <td>
+                    <select  name="area" id="area" class="chosen-select">
+                        <option value="">请选择</option>
+<!--                        <?php foreach($diQu as $key=>$value){ ?>-->
+<!--                        <option <?php if($data['sev_area'] == $value['dic_id']) echo 'selected'; ?> value="{$value.dic_id}">{$value.dic_name}</option>-->
+<!--                        <?php } ?>-->
+                        <option value="航天城">航天城</option>
+                    </select>
+                </td>
+                <td class="write">楼宇</td>
+                <td>
+                    <select  name="louyu" id="louyu" class="chosen-select" >
+                        <option value="">请选择</option>
+                        <option value="科研楼">科研楼</option>
+                        <option value="科研楼">行政楼</option>
+                        <option value="科研楼">总体楼</option>
+                    </select>
+                </td>
+                <td class="write">房间号</td>
+                <td><input type="text" id="roomno" name="roomno"></td>
+            </tr>
+            <tr class="test3">
+                <td class="write">资产编号</td>
+                <td><input type="text" id="card" name="card" <if condition="$biao eq 1">
+                    readonly
+                </if>></td>
+                <td class="write">MAC地址</td>
+                <td><input type="text" id="mac" name="mac" <if condition="$biao eq 1">
+                    readonly
+                </if>></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="test4">
+                <td colspan="3">
+                    <center>
+                        <input type="radio" value="物理终端" id="zhong" name="zhong" <if condition="$biao neq 3 ">
+                        disabled
+                    </if>>物理终端(本地有硬盘)
+                    </center>
+                </td>
+                <td colspan="3">
+                    <center>
+                        <input type="radio" value="虚拟化终端" id="zhong" name="zhong"<if condition="$biao neq 3 ">
+                        disabled
+                    </if>>虚拟化终端(本地无硬盘)
+                    </center>
+                </td>
+            </tr>
+            <tr class="test5">
+                <td colspan="2"><button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn" >下一步</button></td>
+                <td colspan="2"><button type="button" data-dismiss="modal" id="back" class="btn" >返回</button></td>
+                <td colspan="2"><button type="button" data-dismiss="modal" id="cancel" class="btn" >取消</button></td>
+            </tr>
+            <tr class="test6">
+                <td colspan="6" class="write">注：用户终端相关资产信息可咨询仪器设备管理部门</td>
+            </tr>
+        </table>
+        </center>
+    </div>
+<!--</form>-->
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        // $('#sys_dlg_submit').click(function(){
+        //     $('#sys_dlg_form1').submit();
+        // })
+
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: 150});
+
+        //申请人
+        $('#username').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        //选择厂家触发楼宇
+        $('#sev_area').change(function () {
+            var id = $(this).val();
+            dic_louyu(id);
+        });
+        //楼宇
+        function dic_louyu(id,next_id){
+            if(next_id == 'undefined'){next_id = ''}
+            if(!id)  return false;
+            $.ajax({
+                type:'post',
+                url:'__MODULE__/dic/getDicByPid',
+                data:{dic_id: id},
+
+                dataType :'json',
+                success:function(data){
+                    if (data.code > 0) {
+                        var str=  '<option value="">&nbsp;</option>';
+                        $.each(data.results,function(k,v){
+                            var sele = '';
+                            if(next_id == v['dic_id']){sele = 'selected'}
+                            str += "<option "+sele+" value='"+v['dic_id']+"'>"+v['dic_name']+"</option>";
+                        });
+                        $('#sev_belongfloor option').remove();
+                        $('#sev_belongfloor').append(str);
+                        $('#sev_belongfloor').trigger("chosen:updated");
+                    } else {
+                        layer.alert(data.message);
+                    }
+                },
+                error:function(){
+                    layer.alert('出错啦！请联系管理员');
+                }
+            });
+        }
+
+
+        $("#sys_dlg_submit").on('click',function(){
+            var area = $('#area').val();
+            var louyu = $('#louyu').val();
+            var roomno = $('#roomno').val();
+            var card = $('#card').val();
+            var mac = $('#mac').val();
+            var zhong = $('#zhong').val();
+
+            location.href='__CONTROLLER__/app?area='+area+'&louyu='+louyu+'&roomno='+roomno+'&card='+card+'&mac='+mac+'&zhong='+zhong
+        })
+
+        $("#back").on('click',function(){
+            history.back(1)
+        })
+
+        $('#cancel').on('click',function(){
+            location.href='__CONTROLLER__/index';
+        })
+
+    });
+</script>
