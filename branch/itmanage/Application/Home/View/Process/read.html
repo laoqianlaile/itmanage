@@ -41,7 +41,7 @@
         <center>
         <table border="1" style="width: 1000px;;">
             <tr class="test1">
-                <td colspan="6" class="write">用户信息核实</td>
+                <td colspan="6" class="write">表单信息提交确认</td>
             </tr>
             <tr class="test1">
                 <td colspan="6" class="write">申请人信息</td>
@@ -117,28 +117,12 @@
                 <td colspan="6" class="write">应用系统账号申请信息</td>
             </tr>
             <tr class="test2">
-                <td class="write">域账号</td>
-                <td>{$data.username}</td>
-                <td class="write">USBKEY</td>
-                <td>{$data.usbkey}</td>
-                <td class="write">安全邮件系统</td>
-                <td>{$data.fire}</td>
+                <td class="write">应用系统</td>
+                <td colspan="5" >{$data.many}</td>
             </tr>
-            <tr class="test3">
-                <td class="write">OA系统</td>
-                <td>{$dataoa}</td>
-                <td class="write">AVIDM3</td>
-                <td>{$data.avidm3}</td>
-                <td class="write">AVIDM4</td>
-                <td>{$data.avidm4}</td>
-            </tr>
-            <tr class="test4">
-                <td class="write">打印系统</td>
-                <td>{$data.dayin}</td>
-                <td class="write">网间文件交换系统</td>
-                <td>{$data.jiaohuan}</td>
+            <tr class="test2">
                 <td class="write">其他</td>
-                <td>{$data.qita}</td>
+                <td colspan="5" >{$data.qita}</td>
             </tr>
             <tr class="test5">
                 <td colspan="2"><button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn" >提交</button></td>
@@ -176,7 +160,16 @@
         });
 
         $("#sys_dlg_submit").on('click',function(){
-            location.href='__CONTROLLER__/guarantee'
+            $.ajax({
+                url:'__CONTROLLER__/addData',
+                success:function(data){
+                    if(data == 'success'){
+                        alert('编辑成功')
+                    }else{
+                        alert('编辑失败')
+                    }
+                }
+            })
         })
 
         $("#back").on('click',function(){

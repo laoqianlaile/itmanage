@@ -1,0 +1,87 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>选择设备</title>
+<style>
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .test1 td{
+        height: 50px;
+    }
+    .test2 td{
+        width: 100px;
+        height: 50px;
+    }
+    .write{
+        font-weight: bold;
+    }
+</style>
+<body style="margin: 0 auto;">
+<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">
+    <div>
+        <center>
+        <table border="1" style="width: 700px;;">
+            <tr class="test1">
+                <td colspan="6" class="write">用户选择设备</td>
+            </tr>
+            <tr class="test2">
+                <td class="write">设备</td>
+                <td >
+                    <select name="type" id="type" class="chosen-select">
+                        <option value=""> </option>
+                        <?php foreach($arr as $key=>$value){ ?>
+                        <option
+                        value="{$value.area}-{$value.louyu}-{$value.roomno}-{$value.miji}" >{$value.type}</option>
+                        <?php } ?>
+                    </select>
+                </td>
+            </tr>
+
+            <tr class="test5">
+                <td colspan="2"><button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn" >完成</button></td>
+            </tr>
+        </table>
+        </center>
+    </div>
+</form>
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+
+        })
+
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: '200px'});
+
+
+        $("#sys_dlg_submit").on('click',function(){
+            var type = $('#type').val();
+           $.ajax({
+               url:'__CONTROLLER__/getSel',
+               data:{type:type},
+               type:'post',
+               dataType: 'json',
+               success: function (data) {
+                    if(data.code > 0){
+                        parent.$('#refresh').click();
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+
+                    }
+               }
+           })
+
+        })
+
+    });
+</script>

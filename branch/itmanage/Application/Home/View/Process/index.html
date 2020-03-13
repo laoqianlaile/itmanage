@@ -48,9 +48,7 @@
                 <td>
                     <select  name="username" id="username" class="chosen-select">
                         <option value="">请选择</option>
-                        <option value="{$username}" <?php if(!empty($domainusername)){echo selected;}?>>{$username}</option>
-                        <option value="宝宝" >宝宝</option>
-                        <option value="云迪" >云迪</option>
+                        <option value="{$username}" <?php if(!empty($domainusername)){echo selected;}?>>{$username}({$domainusername})</option>
                     </select>
                 </td>
                 <td class="write">申请人部门</td>
@@ -70,6 +68,7 @@
                 <td class="write">身份证号</td>
                 <td colspan="5" id="card">{$card}</td>
             </tr>
+            <input type="hidden" id="uuid" value="{$id}" name="uuid">
             <tr class="test5">
                 <td colspan="3"><button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn" >下一步</button></td>
                 <td colspan="3"><button type="button" data-dismiss="modal" id="cancel" class="btn" >取消</button></td>
@@ -99,7 +98,7 @@
         $('#username').ajaxChosen({
             dataType: 'json',
             type: 'post',
-            url:'__MODULE__/org/assignuser'
+            url:'__CONTROLLER__/assignusered'
         },{
             loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
         });
@@ -107,50 +106,33 @@
 
         $("#username").on('change',function(){
             var username = $('#username').val();
+            $.ajax({
+                data:{username:username},
+                url:'__CONTROLLER__/getUserData',
+                type:'post',
+                dataType:'json',
+                success:function(rep){
+                    if(rep.code > 0){
+                        $('#dept').text(rep.message[2])
+                        $('#office').text(rep.message[3])
+                        $('#type').text(rep.message[4])
+                        $('#yong').text(rep.message[5])
+                        $('#miji').text(rep.message[6])
+                        $('#card').text(rep.message[7])
+                    }else{
+                        alert(rep.message)
+                    }
+                }
+            })
 
-            if(username == '虎斌'){
-                $('#dept').text('总体部')
-                $('#office').text('科研室')
-                $('#type').text('临时人员')
-                $('#yong').text('全日制')
-                $('#miji').text('秘密')
-                $('#card').text('140322199407010213')
-            }else if(username == '云迪'){
-                $('#dept').text('总环')
-                $('#office').text('行政')
-                $('#type').text('正式人员')
-                $('#yong').text('全日制')
-                $('#miji').text('非密')
-                $('#card').text('140322199207010213')
-            }else if(username == '宝宝'){
-                $('#dept').text('综合管理层')
-                $('#office').text('产品')
-                $('#type').text('临时人员')
-                $('#yong').text('非全日制')
-                $('#miji').text('非密')
-                $('#card').text('140322199107010213')
-            }else{
-                $('#dept').text('')
-                $('#office').text('')
-                $('#type').text('')
-                $('#yong').text('')
-                $('#miji').text('')
-                $('#card').text('')
-            }
+
+
 
 
         })
 
         $('#cancel').on('click',function(){
-            $('#username').val();
-            // $('#username option').remove();
-            $('#username').trigger("chosen:updated");
-            $('#dept').text('')
-            $('#office').text('')
-            $('#type').text('')
-            $('#yong').text('')
-            $('#miji').text('')
-            $('#card').text('')
+            location.reload(true);
         })
 
         $("#sys_dlg_submit").on('click',function(){
@@ -165,10 +147,11 @@
             var yong = $('#yong').text()
             var miji = $('#miji').text()
             var card = $('#card').text()
+            var uuid = $('#uuid').val()
             if(yong == '非全日志' || yong == '博士后在站' || yong == '劳务派遣' || type == '临时人员'){
-                location.href='__CONTROLLER__/guarantee?dept='+dept+'&username='+username+'&office='+office+'&type='+type+'&yong='+yong+'&miji='+miji+'&card='+card+'&order=1'
+                location.href='__CONTROLLER__/guarantee?dept='+dept+'&username='+username+'&office='+office+'&type='+type+'&yong='+yong+'&miji='+miji+'&card='+card+'&uuid='+uuid+'&order=1'
             }else{
-                location.href='__CONTROLLER__/fill?dept='+dept+'&username='+username+'&office='+office+'&type='+type+'&yong='+yong+'&miji='+miji+'&card='+card+'&order=1'
+                location.href='__CONTROLLER__/fill?dept='+dept+'&username='+username+'&office='+office+'&type='+type+'&yong='+yong+'&miji='+miji+'&card='+card+'&uuid='+uuid+'&order=1'
             }
         })
 

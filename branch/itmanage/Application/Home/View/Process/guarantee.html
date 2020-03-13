@@ -48,19 +48,17 @@
                 <td>
                     <select  name="username" id="username" class="chosen-select">
                         <option value="">请选择</option>
-                        <foreach name="user" item="v">
-                            <option value="{$v}">{$v}</option>
-                        </foreach>
+                        <option value="{$username}" <?php if(!empty($username)){echo selected;}?>>{$realusername}</option>
                     </select>
                 </td>
                 <td class="write">部门</td>
-                <td id="dept"></td>
+                <td id="dept">{$dept}</td>
                 <td class="write"> 处室</td>
-                <td id="office"></td>
+                <td id="office">{$office}</td>
             </tr>
             <tr class="test3">
                 <td class="write">职务</td>
-                <td id="job"></td>
+                <td id="job">{$job}</td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -96,42 +94,33 @@
 
         $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: 180});
 
-        //申请人
+        //担保人
         $('#username').ajaxChosen({
             dataType: 'json',
             type: 'post',
-            url:'__MODULE__/org/assignuser'
+            url:'__CONTROLLER__/getOrg'
         },{
             loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
         });
 
         $("#username").on('change',function(){
-             var username = $('#username').val();
-            // $.ajax({
-            //     url:'__CONTROLLER__/getUser',
-            //     type:'post',
-            //     dataType:'JSON',
-            //     success:function(rep){
-            //         $('#dept').text(rep[0])
-            //         $('#office').text(rep[1])
-            //         $('#job').text(rep[2])
-            //     }
-            //
-            // })
+            var username = $('#username').val();
+            $.ajax({
+                url:'__CONTROLLER__/getUser',
+                data:{username:username},
+                type:'post',
+                dataType:'JSON',
+                success:function(rep){
+                    if(rep.code > 0){
+                        $('#dept').text(rep.message[0])
+                        $('#office').text(rep.message[1])
+                        $('#job').text(rep.message[2])
+                    }else{
+                        alert(rep.message)
+                    }
+                }
 
-            if(username == '纪纬'){
-                $('#dept').text('总体部')
-                $('#office').text('科研室')
-                $('#job').text('组长')
-            }else if(username == '马培'){
-                $('#dept').text('总环')
-                $('#office').text('行政')
-                $('#job').text('人事')
-            }else if(username == '东哥'){
-                $('#dept').text('综合管理层')
-                $('#office').text('产品')
-                $('#job').text('人事')
-            }
+            })
 
 
         })
