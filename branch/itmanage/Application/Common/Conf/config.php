@@ -99,7 +99,7 @@ return array(
     // Cookie前缀 避免冲突
     'COOKIE_PREFIX' =>  'itmanage_c_',
     // session 前缀
-    'SESSION_PREFIX'=>  'itmanage_s_',
+//    'SESSION_PREFIX'=>  'itmanage_s_',
 
 
     //----------------------邮件相关--------------------
