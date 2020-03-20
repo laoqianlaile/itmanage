@@ -1,0 +1,89 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>选择入网类型</title>
+<style>
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .test1 td{
+        height: 50px;
+    }
+    .test2 td{
+        width: 170px;
+        height: 130px;
+    }
+    .test3 td{
+        width: 160px;
+        height: 130px;
+    }
+    .test4 td{
+        height: 50px;
+    }
+    .test5 td{
+        height: 50px;
+    }
+    .test6 td{
+        height: 50px;
+    }
+    .write{
+        font-weight: bold;
+    }
+</style>
+<body style="margin: 0 auto;">
+<!--<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">-->
+    <div>
+        <center>
+        <table border="1" style="width: 1000px;;">
+            <tr class="test1">
+                <td colspan="6" class="write">变更入网申请</td>
+            </tr>
+            <tr class="test2">
+                <td class="write" colspan="2"><input type="radio" class="bian"  value="离职，应用系统权限撤销申请" name="bian">离职，应用系统权限撤销申请</td>
+                <td class="write" colspan="2"><input type="radio" class="bian" value="因工作原因不在使用" name="bian">因工作原因不在使用</td>
+                <td class="write" colspan="2"><input type="radio" class="bian" value="其他" name="bian">其他</td>
+            </tr>
+            <tr class="test5">
+                <td colspan="2"><button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn" >下一步</button></td>
+                <td colspan="2"><button type="button" data-dismiss="modal" id="back" class="btn" >返回</button></td>
+                <td colspan="2"><button type="button" data-dismiss="modal" id="cancel" class="btn" >取消</button></td>
+            </tr>
+            <tr class="test6">
+                <td colspan="6" class="write">注：如果发现信息错误请与人力部门核实</td>
+            </tr>
+        </table>
+        </center>
+    </div>
+<!--</form>-->
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: 150});
+
+        $("#back").on('click',function(){
+            history.back(1)
+        })
+
+        $('#cancel').on('click',function(){
+            location.href='__CONTROLLER__/index';
+        })
+
+        $("#sys_dlg_submit").on('click',function(){
+            var type  = $('.bian').val();
+            location.href='__CONTROLLER__/read?type='+type
+
+        })
+
+    });
+</script>

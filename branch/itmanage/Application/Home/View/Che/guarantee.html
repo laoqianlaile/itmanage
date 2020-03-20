@@ -1,0 +1,164 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>担保人信息核实</title>
+<style>
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .test1 td{
+        height: 50px;
+    }
+    .test2 td{
+        width: 170px;
+        height: 130px;
+    }
+    .test3 td{
+        width: 160px;
+        height: 130px;
+    }
+    .test4 td{
+        height: 50px;
+    }
+    .test5 td{
+        height: 50px;
+    }
+    .test6 td{
+        height: 50px;
+    }
+    .write{
+        font-weight: bold;
+    }
+</style>
+<body style="margin: 0 auto;">
+<!--<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">-->
+    <div>
+        <center>
+        <table border="1" style="width: 1000px;;">
+            <tr class="test1">
+                <td colspan="6" class="write">担保人信息核实</td>
+            </tr>
+            <tr class="test2">
+                <td class="write">担保人姓名</td>
+                <td>
+                    <select  name="username" id="username" class="chosen-select">
+                        <option value="">请选择</option>
+                        <option value="{$username}" <?php if(!empty($username)){echo selected;}?>>{$realusername}({$username})</option>
+                    </select>
+                </td>
+                <td class="write">部门</td>
+                <td id="dept">{$dept}</td>
+                <td class="write"> 处室</td>
+                <td id="office">{$office}</td>
+            </tr>
+            <tr class="test3">
+                <td class="write">职务</td>
+                <td id="job">{$job}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+<!--            <tr class="test4">-->
+<!--                <td>身份证号</td>-->
+<!--                <td colspan="5">{$card}</td>-->
+<!--            </tr>-->
+            <tr class="test5">
+                <td colspan="2"><button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn" >下一步</button></td>
+                <td colspan="2"><button type="button" data-dismiss="modal" id="back" class="btn" >返回</button></td>
+                <td colspan="2"><button type="button" data-dismiss="modal" id="cancel" class="btn" >取消</button></td>
+            </tr>
+            <tr class="test6">
+                <td colspan="6" class="write">注：如果发现信息错误请与人力部门核实</td>
+            </tr>
+        </table>
+        </center>
+    </div>
+<!--</form>-->
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        // $('#sys_dlg_submit').click(function(){
+        //     $('#sys_dlg_form1').submit();
+        // })
+
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: 180});
+
+        //担保人
+        $('#username').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__CONTROLLER__/getOrg'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        $("#username").on('change',function(){
+            var username = $('#username').val();
+            $.ajax({
+                url:'__CONTROLLER__/getUser',
+                data:{username:username},
+                type:'post',
+                dataType:'JSON',
+                success:function(rep){
+                    if(rep.code > 0){
+                        $('#dept').text(rep.message[0])
+                        $('#office').text(rep.message[1])
+                        $('#job').text(rep.message[2])
+                    }else{
+                        alert(rep.message)
+                    }
+                }
+
+            })
+
+
+        })
+
+
+        $("#sys_dlg_submit").on('click',function(){
+            var username = $('#username').val()
+            if(username == ''){
+                alert('担保人不可为空！');
+                return false;
+            }
+            var dept = $('#dept').text()
+            var office = $('#office').text()
+            var job = $('#job').text()
+            $.ajax({
+                url:'__CONTROLLER__/isOrg',
+                data:{username:username},
+                type:'post',
+                success:function(rep){
+                   if('success' != rep){
+                        alert('申请人与担保人必须同一部门');
+                        return false;
+                   }else{
+                    location.href='__CONTROLLER__/fill?username='+username+'&dept='+dept+'&office='+office+'&job='+job+'&order=2'
+                   }     
+                }
+            })    
+
+            
+        })
+
+        $("#back").on('click',function(){
+            history.back(1)
+        })
+
+        $('#cancel').on('click',function(){
+            location.href='__CONTROLLER__/index';
+        })
+
+    });
+</script>

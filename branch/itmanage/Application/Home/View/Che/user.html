@@ -1,0 +1,113 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>中专用机管理</title>
+<style>
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .test1 td{
+        height: 50px;
+    }
+    .test2 td{
+        width: 170px;
+        height: 130px;
+    }
+    .test3 td{
+        width: 160px;
+        height: 130px;
+    }
+    .test4 td{
+        height: 50px;
+    }
+    .test5 td{
+        height: 50px;
+    }
+    .test6 td{
+        height: 50px;
+    }
+    .write{
+        font-weight: bold;
+    }
+</style>
+<body style="margin: 0 auto;">
+<!--<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">-->
+    <div>
+        <center>
+        <table border="1" style="width: 1000px;;">
+            <tr class="test1">
+                <td colspan="6" class="write">单独申请域账号与USBKEY</td>
+            </tr>
+            <tr class="test4">
+                <td class="write">中转用机管理账号申请</td>
+                <td colspan="5">
+                    <select  name="isSq" id="isSq" class="chosen-select">
+                        <option value="">请选择</option>
+                        <option value="是">是</option>
+                        <option value="否">否</option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="test4">
+                <td class="write">申请人姓名</td>
+                <td colspan="5">
+                    <select  name="username" id="username" class="chosen-select">
+                        <option value="">请选择</option>
+                        <option value="{$domainusername}" <?php if(!empty($domainusername)){echo selected;}?>>{$username}({$domainusername})</option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="test4">
+                <td class="write">身份证号</td>
+                <td colspan="5" id="card">{$card}</td>
+            </tr>
+        </table>
+        </center>
+    </div>
+<!--</form>-->
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        // $('#sys_dlg_submit').click(function(){
+        //     $('#sys_dlg_form1').submit();
+        // })
+
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: '150px'});
+
+        //申请人
+        $('#username').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__CONTROLLER__/assignusered'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+
+        $('#cancel').on('click',function(){
+            location.reload(true);
+        })
+
+        $('#isSq').change(function(){
+            var isSq = $(this).val()
+            if(isSq == '否'){
+                location.href='__CONTROLLER__/read?biao=3';
+            }
+        })
+
+        $("#sys_dlg_submit").on('click',function(){
+            var username = $('#username').val()
+        })
+
+    });
+</script>

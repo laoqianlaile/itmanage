@@ -1,0 +1,189 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>用户信息核实</title>
+<style>
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .test1 td{
+        height: 30px;
+    }
+    .test2 td{
+        width: 170px;
+        height: 80px;
+    }
+    .test3 td{
+        width: 160px;
+        height: 80px;
+    }
+    .test4 td{
+        height: 30px;
+    }
+    .test5 td{
+        height: 30px;
+    }
+    .test6 td{
+        height: 30px;
+    }
+    .write{
+        font-weight: bold;
+    }
+</style>
+<body style="margin: 0 auto;">
+<!--<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">-->
+    <div>
+        <center>
+        <table border="1" style="width: 1000px;;">
+            <tr class="test1">
+                <td colspan="6" class="write">表单信息</td>
+            </tr>
+            <tr class="test1">
+                <td colspan="6" class="write">申请人信息</td>
+            </tr>
+            <tr class="test2">
+                <td class="write">申请人姓名</td>
+                <td>{$indexList.username}</td>
+                <td class="write">申请人部门</td>
+                <td>{$indexList.dept}</td>
+                <td class="write">申请人处室</td>
+                <td>{$indexList.office}</td>
+            </tr>
+            <tr class="test3">
+                <td class="write">人员类型</td>
+                <td>{$indexList.type}</td>
+                <td class="write">用工类型</td>
+                <td>{$indexList.yong}</td>
+                <td class="write">岗位密级</td>
+                <td>{$indexList.miji}</td>
+            </tr>
+            <tr class="test4">
+                <td class="write">身份证号</td>
+                <td colspan="5">{$indexList.card}</td>
+            </tr>
+            <tr class="test1">
+                <td colspan="6" class="write">担保人信息</td>
+            </tr>
+            <tr class="test2">
+                <td class="write">担保人姓名</td>
+                <td>
+                    {$guaranteeList.username}
+                </td>
+                <td class="write">部门</td>
+                <td id="dept">{$guaranteeList.dept}</td>
+                <td class="write">处室</td>
+                <td id="office">{$guaranteeList.office}</td>
+            </tr>
+            <tr class="test3">
+                <td class="write">职务</td>
+                <td id="job">{$guaranteeList.job}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="test1">
+                <td colspan="6" class="write">原终端信息</td>
+            </tr>
+
+            <tr class="test2">
+                <td class="write">终端类型</td>
+                <td>{$fillList.type}</td>
+                <td class="write">资产编号</td>
+                <td>{$fillList.code}</td>
+                <td class="write">密级</td>
+                <td>{$fillList.miji}</td>
+            </tr>
+            <tr class="test2">
+                <td class="write">地区</td>
+                <td>{$fillList.area}</td>
+                <td class="write">楼宇</td>
+                <td>{$fillList.louyu}</td>
+                <td class="write">房间号</td>
+                <td>{$fillList.roomno}</td>
+            </tr>
+            <tr class="test3">
+                <td class="write">MAC地址</td>
+                <td>{$fillList.mac}</td>
+                <td class="write">计算机名</td>
+                <td>{$fillList.ji}</td>
+                <td class="write">接入交换机地址</td>
+                <td>{$fillList.dizhi}</td>
+            </tr>
+            <tr class="test3">
+                <td class="write">接入端口号</td>
+                <td>{$fillList.port}</td>
+                <td class="write">IP地址</td>
+                <td>{$fillList.ip}</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="test1">
+                <td colspan="6" class="write">撤销理由</td>
+            </tr>
+            <tr class="test2">
+                <td colspan="6">{$data.type}</td>
+            </tr>
+            <tr class="test5">
+<!--                <td colspan="2"><button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn" >提交</button></td>-->
+                <td colspan="3"><button type="button" data-dismiss="modal" id="back" class="btn" >返回</button></td>
+                <td colspan="3"><button type="button" data-dismiss="modal" id="cancel" class="btn" >取消</button></td>
+            </tr>
+            <tr class="test6">
+                <td colspan="6" class="write">注：如果发现信息有误请选择“取消”按钮重新填写</td>
+            </tr>
+        </table>
+        </center>
+    </div>
+<!--</form>-->
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        // $('#sys_dlg_submit').click(function(){
+        //     $('#sys_dlg_form1').submit();
+        // })
+
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: 150});
+
+        //申请人
+        $('#username').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        // $("#sys_dlg_submit").on('click',function(){
+        //     $.ajax({
+        //         url:'__CONTROLLER__/addData',
+        //         success:function(data){
+        //             if(data == 'success'){
+        //                 alert('编辑成功')
+        //             }else{
+        //                 alert('编辑失败')
+        //             }
+        //         }
+        //     })
+        // })
+
+        $("#back").on('click',function(){
+            history.back(1)
+        })
+
+        $('#cancel').on('click',function(){
+            location.href='__CONTROLLER__/index';
+        })
+
+    });
+</script>
