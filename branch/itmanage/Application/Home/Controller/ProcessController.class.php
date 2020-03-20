@@ -6,57 +6,85 @@ use Think\Controller;
 class ProcessController extends BaseController
 {
 
+    public function first(){
+        unset($_SESSION['guaranteeUser']);
+        unset($_SESSION['indexUser']);
+        unset($_SESSION['AraeData']);
+        unset($_SESSION['fillUser']);
+        unset($_SESSION['read']);
+        unset($_SESSION['Rtype']);
+//        $id = I('get.uuid');
+        $id = 'TC841EABB102B4123A5D992C5';
+        $data = M('xingwei')->where("xw_atpid = '%s'",$id)->getField('xw_content');
+        $data = json_decode($data,true);
+        if(!empty($data)){
+            session('indexUser',$data[0]);
+            session('guaranteeUser',$data[1]);
+            session('fillUser',$data[2]);
+            session('read',$data[3]);
+            $this->assign('Rtype',$data[4]);
+        }
+        $this->assign('uuid',$id);
+        $this->display();
+    }
+
+    public function inAll(){
+        $ids = I('post.bian');
+        $id = explode(',',$ids);
+        if(count($id) > 1){
+            exit(makeStandResult(-1, '只能选择一项！'));
+        }else{
+            exit(makeStandResult(1, 'success'));
+        }
+    }
+
     public function index()
     {
         $id = I('get.uuid');
-//        $id = 'T826A39C662E54A5F93DB6865';
-        $data = M('xingwei')->where("xw_atpid = '%s'",$id)->getField('xw_content');
-        if(empty($id)){
-            unset($_SESSION['guaranteeUser']);
-            unset($_SESSION['indexUser']);
-            unset($_SESSION['AraeData']);
-            unset($_SESSION['fillUser']);
-            unset($_SESSION['read']);
-            $model = M('sysuser s');
-            $userid = session('user_id');
-            $list = $model->field('user_name,user_realusername,org_fullname,user_type,user_jobtype,user_secretlevel,user_card')
-                    ->join('org o on o.org_id = s.user_orgid')
-                    ->where("user_id = '%s'",$userid)
+        $Rtype = I('get.Rtype');
+//         $id = 'TA74CEB1C038646F4A0C58618';
+        session('Rtype',$Rtype);
+//        $data = M('xingwei')->where("xw_atpid = '%s'",$id)->getField('xw_content');
+//        $data = json_decode($data,true);
+        $User = session('indexUser');
+        if(empty($User)){
+//            unset($_SESSION['guaranteeUser']);
+//            unset($_SESSION['indexUser']);
+//            unset($_SESSION['AraeData']);
+//            unset($_SESSION['fillUser']);
+//            unset($_SESSION['read']);
+            $model = M('it_person s');
+            $userid = session('domainusername');
+            $list = $model->field('domainusername,realusername,fullname,name,type,jobtype,secretlevel,card')
+                    ->join('it_depart o on o.id = s.orgid')
+                    ->where("domainusername = '%s'",$userid)
                     ->find();
-            $org = explode('-',$list['org_fullname']);
-            $domainusername = $list['user_name'];
-            $username = $list['user_realusername'];
+            $org = explode('-',$list['fullname']);
+            $domainusername = $list['domainusername'];
+            $username = $list['realusername'];
             $deptname = $org[0];
-            $officename = $org[1];
-            $type = $list['user_type'];
-            $yong = $list['user_jobtype'];
-            $miji = $list['user_secretlevel'];
-            $card = $list['user_card'];
+            $officename = $list['name'];
+            $type = $list['type'];
+            $yong = $list['jobtype'];
+            $miji = $list['secretlevel'];
+            $card = $list['card'];
         }else{
-            $data = explode('||',$data);
-            if(count($data) == '4'){
-                session('indexUser',explode(';',$data[0]));
-                session('guaranteeUser',explode(';',$data[1]));
-                session('fillUser',explode(';',$data[2]));
-                session('read',explode(';',$data[3]));
-            }else{
-                session('indexUser',explode(';',$data[0]));
-                session('fillUser',explode(';',$data[1]));
-                session('read',explode(';',$data[2]));
-
-            }
-            $User = $data[0];
-            $User = explode(';',$User);
-            $domainusername = M('sysuser')->where("user_name = '%s'",$User[1])->getField('user_realusername');
-            $username = $User[1];
-            $deptname = $User[0];
-            $officename = $User[2];
-            $type = $User[3];
-            $yong = $User[4];
-            $miji = $User[5];
-            $card = $User[6];
+//            session('indexUser',$data[0]);
+//            session('guaranteeUser',$data[1]);
+//            session('fillUser',$data[2]);
+//            session('read',$data[3]);
+//            $User = $data[0];
+            $username = M('it_person')->where("domainusername = '%s'",$User['username'])->getField('realusername');
+            $domainusername = $User['username'];
+            $deptname = $User['dept'];
+            $officename = $User['office'];
+            $type = $User['type'];
+            $yong = $User['yong'];
+            $miji = $User['miji'];
+            $card = $User['card'];
             $this->assign('id',$id);
         }
+        $this->assign('Rtype',$Rtype);
         $this->assign('miji',$miji);
         $this->assign('card',$card);
         $this->assign('yong',$yong);
@@ -72,15 +100,14 @@ class ProcessController extends BaseController
     //担保信息核实
     public function guarantee(){
         $data = I('get.');
-
         session('indexUser',$data);
         $guaranteelist = session('guaranteeUser');
         if(!empty($guaranteelist)){
-            $username = $guaranteelist[0];
-            $realusername = M('sysuser')->where("user_name = '%s'",$username)->getField('user_realusername');
-            $dept = $guaranteelist[1];
-            $office = $guaranteelist[2];
-            $job = $guaranteelist[3];
+            $username = $guaranteelist['username'];
+            $realusername = M('it_person')->where("domainusername = '%s'",$username)->getField('realusername');
+            $dept = $guaranteelist['dept'];
+            $office = $guaranteelist['office'];
+            $job = $guaranteelist['job'];
             $this->assign('username',$username);
             $this->assign('realusername',$realusername);
             $this->assign('dept',$dept);
@@ -93,33 +120,46 @@ class ProcessController extends BaseController
 
 
     public function getOrg(){
-        $list= session('indexUser');
-        $username = $list['username'];
-        $orgId = M('sysuser')->where("user_name = '%s'",$username)->getField('user_orgid');
+        // $list= session('indexUser');
+        // $username = $list['username'];
+        // $orgId = M('it_person')->where("domainusername = '%s'",$username)->getField('orgid');
         $q = $_POST['data']['q'];
         $Model = M();
-        $sql_select="select  p.user_name id,p.user_realusername||'('||p.user_name||')' text from  sysuser p inner join org o on o.org_id = p.user_orgid where
-                    (p.user_name like '%".$q."%' or p.user_realusername like '%".$q."%') and p.user_issystem = '否' and user_enable = '启用' and user_isdelete = 0 and user_orgid = '".$orgId."'";
+        $sql_select="select  p.domainusername id,p.realusername||'('||p.domainusername||')' text from  it_person p inner join it_depart o on o.id = p.orgid where
+                    (p.domainusername like '%".$q."%' or p.realusername like '%".$q."%')";
         $result=$Model->query($sql_select);
         echo json_encode(array('q' =>$q, 'results' => $result));
     }
 
+    public function isOrg(){
+        $user = I('post.username');
+        $data = session('indexUser');
+        $userIndex = $data['username'];
+        $id = M('it_person')->where("domainusername = '%s'",$user)->getField('orgid');
+        $ids = M('it_person')->where("domainusername = '%s'",$userIndex)->getField('orgid');
+        if($id == $ids){
+            echo 'success';    
+        }else{
+            echo 'error';    
+        }
+    }
+
     public function getUserData(){
         $username = I('post.username');
-        $model = M('sysuser s');
-        $list = $model->field('user_name,user_realusername,org_fullname,user_type,user_jobtype,user_secretlevel,user_card,user_job')
-            ->join('org o on o.org_id = s.user_orgid')
-            ->where("user_name = '%s'",$username)
+        $model = M('it_person s');
+        $list = $model->field('domainusername,realusername,name,fullname,type,jobtype,secretlevel,card,job')
+            ->join('it_depart o on o.id = s.orgid')
+            ->where("domainusername = '%s'",$username)
             ->find();
-        $org = explode('-',$list['org_fullname']);
-        $domainusername = $list['user_name'];
-        $username = $list['user_realusername'];
+        $org = explode('-',$list['fullname']);
+        $domainusername = $list['domainusername'];
+        $username = $list['realusername'];
         $deptname = $org[0];
-        $officename = $org[1];
-        $type = $list['user_type'];
-        $yong = $list['user_jobtype'];
-        $miji = $list['user_secretlevel'];
-        $card = $list['user_card'];
+        $officename = $list['name'];
+        $type = $list['type'];
+        $yong = $list['jobtype'];
+        $miji = $list['secretlevel'];
+        $card = $list['card'];
         $arr = [$domainusername,$username,$deptname,$officename,$type,$yong,$miji,$card];
         if(!empty($list)){
             exit(makeStandResult(1, $arr));
@@ -130,13 +170,13 @@ class ProcessController extends BaseController
 
     public function getUser(){
         $username = I('post.username');
-        $model = M('sysuser s');
-        $list = $model->field('user_name,user_realusername,org_fullname,user_type,user_jobtype,user_secretlevel,user_card,user_job')
-            ->join('org o on o.org_id = s.user_orgid')
-            ->where("user_name = '%s'",$username)
+        $model = M('it_person s');
+        $list = $model->field('domainusername,realusername,fullname,type,jobtype,secretlevel,card,job')
+            ->join('it_depart o on o.id = s.orgid')
+            ->where("domainusername = '%s'",$username)
             ->find();
-        $org = explode('-',$list['org_fullname']);
-        $job = $list['user_job'];
+        $org = explode('-',$list['fullname']);
+        $job = $list['job'];
         $deptname = $org[0];
         $officename = $org[1];
         $arr = [$deptname,$officename,$job];
@@ -155,6 +195,7 @@ class ProcessController extends BaseController
         }else{
             session('guaranteeUser',$data);
         }
+        $Rtype = session('Rtype');
         $list = session('indexUser');
         $dept = $list['dept'];
         $first = ['总体部'];
@@ -168,13 +209,20 @@ class ProcessController extends BaseController
             $biao = 3;
         }
         $fillUser = session('fillUser');
+//        print_r($fillUser);die;
         if(!empty($fillUser)){
-            $this->assign('area',$fillUser[0]);
-            $this->assign('louyu',$fillUser[1]);
-            $this->assign('roomno',$fillUser[2]);
-            $this->assign('card',$fillUser[3]);
-            $this->assign('mac',$fillUser[4]);
-            $this->assign('zhong',$fillUser[5]);
+            $this->assign('area',$fillUser['area']);
+            $this->assign('louyu',$fillUser['louyu']);
+            $this->assign('roomno',$fillUser['roomno']);
+            $this->assign('card',$fillUser['card']);
+            $this->assign('mac',$fillUser['mac']);
+            $this->assign('zhong',$fillUser['zhong']);
+            $this->assign('zichan',$fillUser['zichan']);
+            $this->assign('sk',explode(',',$fillUser['sk']));
+            $this->assign('hui',$fillUser['hui']);
+            $this->assign('ji',$fillUser['ji']);
+            $this->assign('isSk',$fillUser['isSk']);
+            $this->assign('Smac',$fillUser['Smac']);
         }
         $AraeData = session('AraeData');
         if(!empty($AraeData)){
@@ -187,6 +235,20 @@ class ProcessController extends BaseController
         $arrDic = D('Dic')->getDicValueByName($arr);
         $this->assign('diQu', $arrDic['地区']);
         $this->assign('biao',$biao);
+        $this->assign('Rtype',$Rtype);
+        $this->display();
+    }
+
+    public function user(){
+        $data = I('get.');
+        $data['area'] = $this->getDicById($data['area'], 'dic_name'); //地区
+        $data['louyu'] = $this->getDicLouYuById($data['louyu'], 'dic_name'); //楼宇
+        session('fillUser',$data);
+        $list = session('indexUser');
+        $user = $list['username'];
+        $realuser = M('it_person')->where("domainusername = '%s'",$user)->getField('realusername');
+        $this->assign('$username',$realuser);
+        $this->assign('domainusername',$user);
         $this->display();
     }
 
@@ -200,7 +262,6 @@ class ProcessController extends BaseController
             ['type'=>'333','area'=>'航天城','louyu'=>'航天城1号','roomno'=>'333','miji'=>'非密']
         ];
         $this->assign('arr',$arr);
-        $this->assign('user',$user);
         $this->display();
     }
 
@@ -258,20 +319,29 @@ class ProcessController extends BaseController
         $this->assign('biao',$biao);
         $read = session('read');
         if(!empty($read)){
-            $reads = explode(',',$read[0]);
+            $reads = explode(',',$read['many']);
             $this->assign('read',$reads);
-            $this->assign('qita',$read[1]);
+            $this->assign('qita',$read['qita']);
         }
         $this->display();
     }
 
     public function read(){
         $data = I('get.');
-        session('read',$data);
+        if($data['biao'] == 1){
+            $data['area'] = $this->getDicById($data['area'], 'dic_name'); //地区
+            $data['louyu'] = $this->getDicLouYuById($data['louyu'], 'dic_name'); //楼宇
+            session('fillUser',$data);
+        }else if($data['biao'] == 2){
+            session('read',$data);
+        }
+        $Rtype = session('Rtype');
         $indexlist = session('indexUser');
         $guaranteelist = session('guaranteeUser');
         $filllist = session('fillUser');
-        $this->assign('data',$data);
+        $read = session('read');
+        $this->assign('Rtype',$Rtype);
+        $this->assign('data',$read);
         $this->assign('indexList',$indexlist);
         $this->assign('guaranteeList',$guaranteelist);
         $this->assign('fillList',$filllist);
@@ -283,6 +353,9 @@ class ProcessController extends BaseController
         $guaranteelist = session('guaranteeUser');
         $filllist = session('fillUser');
         $readlist = session('read');
+        $Rtype = session('Rtype');
+        $list = [$indexlist,$guaranteelist,$filllist,$readlist,$Rtype];
+        $list= json_encode($list);
         $data = [];
         if(empty($indexlist['uuid'])){
             $data['xw_atpid'] = makeGuid();
@@ -314,16 +387,6 @@ class ProcessController extends BaseController
         $arr['Ymany'] = $readlist['qita'];
         $arr = json_encode($arr,true);
 //        $arr = url($arr);//对接接口
-        $indexlists = implode(';',$indexlist);
-        $guaranteelist = implode(';',$guaranteelist);
-        $filllist = implode(';',$filllist);
-        $readlist = implode(';',$readlist);
-
-        if(!empty($guaranteelist)){
-            $list = $indexlists.'||'.$guaranteelist.'||'.$filllist.'||'.$readlist;
-        }else{
-            $list = $indexlists.'||'.$filllist.'||'.$readlist;
-        }
         $model = M('xingwei');
         $data['xw_content'] = $list;
         if(empty($indexlist['uuid'])){
