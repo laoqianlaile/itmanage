@@ -39,8 +39,54 @@
         <center>
         <table border="1" style="width: 1000px;;">
             <tr class="test1">
-                <td colspan="6" class="write">用户填写计算机信息<if condition="$biao eq 1"><button type="button" data-dismiss="modal" id="sys_submit" class="btn btn-info" >选择设备</button></if></td>
+                <if condition="$Rtype eq 4">
+                    <td colspan="6" class="write">用户填写设备信息</td>
+                <else />
+                    <td colspan="6" class="write">用户填写计算机信息<if condition="$biao eq 1 and $Rtype eq 1"><button type="button" data-dismiss="modal" id="sys_submit" class="btn btn-info" >选择设备</button></if></td>
+                </if>
             </tr>
+            <if condition="$Rtype eq 4">
+                <tr class="test4">
+                    <td>资产类型</td>
+                    <td colspan="3">
+                        <select name="zichan" id="zichan" class="chosen-selected">
+                            <option value=""> </option>
+                            <option value="视频会议终端" <?php if($zichan == 视频会议终端){echo selected;}?>>视频会议终端</option>
+                            <option value="打印机" <?php if($zichan == 打印机){echo selected;}?>>打印机</option>
+                            <option value="刷卡器" <?php if($zichan == 刷卡器){echo selected;}?>>刷卡器</option>
+                            <option value="自助导出刻录机" <?php if($zichan == 自助导出刻录机){echo selected;}?>>自助导出刻录机</option>
+                            <option value="自助导入" <?php if($zichan == 自助导入){echo selected;}?>>自助导入</option>
+                            <option value="扫描仪" <?php if($zichan == 扫描仪){echo selected;}?>>扫描仪</option>
+                            <option value="实验设备" <?php if($zichan == 实验设备){echo selected;}?>>实验设备</option>
+                        </select>
+                    </td>
+                    <td colspan="2">
+                        <select name="sk" id="sk" class="chosen-selected" multiple disabled>
+                            <option value=""> </option>
+                            <option value="刷卡器1" <?php if(in_array(刷卡器1,$sk)){echo selected;}?>>刷卡器1</option>
+                            <option value="刷卡器2" <?php if(in_array(刷卡器2,$sk)){echo selected;}?>>刷卡器2</option>
+                            <option value="刷卡器3" <?php if(in_array(刷卡器3,$sk)){echo selected;}?>>刷卡器3</option>
+                        </select>
+                    </td>
+                </tr>
+            </if>
+            <if condition="$Rtype eq 3">
+                <tr>
+                    <td>会议室类型</td>
+                    <td colspan="5">
+                        <input type="radio" value="部/所会议室" id="hui" name="hui" <?php if($hui == 部/所会议室){echo checked;}?>>部/所会议室
+                        <input type="radio" value="处室内部会议室" id="hui" name="hui" style="margin-left: 100px;" <?php if($hui == 处室内部会议室){echo checked;}?> >处室内部会议室
+                        <input type="radio" value="其他" id="hui" name="hui" style="margin-left: 100px;" <?php if($hui == 其他){echo checked;}?> >其他
+                    </td>
+                </tr>
+                <tr>
+                    <td>计算机类型</td>
+                    <td colspan="5">
+                        <input type="radio" value="涉密网计算机" id="ji" name="ji"  <?php if($ji == 涉密网计算机){echo checked;}?>>涉密网计算机
+                        <input type="radio" value="廋客户机" id="ji" name="ji" style="margin-left: 100px;" <?php if($ji == 廋客户机){echo checked;}?>>廋客户机
+                    </td>
+                </tr>
+            </if>
             <tr class="test2">
                 <td class="write">地区</td>
                 <td>
@@ -82,26 +128,51 @@
                 <td></td>
                 <td></td>
             </tr>
-            <tr class="test4">
-                <td colspan="3">
-                    <center>
-                        <input type="radio" value="物理终端" id="zhong" <if condition="$zhong eq 物理终端 ">
-                        checked
-                    </if> name="zhong" <if condition="$biao neq 3 ">
-                        disabled
-                    </if>>物理终端(本地有硬盘)
-                    </center>
-                </td>
-                <td colspan="3">
-                    <center>
-                        <input type="radio" value="虚拟化终端" id="zhong" <if condition="$zhong eq 虚拟化终端 ">
-                        checked
-                    </if> name="zhong" <if condition="$biao neq 3 ">
-                        disabled
-                    </if>>虚拟化终端(本地无硬盘)
-                    </center>
-                </td>
-            </tr>
+            <if condition="$Rtype neq 4">
+                <tr class="test4">
+                    <td colspan="2">
+                        <center>
+                            <input type="radio" value="物理终端" name="zhong" id="zhong" <if condition="$zhong eq 物理终端 ">
+                            checked
+                        </if>  <if condition="$biao neq 3 ">
+                            disabled
+                        </if>>物理终端(本地有硬盘)
+                        </center>
+                    </td>
+                    <td colspan="2">
+                        <center>
+                            <input type="radio" value="虚拟化终端"  name="zhong" id="zhong" <if condition="$zhong eq 虚拟化终端 ">
+                            checked
+                        </if>  <if condition="$biao neq 3 ">
+                            disabled
+                        </if>>虚拟化终端(本地无硬盘)
+                        </center>
+                    </td>
+                    <td colspan="2">
+                        <if condition="$Rtype eq 5">
+                        <center>
+                            <input type="radio" value="中转用机" name="zhong" id="zhong"
+                            checked>中转用机
+                        </center>
+                        </if>
+                    </td>
+                </tr>
+            </if>
+            <if condition="$Rtype eq 4">
+                <tr class="test4">
+                    <td class="write">刷卡器</td>
+                    <td> <select name="isSk" id="isSk" class="chosen-select">
+                        <option value=""> </option>
+                        <option value="是" <?php if($isSk == 是){echo selected;}?>>是</option>
+                        <option value="否" <?php if($isSk == 否){echo selected;}?>>否</option>
+                    </select></td>
+                    <td class="write">刷卡器MAC</td>
+                    <td><input type="text" id="Smac" name="Smac" value="<?php if(!empty($Smac))echo $Smac; ?>" >
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </if>
             <tr class="test5">
                 <td colspan="2"><button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn" >下一步</button></td>
                 <td colspan="2"><button type="button" data-dismiss="modal" id="back" class="btn" >返回</button></td>
@@ -135,9 +206,12 @@
         // })
         var biao = '{$biao}';
         var area = '{$area}';
-        if(biao==1 && area ==''){
+        var Rtype = '{$Rtype}';
+
+        if(biao==1 && area =='' && Rtype == 1){
             six();
         }
+
         function six(){
             layui.use('layer', function() {
                 var layer = layui.layer;
@@ -160,6 +234,7 @@
         })
 
         $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: 150});
+        $('.chosen-selected').chosen({disable_search_threshold: 0, search_contains: true, width: '300px'});
 
         //申请人
         $('#username').ajaxChosen({
@@ -214,15 +289,17 @@
             });
         }
 
+        $('#zichan').change(function(){
+            var zi = $(this).val();
+            if(zi == '打印机' || zi == '自助导出刻录机' || zi == '自助导入' || zi == '扫描仪' ){
+                $('#sk').removeAttr("disabled")
+            }
+        })
+
 
 
         $("#sys_dlg_submit").on('click',function(){
-            var area = $('#area').val();
-            var louyu = $('#louyu').val();
-            var roomno = $('#roomno').val();
-            var card = $('#card').val();
             var mac = $('#mac').val();
-            var zhong = $('#zhong').val();
             var miji = $('#miji').val();
             if(mac != ''){
                 $.ajax({
@@ -248,29 +325,53 @@
                         // alert(rep.code);return;
                         if(rep.code == '-1'){
                             alert(rep.message);
-                            location.href='__CONTROLLER__/app?area='+area+'&louyu='+louyu+'&roomno='+roomno+'&card='+card+'&mac='+mac+'&zhong='+zhong
+                            tiao()
                         }else if(rep.code == '-2'){
                             alert(rep.message);
                             return false;
                         }else{
-                            location.href='__CONTROLLER__/app?area='+area+'&louyu='+louyu+'&roomno='+roomno+'&card='+card+'&mac='+mac+'&zhong='+zhong
+                            tiao()
                         }
                     }
                 })
             }else{
-                location.href='__CONTROLLER__/app?area='+area+'&louyu='+louyu+'&roomno='+roomno+'&card='+card+'&mac='+mac+'&zhong='+zhong
+                tiao()
             }
-
-
-
         })
+
+        function tiao(){
+            var area = $('#area').val();
+            var louyu = $('#louyu').val();
+            var roomno = $('#roomno').val();
+            var card = $('#card').val();
+            var mac = $('#mac').val();
+
+            var zhong = $('#zhong').val();
+            var zichan = $('#zichan').val();
+            var sk = $('#sk').val();
+
+            var hui = $('#hui').val();
+            var ji = $('#ji').val();
+
+            var isSk = $('#isSk').val();
+            var Smac = $('#Smac').val();
+            var type = '{$Rtype}'
+
+            if(type ==1 ){
+                location.href='__CONTROLLER__/app?area='+area+'&louyu='+louyu+'&roomno='+roomno+'&card='+card+'&mac='+mac+'&zhong='+zhong+'&zichan='+zichan+'&sk='+sk+'&hui='+hui+'&ji='+ji+'&isSk='+isSk+'&Smac='+Smac
+            }else if(type == 5 ){
+                location.href='__CONTROLLER__/User?area='+area+'&louyu='+louyu+'&roomno='+roomno+'&card='+card+'&mac='+mac+'&zhong='+zhong+'&zichan='+zichan+'&sk='+sk+'&hui='+hui+'&ji='+ji+'&isSk='+isSk+'&Smac='+Smac+'&biao=1'
+            }else{
+                location.href='__CONTROLLER__/read?area='+area+'&louyu='+louyu+'&roomno='+roomno+'&card='+card+'&mac='+mac+'&zhong='+zhong+'&zichan='+zichan+'&sk='+sk+'&hui='+hui+'&ji='+ji+'&isSk='+isSk+'&Smac='+Smac+'&biao=1'
+            }
+        }
 
         $("#back").on('click',function(){
             history.back(1)
         })
 
         $('#cancel').on('click',function(){
-            location.href='__CONTROLLER__/index';
+            location.href='__CONTROLLER__/first';
         })
 
     });

@@ -145,7 +145,7 @@
 
             }
             s=s.substr(0, s.length - 1);
-            location.href='__CONTROLLER__/read?many='+s+'&qita='+qita;
+            location.href='__CONTROLLER__/read?many='+s+'&qita='+qita+'&biao=2';
         })
 
         $("#back").on('click',function(){
@@ -153,7 +153,7 @@
         })
 
         $('#cancel').on('click',function(){
-            location.href='__CONTROLLER__/index';
+            location.href='__CONTROLLER__/first';
         })
 
     });

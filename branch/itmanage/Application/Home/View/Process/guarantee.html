@@ -48,7 +48,7 @@
                 <td>
                     <select  name="username" id="username" class="chosen-select">
                         <option value="">请选择</option>
-                        <option value="{$username}" <?php if(!empty($username)){echo selected;}?>>{$realusername}</option>
+                        <option value="{$username}" <?php if(!empty($username)){echo selected;}?>>{$realusername}({$username})</option>
                     </select>
                 </td>
                 <td class="write">部门</td>
@@ -135,7 +135,21 @@
             var dept = $('#dept').text()
             var office = $('#office').text()
             var job = $('#job').text()
-            location.href='__CONTROLLER__/fill?username='+username+'&dept='+dept+'&office='+office+'&job='+job+'&order=2'
+            $.ajax({
+                url:'__CONTROLLER__/isOrg',
+                data:{username:username},
+                type:'post',
+                success:function(rep){
+                   if('success' != rep){
+                        alert('申请人与担保人必须同一部门');
+                        return false;
+                   }else{
+                    location.href='__CONTROLLER__/fill?username='+username+'&dept='+dept+'&office='+office+'&job='+job+'&order=2'
+                   }     
+                }
+            })    
+
+            
         })
 
         $("#back").on('click',function(){
@@ -143,7 +157,7 @@
         })
 
         $('#cancel').on('click',function(){
-            location.href='__CONTROLLER__/index';
+            location.href='__CONTROLLER__/first';
         })
 
     });

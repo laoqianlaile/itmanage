@@ -88,8 +88,37 @@
                 <td></td>
             </tr>
             <tr class="test1">
-                <td colspan="6" class="write">计算机信息</td>
+                <if condition="$Rtype eq 4">
+                    <td colspan="6" class="write">设备信息</td>
+                    <else />
+                    <td colspan="6" class="write">计算机信息</td>
+                </if>
             </tr>
+            <if condition="$Rtype eq 4">
+                <tr class="test4">
+                    <td>资产类型</td>
+                    <td colspan="3">
+                      {$fillList.zichan}
+                    </td>
+                    <td colspan="2">
+                        {$fillList.sk}
+                    </td>
+                </tr>
+            </if>
+            <if condition="$Rtype eq 3">
+                <tr>
+                    <td>会议室类型</td>
+                    <td colspan="5">
+                        {$fillList.hui}
+                    </td>
+                </tr>
+                <tr>
+                    <td>计算机类型</td>
+                    <td colspan="5">
+                        {$fillList.ji}
+                    </td>
+                </tr>
+            </if>
             <tr class="test2">
                 <td class="write">地区</td>
                 <td>{$fillList.area}</td>
@@ -106,13 +135,26 @@
                 <td></td>
                 <td></td>
             </tr>
-            <tr class="test4">
-                <td colspan="6">
-                    <center>
-                        {$fillList.zhong}
-                    </center>
-                </td>
-            </tr>
+
+            <if condition="$Rtype eq 4">
+                <tr class="test4">
+                    <td class="write">刷卡器</td>
+                    <td> {$fillList.isSk}</td>
+                    <td class="write">刷卡器MAC</td>
+                    <td>{$fillList.Smac}
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            <else />
+                <tr class="test4">
+                    <td colspan="6">
+                        <center>
+                            {$fillList.zhong}
+                        </center>
+                    </td>
+                </tr>
+            </if>
             <tr class="test1">
                 <td colspan="6" class="write">应用系统账号申请信息</td>
             </tr>
@@ -177,7 +219,7 @@
         })
 
         $('#cancel').on('click',function(){
-            location.href='__CONTROLLER__/index';
+            location.href='__CONTROLLER__/first';
         })
 
     });
