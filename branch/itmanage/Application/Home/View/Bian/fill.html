@@ -1,0 +1,224 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>原终端信息</title>
+<style>
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .test1 td{
+        height: 50px;
+    }
+    .test2 td{
+        width: 170px;
+        height: 130px;
+    }
+    .test3 td{
+        width: 160px;
+        height: 130px;
+    }
+    .test4 td{
+        height: 50px;
+    }
+    .test5 td{
+        height: 50px;
+    }
+    .test6 td{
+        height: 50px;
+    }
+    .write{
+        font-weight: bold;
+    }
+</style>
+<body style="margin: 0 auto;">
+<!--<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">-->
+    <div>
+        <center>
+        <table border="1" style="width: 1000px;;">
+            <tr class="test1">
+               <td colspan="6" class="write">原终端信息<button type="button" data-dismiss="modal" id="sys_submit" class="btn btn-info" >选择设备</button></td>
+            </tr>
+            <tr class="test2">
+                <td>终端类型</td>
+                <td>
+                    <select name="type" id="type" class="chosen-select">
+                        <option value="">请选择</option>
+                        <foreach name="type" item="v">
+                            <option value="{$v.zd_type}" <?php if($v['zd_type'] == $zd_type){echo selected;}?>>{$v.zd_type}</option>
+                        </foreach>
+                    </select>
+                </td>
+                <td>资产编号</td>
+                <td>
+                    <select name="code" id="code" class="chosen-select">
+                        <option value=""></option>
+                        <foreach name="code" item="v">
+                            <option value="{$v.zd_devicecode}" <?php if($v['zd_devicecode'] == $zd_devicecode){echo selected;}?>>{$v.zd_devicecode}</option>
+                        </foreach>
+                    </select>
+                </td>
+                <td class="write">密级</td>
+                <td id="miji">{$zd_secretlevel}</td>
+            </tr>
+            <tr class="test2">
+                <td class="write">地区</td>
+                <td id="area">{$zd_area}</td>
+                <td class="write">楼宇</td>
+                <td id="louyu">{$zd_belongfloor}</td>
+                <td class="write">房间号</td>
+                <td id="roomno">{$zd_roomno}</td>
+            </tr>
+            <tr class="test3">
+                <td class="write">MAC地址</td>
+                <td id="mac">{$zd_macaddress}</td>
+                <td class="write">计算机名</td>
+                <td id="ji"></td>
+                <td class="write">接入交换机地址</td>
+                <td id="dizhi"></td>
+            </tr>
+            <tr class="test3">
+                <td class="write">接入端口号</td>
+                <td id="port"></td>
+                <td class="write">IP地址</td>
+                <td id="ip">{$zd_ipaddress}</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="test5">
+                <td colspan="2"><button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn" >下一步</button></td>
+                <td colspan="2"><button type="button" data-dismiss="modal" id="back" class="btn" >返回</button></td>
+                <td colspan="2"><button type="button" data-dismiss="modal" id="cancel" class="btn" >取消</button></td>
+            </tr>
+            <button type="button" data-dismiss="modal" id="refresh" style="display: none" class="btn" >下一步</button>
+            <tr class="test6">
+                <td colspan="6" class="write">注：用户终端相关资产信息可咨询仪器设备管理部门</td>
+            </tr>
+        </table>
+        </center>
+    </div>
+<!--</form>-->
+</body>
+<script src="__PUBLIC__/js/tablecopy.js"></script>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script>
+
+    $(function () {
+        var biao = '{$biao}';
+        // var area = '{$area}';
+        // var Rtype = '{$Rtype}';
+        //
+        if(biao== ''){
+            six();
+        }
+        function six(){
+            layui.use('layer', function() {
+                var layer = layui.layer;
+                layer.open({
+                    title:'选择设备',
+                    closeBtn:1,
+                    type: 2,
+                    shadeClose:false,
+                    content: '__CONTROLLER__/select',
+                    area: ['55%', '55%']
+                });
+            })
+        }
+
+        $('#sys_submit').click(function(){
+            six();
+        })
+        $('#refresh').click(function(){
+            location.reload(true);
+        })
+
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: 150});
+        $('.chosen-selected').chosen({disable_search_threshold: 0, search_contains: true, width: '300px'});
+
+        $('#code').change(function(){
+            var type=$('#type').val();
+            var code=$('#code').val();
+            if(type == ''){
+                $('#code').val('');
+                $('#code').trigger("chosen:updated");
+                alert("必须选择终端类型");
+                return false;
+            }
+            $.ajax({
+                type:'post',
+                data:{type:type,code:code},
+                url:'__CONTROLLER__/getData',
+                dataType:'json',
+                success:function(rep){
+                    if(rep.code>0){
+                        $('#miji').text(rep.message['zd_secretlevel']);
+                        $('#area').text(rep.message['zd_area']);
+                        $('#louyu').text(rep.message['zd_belongfloor']);
+                        $('#roomno').text(rep.message['zd_roomno']);
+                        $('#mac').text(rep.message['zd_macaddress']);
+                        $('#ji').text(rep.message['zd_secretlevel']);
+                        $('#dizhi').text(rep.message['zd_secretlevel']);
+                        $('#port').text(rep.message['zd_secretlevel']);
+                        $('#ip').text(rep.message['zd_ipaddress']);
+                    }else{
+                        alert(rep.message);
+                    }
+                }
+            })
+        })
+
+
+
+        $("#sys_dlg_submit").on('click',function(){
+            var miji = $('#miji').val();
+            if(miji != ''){
+                $.ajax({
+                    data:{miji:miji},
+                    url:'__CONTROLLER__/isMJ',
+                    type:'post',
+                    dataType:'json',
+                    success:function(rep){
+                        // alert(rep.code);return;
+                        if(rep.code == '-1'){
+                            alert(rep.message);
+                            tiao()
+                        }else if(rep.code == '-2'){
+                            alert(rep.message);
+                            return false;
+                        }else{
+                            tiao()
+                        }
+                    }
+                })
+            }else{
+                tiao()
+            }
+        })
+
+        function tiao(){
+            var code = $('#code').val();
+            var type = $('#type').val();
+            var miji = $('#miji').text();
+            var area = $('#area').text();
+            var louyu = $('#louyu').text();
+            var roomno = $('#roomno').text();
+            var mac = $('#mac').text();
+            var ji = $('#ji').text();
+            var dizhi = $('#dizhi').text();
+            var port = $('#port').text();
+            var ip = $('#ip').text();
+           location.href='__CONTROLLER__/tian?code='+code+'&type='+type+'&miji='+miji+'&area='+area+'&louyu='+louyu+'&roomno='+roomno+'&mac='+mac+'&ji='+ji+'&dizhi='+dizhi+'&port='+port+'&ip='+ip
+        }
+
+        $("#back").on('click',function(){
+            history.back(1)
+        })
+
+        $('#cancel').on('click',function(){
+            location.href='__CONTROLLER__/first';
+        })
+
+    });
+</script>

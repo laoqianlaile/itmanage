@@ -1,0 +1,160 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>用户填写应用系统账号申请信息</title>
+<style>
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .test1 td{
+        height: 50px;
+    }
+    .test2 td{
+        width: 170px;
+        height: 130px;
+    }
+    .test3 td{
+        width: 160px;
+        height: 130px;
+    }
+    .test4 td{
+        width: 160px;
+        height: 130px;
+    }
+    .test5 td{
+        height: 50px;
+    }
+    .test6 td{
+        height: 50px;
+    }
+    .default{
+        width: 150px;
+    }
+    .write{
+        font-weight: bold;
+    }
+</style>
+<body style="margin: 0 auto;">
+<!--<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">-->
+    <div>
+        <center>
+        <table border="1" style="width: 1000px;;">
+            <tr class="test1">
+                <td colspan="6" class="write">用户填写应用系统账号申请信息</td>
+            </tr>
+            <tr class="test2">
+                <td class="write">域账号</td>
+                <td>
+                    <input type="checkbox" name="many" <?php if(in_array('域账号',$read)){echo checked;}?> value="域账号" <if condition="$biao eq 2"> checked
+                </if>>
+                </td>
+                <td class="write">USBKEY</td>
+                <td>
+                    <input type="checkbox" name="many" value="USBKEY" <?php if(in_array('USBKEY',$read)){echo checked;}?> <if condition="$biao eq 2"> checked
+                </if> >
+                </td>
+                <td class="write">安全邮件系统</td>
+                <td>
+                    <input type="checkbox" name="many" <?php if(in_array('安全邮件系统',$read)){echo checked;}?> value="安全邮件系统">
+                </td>
+            </tr>
+            <tr class="test3">
+                <td class="write">OA系统</td>
+                <td>
+                    <input type="checkbox" name="many" value="OA系统" <?php if(in_array('OA系统',$read)){echo checked;}?> <if condition="$biao eq 1"> disabled
+                </if>>
+                        </td>
+                <td class="write">AVIDM3</td>
+                <td>
+                    <input type="checkbox" name="many"  value="AVIDM3" <?php if(in_array('AVIDM3',$read)){echo checked;}?> <if condition="$biao eq 1">
+                    disabled
+                </if>>
+                </td>
+                <td class="write">AVIDM4</td>
+                <td>
+                    <input type="checkbox" name="many" value="AVIDM4" <?php if(in_array('AVIDM4',$read)){echo checked;}?>   <if condition="$biao eq 1">
+                    disabled
+                </if>>
+                </td>
+            </tr>
+            <tr class="test4">
+                <td class="write">打印系统</td>
+                <td>
+                    <input type="checkbox" name="many" value="打印系统" <?php if(in_array('打印系统',$read)){echo checked;}?>   <if condition="$biao eq 1">
+                    disabled
+                </if>>
+                </td>
+                <td class="write">网间文件交换系统</td>
+                <td>
+                    <input type="checkbox" name="many" value="网间文件交换系统" <?php if(in_array('网间文件交换系统',$read)){echo checked;}?>   <if condition="$biao eq 1">
+                    disabled
+                </if>>
+                </td>
+                <td class="write">其他</td>
+                <td><input type="text" id="qita" name="qita" value="<?php if(!empty($qita))echo $qita; ?>"></td>
+            </tr>
+            <tr class="test5">
+                <td colspan="2"><button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn" >下一步</button></td>
+                <td colspan="2"><button type="button" data-dismiss="modal" id="back" class="btn" >返回</button></td>
+                <td colspan="2"><button type="button" data-dismiss="modal" id="cancel" class="btn" >取消</button></td>
+            </tr>
+            <tr class="test6">
+                <td colspan="6" class="write">注：请核实您所选择的应用系统名称</td>
+            </tr>
+        </table>
+        </center>
+    </div>
+<!--</form>-->
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        // $('#sys_dlg_submit').click(function(){
+        //     $('#sys_dlg_form1').submit();
+        // })
+
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true,width:'150px'});
+
+        //申请人
+        $('#username').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__MODULE__/org/assignuser'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        $("#sys_dlg_submit").on('click',function(){
+            var qita = $('#qita').val();
+            var obj = document.getElementsByName('many');
+
+            var s = '';
+
+            for (var i = 0; i < obj.length; i++) {
+
+                if (obj[i].checked) s += obj[i].value + ',';
+
+            }
+            s=s.substr(0, s.length - 1);
+            location.href='__CONTROLLER__/read?many='+s+'&qita='+qita+'&biao=2';
+        })
+
+        $("#back").on('click',function(){
+            history.back(1)
+        })
+
+        $('#cancel').on('click',function(){
+            location.href='__CONTROLLER__/index';
+        })
+
+    });
+</script>

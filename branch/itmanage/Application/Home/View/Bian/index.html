@@ -1,0 +1,166 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>用户信息核实</title>
+<style>
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .test1 td{
+        height: 50px;
+    }
+    .test2 td{
+        width: 170px;
+        height: 130px;
+    }
+    .test3 td{
+        width: 160px;
+        height: 130px;
+    }
+    .test4 td{
+        height: 50px;
+    }
+    .test5 td{
+        height: 50px;
+    }
+    .test6 td{
+        height: 50px;
+    }
+    .write{
+        font-weight: bold;
+    }
+</style>
+<body style="margin: 0 auto;">
+<!--<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">-->
+    <div>
+        <center>
+        <table border="1" style="width: 1000px;;">
+            <tr class="test1">
+                <td colspan="6" class="write">申请人信息</td>
+            </tr>
+            <tr class="test2">
+                <td class="write">申请人姓名</td>
+                <td>
+                    <select  name="username" id="username" class="chosen-select">
+                        <option value="">请选择</option>
+                        <option value="{$domainusername}" <?php if(!empty($domainusername)){echo selected;}?>>{$username}({$domainusername})</option>
+                    </select>
+                </td>
+                <td class="write">申请人部门</td>
+                <td id="dept">{$deptname}</td>
+                <td class="write">申请人处室</td>
+                <td id="office">{$officename}</td>
+            </tr>
+            <tr class="test3">
+                <td class="write">人员类型</td>
+                <td id="type">{$type}</td>
+                <td class="write">用工类型</td>
+                <td id="yong">{$yong}</td>
+                <td class="write">岗位密级</td>
+                <td id="miji">{$miji}</td>
+            </tr>
+            <if condition="$Rtype eq 1">
+                <tr class="test4">
+                    <td class="write">身份证号</td>
+                    <td colspan="5" id="card">{$card}</td>
+                </tr>
+            </if>
+            <input type="hidden" id="uuid" value="{$id}" name="uuid">
+            <tr class="test5">
+                <td colspan="2"><button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn" >下一步</button></td>
+                <td colspan="2"><button type="button" data-dismiss="modal" id="back" class="btn" >返回</button></td>
+                <td colspan="2"><button type="button" data-dismiss="modal" id="cancel" class="btn" >取消</button></td>
+            </tr>
+            <tr class="test6">
+                <td colspan="6" class="write">注：如果发现信息错误请与人力部门核实</td>
+            </tr>
+        </table>
+        </center>
+    </div>
+<!--</form>-->
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+        // $('#sys_dlg_submit').click(function(){
+        //     $('#sys_dlg_form1').submit();
+        // })
+
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: 150});
+
+        //申请人
+        $('#username').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__CONTROLLER__/assignusered'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+
+        $("#username").on('change',function(){
+            var username = $('#username').val();
+            $.ajax({
+                data:{username:username},
+                url:'__CONTROLLER__/getUserData',
+                type:'post',
+                dataType:'json',
+                success:function(rep){
+                    if(rep.code > 0){
+                        $('#dept').text(rep.message[2])
+                        $('#office').text(rep.message[3])
+                        $('#type').text(rep.message[4])
+                        $('#yong').text(rep.message[5])
+                        $('#miji').text(rep.message[6])
+                        $('#card').text(rep.message[7])
+                    }else{
+                        alert(rep.message)
+                    }
+                }
+            })
+
+
+
+
+
+        })
+
+        $('#cancel').on('click',function(){
+            location.href='__CONTROLLER__/first';
+        })
+
+        $("#back").on('click',function(){
+            history.back(1)
+        })
+
+        $("#sys_dlg_submit").on('click',function(){
+            var username = $('#username').val()
+            if(username == ''){
+                alert('申请人不可为空!');
+                return false;
+            }
+            var dept = $('#dept').text()
+            var office = $('#office').text()
+            var type = $('#type').text()
+            var yong = $('#yong').text()
+            var miji = $('#miji').text()
+            var card = $('#card').text()
+            var uuid = $('#uuid').val()
+            if(yong == '非全日志' || yong == '博士后在站' || yong == '劳务派遣' || type == '总体部临时人员' || type == '临时人员'){
+                location.href='__CONTROLLER__/guarantee?dept='+dept+'&username='+username+'&office='+office+'&type='+type+'&yong='+yong+'&miji='+miji+'&card='+card+'&uuid='+uuid+'&order=1'
+            }else{
+                location.href='__CONTROLLER__/fill?dept='+dept+'&username='+username+'&office='+office+'&type='+type+'&yong='+yong+'&miji='+miji+'&card='+card+'&uuid='+uuid+'&order=1'
+            }
+        })
+
+    });
+</script>

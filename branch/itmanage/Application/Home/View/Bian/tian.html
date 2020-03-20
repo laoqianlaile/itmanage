@@ -1,0 +1,245 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:tableheader" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>变更后数据填写</title>
+<style>
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .test1 td{
+        height: 50px;
+    }
+    .test2 td{
+        width: 170px;
+        height: 130px;
+    }
+    .test3 td{
+        width: 160px;
+        height: 130px;
+    }
+    .test4 td{
+        height: 50px;
+    }
+    .test5 td{
+        height: 50px;
+    }
+    .test6 td{
+        height: 50px;
+    }
+    .write{
+        font-weight: bold;
+    }
+</style>
+<body style="margin: 0 auto;">
+<!--<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">-->
+    <div>
+        <center>
+        <table border="1" style="width: 1000px;;">
+            <tr class="test1">
+               <td colspan="6" class="write">变更后数据填写</td>
+            </tr>
+            <tr class="test2">
+                <td class="write">地区</td>
+                <td>
+                    <select name="area" id="area" class="chosen-select" <?php if(!in_array(2,$Rtype)){echo disabled;}?>>
+                        <option value=""> </option>
+                        <?php foreach($diQu as $key=>$value){ ?>
+                        <option <?php if($area == $value['dic_name']) echo 'selected'; ?>
+                        value="{$value.dic_id}" >{$value.dic_name}</option>
+                        <?php } ?>
+                    </select>
+                </td>
+                <td class="write">楼宇</td>
+                <td>
+                    <select name="louyu" id="louyu" class="chosen-select" <?php if(!in_array(2,$Rtype)){echo disabled;}?>>
+                        <option value=""> </option>
+                    </select>
+                </td>
+                <td class="write">房间号</td>
+                <td><input type="text" id="roomno" value="<?php if(!empty($roomno))echo $roomno; ?>" name="roomno" <?php if(!in_array(2,$Rtype)){echo disabled;}?>></td>
+            </tr>
+            <tr class="test2">
+                <td class="write">部门</td>
+                <td>
+                    <select name="dept" id="dept" class="chosen-select" <?php if(!in_array(3,$Rtype)){echo disabled;}?>>
+                        <option value=""> </option>
+                        <foreach name="dept" item="v">
+                            <option value="{$v.dic_name}">{$v.dic_name}</option>
+                        </foreach>
+                    </select>
+                </td>
+                <td class="write">处室</td>
+                <td>
+                    <select name="office" id="office" class="chosen-select" <?php if(!in_array(3,$Rtype)){echo disabled;}?>>
+                        <option value=""> </option>
+                        <foreach name="office" item="v">
+                            <option value="{$v.dic_name}">{$v.dic_name}</option>
+                        </foreach>
+                    </select>
+                </td>
+                <td class="write">新MAC地址</td>
+                <td><input type="text" id="Nmac" name="Nmac" <?php if(!in_array(4,$Rtype)){echo disabled;}?>></td>
+            </tr>
+            <tr class="test3">
+                <td class="write">资产编号</td>
+                <td><input type="text" id="code" name="code" <?php if(!in_array(5,$Rtype)){echo disabled;}?>></td>
+                <td class="write">终端类型</td>
+                <td><input type="text" id="type" name="type" <?php if(!in_array(5,$Rtype)){echo disabled;}?>></td>
+                <td class="write">终端密级</td>
+                <td> <select name="zMiji" id="zMiji" class="chosen-select" <?php if(!in_array(5,$Rtype)){echo disabled;}?>>
+                    <option value=""> </option>
+                    <foreach name="zMiji" item="v">
+                        <option value="{$v.dic_name}">{$v.dic_name}</option>
+                    </foreach>
+                </select></td>
+            </tr>
+            <tr class="test3">
+                <td class="write">MAC地址</td>
+                <td><input type="text" id="mac" name="mac" <?php if(!in_array(5,$Rtype)){echo disabled;}?>></td>
+                <td class="write">新责任人</td>
+                <td>
+                    <select  name="username" id="username" class="chosen-select" <?php if(!in_array(1,$Rtype)){echo disabled;}?>>
+                        <option value="">请选择</option>
+                    </select>
+                </td>
+                <td class="write">密级</td>
+                <td id="NewMiji"></td>
+            </tr>
+            <tr class="test5">
+                <td colspan="2"><button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn" >下一步</button></td>
+                <td colspan="2"><button type="button" data-dismiss="modal" id="back" class="btn" >返回</button></td>
+                <td colspan="2"><button type="button" data-dismiss="modal" id="cancel" class="btn" >取消</button></td>
+            </tr>
+            <button type="button" data-dismiss="modal" id="refresh" style="display: none" class="btn" >下一步</button>
+            <tr class="test6">
+                <td colspan="6" class="write">注：用户终端相关资产信息可咨询仪器设备管理部门</td>
+            </tr>
+        </table>
+        </center>
+    </div>
+<!--</form>-->
+</body>
+<script src="__PUBLIC__/js/tablecopy.js"></script>
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script>
+
+    $(function () {
+
+
+
+
+
+        $('#refresh').click(function(){
+            location.reload(true);
+        })
+
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: '150px'});
+        $('.chosen-selected').chosen({disable_search_threshold: 0, search_contains: true, width: '300px'});
+        //申请人
+        $('#username').ajaxChosen({
+            dataType: 'json',
+            type: 'post',
+            url:'__CONTROLLER__/assignusered'
+        },{
+            loadingImg: '__PUBLIC__/vendor/chosen-ajax-addition/example/loading.gif'
+        });
+
+        //选择地区触发楼宇
+        $('#area').change(function () {
+            var id = $(this).val();
+            dic_louyu(id);
+        });
+
+        //设置楼宇
+        var areaid = $("#area").val();
+        if (areaid != '') {
+            var next_name = "<?php echo $louyu;?>";
+            dic_louyu(areaid, next_name);
+        }
+
+        //楼宇
+        function dic_louyu(id, next_name) {
+            if (next_name == 'undefined') { next_name = '' }
+            if (!id) return false;
+            $.ajax({
+                type: 'post',
+                url: '__MODULE__/dic/getDicLouYu',
+                data: { pid: id },
+
+                dataType: 'json',
+                success: function (data) {
+                    if (data.code > 0) {
+                        var str = '<option value=""> </option>';
+                        $.each(data.results, function (k, v) {
+                            var sele = '';
+                            if (next_name == v['dic_name']) { sele = 'selected' }
+                            str += "<option " + sele + " value='" + v['dic_id'] + "'>" + v['dic_name'] + "</option>";
+                        });
+                        $('#louyu option').remove();
+                        $('#louyu').append(str);
+                        $('#louyu').trigger("chosen:updated");
+                    } else {
+                        layer.alert(data.message);
+                    }
+                },
+                error: function () {
+                    layer.alert('出错啦！请联系管理员');
+                }
+            });
+        }
+
+
+
+
+        $("#username").on('change',function(){
+            var username = $(this).val();
+            $.ajax({
+                type:'post',
+                data:{username:username},
+                url:'__CONTROLLER__/miji',
+                dataType:'json',
+                success:function(rep){
+                    if(rep.code>0){
+                        $('#NewMiji').text(rep.message)
+                    }else{
+                        $('#NewMiji').text(rep.message)
+                    }
+                }
+            })
+        })
+
+
+
+        $("#sys_dlg_submit").on('click',function(){
+                tiao()
+        })
+
+        function tiao(){
+            var area = $('#area').val();
+            var louyu = $('#louyu').val();
+            var roomno = $('#roomno').val();
+            var dept = $('#dept').val();
+            var office = $('#office').val();
+            var Nmac = $('#Nmac').val();
+            var code = $('#code').val();
+            var type = $('#type').val();
+            var zMiji = $('#zMiji').val();
+            var mac = $('#mac').val();
+            var username = $('#username').val();
+            var NewMiji = $('#NewMiji').text();
+           location.href='__CONTROLLER__/read?area='+area+'&louyu='+louyu+'&roomno='+roomno+'&dept='+dept+'&office='+office+'&Nmac='+Nmac+'&code='+code+'&type='+type+'&zMiji='+zMiji+'&mac='+mac+'&username='+username+'&NewMiji='+NewMiji
+        }
+
+        $("#back").on('click',function(){
+            history.back(1)
+        })
+
+        $('#cancel').on('click',function(){
+            location.href='__CONTROLLER__/first';
+        })
+
+    });
+</script>

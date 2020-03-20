@@ -1,0 +1,107 @@
+<?php showViewsByPower() ?>
+<include file="Universal@Public:header" />
+<link href="__PUBLIC__/vendor/chosen/chosen.css" rel="stylesheet">
+<script src="__PUBLIC__/vendor/chosen/chosen.jquery.js"></script>
+<script src="__PUBLIC__/vendor/My97DatePicker/WdatePicker.js"></script>
+<script src="__PUBLIC__/vendor/chosen-ajax-addition/chosen.ajaxaddition.jquery.js"></script>
+
+<title>选择入网类型</title>
+<style>
+
+    .chosen-container .chosen-results {
+        max-height: 180px;
+    }
+    .test1 td{
+        height: 50px;
+    }
+    .test2 td{
+        width: 170px;
+        height: 130px;
+    }
+    .test3 td{
+        width: 160px;
+        height: 130px;
+    }
+    .test4 td{
+        height: 50px;
+    }
+    .test5 td{
+        height: 50px;
+    }
+    .test6 td{
+        height: 50px;
+    }
+    .write{
+        font-weight: bold;
+    }
+</style>
+<body style="margin: 0 auto;">
+<!--<form id="sys_dlg_form1" role="form" class="form-horizontal" enctype="multipart/form-data">-->
+    <div>
+        <center>
+        <table border="1" style="width: 1000px;;">
+            <tr class="test1">
+                <td colspan="6" class="write">变更入网申请</td>
+            </tr>
+            <tr class="test2">
+                <td class="write"><input type="checkbox" value="1" id="bian" name="bian">变更责任人</td>
+                <td class="write"><input type="checkbox" value="2" id="bian" name="bian">变更办公地点</td>
+                <td class="write"><input type="checkbox" value="3" id="bian" name="bian">变更部门处室</td>
+                <td class="write"><input type="checkbox" value="4" id="bian" name="bian">变更主板网卡</td>
+                <td class="write"><input type="checkbox" value="5" id="bian" name="bian">变更终端设备</td>
+            </tr>
+            <tr class="test5">
+                <td colspan="3"><button type="button" data-dismiss="modal" id="sys_dlg_submit" class="btn" >下一步</button></td>
+                <td colspan="3"><button type="button" data-dismiss="modal" id="cancel" class="btn" >取消</button></td>
+            </tr>
+            <tr class="test6">
+                <td colspan="6" class="write">注：如果发现信息错误请与人力部门核实</td>
+            </tr>
+        </table>
+        </center>
+    </div>
+<!--</form>-->
+</body>
+<script type="text/javascript" src="__PUBLIC__/vendor/ie8/jquery.form.js"></script>
+<script src="__PUBLIC__/vendor/validate/jquery.validate.min.js"></script>
+<script>
+    $(function () {
+        layui.use('layer', function() {
+            layer = layui.layer;
+        })
+
+        $('.chosen-select').chosen({disable_search_threshold: 0, search_contains: true, width: 150});
+
+        $('#cancel').on('click',function(){
+            location.reload(true);
+        })
+
+        $("#sys_dlg_submit").on('click',function(){
+            var obj = document.getElementsByName('bian');
+
+            var s = '';
+
+            for (var i = 0; i < obj.length; i++) {
+
+                if (obj[i].checked) s += obj[i].value + ',';
+
+            }
+            s=s.substr(0, s.length - 1);
+            $.ajax({
+                url:'__CONTROLLER__/inAll',
+                data:{bian:s},
+                type:'post',
+                dataType:'json',
+                success:function(rep){
+                    if(rep.code > 0){
+                        location.href='__CONTROLLER__/index?Rtype='+s
+                    }else{
+                        alert(rep.message);
+                        return false;
+                    }
+                }
+            })
+        })
+
+    });
+</script>
